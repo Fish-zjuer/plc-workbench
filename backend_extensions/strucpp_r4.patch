@@ -1,0 +1,492 @@
+diff --git a/scripts/build-iec-types-json.mjs b/scripts/build-iec-types-json.mjs
+index 38a2254..c31af90 100644
+--- a/scripts/build-iec-types-json.mjs
++++ b/scripts/build-iec-types-json.mjs
+@@ -18,7 +18,7 @@
+ 
+ import { writeFileSync } from "fs";
+ import { resolve, dirname } from "path";
+-import { fileURLToPath } from "url";
++import { fileURLToPath, pathToFileURL } from "url";
+ 
+ const __filename = fileURLToPath(import.meta.url);
+ const __dirname = dirname(__filename);
+@@ -37,7 +37,7 @@ export async function buildIecTypesJson() {
+   // `tsc` pass before importing, so by the time this runs the dist
+   // mirror of `iec-types-data.ts` is current.
+   const data = await import(
+-    resolve(projectRoot, "dist/semantic/iec-types-data.js")
++    pathToFileURL(resolve(projectRoot, "dist/semantic/iec-types-data.js")).href
+   );
+ 
+   const out = {
+diff --git a/scripts/rebuild-libs.mjs b/scripts/rebuild-libs.mjs
+index a7557f2..be8802d 100644
+--- a/scripts/rebuild-libs.mjs
++++ b/scripts/rebuild-libs.mjs
+@@ -34,7 +34,7 @@
+ import { execSync } from "child_process";
+ import { readFileSync, readdirSync, writeFileSync, existsSync, copyFileSync, statSync } from "fs";
+ import { resolve, dirname, relative, sep, posix } from "path";
+-import { fileURLToPath } from "url";
++import { fileURLToPath, pathToFileURL } from "url";
+ import { buildIecTypesJson } from "./build-iec-types-json.mjs";
+ 
+ const __filename = fileURLToPath(import.meta.url);
+@@ -103,22 +103,22 @@ async function refreshAndLoadCompiler() {
+   }
+ 
+   const compiler = await import(
+-    resolve(projectRoot, "dist/library/library-compiler.js")
++    pathToFileURL(resolve(projectRoot, "dist/library/library-compiler.js")).href
+   );
+   const nodeLoader = await import(
+-    resolve(projectRoot, "dist/node/library-loader.js")
++    pathToFileURL(resolve(projectRoot, "dist/node/library-loader.js")).href
+   );
+   const nodeConfig = await import(
+-    resolve(projectRoot, "dist/node/library-config.js")
++    pathToFileURL(resolve(projectRoot, "dist/node/library-config.js")).href
+   );
+   const pureConfig = await import(
+-    resolve(projectRoot, "dist/library/library-config.js")
++    pathToFileURL(resolve(projectRoot, "dist/library/library-config.js")).href
+   );
+   const codesysImport = await import(
+-    resolve(projectRoot, "dist/library/codesys-import/index.js")
++    pathToFileURL(resolve(projectRoot, "dist/library/codesys-import/index.js")).href
+   );
+   const stdFnRegistry = await import(
+-    resolve(projectRoot, "dist/semantic/std-function-registry.js")
++    pathToFileURL(resolve(projectRoot, "dist/semantic/std-function-registry.js")).href
+   );
+   compileStlib = compiler.compileStlib;
+   loadStlibFromFile = nodeLoader.loadStlibFromFile;
+diff --git a/src/backend/codegen.ts b/src/backend/codegen.ts
+index 54470cf..de55182 100644
+--- a/src/backend/codegen.ts
++++ b/src/backend/codegen.ts
+@@ -3743,9 +3743,10 @@ export class CodeGenerator {
+         const wEscaped = translateIECString(wInner);
+         return `u"${wEscaped}"`;
+       }
+-      case "TIME": {
++      case "TIME":
++      case "LTIME": {
+         const timeVal = parseTimeLiteral(String(expr.value));
+-        return `${timeVal.nanoseconds}LL`;
++        return `${timeVal.exactNanoseconds ?? timeVal.nanoseconds}LL`;
+       }
+       case "DATE":
+         // DATE: int64 days since Unix epoch (UTC).  `iec_date.hpp`
+diff --git a/src/backend/type-codegen.ts b/src/backend/type-codegen.ts
+index 265dd6e..8d48303 100644
+--- a/src/backend/type-codegen.ts
++++ b/src/backend/type-codegen.ts
+@@ -77,6 +77,7 @@ export const defaultTypeCodeGenOptions: TypeCodeGenOptions = {
+  * Map IEC elementary type names to C++ type names
+  */
+ const IEC_TO_CPP_TYPE: Record<string, string> = {
++  VARIANT: "IEC_VARIANT",
+   BOOL: "BOOL_t",
+   BYTE: "BYTE_t",
+   WORD: "WORD_t",
+@@ -114,6 +115,7 @@ const IEC_TO_CPP_TYPE: Record<string, string> = {
+  * Used for struct fields and array elements that need per-element forcing.
+  */
+ export const IEC_TO_CPP_VAR_TYPE: Record<string, string> = {
++  VARIANT: "IEC_VARIANT",
+   BOOL: "IEC_BOOL",
+   BYTE: "IEC_BYTE",
+   WORD: "IEC_WORD",
+@@ -672,9 +674,10 @@ export class TypeCodeGenerator {
+         const inner = expr.rawValue.replace(/^["']|["']$/g, "");
+         return `u"${translateIECString(inner)}"`;
+       }
+-      case "TIME": {
++      case "TIME":
++      case "LTIME": {
+         const timeVal = parseTimeLiteral(String(expr.value));
+-        return `${timeVal.nanoseconds}LL`;
++        return `${timeVal.exactNanoseconds ?? timeVal.nanoseconds}LL`;
+       }
+       case "DATE":
+         return `${parseDateLiteralToDays(String(expr.value))}LL`;
+diff --git a/src/frontend/ast-builder.ts b/src/frontend/ast-builder.ts
+index 02fdddd..d60e633 100644
+--- a/src/frontend/ast-builder.ts
++++ b/src/frontend/ast-builder.ts
+@@ -2852,7 +2852,7 @@ export class ASTBuilder {
+       return {
+         kind: "LiteralExpression",
+         sourceSpan: tokenToSourceSpan(token),
+-        literalType: "TIME",
++        literalType: /^(?:LT|LTIME)#/i.test(token.image) ? "LTIME" : "TIME",
+         value: token.image,
+         rawValue: token.image,
+       };
+@@ -2973,7 +2973,7 @@ export class ASTBuilder {
+       return {
+         kind: "LiteralExpression",
+         sourceSpan: tokenToSourceSpan(token),
+-        literalType: "TIME",
++        literalType: /^(?:LT|LTIME)#/i.test(token.image) ? "LTIME" : "TIME",
+         value: token.image,
+         rawValue: token.image,
+       };
+diff --git a/src/frontend/ast.ts b/src/frontend/ast.ts
+index 49076ce..331f67d 100644
+--- a/src/frontend/ast.ts
++++ b/src/frontend/ast.ts
+@@ -787,6 +787,7 @@ export type LiteralType =
+   | "STRING"
+   | "WSTRING"
+   | "TIME"
++  | "LTIME"
+   | "DATE"
+   | "TIME_OF_DAY"
+   | "DATE_AND_TIME"
+diff --git a/src/frontend/lexer.ts b/src/frontend/lexer.ts
+index 213c37b..0972033 100644
+--- a/src/frontend/lexer.ts
++++ b/src/frontend/lexer.ts
+@@ -507,7 +507,7 @@ export const VAR_INST = createToken({
+ // Longer suffixes (ms, us, ns) must come before shorter ones (m, s) in the alternation
+ export const TimeLiteral = createToken({
+   name: "TimeLiteral",
+-  pattern: /(?:T|TIME)#(?:[0-9_]+(?:\.[0-9_]+)?(?:ms|us|ns|d|h|m|s))+/i,
++  pattern: /(?:LTIME|LT|TIME|T)#(?:[0-9_]+(?:\.[0-9_]+)?(?:ms|us|ns|d|h|m|s))+/i,
+ });
+ 
+ // Date literal: D#2024-01-15, D#1970-9-1 (IEC allows 1- or 2-digit month/day)
+diff --git a/src/node/build-utils.ts b/src/node/build-utils.ts
+index aa0db75..72dea4f 100644
+--- a/src/node/build-utils.ts
++++ b/src/node/build-utils.ts
+@@ -18,6 +18,7 @@ import { execFileSync } from "node:child_process";
+ import { existsSync, statSync } from "node:fs";
+ import { platform } from "node:os";
+ import { dirname, join, resolve } from "node:path";
++import { fileURLToPath } from "node:url";
+ 
+ import { extractIncludePaths } from "../cxx-flags.js";
+ 
+@@ -67,7 +68,7 @@ export function findRuntimeIncludeDir(cxxFlags: string): string | null {
+   // From import.meta.url (ESM dev mode)
+   try {
+     if (typeof import.meta?.url === "string") {
+-      const scriptDir = dirname(new URL(import.meta.url).pathname);
++      const scriptDir = dirname(fileURLToPath(import.meta.url));
+       candidates.push(resolve(scriptDir, "runtime", "include"));
+       // npm/built layout: dist/node/ → ../../src/runtime/include.
+       // (src/node/ dev layout resolves to the same src/runtime/include.)
+@@ -132,7 +133,7 @@ export function findBundledLibsDir(): string | null {
+   // From import.meta.url (ESM dev mode)
+   try {
+     if (typeof import.meta?.url === "string") {
+-      const scriptDir = dirname(new URL(import.meta.url).pathname);
++      const scriptDir = dirname(fileURLToPath(import.meta.url));
+       // src/node/build-utils.ts → ../../libs/  or  dist/node/build-utils.js → ../../libs/
+       candidates.push(resolve(scriptDir, "..", "..", "libs"));
+       candidates.push(resolve(scriptDir, "..", "libs"));
+diff --git a/src/project-model.ts b/src/project-model.ts
+index 5ac3010..5b153f2 100644
+--- a/src/project-model.ts
++++ b/src/project-model.ts
+@@ -58,6 +58,8 @@ export interface ProjectConfig {
+ export interface TimeValue {
+   /** Time in nanoseconds */
+   nanoseconds: number;
++  /** Exact integer spelling for C++ literal emission beyond Number's 53-bit range. */
++  exactNanoseconds?: string;
+   /** Original string representation */
+   rawValue: string;
+ }
+@@ -422,7 +424,8 @@ export function parseTimeLiteral(literal: string): TimeValue {
+   let nanoseconds = 0;
+ 
+   // Remove T# or TIME# prefix (case insensitive)
+-  let value = literal.replace(/^(T|TIME)#/i, "");
++  let value = literal.replace(/^(LTIME|LT|TIME|T)#/i, "").replace(/_/g, "");
++  const exactValue = value;
+ 
+   // Parse components: d (days), h (hours), m (minutes), s (seconds), ms (milliseconds), us (microseconds), ns (nanoseconds)
+   const patterns = [
+@@ -445,7 +448,15 @@ export function parseTimeLiteral(literal: string): TimeValue {
+     }
+   }
+ 
+-  return { nanoseconds, rawValue };
++  const scales: Record<string,bigint> = { d:86400000000000n,h:3600000000000n,m:60000000000n,s:1000000000n,ms:1000000n,us:1000n,ns:1n };
++  let exact=0n;
++  for(const component of exactValue.matchAll(/(\d+)(?:\.(\d+))?(ms|us|ns|d|h|m|s)/gi)) {
++    const scale=scales[component[3]!.toLowerCase()]!;
++    exact+=BigInt(component[1]!)*scale;
++    if(component[2]) exact+=BigInt(component[2])*scale/(10n**BigInt(component[2].length));
++  }
++  if(exact>9223372036854775807n) throw new Error("Duration exceeds PLC-R4 signed 64-bit nanosecond range");
++  return { nanoseconds, rawValue, exactNanoseconds:exact.toString() };
+ }
+ 
+ // =============================================================================
+@@ -955,7 +966,7 @@ export class ProjectModelBuilder {
+   private extractTimeValue(expr: Expression): TimeValue | undefined {
+     if (expr.kind === "LiteralExpression") {
+       const lit = expr;
+-      if (lit.literalType === "TIME" && typeof lit.value === "string") {
++      if ((lit.literalType === "TIME" || lit.literalType === "LTIME") && typeof lit.value === "string") {
+         return parseTimeLiteral(lit.value);
+       }
+       // Handle raw string that might be a time literal
+diff --git a/src/runtime/include/iec_array.hpp b/src/runtime/include/iec_array.hpp
+index de0daba..aa34aa9 100644
+--- a/src/runtime/include/iec_array.hpp
++++ b/src/runtime/include/iec_array.hpp
+@@ -404,6 +404,21 @@ class ArrayView1D {
+     int64_t upper_;
+ 
+ public:
++    // An unbound FB member is an empty view; no element can be accessed.
++    ArrayView1D() noexcept : data_(nullptr), lower_(0), upper_(-1) {}
++
++    // Caller-owned dynamic storage; binding retains bounds and aliases values.
++    ArrayView1D(T* data, int64_t lower, int64_t upper)
++        : data_(data), lower_(lower), upper_(upper) {
++        if (data == nullptr || upper < lower) {
++#if STRUCPP_HAS_EXCEPTIONS
++            throw std::invalid_argument("Invalid array view binding");
++#else
++            iec_runtime_fault(IecFault::ArrayBounds);
++#endif
++        }
++    }
++
+     // Construct from any IEC_ARRAY_1D with matching element type
+     template<typename Bounds>
+     ArrayView1D(IEC_ARRAY_1D<T, Bounds>& arr)
+diff --git a/src/runtime/include/iec_std_lib.hpp b/src/runtime/include/iec_std_lib.hpp
+index 0965b36..1afb947 100644
+--- a/src/runtime/include/iec_std_lib.hpp
++++ b/src/runtime/include/iec_std_lib.hpp
+@@ -26,6 +26,7 @@
+ #include "iec_ptr.hpp"
+ #include "iec_string.hpp"
+ #include "iec_wstring.hpp"
++#include "iec_variant.hpp"
+ // IEC 61131-3 temporal types — pulled in here so the standard
+ // library entry point exposes every standard function (`ADD_TIME`,
+ // `ADD_DATE`, `ADD_DT`, `ADD_TOD`, `CONCAT_DATE_TOD`, etc.) without
+@@ -818,6 +819,9 @@ template<typename T> inline IEC_LWORD TO_LWORD(T v) noexcept { return CONVERT<IE
+ template<typename T> inline IEC_TIME TO_TIME(T v) noexcept {
+     return IEC_TIME(static_cast<TIME_t>(iec_unwrap(v)));
+ }
++template<typename T> inline IEC_LTIME TO_LTIME(T v) noexcept {
++    return IEC_LTIME(static_cast<LTIME_t>(iec_unwrap(v)));
++}
+ 
+ template<typename T> inline IEC_DATE TO_DATE(T v) noexcept {
+     return IEC_DATE(static_cast<DATE_t>(iec_unwrap(v)));
+diff --git a/src/runtime/include/iec_variant.hpp b/src/runtime/include/iec_variant.hpp
+new file mode 100644
+index 0000000..3113f1d
+--- /dev/null
++++ b/src/runtime/include/iec_variant.hpp
+@@ -0,0 +1,51 @@
++// SPDX-License-Identifier: GPL-3.0-only WITH STruCpp-runtime-exception
++// PLC Workbench extension, 2026. Descriptor ABI is local to this backend.
++#pragma once
++#include <cstdint>
++#include <cstddef>
++#include <typeinfo>
++#include <limits>
++#include "iec_var.hpp"
++#include "iec_traits.hpp"
++
++namespace strucpp {
++class IEC_VARIANT {
++    void* data_ = nullptr;
++    const std::type_info* type_ = nullptr;
++    std::size_t width_ = 0;
++    int64_t count_ = 0;
++    bool array_ = false;
++    void (*copy_)(void*, const void*) = nullptr;
++
++    template<class T> void bind_impl(T* data, int64_t count, bool array) {
++        data_=data;type_=&typeid(T);width_=sizeof(T);count_=count;array_=array;
++        copy_=[](void* to,const void* from){ *static_cast<T*>(to)=*static_cast<const T*>(from); };
++    }
++public:
++    template<class T> void bind_scalar(T& value) { bind_impl(&value,1,false); }
++    template<class T> void bind_array(T* values,int64_t count) { bind_impl(values,count,true); }
++    bool valid() const { return data_ && type_ && count_>0 && copy_; }
++    int64_t count() const { return valid() && array_ ? count_ : 0; }
++    bool compatible(const IEC_VARIANT& item) const {
++        return valid() && array_ && item.valid() && !item.array_ && item.count_==1 &&
++               *type_==*item.type_ && width_==item.width_;
++    }
++    bool read(int64_t index,IEC_VARIANT& item) const {
++        if(!compatible(item) || index<0 || index>=count_) return false;
++        copy_(item.data_,static_cast<const char*>(data_)+static_cast<std::size_t>(index)*width_);
++        return true;
++    }
++    bool write(int64_t index,const IEC_VARIANT& item) {
++        if(!compatible(item) || index<0 || index>=count_) return false;
++        copy_(static_cast<char*>(data_)+static_cast<std::size_t>(index)*width_,item.data_);
++        return true;
++    }
++};
++inline IEC_DINT PV_COUNT(const IEC_VARIANT& buffer) {
++    const auto count=buffer.count();
++    return count<=std::numeric_limits<int32_t>::max()?static_cast<int32_t>(count):0;
++}
++inline IEC_BOOL PV_COMPATIBLE(const IEC_VARIANT& buffer,const IEC_VARIANT& item) { return buffer.compatible(item); }
++template<class T> inline IEC_BOOL PV_READ(const IEC_VARIANT& buffer,T index,IEC_VARIANT& item) { return buffer.read(iec_unwrap(index),item); }
++template<class T> inline IEC_BOOL PV_WRITE(IEC_VARIANT& buffer,T index,const IEC_VARIANT& item) { return buffer.write(iec_unwrap(index),item); }
++}
+diff --git a/src/semantic/iec-types-data.ts b/src/semantic/iec-types-data.ts
+index 8a42aa0..edb837a 100644
+--- a/src/semantic/iec-types-data.ts
++++ b/src/semantic/iec-types-data.ts
+@@ -49,7 +49,8 @@ export type IECWireFormat =
+   /** STRING — 1 length byte + 126 UTF-8 bytes (strucpp default cap). */
+   | "len8-utf8"
+   /** WSTRING — 1 length byte + 126 UTF-16 LE code units. */
+-  | "len8-utf16le";
++  | "len8-utf16le"
++  | "variant-ref";
+ 
+ /**
+  * Single elementary type entry. Keep field order stable — it's what
+@@ -330,6 +331,18 @@ export const IEC_BASE_TYPES: readonly IECTypeMetadata[] = [
+     literalDisplay: "DT#YYYY-MM-DD-HH:MM:SS",
+   },
+ 
++  // PLC Workbench extension: signed 64-bit nanosecond durations and
++  // a type-erased reference descriptor (not a Siemens/CODESYS binary ABI).
++  {
++    name: "LTIME", aliases: [], byteSize: 8, bits: 64, signed: true,
++    cppType: "LTIME_t", wireFormat: "duration-ns-i64",
++    xml: { elementName: "LTIME", plcopenStandard: false },
++  },
++  {
++    name: "VARIANT", aliases: [], byteSize: 0, bits: 0, signed: null,
++    cppType: "IEC_VARIANT", wireFormat: "variant-ref",
++    xml: { elementName: "VARIANT", plcopenStandard: false },
++  },
+   // ── Character strings ────────────────────────────────────────────
+   // byteSize 0 ⇒ variable-width on the wire (the per-declaration cap
+   // or the library's STRING_LENGTH constant decides the actual width).
+diff --git a/src/semantic/std-function-registry.ts b/src/semantic/std-function-registry.ts
+index 51c9059..9b35423 100644
+--- a/src/semantic/std-function-registry.ts
++++ b/src/semantic/std-function-registry.ts
+@@ -103,6 +103,7 @@ const ELEMENTARY_TYPE_NAMES = new Set([
+   "REAL",
+   "LREAL",
+   "TIME",
++  "LTIME",
+   "DATE",
+   "TIME_OF_DAY",
+   "DATE_AND_TIME",
+@@ -197,6 +198,18 @@ export class StdFunctionRegistry {
+     this.registerStringFunctions();
+     this.registerTimeFunctions();
+     this.registerSystemFunctions();
++    this.register({ name: "PV_COUNT", cppName: "PV_COUNT", returnConstraint: "specific", specificReturnType: "DINT",
++      returnMatchesFirstParam: false, params: [{ name: "BUFFER", constraint: "specific", specificType: "VARIANT", isByRef: true }],
++      isVariadic: false, isConversion: false, category: "system" });
++    this.register({ name: "PV_COMPATIBLE", cppName: "PV_COMPATIBLE", returnConstraint: "BOOL", returnMatchesFirstParam: false,
++      params: [{name:"BUFFER",constraint:"specific",specificType:"VARIANT",isByRef:true},
++               {name:"ITEM",constraint:"specific",specificType:"VARIANT",isByRef:true}],
++      isVariadic:false,isConversion:false,category:"system" });
++    for (const name of ["PV_READ", "PV_WRITE"]) this.register({ name, cppName:name, returnConstraint:"BOOL", returnMatchesFirstParam:false,
++      params:[{name:"BUFFER",constraint:"specific",specificType:"VARIANT",isByRef:true},
++              {name:"INDEX",constraint:"specific",specificType:"DINT",isByRef:false},
++              {name:"ITEM",constraint:"specific",specificType:"VARIANT",isByRef:true}],
++      isVariadic:false,isConversion:false,category:"system" });
+   }
+ 
+   // ---------------------------------------------------------------------------
+diff --git a/src/semantic/symbol-table.ts b/src/semantic/symbol-table.ts
+index 33a2d7c..ae9a894 100644
+--- a/src/semantic/symbol-table.ts
++++ b/src/semantic/symbol-table.ts
+@@ -320,6 +320,8 @@ export class SymbolTables {
+       "REAL",
+       "LREAL",
+       "TIME",
++      "LTIME",
++      "VARIANT",
+       "DATE",
+       "TIME_OF_DAY",
+       "TOD",
+diff --git a/src/semantic/type-checker.ts b/src/semantic/type-checker.ts
+index e3c359b..e0987b9 100644
+--- a/src/semantic/type-checker.ts
++++ b/src/semantic/type-checker.ts
+@@ -414,6 +414,9 @@ export class TypeChecker {
+       case "TIME":
+         type = ELEMENTARY_TYPES["TIME"];
+         break;
++      case "LTIME":
++        type = ELEMENTARY_TYPES["LTIME"];
++        break;
+       case "DATE":
+         type = ELEMENTARY_TYPES["DATE"];
+         break;
+diff --git a/src/semantic/type-utils.ts b/src/semantic/type-utils.ts
+index 213ba5f..a917181 100644
+--- a/src/semantic/type-utils.ts
++++ b/src/semantic/type-utils.ts
+@@ -116,6 +116,8 @@ export const TYPE_CATEGORIES: Record<string, TypeCategory[]> = {
+   REAL: ["ANY", "ANY_ELEMENTARY", "ANY_MAGNITUDE", "ANY_NUM", "ANY_REAL"],
+   LREAL: ["ANY", "ANY_ELEMENTARY", "ANY_MAGNITUDE", "ANY_NUM", "ANY_REAL"],
+   TIME: ["ANY", "ANY_ELEMENTARY", "ANY_MAGNITUDE", "ANY_DATE"],
++  LTIME: ["ANY", "ANY_ELEMENTARY", "ANY_MAGNITUDE", "ANY_DATE"],
++  VARIANT: ["ANY"],
+   DATE: ["ANY", "ANY_ELEMENTARY", "ANY_DATE"],
+   TIME_OF_DAY: ["ANY", "ANY_ELEMENTARY", "ANY_DATE"],
+   DATE_AND_TIME: ["ANY", "ANY_ELEMENTARY", "ANY_DATE"],
+diff --git a/tests/backend/codegen-functions.test.ts b/tests/backend/codegen-functions.test.ts
+index 767db7c..90ab2d4 100644
+--- a/tests/backend/codegen-functions.test.ts
++++ b/tests/backend/codegen-functions.test.ts
+@@ -232,7 +232,7 @@ describe("Codegen - Function Calls", () => {
+       expect(result.cppCode).toContain("TO_UDINT(DATE_TO_SECONDS(");
+     });
+ 
+-    it("has no declarable L variants yet, so their unit rows are unreachable", () => {
++    it("keeps non-duration long date/time variants unavailable in PLC-R4", () => {
+       // TEMPORAL_CONVERSION_UNITS carries LTIME / LTOD / LDT / LDATE rows and
+       // codegen has always branched on those names, but the frontend does not
+       // accept them as types — `VAR v : LDT;` is "Undefined type 'LDT'", and
+@@ -243,7 +243,7 @@ describe("Codegen - Function Calls", () => {
+       // — at which point the L rows become reachable and need the coverage
+       // that cannot be written today. CODESYS makes all four nanoseconds,
+       // which is already what the table says.
+-      for (const type of ["LTIME", "LTOD", "LDT", "LDATE"]) {
++      for (const type of ["LTOD", "LDT", "LDATE"]) {
+         const result = compile(
+           `PROGRAM Main\n VAR v : ${type}; END_VAR\nEND_PROGRAM`,
+           { headerFileName: "generated.hpp" },
+@@ -255,6 +255,20 @@ describe("Codegen - Function Calls", () => {
+       }
+     });
+ 
++    it("PLC-R4 LTIME conversions preserve nanoseconds and exact duration literals", () => {
++      const result=compileAndCheck(`PROGRAM Main
++        VAR duration : LTIME; ns : LINT; END_VAR
++        duration := LINT_TO_LTIME(1000000000);
++        ns := LTIME_TO_LINT(duration);
++        duration := LTIME#123d4h5m6s7ms8us9ns;
++        END_PROGRAM`);
++      expect(result.cppCode).toContain("TO_LTIME(");
++      expect(result.cppCode).toContain("TO_LINT(");
++      expect(result.cppCode).toContain("10641906007008009LL");
++      expect(result.cppCode).not.toContain("TIME_FROM_MS(");
++      expect(result.cppCode).not.toContain("TIME_TO_MS(");
++    });
++
+     it("scales a numeric source INTO a temporal target, in codegen", () => {
+       // The reverse direction. This scaling used to live in the runtime
+       // `TO_TIME(integer)` template, which could not tell an integer

@@ -1,0 +1,168 @@
+{
+  "id": "20",
+  "title": "Production Control",
+  "difficulty": "hard",
+  "project_id": "1602dc8c1e74",
+  "session_id": "92202be9141a",
+  "session_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\1602dc8c1e74\\sessions\\92202be9141a",
+  "model": "deepseek-flash",
+  "agent_status": "idle",
+  "versions": 1,
+  "answer": "已完成第 20 题。\n\n## 交付\n- 文件：`candidate.st`（SHA256 `e8adc1f6…30df0`），主功能块名 `Q20`，接口严格按题面表格：12 个输入 / 5 个输出，名称、类型、方向均未改动。\n- 另含一处 `TYPE Q20_STATE : (...)` 枚举（9 个状态）。\n- 本题接口中没有 `ARRAY[*]`、没有 `VARIANT`，因此不存在“用具体类型替换”的问题；接口原样保留。\n\n## 实现要点\n- 手动：`Mode = FALSE` 时 `ForwardButton`/`ReverseButton` 直接驱动正/反转，二者互锁（反向优先），且与自动流程互斥。\n- 自动：`S_IDLE → S_TO_WASH → S_AT_WASH → S_TO_WEIGHT → S_AT_WEIGHT → S_TO_FIRING → S_AT_FIRING → S_TO_OUTPUT → S_AT_OUTPUT`；每到站点传感器置位即停电机，收到对应 `xxxComplete` 才继续。\n- 称重：`100.0 <= weight <= 200.0` 合格 → `firingTemp = 500 + (weight-100)/100*50`，正转送烧成站；不合格 → `kick` 输出，不送后续工位。\n- 成品站：`SensorOutput` 检测到产品时 `CompletionLight := TRUE`，产品被取走（信号消失）时灭灯并回到 `S_IDLE`。\n- 模式切换时自动序列复位；首扫描做初始化以避免误触发模式切换复位。\n\n## 验证证据（实际执行）\n- `plc_compile_unit(candidate.st)`：ST → C++ → 目标文件编译通过（`behavior_tested: false`）。\n- `plc_bank_test(source=\"candidate.st\", question_id=\"20\")`：**pass**，6 个场景 / 55 次扫描 / 0 失败，`first_failure: null`。因无失败，修改次数为 0。\n\n## 有限结论与局限\n- 这是**稀疏有限检查**（题库预定义场景），不是完整正确性证明；环境未安装 CODESYS，未做 CODESYS 编译，也未做形式化验证或实体 PLC 测试；后端为 STruC++ 0.7.0 + g++ 离线编译。\n- 题面未定义、由我自选并已在文件头注释中记录的细节：\n  1. `kick` 为电平输出，在“该不合格件一直停在称重站”期间保持，直到称重传感器失去信号才撤销（下一件重新判定）。\n  2. `firingTemp` 为锁存值，保持上次合格件的计算结果，直到新的合格件被称重；不合格件不更新它。\n  3. 手动模式下自动序列状态保持不变（首次进入手动不会清流程），仅在 `Mode` 变化时复位序列。\n  4. “100~200 线性对应 500~550”按十进制量值解读，且映射时对重量做钳位（本题判定已保证在区间内，钳位只是防御）。\n  5. `weightComplete` 按“每工位每件一次性”处理，信号持续为 TRUE 不会让同一件产品被重复推进。",
+  "seconds": 65.0,
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2719,
+        "completion_tokens": 100,
+        "total_tokens": 2819,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 2591
+      },
+      "seconds": 5.703
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4430,
+        "completion_tokens": 37,
+        "total_tokens": 4467,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816
+        },
+        "prompt_cache_hit_tokens": 2816,
+        "prompt_cache_miss_tokens": 1614
+      },
+      "seconds": 5.656
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 5082,
+        "completion_tokens": 188,
+        "total_tokens": 5270,
+        "prompt_tokens_details": {
+          "cached_tokens": 4352
+        },
+        "prompt_cache_hit_tokens": 4352,
+        "prompt_cache_miss_tokens": 730
+      },
+      "seconds": 6.453
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 5594,
+        "completion_tokens": 1901,
+        "total_tokens": 7495,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 5466
+      },
+      "seconds": 14.578
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 9184,
+        "completion_tokens": 51,
+        "total_tokens": 9235,
+        "prompt_tokens_details": {
+          "cached_tokens": 7424
+        },
+        "prompt_cache_hit_tokens": 7424,
+        "prompt_cache_miss_tokens": 1760
+      },
+      "seconds": 5.75
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 9421,
+        "completion_tokens": 59,
+        "total_tokens": 9480,
+        "prompt_tokens_details": {
+          "cached_tokens": 9216
+        },
+        "prompt_cache_hit_tokens": 9216,
+        "prompt_cache_miss_tokens": 205
+      },
+      "seconds": 5.578
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 9682,
+        "completion_tokens": 199,
+        "total_tokens": 9881,
+        "prompt_tokens_details": {
+          "cached_tokens": 9472
+        },
+        "prompt_cache_hit_tokens": 9472,
+        "prompt_cache_miss_tokens": 210
+      },
+      "seconds": 6.109
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 10077,
+        "completion_tokens": 737,
+        "total_tokens": 10814,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 9949
+      },
+      "seconds": 9.859
+    }
+  ],
+  "tool_counts": {
+    "read_attachment": 1,
+    "list_files": 1,
+    "plc_environment": 1,
+    "plc_profiles": 1,
+    "update_plan": 2,
+    "write_file": 1,
+    "plc_compile_unit": 1,
+    "plc_bank_test": 1
+  },
+  "first": {
+    "status": "pass",
+    "question_id": "20",
+    "source_sha256": "e8adc1f68057695880e3fa7d07c651038680a02c5b7eb08b72ae785df8e30df0",
+    "behavior_tested": true,
+    "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_dbf8e14ab68524aeba774d8f\\build.json",
+    "summary": {
+      "scenarios": 6,
+      "scans": 55,
+      "failed": 0
+    },
+    "first_failure": null,
+    "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof",
+    "full_evidence_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\deepseek_20\\tasks\\20\\candidate_01.evaluation.json"
+  },
+  "final": {
+    "status": "pass",
+    "question_id": "20",
+    "source_sha256": "e8adc1f68057695880e3fa7d07c651038680a02c5b7eb08b72ae785df8e30df0",
+    "behavior_tested": true,
+    "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_dbf8e14ab68524aeba774d8f\\build.json",
+    "summary": {
+      "scenarios": 6,
+      "scans": 55,
+      "failed": 0
+    },
+    "first_failure": null,
+    "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof",
+    "full_evidence_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\deepseek_20\\tasks\\20\\final.evaluation.json"
+  },
+  "final_source_sha256": "e8adc1f68057695880e3fa7d07c651038680a02c5b7eb08b72ae785df8e30df0"
+}

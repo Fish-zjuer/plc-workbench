@@ -1,0 +1,200 @@
+{
+  "status": "fail",
+  "question_id": "05",
+  "source_sha256": "b40e7d1a4472c44505f32fc10164e1397840300e9eee3808ada8c65325979de5",
+  "behavior_tested": true,
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_1ae3adb0fc782bf015be4254\\build.json",
+  "summary": {
+    "scenarios": 1,
+    "scans": 9,
+    "failed": 1
+  },
+  "first_failure": {
+    "scenario": "startup_no_predebounce_and_estop",
+    "scan": 3,
+    "time_ms": 5101,
+    "output": "Operator_Alert",
+    "expected": 1,
+    "actual": 0
+  },
+  "cases": [
+    {
+      "name": "startup_no_predebounce_and_estop",
+      "status": "fail",
+      "first_failure": {
+        "scan": 3,
+        "time_ms": 5101,
+        "output": "Operator_Alert",
+        "expected": 1,
+        "actual": 0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Gap_Exceeded": 1,
+            "Weld_E_Stop_NC": 1,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "actual": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4999,
+          "inputs": {
+            "Gap_Exceeded": 1,
+            "Weld_E_Stop_NC": 1,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "actual": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5000,
+          "inputs": {
+            "Gap_Exceeded": 1,
+            "Weld_E_Stop_NC": 1,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": 0
+          },
+          "actual": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5101,
+          "inputs": {
+            "Gap_Exceeded": 1,
+            "Weld_E_Stop_NC": 1,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": 1,
+            "Weld_Soft_Start_Active": 0
+          },
+          "actual": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "violations": [
+            {
+              "output": "Operator_Alert",
+              "expected": 1,
+              "actual": 0
+            },
+            {
+              "output": "Weld_Soft_Start_Active",
+              "expected": 0,
+              "actual": 1
+            }
+          ]
+        },
+        {
+          "time_ms": 5110,
+          "inputs": {
+            "Gap_Exceeded": 1,
+            "Weld_E_Stop_NC": 0,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": 0
+          },
+          "actual": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5120,
+          "inputs": {
+            "Gap_Exceeded": 1,
+            "Weld_E_Stop_NC": 1,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": 0
+          },
+          "actual": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5219,
+          "inputs": {
+            "Gap_Exceeded": 1,
+            "Weld_E_Stop_NC": 1,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": 0
+          },
+          "actual": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5220,
+          "inputs": {
+            "Gap_Exceeded": 1,
+            "Weld_E_Stop_NC": 1,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": 1
+          },
+          "actual": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "violations": [
+            {
+              "output": "Operator_Alert",
+              "expected": 1,
+              "actual": 0
+            }
+          ]
+        },
+        {
+          "time_ms": 5230,
+          "inputs": {
+            "Gap_Exceeded": 0,
+            "Weld_E_Stop_NC": 1,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": 0
+          },
+          "actual": {
+            "Operator_Alert": 0,
+            "Weld_Soft_Start_Active": 1
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+}

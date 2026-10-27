@@ -1,0 +1,190 @@
+{
+  "id": "17",
+  "title": "Recipe Management System",
+  "difficulty": "hard",
+  "project_id": "b6fdee776fbe",
+  "session_id": "91f5f9e58658",
+  "session_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\b6fdee776fbe\\sessions\\91f5f9e58658",
+  "model": "deepseek-flash",
+  "agent_status": "idle",
+  "versions": 2,
+  "answer": "已完成第 17 题的实现与有限验证。\n\n## 交付物\n`candidate.st`（SHA256 `13af2e71…8aca30`），包含：\n- `TYPE ST_Recipe`：`recipeID : INT`、`ingredientType : INT`、`ingredientRatio : REAL`、`productionTemperature : REAL`。\n- `FUNCTION_BLOCK Q17`，接口完全按原题定义：输入 `addRecipe/deleteRecipe/modifyRecipe/queryRecipe : BOOL`、`recipeIn : ST_Recipe`；输出 `recipeAdded/recipeDeleted/recipeModified : BOOL`、`recipeQueryResult : ST_Recipe`、`error : BOOL`、`status : WORD`；输入输出 `recipe : ARRAY[1..10] OF ST_Recipe`。未更改任何名称、类型、方向，未用定长替换改写（原题本就是 `ARRAY[1..10]`）。\n\n## 实现逻辑（每个扫描周期）\n1. 复位 `recipeAdded/recipeDeleted/recipeModified/error`，`status := 16#0000`。\n2. 一次扫描库：记录首个命中下标 `idx`（`recipeIn.recipeID <> 0` 才算命中，避免空槽即 0 造成“命中”），并记录最小下标空槽 `emptySlot`。\n3. 查询：`idx = 0` → `error`、`status := 16#8001`；否则输出 `recipe[idx]`。\n4. 添加：已存在号 → `16#8002`；无空槽 → `16#8003`；否则写入 `recipe[emptySlot]` 并置 `recipeAdded`。\n5. 删除：不存在 → `16#8004`；否则 `recipe[idx].recipeID := 0`（其余字段一并清零）并置 `recipeDeleted`。\n6. 修改：不存在 → `16#8005`；否则 `recipe[idx] := recipeIn` 并置 `recipeModified`。\n\n## 实际执行证据\n- `plc_bank_test(source=\"candidate.st\", question_id=\"17\")` → `status: behavior_not_supported`，`compile_status: compiled_unit`，`behavior_tested: false`，`codesys_compile: not_executed`；原因：`Recipe STRUCT and mutable caller-owned database: no validated native reference bridge`。\n- 补充 `plc_compile_unit(candidate.st)` → `compiled_unit`（ST→C++→目标文件编译成功）。\n- 说明：以上仅证明语法/类型与接口可被 STruC++ 0.7.0 + g++ 编译，**没有任何功能行为被执行验证**；不是 CODESYS 编译、不是形式化验证、不是实体 PLC 或功能安全证明。因为后端不支持 STRUCT + `VAR_IN_OUT` 引用桥接，我没有改用其他接口来强行测试（首次 bank_test 即遇到不支持，无功能反例可修）。\n\n## 题面未定义、由我自行约定的细节\n1. 四个请求同时为 TRUE 时的优先级与输出互斥：本实现按 查询→添加→删除→修改 顺序执行，同一扫描内可能多个请求都生效且后执行者可能覆盖 `status/error`。题面未规定，建议实际使用时做单请求互斥。\n2. 输出是电平型（每周期按当前输入重新计算），不是单次脉冲锁存；`recipeQueryResult` 在无查询请求/查询失败时保持上一次值，未清零。\n3. 删除时空槽其余字段是否清 0：题面只要求 `recipeID := 0`，本实现额外清零其余字段（避免脏数据被后续读成“有效配方”）。\n4. `recipeIn.recipeID = 0` 的添加请求：本实现视为“对空号的重复/无效”，走 `16#8002` 分支（因 `idx` 不命中但号本身非法）；题面未定义该情形。\n5. 成功时的 `status` 取 `16#0000`（题面未定义成功码）；失败时 `recipeAdded/Deleted/Modified` 均保持 FALSE。\n6. 数据库被假定由调用方初始化（空槽 `recipeID = 0`），FB 不做上电初始化。\n\n## 局限\n功能正确性尚未获得工具证据；如需要验证，需要在支持 STRUCT/引用参数的环境（如实际 CODESYS 或自建测试工程）中做扫描级测试。",
+  "seconds": 76.562,
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2721,
+        "completion_tokens": 97,
+        "total_tokens": 2818,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 2593
+      },
+      "seconds": 6.11
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4518,
+        "completion_tokens": 177,
+        "total_tokens": 4695,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816
+        },
+        "prompt_cache_hit_tokens": 2816,
+        "prompt_cache_miss_tokens": 1702
+      },
+      "seconds": 6.172
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4997,
+        "completion_tokens": 952,
+        "total_tokens": 5949,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 4869
+      },
+      "seconds": 9.938
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 7207,
+        "completion_tokens": 90,
+        "total_tokens": 7297,
+        "prompt_tokens_details": {
+          "cached_tokens": 5632
+        },
+        "prompt_cache_hit_tokens": 5632,
+        "prompt_cache_miss_tokens": 1575
+      },
+      "seconds": 9.515
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 7455,
+        "completion_tokens": 893,
+        "total_tokens": 8348,
+        "prompt_tokens_details": {
+          "cached_tokens": 7296
+        },
+        "prompt_cache_hit_tokens": 7296,
+        "prompt_cache_miss_tokens": 159
+      },
+      "seconds": 8.375
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 9476,
+        "completion_tokens": 59,
+        "total_tokens": 9535,
+        "prompt_tokens_details": {
+          "cached_tokens": 8320
+        },
+        "prompt_cache_hit_tokens": 8320,
+        "prompt_cache_miss_tokens": 1156
+      },
+      "seconds": 5.75
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 9750,
+        "completion_tokens": 50,
+        "total_tokens": 9800,
+        "prompt_tokens_details": {
+          "cached_tokens": 9472
+        },
+        "prompt_cache_hit_tokens": 9472,
+        "prompt_cache_miss_tokens": 278
+      },
+      "seconds": 5.594
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 10197,
+        "completion_tokens": 42,
+        "total_tokens": 10239,
+        "prompt_tokens_details": {
+          "cached_tokens": 9728
+        },
+        "prompt_cache_hit_tokens": 9728,
+        "prompt_cache_miss_tokens": 469
+      },
+      "seconds": 5.797
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 10421,
+        "completion_tokens": 193,
+        "total_tokens": 10614,
+        "prompt_tokens_details": {
+          "cached_tokens": 10112
+        },
+        "prompt_cache_hit_tokens": 10112,
+        "prompt_cache_miss_tokens": 309
+      },
+      "seconds": 6.391
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 10809,
+        "completion_tokens": 979,
+        "total_tokens": 11788,
+        "prompt_tokens_details": {
+          "cached_tokens": 256
+        },
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 10553
+      },
+      "seconds": 10.969
+    }
+  ],
+  "tool_counts": {
+    "read_attachment": 1,
+    "list_files": 1,
+    "update_plan": 2,
+    "write_file": 2,
+    "read_file": 1,
+    "plc_bank_test": 1,
+    "plc_profiles": 1,
+    "plc_compile_unit": 1
+  },
+  "first": {
+    "status": "behavior_not_supported",
+    "source_sha256": "f5c24283896a1db69503f35f55aa52ef15a2a7d71d8f500d9e5c5d379f409bfb",
+    "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\unit_14463fbd8e01024b3e993a72\\unit_build.json",
+    "behavior_tested": false,
+    "codesys_compile": "not_executed",
+    "message": "实际完成 ST→C++→目标文件编译；未检查功能行为，未链接外部用户库。",
+    "compile_status": "compiled_unit",
+    "question_id": "17",
+    "reason": "Recipe STRUCT and mutable caller-owned database: no validated native reference bridge",
+    "full_evidence_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\deepseek_20\\tasks\\17\\candidate_01.evaluation.json"
+  },
+  "final": {
+    "status": "behavior_not_supported",
+    "source_sha256": "13af2e71f6ef2bff899819507f3667c2357b1b3e23fedb368dd460f6488aca30",
+    "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\unit_3374863df67beba91717493e\\unit_build.json",
+    "behavior_tested": false,
+    "codesys_compile": "not_executed",
+    "message": "实际完成 ST→C++→目标文件编译；未检查功能行为，未链接外部用户库。",
+    "compile_status": "compiled_unit",
+    "question_id": "17",
+    "reason": "Recipe STRUCT and mutable caller-owned database: no validated native reference bridge",
+    "full_evidence_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\deepseek_20\\tasks\\17\\final.evaluation.json"
+  },
+  "final_source_sha256": "13af2e71f6ef2bff899819507f3667c2357b1b3e23fedb368dd460f6488aca30"
+}

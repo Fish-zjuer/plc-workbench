@@ -1,0 +1,83 @@
+{
+  "question_id": "14",
+  "project_id": "01cd340317fb",
+  "session_id": "32a496704ce3",
+  "baseline_sha256": "54c7912fc58fc58076a13e2721d4dc8f600f13e8b798236a0040f9a38ec7ceec",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "14",
+    "source": "candidate.st",
+    "source_sha256": "ae45d00b367dbfab1e5607f9ba763e338e9cd6eb585c66768c72cd03bfaf38ef",
+    "attempts": [
+      {
+        "revision": 1,
+        "source_sha256": "810765eb2ac625efa53e602c4ebc0e1adce5023b8d7d9693cb757a397fa1ca60",
+        "model_summary": "替换不受支持的 oneChar[1] 字符索引，改用 MID 提取单个字符；MID 在离线后端受支持，避免生成缺失的 .at()。其余解析逻辑保持不变。",
+        "assumptions": [
+          "MID(string, length, position) 的参数顺序按后端实现采用 (source, len, pos)，位置从 1 开始。",
+          "oneChar 使用 STRING(1) 声明，其首字节可由 MID 返回的单字符赋给 BYTE 变量获得。",
+          "LEN 返回有效字符长度且不超过声明容量，因此 n > 254 的保护为冗余但无害。"
+        ],
+        "status": "compile_error",
+        "evidence": "workflow_runs/c1a0249f144d/evaluation_01.json"
+      },
+      {
+        "revision": 2,
+        "source_sha256": "ae45d00b367dbfab1e5607f9ba763e338e9cd6eb585c66768c72cd03bfaf38ef",
+        "model_summary": "Removed unsupported STRING indexing (oneChar[1]); derive character code via MID(...) compared against single-character literals in a CASE/IF chain, avoiding .at() generation. Kept parsing, range check, and network-byte-order assembly unchanged.",
+        "assumptions": [
+          "MID(ipText,1,i+1) returns a single-character STRING(1) whose value can be compared to single-character literals; empty/invalid positions never occur because the loop is bounded by LEN(ipText).",
+          "Digit classification via literal equality avoids both STRING indexing and ordering comparisons, which the backend does not support reliably.",
+          "Result accumulation only finalized into ipValue when ok is TRUE; partial accumulation for malformed input is discarded as required."
+        ],
+        "status": "pass",
+        "evidence": "workflow_runs/c1a0249f144d/evaluation_02.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "14",
+      "source_sha256": "ae45d00b367dbfab1e5607f9ba763e338e9cd6eb585c66768c72cd03bfaf38ef",
+      "summary": {
+        "scenarios": 68,
+        "scans": 4085,
+        "failed": 0
+      },
+      "behavior_tested": true
+    },
+    "backend": "STruC++ 0.7.0 + g++; not CODESYS",
+    "run_path": "workflow_runs/c1a0249f144d"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1501,
+        "completion_tokens": 699,
+        "total_tokens": 2200,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1501
+      },
+      "seconds": 7.765
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1470,
+        "completion_tokens": 887,
+        "total_tokens": 2357,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        },
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 958
+      },
+      "seconds": 8.578
+    }
+  ],
+  "receipt_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\01cd340317fb\\workspace\\workflow_runs\\c1a0249f144d\\receipt.json"
+}

@@ -1,0 +1,864 @@
+{
+  "source_sha256": "87f685ea880777c2d1286fa070bcf4d20205d86b86a9330a58e047374ebb356f",
+  "runs": [
+    {
+      "status": "pass",
+      "question_id": "11",
+      "source_sha256": "87f685ea880777c2d1286fa070bcf4d20205d86b86a9330a58e047374ebb356f",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_d0604d0fc1e31e3957e8850b\\build.json",
+      "summary": {
+        "scenarios": 2,
+        "scans": 18,
+        "failed": 0
+      },
+      "first_failure": null,
+      "cases": [
+        {
+          "name": "manual_interlock",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 1,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 1,
+                "MotorReverse": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 1,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 0,
+                "MotorReverse": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 1,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 1,
+                "ReverseButton": 1,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 0,
+                "MotorReverse": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "three_station_cycle",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 1,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 1,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 1,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 1,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 1,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 1,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 1,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 1,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 1,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 1,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 1
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 1,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "CompletionLight": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 1
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 110,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 120,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "CompletionLight": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ],
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+    },
+    {
+      "status": "pass",
+      "question_id": "11",
+      "source_sha256": "87f685ea880777c2d1286fa070bcf4d20205d86b86a9330a58e047374ebb356f",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_d0604d0fc1e31e3957e8850b\\build.json",
+      "summary": {
+        "scenarios": 2,
+        "scans": 18,
+        "failed": 0
+      },
+      "first_failure": null,
+      "cases": [
+        {
+          "name": "manual_interlock",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 1,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 1,
+                "MotorReverse": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 1,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 0,
+                "MotorReverse": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 1,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 1,
+                "ReverseButton": 1,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 0,
+                "MotorReverse": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "three_station_cycle",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 1,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 1,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 1,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 1,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 1,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 1,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 1,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 1,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 1,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 1,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 1
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 1,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "CompletionLight": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 1
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 110,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 120,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorA": 0,
+                "SensorB": 0,
+                "SensorC": 0,
+                "ButtonA": 0,
+                "ButtonB": 0,
+                "ButtonC": 0
+              },
+              "expected": {
+                "CompletionLight": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "CompletionLight": 0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ],
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+    }
+  ],
+  "note": "Exact frozen finite tests, separate fresh execution processes per run; no sparse-assertion minimization"
+}

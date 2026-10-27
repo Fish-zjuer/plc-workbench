@@ -1,0 +1,173 @@
+{
+  "question_id": "04",
+  "project_id": "d6bdff2ee0e1",
+  "session_id": "afe7d2be9731",
+  "baseline_sha256": "458f097c619796369721e3404b6a652f0a1b1dde570733c836dff61b69a3b44e",
+  "before_status": "fail",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "04",
+    "source": "candidate.st",
+    "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+    "attempts": [
+      {
+        "proposal": 1,
+        "revision": 1,
+        "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+        "model_summary": "将维护阈值常量从错误的 1.8e12 ns（30 分钟）修正为 500 小时对应的 1.8e15 ns，使 PUMP_MAINT_DUE 恰好在累计运行时达到 500 h 时置位，不再提前 1000 倍误触发；其余去抖、急停优先、累计保持逻辑不变。",
+        "assumptions": [
+          "TIME_TO_LINT 返回毫秒、LTIME 以纳秒存储（后端已说明），故毫秒×1e6 转纳秒。",
+          "DebounceTime/CycleTime 为非正值时按无效处理：CycleTime<=0 不累计，DebounceTime 由 TON 语义自然处理。",
+          "PUMP_MAINT_DUE 达到 500 h 后保持置位（不自动复位），且不影响 VFD_RUN。",
+          "初始化仅在首次调用执行一次，之后 rtAccNs 与输出保持并继续累计。"
+        ],
+        "status": "pass",
+        "first_failure": null,
+        "evidence": "workflow_runs/ced5e9c402a6/evaluation_01.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "04",
+      "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+      "behavior_tested": true,
+      "first_failure": null,
+      "summary": {
+        "scenarios": 2,
+        "scans": 325,
+        "failed": 0
+      },
+      "scope": "Additional finite duration/history checks; Q12 alarm only asserts minimum hold outside original fixed examples.",
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\4e4c92202fb01fc5ae3e\\builds\\bank_7b121cec1c8d2343638af538\\build.json",
+      "original_finite_status": "pass",
+      "original_finite_scans": 15,
+      "original_finite_summary": {
+        "scenarios": 2,
+        "scans": 15,
+        "failed": 0
+      }
+    },
+    "backend": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "b19cb4e7ec0ac18a1ccd896ac0df001b44667a68a3bdb56b9d5e8196bb63430a",
+    "run_path": "workflow_runs/ced5e9c402a6"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3107,
+        "completion_tokens": 2081,
+        "total_tokens": 5188,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 941
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 3107
+      },
+      "seconds": 14.922
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3249,
+        "completion_tokens": 1823,
+        "total_tokens": 5072,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 666
+        },
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 2737
+      },
+      "seconds": 19.641
+    }
+  ],
+  "receipt_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\d6bdff2ee0e1\\workspace\\workflow_runs\\ced5e9c402a6\\receipt.json",
+  "followup_stages": [
+    {
+      "trigger": "Expanded duration/hold checks",
+      "previous_status": "fail",
+      "previous_first_failure": {
+        "scenario": "maintenance_just_below_at_above_500_hours",
+        "scan": 2,
+        "time_ms": 1799999999,
+        "output": "PUMP_MAINT_DUE",
+        "expected": 0,
+        "actual": 1.0
+      },
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 3249,
+            "completion_tokens": 1823,
+            "total_tokens": 5072,
+            "prompt_tokens_details": {
+              "cached_tokens": 512
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 666
+            },
+            "prompt_cache_hit_tokens": 512,
+            "prompt_cache_miss_tokens": 2737
+          },
+          "seconds": 19.641
+        }
+      ],
+      "receipt": {
+        "schema": "plc-workflow-receipt-v1",
+        "status": "verified",
+        "question_id": "04",
+        "source": "candidate.st",
+        "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+        "attempts": [
+          {
+            "proposal": 1,
+            "revision": 1,
+            "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+            "model_summary": "将维护阈值常量从错误的 1.8e12 ns（30 分钟）修正为 500 小时对应的 1.8e15 ns，使 PUMP_MAINT_DUE 恰好在累计运行时达到 500 h 时置位，不再提前 1000 倍误触发；其余去抖、急停优先、累计保持逻辑不变。",
+            "assumptions": [
+              "TIME_TO_LINT 返回毫秒、LTIME 以纳秒存储（后端已说明），故毫秒×1e6 转纳秒。",
+              "DebounceTime/CycleTime 为非正值时按无效处理：CycleTime<=0 不累计，DebounceTime 由 TON 语义自然处理。",
+              "PUMP_MAINT_DUE 达到 500 h 后保持置位（不自动复位），且不影响 VFD_RUN。",
+              "初始化仅在首次调用执行一次，之后 rtAccNs 与输出保持并继续累计。"
+            ],
+            "status": "pass",
+            "first_failure": null,
+            "evidence": "workflow_runs/ced5e9c402a6/evaluation_01.json"
+          }
+        ],
+        "final_evaluation": {
+          "status": "pass",
+          "question_id": "04",
+          "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+          "behavior_tested": true,
+          "first_failure": null,
+          "summary": {
+            "scenarios": 2,
+            "scans": 325,
+            "failed": 0
+          },
+          "scope": "Additional finite duration/history checks; Q12 alarm only asserts minimum hold outside original fixed examples.",
+          "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\4e4c92202fb01fc5ae3e\\builds\\bank_7b121cec1c8d2343638af538\\build.json",
+          "original_finite_status": "pass",
+          "original_finite_scans": 15,
+          "original_finite_summary": {
+            "scenarios": 2,
+            "scans": 15,
+            "failed": 0
+          }
+        },
+        "backend": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+        "backend_fingerprint": "b19cb4e7ec0ac18a1ccd896ac0df001b44667a68a3bdb56b9d5e8196bb63430a",
+        "run_path": "workflow_runs/ced5e9c402a6"
+      }
+    }
+  ]
+}

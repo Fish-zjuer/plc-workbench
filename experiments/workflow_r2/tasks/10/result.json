@@ -1,0 +1,117 @@
+{
+  "question_id": "10",
+  "project_id": "ad8248d5a2be",
+  "session_id": "def5207616bd",
+  "baseline_sha256": "b6825c2d35cd06806d1644cc930ea40fe2ef383c84147d168f56c8cd1fb68e10",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "10",
+    "source": "candidate.st",
+    "source_sha256": "47cc4873b4db5722a433351c16d2413b39d2a1fd6daeda46b4c261175a6aa54f",
+    "attempts": [
+      {
+        "revision": 1,
+        "source_sha256": "753e98f2dde24f780464814998cf6d0da881af22cf5d1d851055bdd96520cbb8",
+        "model_summary": "修复过热保护保持计时被提前重置的问题：保护触发与保持解除需跨扫描维持同一计时起点，避免在保护有效但加热器已关时因加热器下降沿清零计时，导致 8s 时保护已解除并重新开加热器。采用独立状态：调节请求、保护锁存、保护计时，并用显式布尔运算处理相等保持。",
+        "assumptions": [
+          "温度等于设定值时题面未定义，程序保持上一次加热请求状态。",
+          "传感器有效范围按题面边界判定：小于 0.0 或大于 100.0 为故障；0.0 与 100.0 视为有效。",
+          "连续加热超过 5s 按达到 T#5S 即触发过热保护处理；保护保持达到 T#3S 后解除。",
+          "采用 TIME() 系统毫秒时间做连续加热与保护保持计时，以适配离线后端。",
+          "传感器故障时立即强制关闭加热器；故障状态不单独作为输出，仅在温度显示与加热关闭中体现。"
+        ],
+        "status": "fail",
+        "evidence": "workflow_runs/a36653d75866/evaluation_01.json"
+      },
+      {
+        "revision": 2,
+        "source_sha256": "9857d4ec613b7a491978c02252d7d7bedf13a6e20312d59bd3714c8b1f3b617f",
+        "model_summary": "修复过热保护保持计时被提前解除的问题：过热保护置位后改为单独锁存保持，只有保持满3s才解除；加热器因保护强制关闭时不重新启动。同时确保传感器故障时关闭加热器且不触发过热计时。",
+        "assumptions": [
+          "温度等于设定温度时保持上一次加热请求（题面未定义）。",
+          "有效温度范围 [0,100] 含端点；小于0或大于100为故障。",
+          "连续加热计时从加热器实际输出上升沿开始，保护强制关闭后计时清零。",
+          "过热保护置位后独立保持3s，不因加热器被强制关闭而提前解除；保持期满解除后可重新响应温度请求。",
+          "TIME() 返回系统毫秒时间戳，使用 TIME 语义进行时长计算。"
+        ],
+        "status": "fail",
+        "evidence": "workflow_runs/a36653d75866/evaluation_02.json"
+      },
+      {
+        "revision": 3,
+        "source_sha256": "47cc4873b4db5722a433351c16d2413b39d2a1fd6daeda46b4c261175a6aa54f",
+        "model_summary": "修复过热保护保持时间因计时起点在保护置位扫描后才记录而导致提前解除的问题：在置位当次扫描立即记录保持开始时间，并在保护期间锁定为关断且满3s后才解除。",
+        "assumptions": [
+          "温度等于设定值时保持前一扫描的加热请求，因为题面未定义该情形。",
+          "过热保护保持满3s后立即解除，并在下一扫描根据温度比较重新决定是否加热。",
+          "加热器连续工作计时以 HeaterOutput 实际为 TRUE 的持续时间计，故障或保护导致关断时计时清零。",
+          "时间基准使用 TIME()，与离线测试的仿真时间语义一致；不构成 CODESYS 或形式化正确性证明。"
+        ],
+        "status": "pass",
+        "evidence": "workflow_runs/a36653d75866/evaluation_03.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "10",
+      "source_sha256": "47cc4873b4db5722a433351c16d2413b39d2a1fd6daeda46b4c261175a6aa54f",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_d2362fa2ec83eaa6cff86f9a\\build.json",
+      "summary": {
+        "scenarios": 4,
+        "scans": 8,
+        "failed": 0
+      },
+      "first_failure": null,
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+    },
+    "backend": "STruC++ 0.7.0 + g++; not CODESYS",
+    "run_path": "workflow_runs/a36653d75866"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3154,
+        "completion_tokens": 1850,
+        "total_tokens": 5004,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 3154
+      },
+      "seconds": 12.609
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3233,
+        "completion_tokens": 1529,
+        "total_tokens": 4762,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        },
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 2721
+      },
+      "seconds": 10.672
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2977,
+        "completion_tokens": 1410,
+        "total_tokens": 4387,
+        "prompt_tokens_details": {
+          "cached_tokens": 512
+        },
+        "prompt_cache_hit_tokens": 512,
+        "prompt_cache_miss_tokens": 2465
+      },
+      "seconds": 10.547
+    }
+  ],
+  "receipt_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\ad8248d5a2be\\workspace\\workflow_runs\\a36653d75866\\receipt.json"
+}

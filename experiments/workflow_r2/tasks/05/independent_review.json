@@ -1,0 +1,120 @@
+{
+  "question_id": "05",
+  "source_sha256": "4f3823797ceffd49189405b75ed1a9fae04c574b5ab9c6495464d426b00ac9b1",
+  "reviewer_model": "deepseek-flash",
+  "findings": [
+    {
+      "proposal": {
+        "id": "REV-01",
+        "title": "E-stop while init incomplete may leave init timer state inconsistent, delaying/altering 5s inhibition",
+        "basis": "Req 2: 5s inhibition after power-up; Req 4: E-stop priority over initialization, but no requirement that E-stop cancels init. Candidate skips fbInitTimer call while E-stop active, so timer freezes rather than cancels; after E-stop releases, remaining init time continues. 题面未明确E-stop是否暂停/取消初始化计时，存在歧义。",
+        "scope": "ambiguous",
+        "trace": [
+          {
+            "time_ms": 0,
+            "inputs": {
+              "Gap_Exceeded": 0,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            }
+          },
+          {
+            "time_ms": 3000,
+            "inputs": {
+              "Gap_Exceeded": 0,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            }
+          },
+          {
+            "time_ms": 3000,
+            "inputs": {
+              "Gap_Exceeded": 0,
+              "Weld_E_Stop_NC": 0,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 0
+            }
+          },
+          {
+            "time_ms": 5000,
+            "inputs": {
+              "Gap_Exceeded": 0,
+              "Weld_E_Stop_NC": 0,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 0
+            }
+          },
+          {
+            "time_ms": 5000,
+            "inputs": {
+              "Gap_Exceeded": 0,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            }
+          },
+          {
+            "time_ms": 7000,
+            "inputs": {
+              "Gap_Exceeded": 0,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            }
+          },
+          {
+            "time_ms": 7001,
+            "inputs": {
+              "Gap_Exceeded": 0,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 0
+            }
+          }
+        ]
+      },
+      "status": "invalid_proposal",
+      "message": "Invalid time"
+    }
+  ],
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1201,
+        "completion_tokens": 506,
+        "total_tokens": 1707,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1201
+      },
+      "seconds": 7.25
+    }
+  ],
+  "scope": "Fresh review without tests or author history. Mismatch is not a confirmed requirement violation; separate adjudication required."
+}

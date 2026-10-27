@@ -1,0 +1,152 @@
+{
+  "id": "11",
+  "title": "Automated Production Line Control",
+  "difficulty": "medium",
+  "project_id": "af7002ec4414",
+  "session_id": "dfb95514f1fc",
+  "session_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\af7002ec4414\\sessions\\dfb95514f1fc",
+  "model": "deepseek-flash",
+  "agent_status": "idle",
+  "versions": 1,
+  "answer": "已完成第 11 题（0 次返修）。\n\n**交付**：`candidate.st`，主功能块 `Q11`，另含 `TYPE Q11_STATE`（内部状态枚举）。接口严格照题面：9 个 BOOL 输入 + 3 个 BOOL 输出，名称/类型/方向未改；题面无 ARRAY[*] 或 VARIANT，故不存在替换接口的问题。\n\n**实现要点**\n- 手动（Mode=0）：`ForwardButton`/`ReverseButton` 上升沿驱动，正反转互锁；同时按下时两者都不输出，末尾另有一道强制互锁。\n- 自动（Mode=1）：状态机 IDLE→AT_A→MOVE_AB→AT_B→MOVE_BC→AT_C→DONE。到 B、到 C 传感器置位时停正转；DONE 中 `SensorC` 仍检测→`CompletionLight` 亮，产品取走→灯灭并回 IDLE。\n- 手动/自动切换时按传感器位置重新对齐状态，避免带着旧状态运行。\n\n**实际执行证据**\n- `plc_bank_test(source=\"candidate.st\", question_id=\"11\")` → `pass`，2 场景 / 18 扫描 / 0 失败（行为已测）。\n- `plc_compile_unit(candidate.st)` → 编译出目标文件成功；该工具明确 `behavior_tested:false`、`codesys_compile:not_executed`。\n\n**题面未定义、我自行决定的细节**（可能与其他参考实现不同，非缺陷）\n1. 三个\"加工完成按钮\"按上升沿触发（长按不会重复触发）。\n2. 手动模式下按钮为点动语义：按下才有输出，松开即停；未定义自保持，故不实现。\n3. 自动模式 `SensorA` 一旦丢失（AT_A 状态）即回 IDLE，题面未提此异常路径。\n4. 手动模式不点亮 `CompletionLight`，且会把状态机复位到 IDLE。\n5. 未定义 C 工位完成后需人工复位还是自动循环：按题面\"取走后灯灭\"实现为取走即回初始，可继续下一件。\n\n**有限结论**：这是 STruC++ + g++ 离线编译与稀疏有限场景检查的结果，不等于 CODESYS 编译、形式化验证或实体 PLC 验证；题库检查只覆盖少量扫描序列，其他未测路径（如模式中途切换、传感器抖动）未获验证。",
+  "seconds": 53.5,
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2723,
+        "completion_tokens": 64,
+        "total_tokens": 2787,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 2595
+      },
+      "seconds": 5.719
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4035,
+        "completion_tokens": 174,
+        "total_tokens": 4209,
+        "prompt_tokens_details": {
+          "cached_tokens": 2688
+        },
+        "prompt_cache_hit_tokens": 2688,
+        "prompt_cache_miss_tokens": 1347
+      },
+      "seconds": 6.063
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4451,
+        "completion_tokens": 1475,
+        "total_tokens": 5926,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 4323
+      },
+      "seconds": 10.766
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 7776,
+        "completion_tokens": 67,
+        "total_tokens": 7843,
+        "prompt_tokens_details": {
+          "cached_tokens": 5888
+        },
+        "prompt_cache_hit_tokens": 5888,
+        "prompt_cache_miss_tokens": 1888
+      },
+      "seconds": 5.516
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 8043,
+        "completion_tokens": 61,
+        "total_tokens": 8104,
+        "prompt_tokens_details": {
+          "cached_tokens": 7808
+        },
+        "prompt_cache_hit_tokens": 7808,
+        "prompt_cache_miss_tokens": 235
+      },
+      "seconds": 5.906
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 8284,
+        "completion_tokens": 160,
+        "total_tokens": 8444,
+        "prompt_tokens_details": {
+          "cached_tokens": 8064
+        },
+        "prompt_cache_hit_tokens": 8064,
+        "prompt_cache_miss_tokens": 220
+      },
+      "seconds": 6.563
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 8603,
+        "completion_tokens": 550,
+        "total_tokens": 9153,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 8475
+      },
+      "seconds": 8.718
+    }
+  ],
+  "tool_counts": {
+    "read_attachment": 1,
+    "list_files": 1,
+    "update_plan": 2,
+    "write_file": 1,
+    "plc_bank_test": 1,
+    "plc_compile_unit": 1
+  },
+  "first": {
+    "status": "pass",
+    "question_id": "11",
+    "source_sha256": "87f685ea880777c2d1286fa070bcf4d20205d86b86a9330a58e047374ebb356f",
+    "behavior_tested": true,
+    "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_d0604d0fc1e31e3957e8850b\\build.json",
+    "summary": {
+      "scenarios": 2,
+      "scans": 18,
+      "failed": 0
+    },
+    "first_failure": null,
+    "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof",
+    "full_evidence_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\deepseek_20\\tasks\\11\\candidate_01.evaluation.json"
+  },
+  "final": {
+    "status": "pass",
+    "question_id": "11",
+    "source_sha256": "87f685ea880777c2d1286fa070bcf4d20205d86b86a9330a58e047374ebb356f",
+    "behavior_tested": true,
+    "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_d0604d0fc1e31e3957e8850b\\build.json",
+    "summary": {
+      "scenarios": 2,
+      "scans": 18,
+      "failed": 0
+    },
+    "first_failure": null,
+    "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof",
+    "full_evidence_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\deepseek_20\\tasks\\11\\final.evaluation.json"
+  },
+  "final_source_sha256": "87f685ea880777c2d1286fa070bcf4d20205d86b86a9330a58e047374ebb356f"
+}

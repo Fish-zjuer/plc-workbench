@@ -1,0 +1,704 @@
+{
+  "question_id": "15",
+  "source_sha256": "e0754b46ee37539056626d7875786d56e375ea00234e46bcfa13487a6338bd92",
+  "reviewer_model": "deepseek-flash",
+  "findings": [
+    {
+      "proposal": {
+        "id": "REV-01",
+        "title": "急停期间自动输出被清零但保持步序状态机保留（不清步）",
+        "basis": "题面要求“急停信号触发时所有设备立即停止”，未明确要求急停后自动流程是否需要复位；候选在 NOT estop 分支将 autoStep 置 0，恢复 estop 后需再次 autoStart 才能重启。此为对“立即停止所有设备”的实现选择，但可能构成对“急停仅停止设备、流程状态应保持可恢复”的歧义。",
+        "scope": "ambiguous",
+        "trace": [
+          {
+            "time_ms": 0,
+            "inputs": {
+              "estop": 1,
+              "opeMode": 1,
+              "valveAStart": 0,
+              "valveBStart": 0,
+              "valveCStart": 0,
+              "valveDStart": 0,
+              "mixMotorStart": 0,
+              "autoStart": 1,
+              "processMode": 0,
+              "levelSensor": 0,
+              "mixMotorComplete": 0
+            },
+            "expected": {
+              "valveARun": 1,
+              "valveBRun": 0,
+              "valveCRun": 0,
+              "valveDRun": 0,
+              "mixMotorRun": 0
+            }
+          },
+          {
+            "time_ms": 100,
+            "inputs": {
+              "estop": 0,
+              "opeMode": 1,
+              "valveAStart": 0,
+              "valveBStart": 0,
+              "valveCStart": 0,
+              "valveDStart": 0,
+              "mixMotorStart": 0,
+              "autoStart": 1,
+              "processMode": 0,
+              "levelSensor": 60,
+              "mixMotorComplete": 0
+            },
+            "expected": {
+              "valveARun": 0,
+              "valveBRun": 0,
+              "valveCRun": 0,
+              "valveDRun": 0,
+              "mixMotorRun": 0
+            }
+          },
+          {
+            "time_ms": 200,
+            "inputs": {
+              "estop": 1,
+              "opeMode": 1,
+              "valveAStart": 0,
+              "valveBStart": 0,
+              "valveCStart": 0,
+              "valveDStart": 0,
+              "mixMotorStart": 0,
+              "autoStart": 0,
+              "processMode": 0,
+              "levelSensor": 60,
+              "mixMotorComplete": 0
+            },
+            "expected": {
+              "valveARun": 0,
+              "valveBRun": 0,
+              "valveCRun": 0,
+              "valveDRun": 0,
+              "mixMotorRun": 0
+            }
+          }
+        ]
+      },
+      "status": "needs_requirement_clarification",
+      "mismatches": [
+        [],
+        []
+      ],
+      "runs": [
+        {
+          "name": "REV-01",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 1,
+                "processMode": 0,
+                "levelSensor": 0,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveARun": 1,
+                "valveBRun": 0,
+                "valveCRun": 0,
+                "valveDRun": 0,
+                "mixMotorRun": 0
+              },
+              "actual": {
+                "valveARun": 1.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "estop": 0,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 1,
+                "processMode": 0,
+                "levelSensor": 60,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveARun": 0,
+                "valveBRun": 0,
+                "valveCRun": 0,
+                "valveDRun": 0,
+                "mixMotorRun": 0
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 200,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 0,
+                "processMode": 0,
+                "levelSensor": 60,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveARun": 0,
+                "valveBRun": 0,
+                "valveCRun": 0,
+                "valveDRun": 0,
+                "mixMotorRun": 0
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "REV-01",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 1,
+                "processMode": 0,
+                "levelSensor": 0,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveARun": 1,
+                "valveBRun": 0,
+                "valveCRun": 0,
+                "valveDRun": 0,
+                "mixMotorRun": 0
+              },
+              "actual": {
+                "valveARun": 1.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "estop": 0,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 1,
+                "processMode": 0,
+                "levelSensor": 60,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveARun": 0,
+                "valveBRun": 0,
+                "valveCRun": 0,
+                "valveDRun": 0,
+                "mixMotorRun": 0
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 200,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 0,
+                "processMode": 0,
+                "levelSensor": 60,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveARun": 0,
+                "valveBRun": 0,
+                "valveCRun": 0,
+                "valveDRun": 0,
+                "mixMotorRun": 0
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "proposal": {
+        "id": "REV-02",
+        "title": "步骤30分支切换到40依赖下一扫描，起搅与processMode=FALSE流程衔接存在一扫描空缺",
+        "basis": "题面要求 processMode=false 时在80cm关B后启动搅拌电机；候选需在步骤30判定后进入40才置 mixMotorRun=TRUE，若在 levelSensor 达到80的同一次调用观察输出，mixMotorRun 仍为 FALSE，是否允许一扫描延迟属歧义。",
+        "scope": "ambiguous",
+        "trace": [
+          {
+            "time_ms": 0,
+            "inputs": {
+              "estop": 1,
+              "opeMode": 1,
+              "valveAStart": 0,
+              "valveBStart": 0,
+              "valveCStart": 0,
+              "valveDStart": 0,
+              "mixMotorStart": 0,
+              "autoStart": 1,
+              "processMode": 0,
+              "levelSensor": 0,
+              "mixMotorComplete": 0
+            },
+            "expected": {
+              "valveARun": 1
+            }
+          },
+          {
+            "time_ms": 100,
+            "inputs": {
+              "estop": 1,
+              "opeMode": 1,
+              "valveAStart": 0,
+              "valveBStart": 0,
+              "valveCStart": 0,
+              "valveDStart": 0,
+              "mixMotorStart": 0,
+              "autoStart": 0,
+              "processMode": 0,
+              "levelSensor": 80,
+              "mixMotorComplete": 0
+            },
+            "expected": {
+              "valveBRun": 1,
+              "valveARun": 0
+            }
+          },
+          {
+            "time_ms": 200,
+            "inputs": {
+              "estop": 1,
+              "opeMode": 1,
+              "valveAStart": 0,
+              "valveBStart": 0,
+              "valveCStart": 0,
+              "valveDStart": 0,
+              "mixMotorStart": 0,
+              "autoStart": 0,
+              "processMode": 0,
+              "levelSensor": 80,
+              "mixMotorComplete": 0
+            },
+            "expected": {
+              "valveBRun": 0,
+              "mixMotorRun": 1
+            }
+          },
+          {
+            "time_ms": 300,
+            "inputs": {
+              "estop": 1,
+              "opeMode": 1,
+              "valveAStart": 0,
+              "valveBStart": 0,
+              "valveCStart": 0,
+              "valveDStart": 0,
+              "mixMotorStart": 0,
+              "autoStart": 0,
+              "processMode": 0,
+              "levelSensor": 80,
+              "mixMotorComplete": 0
+            },
+            "expected": {
+              "valveBRun": 0,
+              "mixMotorRun": 1
+            }
+          }
+        ]
+      },
+      "status": "needs_requirement_clarification",
+      "mismatches": [
+        [
+          {
+            "scan": 2,
+            "output": "mixMotorRun",
+            "expected": 1,
+            "actual": 0.0
+          },
+          {
+            "scan": 3,
+            "output": "mixMotorRun",
+            "expected": 1,
+            "actual": 0.0
+          }
+        ],
+        [
+          {
+            "scan": 2,
+            "output": "mixMotorRun",
+            "expected": 1,
+            "actual": 0.0
+          },
+          {
+            "scan": 3,
+            "output": "mixMotorRun",
+            "expected": 1,
+            "actual": 0.0
+          }
+        ]
+      ],
+      "runs": [
+        {
+          "name": "REV-02",
+          "status": "fail",
+          "first_failure": {
+            "scan": 2,
+            "time_ms": 200,
+            "output": "mixMotorRun",
+            "expected": 1,
+            "actual": 0.0
+          },
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 1,
+                "processMode": 0,
+                "levelSensor": 0,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveARun": 1
+              },
+              "actual": {
+                "valveARun": 1.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 0,
+                "processMode": 0,
+                "levelSensor": 80,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveBRun": 1,
+                "valveARun": 0
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 1.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 200,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 0,
+                "processMode": 0,
+                "levelSensor": 80,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveBRun": 0,
+                "mixMotorRun": 1
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": [
+                {
+                  "output": "mixMotorRun",
+                  "expected": 1,
+                  "actual": 0.0
+                }
+              ]
+            },
+            {
+              "time_ms": 300,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 0,
+                "processMode": 0,
+                "levelSensor": 80,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveBRun": 0,
+                "mixMotorRun": 1
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": [
+                {
+                  "output": "mixMotorRun",
+                  "expected": 1,
+                  "actual": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "REV-02",
+          "status": "fail",
+          "first_failure": {
+            "scan": 2,
+            "time_ms": 200,
+            "output": "mixMotorRun",
+            "expected": 1,
+            "actual": 0.0
+          },
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 1,
+                "processMode": 0,
+                "levelSensor": 0,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveARun": 1
+              },
+              "actual": {
+                "valveARun": 1.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 0,
+                "processMode": 0,
+                "levelSensor": 80,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveBRun": 1,
+                "valveARun": 0
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 1.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 200,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 0,
+                "processMode": 0,
+                "levelSensor": 80,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveBRun": 0,
+                "mixMotorRun": 1
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": [
+                {
+                  "output": "mixMotorRun",
+                  "expected": 1,
+                  "actual": 0.0
+                }
+              ]
+            },
+            {
+              "time_ms": 300,
+              "inputs": {
+                "estop": 1,
+                "opeMode": 1,
+                "valveAStart": 0,
+                "valveBStart": 0,
+                "valveCStart": 0,
+                "valveDStart": 0,
+                "mixMotorStart": 0,
+                "autoStart": 0,
+                "processMode": 0,
+                "levelSensor": 80,
+                "mixMotorComplete": 0
+              },
+              "expected": {
+                "valveBRun": 0,
+                "mixMotorRun": 1
+              },
+              "actual": {
+                "valveARun": 0.0,
+                "valveBRun": 0.0,
+                "valveCRun": 0.0,
+                "valveDRun": 0.0,
+                "mixMotorRun": 0.0
+              },
+              "violations": [
+                {
+                  "output": "mixMotorRun",
+                  "expected": 1,
+                  "actual": 0.0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2562,
+        "completion_tokens": 920,
+        "total_tokens": 3482,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2562
+      },
+      "seconds": 9.094
+    }
+  ],
+  "scope": "Fresh review without tests or author history. Mismatch is not a confirmed requirement violation; separate adjudication required."
+}

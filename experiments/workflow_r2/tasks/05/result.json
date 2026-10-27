@@ -1,0 +1,106 @@
+{
+  "question_id": "05",
+  "project_id": "f186923f5580",
+  "session_id": "253e8d34dbf3",
+  "baseline_sha256": "b40e7d1a4472c44505f32fc10164e1397840300e9eee3808ada8c65325979de5",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "05",
+    "source": "candidate.st",
+    "source_sha256": "4f3823797ceffd49189405b75ed1a9fae04c574b5ab9c6495464d426b00ac9b1",
+    "attempts": [
+      {
+        "revision": 1,
+        "source_sha256": "00275720612fc11390880f825ac04eb64eebccce278cf890049a3407b85b049c",
+        "model_summary": "实现5秒上电抑制的TON计时、抑制结束后按DebounceTime对Gap_Exceeded去抖报警，急停优先立即清除报警和去抖并重新触发上电抑制。",
+        "assumptions": [
+          "DebounceTime 为正；若为0，TON在PT=0时立即满足。",
+          "Weld_Soft_Start_Active在上电后保持TRUE 5秒（模拟时间），急停期间为FALSE，急停释放后重新开始5秒抑制。",
+          "去抖仅在抑制结束后才计时，抑制期间不计时。",
+          "Gap_Exceeded变为FALSE时立即关闭报警并清零去抖计时。"
+        ],
+        "status": "fail",
+        "evidence": "workflow_runs/0908510834e8/evaluation_01.json"
+      },
+      {
+        "revision": 2,
+        "status": "rejected_packaging",
+        "message": "Expecting ',' delimiter: line 1 column 2684 (char 2683)"
+      },
+      {
+        "revision": 3,
+        "source_sha256": "4f3823797ceffd49189405b75ed1a9fae04c574b5ab9c6495464d426b00ac9b1",
+        "model_summary": "修订急停恢复与初始化抑制逻辑：急停优先立即清除报警和去抖；但恢复后不得重新触发5秒上电抑制或清除已完成的初始化，除非确实处于首次上电初始化。保持正常监控去抖。",
+        "assumptions": [
+          "Weld_E_Stop_NC 恢复为 TRUE 后，若上电初始化已完成，则保持已完成状态，不重新进入 5 秒抑制。",
+          "急停期间 OOperator_Alert 与 Weld_Soft_Start_Active 均立即为 FALSE，且去抖计时被清除。",
+          "DebounceTime 必须为正；题面未要求本块对非正值单独报警或钳位。"
+        ],
+        "status": "pass",
+        "evidence": "workflow_runs/0908510834e8/evaluation_03.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "05",
+      "source_sha256": "4f3823797ceffd49189405b75ed1a9fae04c574b5ab9c6495464d426b00ac9b1",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_1b35cb55d1529df389eae7d7\\build.json",
+      "summary": {
+        "scenarios": 1,
+        "scans": 9,
+        "failed": 0
+      },
+      "first_failure": null,
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+    },
+    "backend": "STruC++ 0.7.0 + g++; not CODESYS",
+    "run_path": "workflow_runs/0908510834e8"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2187,
+        "completion_tokens": 729,
+        "total_tokens": 2916,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2187
+      },
+      "seconds": 8.719
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2452,
+        "completion_tokens": 898,
+        "total_tokens": 3350,
+        "prompt_tokens_details": {
+          "cached_tokens": 640
+        },
+        "prompt_cache_hit_tokens": 640,
+        "prompt_cache_miss_tokens": 1812
+      },
+      "seconds": 9.281
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2469,
+        "completion_tokens": 672,
+        "total_tokens": 3141,
+        "prompt_tokens_details": {
+          "cached_tokens": 2048
+        },
+        "prompt_cache_hit_tokens": 2048,
+        "prompt_cache_miss_tokens": 421
+      },
+      "seconds": 8.391
+    }
+  ],
+  "receipt_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\f186923f5580\\workspace\\workflow_runs\\0908510834e8\\receipt.json"
+}

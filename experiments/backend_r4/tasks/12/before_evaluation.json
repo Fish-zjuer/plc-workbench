@@ -1,0 +1,569 @@
+{
+  "status": "fail",
+  "question_id": "12",
+  "source_sha256": "00a3a6cd171b04675cb5b328b79a49700acfcd4a48e0c9f98c9be204cd8f3bbd",
+  "behavior_tested": true,
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\4e4c92202fb01fc5ae3e\\builds\\bank_3dd73e83227da025eaf8556c\\build.json",
+  "summary": {
+    "scenarios": 2,
+    "scans": 21,
+    "failed": 1
+  },
+  "first_failure": {
+    "scenario": "hold_validity_and_runtime",
+    "scan": 4,
+    "time_ms": 510,
+    "output": "THICKNESS_ALARM",
+    "expected": 0,
+    "actual": 1
+  },
+  "cases": [
+    {
+      "name": "hold_validity_and_runtime",
+      "status": "fail",
+      "first_failure": {
+        "scan": 4,
+        "time_ms": 510,
+        "output": "THICKNESS_ALARM",
+        "expected": 0,
+        "actual": 1
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 1,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": 0,
+            "Slab_Fault_Counter": 0,
+            "Slab_Runtime_Accumulator": 10
+          },
+          "actual": {
+            "THICKNESS_ALARM": 0,
+            "Slab_Fault_Counter": 0,
+            "Slab_Runtime_Accumulator": 10.0,
+            "Slab_Fault_History[0]": 0,
+            "Slab_Fault_History[1]": 0,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "THICKNESS_FAULT": 1,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 1,
+            "FaultTimestamp": 10,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 1,
+            "Slab_Fault_History[0]": 10
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 1,
+            "Slab_Runtime_Accumulator": 10.0,
+            "Slab_Fault_History[0]": 10,
+            "Slab_Fault_History[1]": 0,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 1,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": 1
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 1,
+            "Slab_Runtime_Accumulator": 20.0,
+            "Slab_Fault_History[0]": 10,
+            "Slab_Fault_History[1]": 0,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 509,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 1,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": 1
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 1,
+            "Slab_Runtime_Accumulator": 30.0,
+            "Slab_Fault_History[0]": 10,
+            "Slab_Fault_History[1]": 0,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 1,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": 0
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 1,
+            "Slab_Runtime_Accumulator": 40.0,
+            "Slab_Fault_History[0]": 10,
+            "Slab_Fault_History[1]": 0,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": [
+            {
+              "output": "THICKNESS_ALARM",
+              "expected": 0,
+              "actual": 1
+            }
+          ]
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "THICKNESS_FAULT": 1,
+            "THICKNESS_SIGNAL_VALID": 0,
+            "CUTTING_RUN": 1,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": 0,
+            "Slab_Fault_Counter": 1
+          },
+          "actual": {
+            "THICKNESS_ALARM": 0,
+            "Slab_Fault_Counter": 1,
+            "Slab_Runtime_Accumulator": 40.0,
+            "Slab_Fault_History[0]": 10,
+            "Slab_Fault_History[1]": 0,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "history_retains_newest_five",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {
+            "Slab_Fault_Counter": 0
+          },
+          "actual": {
+            "THICKNESS_ALARM": 0,
+            "Slab_Fault_Counter": 0,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 0,
+            "Slab_Fault_History[1]": 0,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "THICKNESS_FAULT": 1,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 100,
+            "CycleTime": 1
+          },
+          "expected": {
+            "Slab_Fault_Counter": 1,
+            "Slab_Fault_History[0]": 100
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 1,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 100,
+            "Slab_Fault_History[1]": 0,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 21,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {},
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 1,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 100,
+            "Slab_Fault_History[1]": 0,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "THICKNESS_FAULT": 1,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 200,
+            "CycleTime": 1
+          },
+          "expected": {
+            "Slab_Fault_Counter": 2,
+            "Slab_Fault_History[0]": 200,
+            "Slab_Fault_History[1]": 100
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 2,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 200,
+            "Slab_Fault_History[1]": 100,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 41,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {},
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 2,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 200,
+            "Slab_Fault_History[1]": 100,
+            "Slab_Fault_History[2]": 0,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "THICKNESS_FAULT": 1,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 300,
+            "CycleTime": 1
+          },
+          "expected": {
+            "Slab_Fault_Counter": 3,
+            "Slab_Fault_History[0]": 300,
+            "Slab_Fault_History[1]": 200,
+            "Slab_Fault_History[2]": 100
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 3,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 300,
+            "Slab_Fault_History[1]": 200,
+            "Slab_Fault_History[2]": 100,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 61,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {},
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 3,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 300,
+            "Slab_Fault_History[1]": 200,
+            "Slab_Fault_History[2]": 100,
+            "Slab_Fault_History[3]": 0,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "THICKNESS_FAULT": 1,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 400,
+            "CycleTime": 1
+          },
+          "expected": {
+            "Slab_Fault_Counter": 4,
+            "Slab_Fault_History[0]": 400,
+            "Slab_Fault_History[1]": 300,
+            "Slab_Fault_History[2]": 200,
+            "Slab_Fault_History[3]": 100
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 4,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 400,
+            "Slab_Fault_History[1]": 300,
+            "Slab_Fault_History[2]": 200,
+            "Slab_Fault_History[3]": 100,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 81,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {},
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 4,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 400,
+            "Slab_Fault_History[1]": 300,
+            "Slab_Fault_History[2]": 200,
+            "Slab_Fault_History[3]": 100,
+            "Slab_Fault_History[4]": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "THICKNESS_FAULT": 1,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 500,
+            "CycleTime": 1
+          },
+          "expected": {
+            "Slab_Fault_Counter": 5,
+            "Slab_Fault_History[0]": 500,
+            "Slab_Fault_History[1]": 400,
+            "Slab_Fault_History[2]": 300,
+            "Slab_Fault_History[3]": 200,
+            "Slab_Fault_History[4]": 100
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 5,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 500,
+            "Slab_Fault_History[1]": 400,
+            "Slab_Fault_History[2]": 300,
+            "Slab_Fault_History[3]": 200,
+            "Slab_Fault_History[4]": 100
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 101,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {},
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 5,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 500,
+            "Slab_Fault_History[1]": 400,
+            "Slab_Fault_History[2]": 300,
+            "Slab_Fault_History[3]": 200,
+            "Slab_Fault_History[4]": 100
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "THICKNESS_FAULT": 1,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 600,
+            "CycleTime": 1
+          },
+          "expected": {
+            "Slab_Fault_Counter": 6,
+            "Slab_Fault_History[0]": 600,
+            "Slab_Fault_History[1]": 500,
+            "Slab_Fault_History[2]": 400,
+            "Slab_Fault_History[3]": 300,
+            "Slab_Fault_History[4]": 200
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 6,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 600,
+            "Slab_Fault_History[1]": 500,
+            "Slab_Fault_History[2]": 400,
+            "Slab_Fault_History[3]": 300,
+            "Slab_Fault_History[4]": 200
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 121,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {},
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 6,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 600,
+            "Slab_Fault_History[1]": 500,
+            "Slab_Fault_History[2]": 400,
+            "Slab_Fault_History[3]": 300,
+            "Slab_Fault_History[4]": 200
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "THICKNESS_FAULT": 1,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 700,
+            "CycleTime": 1
+          },
+          "expected": {
+            "Slab_Fault_Counter": 7,
+            "Slab_Fault_History[0]": 700,
+            "Slab_Fault_History[1]": 600,
+            "Slab_Fault_History[2]": 500,
+            "Slab_Fault_History[3]": 400,
+            "Slab_Fault_History[4]": 300
+          },
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 7,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 700,
+            "Slab_Fault_History[1]": 600,
+            "Slab_Fault_History[2]": 500,
+            "Slab_Fault_History[3]": 400,
+            "Slab_Fault_History[4]": 300
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 141,
+          "inputs": {
+            "THICKNESS_FAULT": 0,
+            "THICKNESS_SIGNAL_VALID": 1,
+            "CUTTING_RUN": 0,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {},
+          "actual": {
+            "THICKNESS_ALARM": 1,
+            "Slab_Fault_Counter": 7,
+            "Slab_Runtime_Accumulator": 0.0,
+            "Slab_Fault_History[0]": 700,
+            "Slab_Fault_History[1]": 600,
+            "Slab_Fault_History[2]": 500,
+            "Slab_Fault_History[3]": 400,
+            "Slab_Fault_History[4]": 300
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+}

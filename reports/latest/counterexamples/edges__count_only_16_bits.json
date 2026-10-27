@@ -1,0 +1,103 @@
+{
+  "schema": "plc-probe-counterexample-v1",
+  "profile": "edges",
+  "source_sha256": "fa62442fdd2cc73f8dbec912078abf60cbcc2bb40da69747e760e54ced8a2c5f",
+  "monitor_version": "1",
+  "target_property": "edges.rising_count",
+  "original_failure_prefix_scans": 2,
+  "minimized_scans": 2,
+  "candidate_replays": 2,
+  "minimality": "deletion reduction under an explicit replay budget; not guaranteed globally shortest",
+  "scenario": {
+    "name": "bit_16_rise_hold_fall_minimized",
+    "family": "minimized",
+    "trace": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "value": 0
+        }
+      },
+      {
+        "time_ms": 100,
+        "inputs": {
+          "value": 65536
+        }
+      }
+    ]
+  },
+  "reproduced": true,
+  "result": {
+    "name": "bit_16_rise_hold_fall_minimized",
+    "family": "minimized",
+    "status": "fail",
+    "first_failure": {
+      "scan": 1,
+      "time_ms": 100,
+      "property": "edges.rising_count",
+      "description": "上升沿计数应包含全部 32 位。",
+      "output": "noOfRisingBits",
+      "expected": 1,
+      "actual": 0
+    },
+    "rows": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "value": 0
+        },
+        "actual": {
+          "hasChanged": 0,
+          "hasRisingEdges": 0,
+          "risingBits": 0,
+          "noOfRisingBits": 0,
+          "hasFallingEdges": 0,
+          "fallingBits": 0,
+          "noOfFallingBits": 0
+        },
+        "expected": {},
+        "violations": []
+      },
+      {
+        "time_ms": 100,
+        "inputs": {
+          "value": 65536
+        },
+        "actual": {
+          "hasChanged": 1,
+          "hasRisingEdges": 1,
+          "risingBits": 65536,
+          "noOfRisingBits": 0,
+          "hasFallingEdges": 0,
+          "fallingBits": 0,
+          "noOfFallingBits": 0
+        },
+        "expected": {
+          "hasChanged": 1,
+          "hasRisingEdges": 1,
+          "risingBits": 65536,
+          "noOfRisingBits": 1,
+          "hasFallingEdges": 0,
+          "fallingBits": 0,
+          "noOfFallingBits": 0
+        },
+        "violations": [
+          {
+            "property": "edges.rising_count",
+            "description": "上升沿计数应包含全部 32 位。",
+            "output": "noOfRisingBits",
+            "expected": 1,
+            "actual": 0
+          }
+        ]
+      }
+    ]
+  },
+  "evidence_scope": {
+    "execution": "Actual ST source transpiled by STruC++ 0.7.0 and executed as native C++",
+    "evaluation": "Finite scan-sequence tests against independent handwritten contracts",
+    "codesys_compile": "not_executed",
+    "formal_verification": "not_executed",
+    "hardware_validation": "not_executed"
+  }
+}

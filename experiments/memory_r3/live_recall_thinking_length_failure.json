@@ -1,0 +1,57 @@
+{
+  "project_id": "01d2172a834d",
+  "session_id": "b98530f1dd96",
+  "configuration": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-flash",
+    "key_env": "PLC_AGENT_API_KEY",
+    "tool_mode": "native",
+    "stream": true,
+    "context_window": 16000,
+    "max_output_tokens": 2048,
+    "max_steps": 6,
+    "timeout": 120,
+    "review_model": "",
+    "extra_body": {
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "low"
+    },
+    "compact_keep_turns": 2,
+    "compact_target_ratio": 0.5,
+    "compact_summary_tokens": 2048
+  },
+  "before_context": {
+    "estimated_tokens": 11896,
+    "window": 16000,
+    "ratio": 0.7435,
+    "compactions": 0,
+    "provider_usage": {},
+    "model_calls_this_turn": 0,
+    "model_call_limit": 6
+  },
+  "all_passed": false,
+  "error": "模型响应未完成（length），未执行任何工具；请调整输出上限或任务范围",
+  "metrics": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 5130,
+        "completion_tokens": 2048,
+        "total_tokens": 7178,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1394
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 5130
+      },
+      "seconds": 16.172
+    }
+  ],
+  "logical_calls": 1,
+  "limitation": "One constructed long-history recall sample using a real service; not a general memory reliability estimate."
+}

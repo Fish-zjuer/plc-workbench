@@ -1,0 +1,1435 @@
+{
+  "results": [
+    {
+      "question_id": "05",
+      "source_sha256": "4f3823797ceffd49189405b75ed1a9fae04c574b5ab9c6495464d426b00ac9b1",
+      "reviewer_model": "deepseek-flash",
+      "findings": [
+        {
+          "proposal": {
+            "id": "REV-01",
+            "title": "E-stop while init incomplete may leave init timer state inconsistent, delaying/altering 5s inhibition",
+            "basis": "Req 2: 5s inhibition after power-up; Req 4: E-stop priority over initialization, but no requirement that E-stop cancels init. Candidate skips fbInitTimer call while E-stop active, so timer freezes rather than cancels; after E-stop releases, remaining init time continues. 题面未明确E-stop是否暂停/取消初始化计时，存在歧义。",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "Gap_Exceeded": 0,
+                  "Weld_E_Stop_NC": 1,
+                  "DebounceTime": 100
+                },
+                "expected": {
+                  "Operator_Alert": 0,
+                  "Weld_Soft_Start_Active": 1
+                }
+              },
+              {
+                "time_ms": 3000,
+                "inputs": {
+                  "Gap_Exceeded": 0,
+                  "Weld_E_Stop_NC": 1,
+                  "DebounceTime": 100
+                },
+                "expected": {
+                  "Operator_Alert": 0,
+                  "Weld_Soft_Start_Active": 1
+                }
+              },
+              {
+                "time_ms": 3000,
+                "inputs": {
+                  "Gap_Exceeded": 0,
+                  "Weld_E_Stop_NC": 0,
+                  "DebounceTime": 100
+                },
+                "expected": {
+                  "Operator_Alert": 0,
+                  "Weld_Soft_Start_Active": 0
+                }
+              },
+              {
+                "time_ms": 5000,
+                "inputs": {
+                  "Gap_Exceeded": 0,
+                  "Weld_E_Stop_NC": 0,
+                  "DebounceTime": 100
+                },
+                "expected": {
+                  "Operator_Alert": 0,
+                  "Weld_Soft_Start_Active": 0
+                }
+              },
+              {
+                "time_ms": 5000,
+                "inputs": {
+                  "Gap_Exceeded": 0,
+                  "Weld_E_Stop_NC": 1,
+                  "DebounceTime": 100
+                },
+                "expected": {
+                  "Operator_Alert": 0,
+                  "Weld_Soft_Start_Active": 1
+                }
+              },
+              {
+                "time_ms": 7000,
+                "inputs": {
+                  "Gap_Exceeded": 0,
+                  "Weld_E_Stop_NC": 1,
+                  "DebounceTime": 100
+                },
+                "expected": {
+                  "Operator_Alert": 0,
+                  "Weld_Soft_Start_Active": 1
+                }
+              },
+              {
+                "time_ms": 7001,
+                "inputs": {
+                  "Gap_Exceeded": 0,
+                  "Weld_E_Stop_NC": 1,
+                  "DebounceTime": 100
+                },
+                "expected": {
+                  "Operator_Alert": 0,
+                  "Weld_Soft_Start_Active": 0
+                }
+              }
+            ]
+          },
+          "status": "invalid_proposal",
+          "message": "Invalid time"
+        }
+      ],
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1201,
+            "completion_tokens": 506,
+            "total_tokens": 1707,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1201
+          },
+          "seconds": 7.25
+        }
+      ],
+      "scope": "Fresh review without tests or author history. Mismatch is not a confirmed requirement violation; separate adjudication required."
+    },
+    {
+      "question_id": "10",
+      "source_sha256": "47cc4873b4db5722a433351c16d2413b39d2a1fd6daeda46b4c261175a6aa54f",
+      "reviewer_model": "deepseek-flash",
+      "findings": [
+        {
+          "proposal": {
+            "id": "REV-01",
+            "title": "过热保护在加热器被保护关断后立即自解除，无法保持3s",
+            "basis": "题面要求：过热保护触发后必须等待3s才能解除。候选源码中 tHeatDur 仅在 xHeaterOn 为 TRUE 时累加；触发过热时在同扫描置 xOverheat、tOverStart=tNow，随后输出合成阶段因 xOverheat 把 xHeaterOn 置 FALSE。下一扫描 IF xHeaterOn 为假，进入 ELSE 分支把 tHeatStart:=tNow、tHeatDur:=0；同时 5a 的触发条件 xHeaterOn AND ... 不再满足。5b 中 tOverDur:=tNow-tOverStart，但 tOverStart 在上一扫描 5b 的 ELSE 分支（xOverheat 原本为 FALSE）已在置位前被赋为旧 tNow？需核实：触发扫描内 5b 于置位后运行，xOverheat=TRUE，tOverDur=tNow-tOverStart=0，未满3s，保持 TRUE。下一扫描 5a 不触发，5b 计算 tOverDur 约为两次调用间隔；若调用间隔很小则仍保持，但 5a 的 ELSE 分支未影响 tOverStart，故实际保持由时间差决定。关键问题：触发扫描中 5b 于置位后执行，xOverheat 为 TRUE 时 tOverDur=tNow-tOverStart 用刚赋的同一 tNow 得0，正常。但同扫描 5a 的 ELSE（加热器未工作）分支在本扫描尚未将 tOverStart 清零，因为 5a 在置位之前已执行。下一扫描 5a 的 ELSE 只清 tHeatStart/tHeatDur，不清 tOverStart。因此保护保持期实际依赖 tOverStart，而 tOverStart 在触发扫描被正确设为 tNow，后续扫描 5b 持续计算 tOverDur，满3s后解除，逻辑上保持成立。但候选存在真正缺陷：触发过热后加热器被关断，下一扫描 5a 的 ELSE 清零 tHeatDur，使再次启动时重新计5s，属预期。保护解除后同扫描最终 xHeaterOn 为 xHeaterReq=TRUE 立即重新加热。该点符合题面。经核查保持逻辑无明显违反。",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "TemperatureSensorInput": 20.0,
+                  "SetTemperature": 30.0
+                },
+                "expected": {
+                  "HeaterOutput": 1,
+                  "OverheatProtection": 0
+                }
+              },
+              {
+                "time_ms": 5000,
+                "inputs": {
+                  "TemperatureSensorInput": 20.0,
+                  "SetTemperature": 30.0
+                },
+                "expected": {
+                  "HeaterOutput": 0,
+                  "OverheatProtection": 1
+                }
+              },
+              {
+                "time_ms": 8000,
+                "inputs": {
+                  "TemperatureSensorInput": 20.0,
+                  "SetTemperature": 30.0
+                },
+                "expected": {
+                  "OverheatProtection": 0,
+                  "HeaterOutput": 1
+                }
+              }
+            ]
+          },
+          "status": "needs_requirement_clarification",
+          "mismatches": [
+            [],
+            []
+          ],
+          "runs": [
+            {
+              "name": "REV-01",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "HeaterOutput": 1,
+                    "OverheatProtection": 0
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 1.0,
+                    "OverheatProtection": 0.0,
+                    "HeaterOutput": 1.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 5000,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "HeaterOutput": 0,
+                    "OverheatProtection": 1
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 0.0,
+                    "OverheatProtection": 1.0,
+                    "HeaterOutput": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 8000,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "OverheatProtection": 0,
+                    "HeaterOutput": 1
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 1.0,
+                    "OverheatProtection": 0.0,
+                    "HeaterOutput": 1.0
+                  },
+                  "violations": []
+                }
+              ]
+            },
+            {
+              "name": "REV-01",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "HeaterOutput": 1,
+                    "OverheatProtection": 0
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 1.0,
+                    "OverheatProtection": 0.0,
+                    "HeaterOutput": 1.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 5000,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "HeaterOutput": 0,
+                    "OverheatProtection": 1
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 0.0,
+                    "OverheatProtection": 1.0,
+                    "HeaterOutput": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 8000,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "OverheatProtection": 0,
+                    "HeaterOutput": 1
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 1.0,
+                    "OverheatProtection": 0.0,
+                    "HeaterOutput": 1.0
+                  },
+                  "violations": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "proposal": {
+            "id": "REV-02",
+            "title": "过热保持期结束后同一扫描立即恢复加热，且保持计时起点依赖触发扫描内同扫描写入的tNow，存在同扫描内自比较风险",
+            "basis": "题面仅要求保护期间关断加热器、等待约3s后可解除；未规定解除后是否应在本扫描抑制加热。候选在解除过热后直接 xHeaterOn:=xHeaterReq，解除扫描即恢复输出，属题面未定义，不判定违反。但保持计时的可验证性：触发扫描内 5a 先置 tOverStart:=tNow，5b 随即以同一 tNow 计算 tOverDur=0；若某实现中 TIME() 在同扫描返回相同值，则触发扫描 tOverDur=0 正常。下一扫描 tOverDur 为调用间隔。若两次调用间隔≥3s（例如裸单元扫描间隔较大），保护会在触发后的第一次后续观察前即被解除，导致“刚触发保护就解除”的可观测现象。题面未限定扫描周期，故该行为在长调用间隔下与“必须等待3s”存在歧义冲突。",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "TemperatureSensorInput": 20.0,
+                  "SetTemperature": 30.0
+                },
+                "expected": {
+                  "HeaterOutput": 1,
+                  "OverheatProtection": 0
+                }
+              },
+              {
+                "time_ms": 5000,
+                "inputs": {
+                  "TemperatureSensorInput": 20.0,
+                  "SetTemperature": 30.0
+                },
+                "expected": {
+                  "HeaterOutput": 0,
+                  "OverheatProtection": 1
+                }
+              },
+              {
+                "time_ms": 8001,
+                "inputs": {
+                  "TemperatureSensorInput": 20.0,
+                  "SetTemperature": 30.0
+                },
+                "expected": {
+                  "OverheatProtection": 0
+                }
+              }
+            ]
+          },
+          "status": "needs_requirement_clarification",
+          "mismatches": [
+            [],
+            []
+          ],
+          "runs": [
+            {
+              "name": "REV-02",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "HeaterOutput": 1,
+                    "OverheatProtection": 0
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 1.0,
+                    "OverheatProtection": 0.0,
+                    "HeaterOutput": 1.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 5000,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "HeaterOutput": 0,
+                    "OverheatProtection": 1
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 0.0,
+                    "OverheatProtection": 1.0,
+                    "HeaterOutput": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 8001,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "OverheatProtection": 0
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 1.0,
+                    "OverheatProtection": 0.0,
+                    "HeaterOutput": 1.0
+                  },
+                  "violations": []
+                }
+              ]
+            },
+            {
+              "name": "REV-02",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "HeaterOutput": 1,
+                    "OverheatProtection": 0
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 1.0,
+                    "OverheatProtection": 0.0,
+                    "HeaterOutput": 1.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 5000,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "HeaterOutput": 0,
+                    "OverheatProtection": 1
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 0.0,
+                    "OverheatProtection": 1.0,
+                    "HeaterOutput": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 8001,
+                  "inputs": {
+                    "TemperatureSensorInput": 20.0,
+                    "SetTemperature": 30.0
+                  },
+                  "expected": {
+                    "OverheatProtection": 0
+                  },
+                  "actual": {
+                    "CurrentTemperature": 20.0,
+                    "SetTempDisplay": 30.0,
+                    "HeaterStatus": 1.0,
+                    "OverheatProtection": 0.0,
+                    "HeaterOutput": 1.0
+                  },
+                  "violations": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1950,
+            "completion_tokens": 1022,
+            "total_tokens": 2972,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1950
+          },
+          "seconds": 11.25
+        }
+      ],
+      "scope": "Fresh review without tests or author history. Mismatch is not a confirmed requirement violation; separate adjudication required."
+    },
+    {
+      "question_id": "14",
+      "source_sha256": "ae45d00b367dbfab1e5607f9ba763e338e9cd6eb585c66768c72cd03bfaf38ef",
+      "reviewer_model": "deepseek-flash",
+      "findings": [
+        {
+          "proposal": {
+            "id": "REV-01",
+            "title": "i 使用 INT 与 n 比较可能违反 FOR 循环变量的整数边界",
+            "basis": "题面未规定循环上限的整数取值范围；当 ipText 长度接近 254 时，i : INT 与 n : INT 的 FOR 循环边界取决于实现支持的 INT 宽度，属于题面歧义。",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "ipText": "0.0.0.0"
+                },
+                "expected": {
+                  "ipValue": 0
+                }
+              },
+              {
+                "time_ms": 1,
+                "inputs": {
+                  "ipText": "1.2.3.4"
+                },
+                "expected": {
+                  "ipValue": 16909060
+                }
+              }
+            ]
+          },
+          "status": "needs_requirement_clarification",
+          "mismatches": [
+            [],
+            []
+          ],
+          "runs": [
+            {
+              "name": "REV-01",
+              "family": "custom",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "ipText": "0.0.0.0"
+                  },
+                  "actual": {
+                    "ipValue": 0
+                  },
+                  "expected": {
+                    "ipValue": 0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 1,
+                  "inputs": {
+                    "ipText": "1.2.3.4"
+                  },
+                  "actual": {
+                    "ipValue": 16909060
+                  },
+                  "expected": {
+                    "ipValue": 16909060
+                  },
+                  "violations": []
+                }
+              ]
+            },
+            {
+              "name": "REV-01",
+              "family": "custom",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "ipText": "0.0.0.0"
+                  },
+                  "actual": {
+                    "ipValue": 0
+                  },
+                  "expected": {
+                    "ipValue": 0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 1,
+                  "inputs": {
+                    "ipText": "1.2.3.4"
+                  },
+                  "actual": {
+                    "ipValue": 16909060
+                  },
+                  "expected": {
+                    "ipValue": 16909060
+                  },
+                  "violations": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "proposal": {
+            "id": "REV-02",
+            "title": "前导零段与空段的区分仅由实现细节保证",
+            "basis": "题面禁止空段但未明示前导零（如 001）是否合法；源码对前导零接受，对连续点拒绝，需按题面“四个非空十进制数字段”确认接受前导零是否合理。",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "ipText": "001.002.003.004"
+                },
+                "expected": {
+                  "ipValue": 16909060
+                }
+              },
+              {
+                "time_ms": 1,
+                "inputs": {
+                  "ipText": "1..2.3"
+                },
+                "expected": {
+                  "ipValue": 0
+                }
+              }
+            ]
+          },
+          "status": "needs_requirement_clarification",
+          "mismatches": [
+            [],
+            []
+          ],
+          "runs": [
+            {
+              "name": "REV-02",
+              "family": "custom",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "ipText": "001.002.003.004"
+                  },
+                  "actual": {
+                    "ipValue": 16909060
+                  },
+                  "expected": {
+                    "ipValue": 16909060
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 1,
+                  "inputs": {
+                    "ipText": "1..2.3"
+                  },
+                  "actual": {
+                    "ipValue": 0
+                  },
+                  "expected": {
+                    "ipValue": 0
+                  },
+                  "violations": []
+                }
+              ]
+            },
+            {
+              "name": "REV-02",
+              "family": "custom",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "ipText": "001.002.003.004"
+                  },
+                  "actual": {
+                    "ipValue": 16909060
+                  },
+                  "expected": {
+                    "ipValue": 16909060
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 1,
+                  "inputs": {
+                    "ipText": "1..2.3"
+                  },
+                  "actual": {
+                    "ipValue": 0
+                  },
+                  "expected": {
+                    "ipValue": 0
+                  },
+                  "violations": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1258,
+            "completion_tokens": 288,
+            "total_tokens": 1546,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1258
+          },
+          "seconds": 6.937
+        }
+      ],
+      "scope": "Fresh review without tests or author history. Mismatch is not a confirmed requirement violation; separate adjudication required."
+    },
+    {
+      "question_id": "15",
+      "source_sha256": "e0754b46ee37539056626d7875786d56e375ea00234e46bcfa13487a6338bd92",
+      "reviewer_model": "deepseek-flash",
+      "findings": [
+        {
+          "proposal": {
+            "id": "REV-01",
+            "title": "急停期间自动输出被清零但保持步序状态机保留（不清步）",
+            "basis": "题面要求“急停信号触发时所有设备立即停止”，未明确要求急停后自动流程是否需要复位；候选在 NOT estop 分支将 autoStep 置 0，恢复 estop 后需再次 autoStart 才能重启。此为对“立即停止所有设备”的实现选择，但可能构成对“急停仅停止设备、流程状态应保持可恢复”的歧义。",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "estop": 1,
+                  "opeMode": 1,
+                  "valveAStart": 0,
+                  "valveBStart": 0,
+                  "valveCStart": 0,
+                  "valveDStart": 0,
+                  "mixMotorStart": 0,
+                  "autoStart": 1,
+                  "processMode": 0,
+                  "levelSensor": 0,
+                  "mixMotorComplete": 0
+                },
+                "expected": {
+                  "valveARun": 1,
+                  "valveBRun": 0,
+                  "valveCRun": 0,
+                  "valveDRun": 0,
+                  "mixMotorRun": 0
+                }
+              },
+              {
+                "time_ms": 100,
+                "inputs": {
+                  "estop": 0,
+                  "opeMode": 1,
+                  "valveAStart": 0,
+                  "valveBStart": 0,
+                  "valveCStart": 0,
+                  "valveDStart": 0,
+                  "mixMotorStart": 0,
+                  "autoStart": 1,
+                  "processMode": 0,
+                  "levelSensor": 60,
+                  "mixMotorComplete": 0
+                },
+                "expected": {
+                  "valveARun": 0,
+                  "valveBRun": 0,
+                  "valveCRun": 0,
+                  "valveDRun": 0,
+                  "mixMotorRun": 0
+                }
+              },
+              {
+                "time_ms": 200,
+                "inputs": {
+                  "estop": 1,
+                  "opeMode": 1,
+                  "valveAStart": 0,
+                  "valveBStart": 0,
+                  "valveCStart": 0,
+                  "valveDStart": 0,
+                  "mixMotorStart": 0,
+                  "autoStart": 0,
+                  "processMode": 0,
+                  "levelSensor": 60,
+                  "mixMotorComplete": 0
+                },
+                "expected": {
+                  "valveARun": 0,
+                  "valveBRun": 0,
+                  "valveCRun": 0,
+                  "valveDRun": 0,
+                  "mixMotorRun": 0
+                }
+              }
+            ]
+          },
+          "status": "needs_requirement_clarification",
+          "mismatches": [
+            [],
+            []
+          ],
+          "runs": [
+            {
+              "name": "REV-01",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 1,
+                    "processMode": 0,
+                    "levelSensor": 0,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveARun": 1,
+                    "valveBRun": 0,
+                    "valveCRun": 0,
+                    "valveDRun": 0,
+                    "mixMotorRun": 0
+                  },
+                  "actual": {
+                    "valveARun": 1.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 100,
+                  "inputs": {
+                    "estop": 0,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 1,
+                    "processMode": 0,
+                    "levelSensor": 60,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveARun": 0,
+                    "valveBRun": 0,
+                    "valveCRun": 0,
+                    "valveDRun": 0,
+                    "mixMotorRun": 0
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 200,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 0,
+                    "processMode": 0,
+                    "levelSensor": 60,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveARun": 0,
+                    "valveBRun": 0,
+                    "valveCRun": 0,
+                    "valveDRun": 0,
+                    "mixMotorRun": 0
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                }
+              ]
+            },
+            {
+              "name": "REV-01",
+              "status": "pass",
+              "first_failure": null,
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 1,
+                    "processMode": 0,
+                    "levelSensor": 0,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveARun": 1,
+                    "valveBRun": 0,
+                    "valveCRun": 0,
+                    "valveDRun": 0,
+                    "mixMotorRun": 0
+                  },
+                  "actual": {
+                    "valveARun": 1.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 100,
+                  "inputs": {
+                    "estop": 0,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 1,
+                    "processMode": 0,
+                    "levelSensor": 60,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveARun": 0,
+                    "valveBRun": 0,
+                    "valveCRun": 0,
+                    "valveDRun": 0,
+                    "mixMotorRun": 0
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 200,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 0,
+                    "processMode": 0,
+                    "levelSensor": 60,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveARun": 0,
+                    "valveBRun": 0,
+                    "valveCRun": 0,
+                    "valveDRun": 0,
+                    "mixMotorRun": 0
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "proposal": {
+            "id": "REV-02",
+            "title": "步骤30分支切换到40依赖下一扫描，起搅与processMode=FALSE流程衔接存在一扫描空缺",
+            "basis": "题面要求 processMode=false 时在80cm关B后启动搅拌电机；候选需在步骤30判定后进入40才置 mixMotorRun=TRUE，若在 levelSensor 达到80的同一次调用观察输出，mixMotorRun 仍为 FALSE，是否允许一扫描延迟属歧义。",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "estop": 1,
+                  "opeMode": 1,
+                  "valveAStart": 0,
+                  "valveBStart": 0,
+                  "valveCStart": 0,
+                  "valveDStart": 0,
+                  "mixMotorStart": 0,
+                  "autoStart": 1,
+                  "processMode": 0,
+                  "levelSensor": 0,
+                  "mixMotorComplete": 0
+                },
+                "expected": {
+                  "valveARun": 1
+                }
+              },
+              {
+                "time_ms": 100,
+                "inputs": {
+                  "estop": 1,
+                  "opeMode": 1,
+                  "valveAStart": 0,
+                  "valveBStart": 0,
+                  "valveCStart": 0,
+                  "valveDStart": 0,
+                  "mixMotorStart": 0,
+                  "autoStart": 0,
+                  "processMode": 0,
+                  "levelSensor": 80,
+                  "mixMotorComplete": 0
+                },
+                "expected": {
+                  "valveBRun": 1,
+                  "valveARun": 0
+                }
+              },
+              {
+                "time_ms": 200,
+                "inputs": {
+                  "estop": 1,
+                  "opeMode": 1,
+                  "valveAStart": 0,
+                  "valveBStart": 0,
+                  "valveCStart": 0,
+                  "valveDStart": 0,
+                  "mixMotorStart": 0,
+                  "autoStart": 0,
+                  "processMode": 0,
+                  "levelSensor": 80,
+                  "mixMotorComplete": 0
+                },
+                "expected": {
+                  "valveBRun": 0,
+                  "mixMotorRun": 1
+                }
+              },
+              {
+                "time_ms": 300,
+                "inputs": {
+                  "estop": 1,
+                  "opeMode": 1,
+                  "valveAStart": 0,
+                  "valveBStart": 0,
+                  "valveCStart": 0,
+                  "valveDStart": 0,
+                  "mixMotorStart": 0,
+                  "autoStart": 0,
+                  "processMode": 0,
+                  "levelSensor": 80,
+                  "mixMotorComplete": 0
+                },
+                "expected": {
+                  "valveBRun": 0,
+                  "mixMotorRun": 1
+                }
+              }
+            ]
+          },
+          "status": "needs_requirement_clarification",
+          "mismatches": [
+            [
+              {
+                "scan": 2,
+                "output": "mixMotorRun",
+                "expected": 1,
+                "actual": 0.0
+              },
+              {
+                "scan": 3,
+                "output": "mixMotorRun",
+                "expected": 1,
+                "actual": 0.0
+              }
+            ],
+            [
+              {
+                "scan": 2,
+                "output": "mixMotorRun",
+                "expected": 1,
+                "actual": 0.0
+              },
+              {
+                "scan": 3,
+                "output": "mixMotorRun",
+                "expected": 1,
+                "actual": 0.0
+              }
+            ]
+          ],
+          "runs": [
+            {
+              "name": "REV-02",
+              "status": "fail",
+              "first_failure": {
+                "scan": 2,
+                "time_ms": 200,
+                "output": "mixMotorRun",
+                "expected": 1,
+                "actual": 0.0
+              },
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 1,
+                    "processMode": 0,
+                    "levelSensor": 0,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveARun": 1
+                  },
+                  "actual": {
+                    "valveARun": 1.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 100,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 0,
+                    "processMode": 0,
+                    "levelSensor": 80,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveBRun": 1,
+                    "valveARun": 0
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 1.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 200,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 0,
+                    "processMode": 0,
+                    "levelSensor": 80,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveBRun": 0,
+                    "mixMotorRun": 1
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": [
+                    {
+                      "output": "mixMotorRun",
+                      "expected": 1,
+                      "actual": 0.0
+                    }
+                  ]
+                },
+                {
+                  "time_ms": 300,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 0,
+                    "processMode": 0,
+                    "levelSensor": 80,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveBRun": 0,
+                    "mixMotorRun": 1
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": [
+                    {
+                      "output": "mixMotorRun",
+                      "expected": 1,
+                      "actual": 0.0
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "REV-02",
+              "status": "fail",
+              "first_failure": {
+                "scan": 2,
+                "time_ms": 200,
+                "output": "mixMotorRun",
+                "expected": 1,
+                "actual": 0.0
+              },
+              "rows": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 1,
+                    "processMode": 0,
+                    "levelSensor": 0,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveARun": 1
+                  },
+                  "actual": {
+                    "valveARun": 1.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 100,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 0,
+                    "processMode": 0,
+                    "levelSensor": 80,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveBRun": 1,
+                    "valveARun": 0
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 1.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": []
+                },
+                {
+                  "time_ms": 200,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 0,
+                    "processMode": 0,
+                    "levelSensor": 80,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveBRun": 0,
+                    "mixMotorRun": 1
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": [
+                    {
+                      "output": "mixMotorRun",
+                      "expected": 1,
+                      "actual": 0.0
+                    }
+                  ]
+                },
+                {
+                  "time_ms": 300,
+                  "inputs": {
+                    "estop": 1,
+                    "opeMode": 1,
+                    "valveAStart": 0,
+                    "valveBStart": 0,
+                    "valveCStart": 0,
+                    "valveDStart": 0,
+                    "mixMotorStart": 0,
+                    "autoStart": 0,
+                    "processMode": 0,
+                    "levelSensor": 80,
+                    "mixMotorComplete": 0
+                  },
+                  "expected": {
+                    "valveBRun": 0,
+                    "mixMotorRun": 1
+                  },
+                  "actual": {
+                    "valveARun": 0.0,
+                    "valveBRun": 0.0,
+                    "valveCRun": 0.0,
+                    "valveDRun": 0.0,
+                    "mixMotorRun": 0.0
+                  },
+                  "violations": [
+                    {
+                      "output": "mixMotorRun",
+                      "expected": 1,
+                      "actual": 0.0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2562,
+            "completion_tokens": 920,
+            "total_tokens": 3482,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2562
+          },
+          "seconds": 9.094
+        }
+      ],
+      "scope": "Fresh review without tests or author history. Mismatch is not a confirmed requirement violation; separate adjudication required."
+    }
+  ]
+}

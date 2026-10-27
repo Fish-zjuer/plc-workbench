@@ -1,0 +1,102 @@
+{
+  "schema": "plc-probe-counterexample-v1",
+  "profile": "blower",
+  "source_sha256": "9807a1c04581f77a71b13700cba92e20754fa1413ec2cd9ef1424cfd52abd471",
+  "monitor_version": "1",
+  "target_property": "blower.no_early_start",
+  "original_failure_prefix_scans": 6,
+  "minimized_scans": 2,
+  "candidate_replays": 16,
+  "minimality": "deletion reduction under an explicit replay budget; not guaranteed globally shortest",
+  "scenario": {
+    "name": "demand_loss_at_2ms_for_1ms_minimized",
+    "family": "minimized",
+    "trace": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "DO_LOW": 0,
+          "AERATION_E_STOP_NC": 1
+        }
+      },
+      {
+        "time_ms": 5000,
+        "inputs": {
+          "DO_LOW": 1,
+          "AERATION_E_STOP_NC": 1
+        }
+      }
+    ]
+  },
+  "reproduced": true,
+  "result": {
+    "name": "demand_loss_at_2ms_for_1ms_minimized",
+    "family": "minimized",
+    "status": "fail",
+    "first_failure": {
+      "scan": 1,
+      "time_ms": 5000,
+      "property": "blower.no_early_start",
+      "description": "每段连续有效需求均须等待完整 5000 ms。",
+      "output": "BLOWER_RUN",
+      "expected": 0,
+      "actual": 1
+    },
+    "rows": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "DO_LOW": 0,
+          "AERATION_E_STOP_NC": 1
+        },
+        "actual": {
+          "BLOWER_RUN": 0,
+          "AERATION_BLOWER_CYCLE_COUNT": 0
+        },
+        "expected": {
+          "BLOWER_RUN": 0,
+          "AERATION_BLOWER_CYCLE_COUNT": 0
+        },
+        "violations": []
+      },
+      {
+        "time_ms": 5000,
+        "inputs": {
+          "DO_LOW": 1,
+          "AERATION_E_STOP_NC": 1
+        },
+        "actual": {
+          "BLOWER_RUN": 1,
+          "AERATION_BLOWER_CYCLE_COUNT": 1
+        },
+        "expected": {
+          "BLOWER_RUN": 0,
+          "AERATION_BLOWER_CYCLE_COUNT": 0
+        },
+        "violations": [
+          {
+            "property": "blower.no_early_start",
+            "description": "每段连续有效需求均须等待完整 5000 ms。",
+            "output": "BLOWER_RUN",
+            "expected": 0,
+            "actual": 1
+          },
+          {
+            "property": "blower.start_count",
+            "description": "只在实际运行指令由 FALSE 变为 TRUE 时增加一次启动计数。",
+            "output": "AERATION_BLOWER_CYCLE_COUNT",
+            "expected": 0,
+            "actual": 1
+          }
+        ]
+      }
+    ]
+  },
+  "evidence_scope": {
+    "execution": "Actual ST source transpiled by STruC++ 0.7.0 and executed as native C++",
+    "evaluation": "Finite scan-sequence tests against independent handwritten contracts",
+    "codesys_compile": "not_executed",
+    "formal_verification": "not_executed",
+    "hardware_validation": "not_executed"
+  }
+}

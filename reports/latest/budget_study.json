@@ -1,0 +1,6541 @@
+{
+  "study": "Equal FB invocation count; no early stop; ten fixed seeds",
+  "limitations": [
+    "Synthetic faults and handwritten focused scenarios are not independent industrial data.",
+    "Equal scan invocations do not equalize simulated elapsed time, reset counts, wall time, or model token budget.",
+    "Focused scenario order is shuffled per seed. Random generation uses a different fixed seed per trial.",
+    "The final scenario is truncated to meet the budget; finite pools repeat if exhausted."
+  ],
+  "summary": [
+    {
+      "scan_budget_per_implementation": 12,
+      "strategy": "focused",
+      "mean_detected_faults_out_of_12": 9.1,
+      "min": 5,
+      "max": 11,
+      "seed_count": 10
+    },
+    {
+      "scan_budget_per_implementation": 12,
+      "strategy": "random",
+      "mean_detected_faults_out_of_12": 5.7,
+      "min": 5,
+      "max": 6,
+      "seed_count": 10
+    },
+    {
+      "scan_budget_per_implementation": 48,
+      "strategy": "focused",
+      "mean_detected_faults_out_of_12": 10.7,
+      "min": 10,
+      "max": 12,
+      "seed_count": 10
+    },
+    {
+      "scan_budget_per_implementation": 48,
+      "strategy": "random",
+      "mean_detected_faults_out_of_12": 7.4,
+      "min": 6,
+      "max": 10,
+      "seed_count": 10
+    },
+    {
+      "scan_budget_per_implementation": 192,
+      "strategy": "focused",
+      "mean_detected_faults_out_of_12": 12,
+      "min": 12,
+      "max": 12,
+      "seed_count": 10
+    },
+    {
+      "scan_budget_per_implementation": 192,
+      "strategy": "random",
+      "mean_detected_faults_out_of_12": 10.7,
+      "min": 8,
+      "max": 12,
+      "seed_count": 10
+    }
+  ],
+  "trials": [
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "lost_latch",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "start_over_stop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "motor",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_not_reset",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "timer_ignores_demand",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "ignore_estop",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "count_each_scan",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": false
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "blower",
+      "variant": "early_delay",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "count_only_16_bits",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "missing_falling_count",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": false
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "latched_changed_flag",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1000,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1001,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1002,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1003,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1004,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1005,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1006,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1007,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1008,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 12,
+      "seed": 1009,
+      "actual_scans": 12,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1000,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1001,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1002,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1003,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1004,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1005,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1006,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1007,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1008,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 48,
+      "seed": 1009,
+      "actual_scans": 48,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "focused",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1000,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1001,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1002,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1003,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1004,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1005,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1006,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1007,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1008,
+      "actual_scans": 192,
+      "detected": true
+    },
+    {
+      "profile": "edges",
+      "variant": "previous_updated_early",
+      "strategy": "random",
+      "budget": 192,
+      "seed": 1009,
+      "actual_scans": 192,
+      "detected": true
+    }
+  ]
+}

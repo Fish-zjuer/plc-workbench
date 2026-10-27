@@ -1,0 +1,19 @@
+{
+  "text": "{\"findings\":[{\"id\":\"F1\",\"title\":\"去抖计时未在调用间推进（TON未正确模拟）\",\"basis\":\"候选在每个扫描周期对 rtTimer 调用一次 TON(IN, PT)，在 CODESYS 中 TON 是带内部起始时刻的定时器 FB，E_NO 在上游调用时以本周期时间推进，其 Q 在 IN 保持 TRUE 达到 PT 后才置位，行为上依赖多次调用。但题面所给采样说明为“每次调用后读取输出、每 trace 独立实例、time_ms 严格递增”，并未规定后端在两次调用之间如何推进定时器时间基（典型地 TON 使用 FB 内部时钟或调用参数不可见）。候选仅靠对 TON 重复调用来实现 DebounceTime，等于假定每次 invocation 间隔与 TON 内部时基一致，题面未明确此语义，故实现是否满足“连续保持 DebounceTime”不确定。\",\"scope\":\"ambiguous\"},{\"id\":\"F2\",\"title\":\"TIME_TO_LINT 毫秒口径为非题面约定\",\"basis\":\"候选在注释中声明后端 TIME_TO_LINT 返回毫秒并乘以 1e6 转为纳秒累计，但题面接口只规定 DebounceTime/CycleTime 为 TIME、PUMP_RUNTIME_ACC 为 LTIME，未规定该后端 TIME_TO_LINT 的返回单位。若宿主后端 TIME_TO_LINT 实际返回其他单位（如秒或纳秒），累计值将放大/缩小 10^3/10^6，导致 500 小时门限与 PUMP_RUNTIME_ACC 数值错误。该口径属于题面未规定的后端约定，实现正确性不可独立判定。\",\"scope\":\"ambiguous\"}]}",
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1808,
+        "completion_tokens": 380,
+        "total_tokens": 2188,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1808
+      },
+      "seconds": 8.094
+    }
+  ]
+}

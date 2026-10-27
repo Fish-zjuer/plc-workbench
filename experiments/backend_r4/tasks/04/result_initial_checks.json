@@ -1,0 +1,68 @@
+{
+  "question_id": "04",
+  "project_id": "d6bdff2ee0e1",
+  "session_id": "afe7d2be9731",
+  "baseline_sha256": "458f097c619796369721e3404b6a652f0a1b1dde570733c836dff61b69a3b44e",
+  "before_status": "fail",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "04",
+    "source": "candidate.st",
+    "source_sha256": "c644c69e48e689310a7faee9af6b5f7ef36395db882c7e58b2aa7c68bb12b1b6",
+    "attempts": [
+      {
+        "proposal": 1,
+        "revision": 1,
+        "source_sha256": "c644c69e48e689310a7faee9af6b5f7ef36395db882c7e58b2aa7c68bb12b1b6",
+        "model_summary": "修正运行时间累计单位：TIME_TO_LINT 返回毫秒，需乘 1e6 转成纳秒再累加到 LTIME；同时把去抖计时改为单一 TON 调用（IN = VISCOSITY_OK AND PASTE_E_STOP_NC），避免同扫描重复调用 TON 并实现急停立即清除去抖。",
+        "assumptions": [
+          "DebounceTime 与 CycleTime 由调用方保证为正；非正 CycleTime 时本周期不累计（不因参数异常修改输出判据）。",
+          "上电初始化在功能块首次调用时执行，等效于题面的 power-up 初始化。",
+          "维护提示为置位保持型（达到 500 h 后保持 TRUE），题面只要求达到时置位，未要求清除条件。",
+          "本后端 TIME_TO_LINT 返回毫秒、LTIME 以纳秒存储，故换算系数 1e6；该换算仅为适配后端单位语义，不改变接口类型。"
+        ],
+        "status": "pass",
+        "first_failure": null,
+        "evidence": "workflow_runs/ca8473d29c9b/evaluation_01.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "04",
+      "source_sha256": "c644c69e48e689310a7faee9af6b5f7ef36395db882c7e58b2aa7c68bb12b1b6",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\4e4c92202fb01fc5ae3e\\builds\\bank_9bd5c59fd83a5124c0b7a7d0\\build.json",
+      "summary": {
+        "scenarios": 2,
+        "scans": 15,
+        "failed": 0
+      },
+      "first_failure": null,
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+    },
+    "backend": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "b19cb4e7ec0ac18a1ccd896ac0df001b44667a68a3bdb56b9d5e8196bb63430a",
+    "run_path": "workflow_runs/ca8473d29c9b"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3107,
+        "completion_tokens": 2081,
+        "total_tokens": 5188,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 941
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 3107
+      },
+      "seconds": 14.922
+    }
+  ],
+  "receipt_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\d6bdff2ee0e1\\workspace\\workflow_runs\\ca8473d29c9b\\receipt.json"
+}

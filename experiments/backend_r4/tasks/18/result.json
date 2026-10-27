@@ -1,0 +1,68 @@
+{
+  "question_id": "18",
+  "project_id": "1835cafa775d",
+  "session_id": "ce26f27933d3",
+  "baseline_sha256": "d5fed2504bdb042cda1b89a0112126fec5a37f26aeb4097d5c916035612c4cd5",
+  "before_status": "compile_error",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "18",
+    "source": "candidate.st",
+    "source_sha256": "f0aaa13aa029dd19373e7074b1218da512ca2552d2a4832ffd1e8be321b1fd1a",
+    "attempts": [
+      {
+        "proposal": 1,
+        "revision": 1,
+        "source_sha256": "f0aaa13aa029dd19373e7074b1218da512ca2552d2a4832ffd1e8be321b1fd1a",
+        "model_summary": "修复 status 枚举赋给 WORD 导致的编译错误；改用数值状态码，并使用 VARIANT 辅助函数 PV_COUNT/PV_COMPATIBLE/PV_WRITE/PV_READ 实现实际缓冲区元素存取、容量推导和 FIFO 状态维护。",
+        "assumptions": [
+          "buffer 在首次非 reset 扫描时完成容量与类型绑定，此后保持固定。",
+          "PV_COUNT(buffer) 返回实际数组长度，PV_WRITE/PV_READ 使用零基序号并完成 VARIANT 元素读写。",
+          "合法调用会提供非空、同元素类型的一维数组 buffer 和可写标量 item；类型不匹配或无效绑定不属于题面正常调用场景。",
+          "同一扫描同时出现 enqueue 与 dequeue 上升沿时按题面约定视为非法调用，本实现不执行操作且 status 保持 16#0000。"
+        ],
+        "status": "pass",
+        "first_failure": null,
+        "evidence": "workflow_runs/695b45d8597d/evaluation_01.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "18",
+      "source_sha256": "f0aaa13aa029dd19373e7074b1218da512ca2552d2a4832ffd1e8be321b1fd1a",
+      "behavior_tested": true,
+      "summary": {
+        "scenarios": 12,
+        "scans": 2280,
+        "failed": 0
+      },
+      "first_failure": null,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\4e4c92202fb01fc5ae3e\\builds\\refs_dfaed0d7c211e7896bd9c4ac\\build.json",
+      "scope": "Fixed finite caller-reference tests. VARIANT uses local PV descriptor ABI; not a Siemens/CODESYS binary-compatibility proof."
+    },
+    "backend": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "b19cb4e7ec0ac18a1ccd896ac0df001b44667a68a3bdb56b9d5e8196bb63430a",
+    "run_path": "workflow_runs/695b45d8597d"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 5623,
+        "completion_tokens": 4546,
+        "total_tokens": 10169,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 3633
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 5623
+      },
+      "seconds": 29.047
+    }
+  ],
+  "receipt_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\1835cafa775d\\workspace\\workflow_runs\\695b45d8597d\\receipt.json"
+}

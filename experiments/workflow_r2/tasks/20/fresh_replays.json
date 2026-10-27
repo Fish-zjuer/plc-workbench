@@ -1,0 +1,3111 @@
+{
+  "source_sha256": "e8adc1f68057695880e3fa7d07c651038680a02c5b7eb08b72ae785df8e30df0",
+  "runs": [
+    {
+      "status": "pass",
+      "question_id": "20",
+      "source_sha256": "e8adc1f68057695880e3fa7d07c651038680a02c5b7eb08b72ae785df8e30df0",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_dbf8e14ab68524aeba774d8f\\build.json",
+      "summary": {
+        "scenarios": 6,
+        "scans": 55,
+        "failed": 0
+      },
+      "first_failure": null,
+      "cases": [
+        {
+          "name": "manual_interlock",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 1,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1,
+                "MotorReverse": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 1,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0,
+                "MotorReverse": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 1,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 1,
+                "ReverseButton": 1,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 1,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0,
+                "MotorReverse": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_99",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "kick": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 1,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_100",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "firingTemp": 500.0,
+                "MotorForward": 1,
+                "kick": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 500.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_150",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "firingTemp": 525.0,
+                "MotorForward": 1,
+                "kick": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 525.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_200",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "firingTemp": 550.0,
+                "MotorForward": 1,
+                "kick": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 550.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_201",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "kick": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 1,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ],
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+    },
+    {
+      "status": "pass",
+      "question_id": "20",
+      "source_sha256": "e8adc1f68057695880e3fa7d07c651038680a02c5b7eb08b72ae785df8e30df0",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_dbf8e14ab68524aeba774d8f\\build.json",
+      "summary": {
+        "scenarios": 6,
+        "scans": 55,
+        "failed": 0
+      },
+      "first_failure": null,
+      "cases": [
+        {
+          "name": "manual_interlock",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 1,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1,
+                "MotorReverse": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 1,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0,
+                "MotorReverse": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 1,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 1,
+                "ReverseButton": 1,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 1,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 0,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 0,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0,
+                "MotorReverse": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_99",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 99,
+                "firingComplete": 0
+              },
+              "expected": {
+                "kick": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 1,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_100",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 100,
+                "firingComplete": 0
+              },
+              "expected": {
+                "firingTemp": 500.0,
+                "MotorForward": 1,
+                "kick": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 500.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_150",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 150,
+                "firingComplete": 0
+              },
+              "expected": {
+                "firingTemp": 525.0,
+                "MotorForward": 1,
+                "kick": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 525.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_200",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 200,
+                "firingComplete": 0
+              },
+              "expected": {
+                "firingTemp": 550.0,
+                "MotorForward": 1,
+                "kick": 0
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 550.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "weight_boundary_201",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 1,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 1,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 1,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 0,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 1
+              },
+              "actual": {
+                "MotorForward": 1,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {},
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 0,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "MotorForward": 0
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 0,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 90,
+              "inputs": {
+                "Mode": 1,
+                "ForwardButton": 0,
+                "ReverseButton": 0,
+                "SensorFeed": 0,
+                "SensorWash": 0,
+                "SensorWeight": 1,
+                "SensorFiring": 0,
+                "SensorOutput": 0,
+                "washComplete": 0,
+                "weightComplete": 1,
+                "weight": 201,
+                "firingComplete": 0
+              },
+              "expected": {
+                "kick": 1
+              },
+              "actual": {
+                "MotorForward": 0,
+                "MotorReverse": 0,
+                "kick": 1,
+                "CompletionLight": 0,
+                "firingTemp": 0.0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ],
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+    }
+  ]
+}

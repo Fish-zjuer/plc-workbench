@@ -1,0 +1,61 @@
+{
+  "question_id": "11",
+  "source_sha256": "87f685ea880777c2d1286fa070bcf4d20205d86b86a9330a58e047374ebb356f",
+  "model": "deepseek-flash",
+  "review": {
+    "findings": [
+      {
+        "id": "REV-001",
+        "title": "手动模式按钮上升沿触发而非电平控制，导致按住按钮电机不持续运转",
+        "category": "ambiguity",
+        "requirement_basis": "要求2：“In manual mode, the forward rotation button (ForwardButton) controls the forward rotation of the motor, and the reverse rotation button (ReverseButton) controls the reverse rotation of the motor.”",
+        "code_evidence": "R_Forward := ForwardButton AND NOT PrevForward; ... IF R_Forward AND NOT ReverseButton THEN MotorForward := TRUE; ELSIF R_Reverse AND NOT ForwardButton THEN MotorReverse := TRUE; END_IF",
+        "trigger_sequence": "手动模式（Mode=FALSE），ForwardButton 保持 TRUE 多个扫描周期；第一个周期 R_Forward=TRUE 使 MotorForward=TRUE，之后 PrevForward=TRUE 使 R_Forward=FALSE，MotorForward 在后续周期变为 FALSE，即使按钮仍按住",
+        "expected": "按钮作为手动正/反转控制，按住期间电机应持续正转，松开才停（常见点动/电平语义）",
+        "predicted_actual": "仅在按下瞬间输出一个扫描周期，随后电机停止，表现为脉冲而非持续运转",
+        "confidence": "medium"
+      },
+      {
+        "id": "REV-002",
+        "title": "自动模式移动中若传感器信号缺失/产品未到位则电机无限正转",
+        "category": "ambiguity",
+        "requirement_basis": "要求3：电机将产品从A送到B、B送到C，传感器检测到位后停止",
+        "code_evidence": "Q11_MOVE_AB: MotorForward := TRUE; IF SensorB THEN MotorForward := FALSE; State := Q11_AT_B; END_IF;（Q11_MOVE_BC 同构，仅依赖 SensorC）",
+        "trigger_sequence": "自动模式，Q11_MOVE_AB 状态下 SensorB 始终为 FALSE（例如传感器故障或产品卡住），状态长期停留 MOVE_AB",
+        "expected": "题面未明确要求超时保护；仅要求到位停。此项不应视为明确错误",
+        "predicted_actual": "持续正转无超时/无反转恢复手段",
+        "confidence": "low"
+      },
+      {
+        "id": "REV-003",
+        "title": "模式切换瞬间的 ButtonC 上升沿对齐分支无实际意义且可能与边沿采样冲突",
+        "category": "portability",
+        "requirement_basis": "要求3：SensorC 检测到产品，ButtonC 触发后 CompletionLight 点亮",
+        "code_evidence": "IF SensorC AND ButtonC AND NOT PrevButtonC THEN State := Q11_AT_C; END_IF（模式切换块内）；随后 CASE Q11_AT_C: IF R_ButtonC THEN State := Q11_DONE; END_IF",
+        "trigger_sequence": "手动模式按住 ButtonC 时切到自动模式，且 SensorC=TRUE：模式切换时该分支把 State 设为 AT_C，但 R_ButtonC 已在本次扫描开头按 PrevButtonC 计算（PrevButtonC 可能为 TRUE，故 R_ButtonC=FALSE），不会立即 DONE；需要松开再按一次",
+        "expected": "题面未定义切换模式时已按按钮的处理；无明确时序要求",
+        "predicted_actual": "该对齐语句是冗余的（前面 SensorC 分支已设 AT_C），不改变最终行为，仅是兼容/清晰性问题",
+        "confidence": "low"
+      }
+    ],
+    "no_additional_issue_found": false
+  },
+  "status": "pending_independent_validation",
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2513,
+        "completion_tokens": 712,
+        "total_tokens": 3225,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2513
+      },
+      "seconds": 9.281
+    }
+  ],
+  "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+}

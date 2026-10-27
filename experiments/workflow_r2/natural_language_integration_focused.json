@@ -1,0 +1,405 @@
+{
+  "project_id": "f88a5e03b0b8",
+  "session_id": "eb05107da061",
+  "status": "workflow_blocked",
+  "last_workflow": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "repair_limit",
+    "question_id": "05",
+    "source": "candidate.st",
+    "source_sha256": "447f1ef020ddf65bb9f674f0ae97092eb63a87ef8fbb8d5907223d4477593a7a",
+    "attempts": [
+      {
+        "proposal": 1,
+        "revision": 1,
+        "source_sha256": "1593c5055f831bfd7421ee3959fc2a4c49a15d50811bd1763fc800c22b803472",
+        "model_summary": "修复启动抑制计时缺失：加入 TON 实现 5 秒上电抑制，抑制期间清零去抖，初始化结束后进入正常监测；急停优先立即复位报警与去抖，并在释放后重新触发 5 秒抑制。",
+        "assumptions": [
+          "上电时刻视为 FB 首次调用，5 秒初始化抑制从首次调用开始计时。",
+          "DebounceTime 要求为正；若传入非正值，则在保持 Gap_Exceeded 为 TRUE 的监测周期内立即允许报警。",
+          "急停有效期间 Weld_Soft_Start_Active 置 FALSE；释放急停后重新开始完整的 5 秒初始化抑制。",
+          "TON 为标准功能块，时间语义使用 ST TIME；仿真时间为纳秒。"
+        ],
+        "status": "fail",
+        "first_failure": {
+          "scenario": "startup_no_predebounce_and_estop",
+          "scan": 7,
+          "time_ms": 5220,
+          "output": "Operator_Alert",
+          "expected": 1,
+          "actual": 0
+        },
+        "evidence": "workflow_runs/c19aa65c9343/evaluation_01.json"
+      },
+      {
+        "proposal": 2,
+        "revision": 2,
+        "source_sha256": "a7bdb1684c259cb25928f5bd89aeb20d68a53c91a9c1e69202b6f34f2b5d713e",
+        "model_summary": "修正上电抑制计时：初始化阶段每扫描调用TON，结束后首扫描从0开始去抖计时；保持急停最高优先级并清零去抖，释放急停后重新执行5秒抑制。",
+        "assumptions": [
+          "DebounceTime is assumed positive during normal monitoring as stated in the interface; the FB uses TON directly for the debounce duration.",
+          "Power-up inhibition is restarted after each active emergency stop is released, since requirement 4 says E-stop takes priority over initialization."
+        ],
+        "status": "fail",
+        "first_failure": {
+          "scenario": "startup_no_predebounce_and_estop",
+          "scan": 7,
+          "time_ms": 5220,
+          "output": "Operator_Alert",
+          "expected": 1,
+          "actual": 0
+        },
+        "evidence": "workflow_runs/c19aa65c9343/evaluation_02.json"
+      },
+      {
+        "proposal": 3,
+        "revision": 3,
+        "source_sha256": "447f1ef020ddf65bb9f674f0ae97092eb63a87ef8fbb8d5907223d4477593a7a",
+        "model_summary": "修订定时器启动语义：初始化结束后的首个扫描开始去抖计时，避免额外延迟；保持急停优先、5秒上电抑制和抑制期间去抖不累计。",
+        "assumptions": [
+          "TON starts timing on the first scan where IN is TRUE, with elapsed effectively 0 at that invocation; after 100 ms it completes by the 5220 ms scan.",
+          "E-stop release restarts a full 5-second initialization inhibition as inferred from the previous implementation and requirement priority.",
+          "During initialization Weld_Soft_Start_Active remains TRUE even if Gap_Exceeded is TRUE.",
+          "DebounceTime is expected positive; no additional validation is required."
+        ],
+        "status": "fail",
+        "first_failure": {
+          "scenario": "startup_no_predebounce_and_estop",
+          "scan": 7,
+          "time_ms": 5220,
+          "output": "Operator_Alert",
+          "expected": 1,
+          "actual": 0
+        },
+        "evidence": "workflow_runs/c19aa65c9343/evaluation_03.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "fail",
+      "question_id": "05",
+      "source_sha256": "447f1ef020ddf65bb9f674f0ae97092eb63a87ef8fbb8d5907223d4477593a7a",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_151bd86635e5d38e77a72507\\build.json",
+      "summary": {
+        "scenarios": 1,
+        "scans": 9,
+        "failed": 1
+      },
+      "first_failure": {
+        "scenario": "startup_no_predebounce_and_estop",
+        "scan": 7,
+        "time_ms": 5220,
+        "output": "Operator_Alert",
+        "expected": 1,
+        "actual": 0
+      },
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof",
+      "failing_trace": {
+        "name": "startup_no_predebounce_and_estop",
+        "rows": [
+          {
+            "time_ms": 0,
+            "inputs": {
+              "Gap_Exceeded": 1,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            },
+            "actual": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 4999,
+            "inputs": {
+              "Gap_Exceeded": 1,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            },
+            "actual": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 5000,
+            "inputs": {
+              "Gap_Exceeded": 1,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0
+            },
+            "actual": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 0
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 5101,
+            "inputs": {
+              "Gap_Exceeded": 1,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 1,
+              "Weld_Soft_Start_Active": 0
+            },
+            "actual": {
+              "Operator_Alert": 1,
+              "Weld_Soft_Start_Active": 0
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 5110,
+            "inputs": {
+              "Gap_Exceeded": 1,
+              "Weld_E_Stop_NC": 0,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0
+            },
+            "actual": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 0
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 5120,
+            "inputs": {
+              "Gap_Exceeded": 1,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0
+            },
+            "actual": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 5219,
+            "inputs": {
+              "Gap_Exceeded": 1,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0
+            },
+            "actual": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 5220,
+            "inputs": {
+              "Gap_Exceeded": 1,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 1
+            },
+            "actual": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            },
+            "violations": [
+              {
+                "output": "Operator_Alert",
+                "expected": 1,
+                "actual": 0
+              }
+            ]
+          },
+          {
+            "time_ms": 5230,
+            "inputs": {
+              "Gap_Exceeded": 0,
+              "Weld_E_Stop_NC": 1,
+              "DebounceTime": 100
+            },
+            "expected": {
+              "Operator_Alert": 0
+            },
+            "actual": {
+              "Operator_Alert": 0,
+              "Weld_Soft_Start_Active": 1
+            },
+            "violations": []
+          }
+        ],
+        "complete": true
+      }
+    },
+    "backend": "STruC++ 0.7.0 + g++; not CODESYS",
+    "run_path": "workflow_runs/c19aa65c9343"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1571,
+        "completion_tokens": 66,
+        "total_tokens": 1637,
+        "prompt_tokens_details": {
+          "cached_tokens": 256
+        },
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 1315
+      },
+      "seconds": 5.89
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2114,
+        "completion_tokens": 39,
+        "total_tokens": 2153,
+        "prompt_tokens_details": {
+          "cached_tokens": 1536
+        },
+        "prompt_cache_hit_tokens": 1536,
+        "prompt_cache_miss_tokens": 578
+      },
+      "seconds": 5.75
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2887,
+        "completion_tokens": 78,
+        "total_tokens": 2965,
+        "prompt_tokens_details": {
+          "cached_tokens": 2048
+        },
+        "prompt_cache_hit_tokens": 2048,
+        "prompt_cache_miss_tokens": 839
+      },
+      "seconds": 5.781
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2494,
+        "completion_tokens": 1036,
+        "total_tokens": 3530,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792
+        },
+        "prompt_cache_hit_tokens": 1792,
+        "prompt_cache_miss_tokens": 702
+      },
+      "seconds": 8.922
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2915,
+        "completion_tokens": 940,
+        "total_tokens": 3855,
+        "prompt_tokens_details": {
+          "cached_tokens": 640
+        },
+        "prompt_cache_hit_tokens": 640,
+        "prompt_cache_miss_tokens": 2275
+      },
+      "seconds": 8.765
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3008,
+        "completion_tokens": 1145,
+        "total_tokens": 4153,
+        "prompt_tokens_details": {
+          "cached_tokens": 640
+        },
+        "prompt_cache_hit_tokens": 640,
+        "prompt_cache_miss_tokens": 2368
+      },
+      "seconds": 10.468
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 5196,
+        "completion_tokens": 273,
+        "total_tokens": 5469,
+        "prompt_tokens_details": {
+          "cached_tokens": 256
+        },
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 4940
+      },
+      "seconds": 6.89
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 5652,
+        "completion_tokens": 73,
+        "total_tokens": 5725,
+        "prompt_tokens_details": {
+          "cached_tokens": 5376
+        },
+        "prompt_cache_hit_tokens": 5376,
+        "prompt_cache_miss_tokens": 276
+      },
+      "seconds": 5.89
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 7027,
+        "completion_tokens": 73,
+        "total_tokens": 7100,
+        "prompt_tokens_details": {
+          "cached_tokens": 5632
+        },
+        "prompt_cache_hit_tokens": 5632,
+        "prompt_cache_miss_tokens": 1395
+      },
+      "seconds": 5.656
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 7132,
+        "completion_tokens": 109,
+        "total_tokens": 7241,
+        "prompt_tokens_details": {
+          "cached_tokens": 6912
+        },
+        "prompt_cache_hit_tokens": 6912,
+        "prompt_cache_miss_tokens": 220
+      },
+      "seconds": 6.141
+    }
+  ],
+  "answer": "模型调用预算已用完；专用PLC流程尚未验证通过，当前文件与证据已保存。\n流程状态：repair_limit；这不是CODESYS或形式化证明。",
+  "source_sha256_after": "447f1ef020ddf65bb9f674f0ae97092eb63a87ef8fbb8d5907223d4477593a7a",
+  "scope": "Additional integration trial after task scoping and failure-memory fixes; original failed trial retained separately"
+}

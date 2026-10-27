@@ -1,0 +1,96 @@
+{
+  "schema": "plc-probe-review-v1",
+  "reviewer": {
+    "model": "gpt-6-luna",
+    "role": "independent_adversarial"
+  },
+  "candidates": [
+    {
+      "profile": "motor",
+      "source": "C:\\Users\\29927\\Desktop\\������\\�γ�\\GenAI���ܹ�ҵ���\\����\\plc_agent\\�ɹ�\\����\\plc_probe\\experiments\\luna\\repair_2\\motor.st",
+      "source_sha256": "9ccb79b6e125ce9e685ceeffde4650ffc610bd72e8bde325fcafda8a7492a5f7"
+    },
+    {
+      "profile": "blower",
+      "source": "C:\\Users\\29927\\Desktop\\������\\�γ�\\GenAI���ܹ�ҵ���\\����\\plc_agent\\�ɹ�\\����\\plc_probe\\experiments\\luna\\repair_2\\blower.st",
+      "source_sha256": "9eac784e0151f1233a78ce8ecf9274c1804bba8b0ea2541fafc7b36081b4fbcc"
+    },
+    {
+      "profile": "edges",
+      "source": "C:\\Users\\29927\\Desktop\\������\\�γ�\\GenAI���ܹ�ҵ���\\����\\plc_agent\\�ɹ�\\����\\plc_probe\\experiments\\luna\\repair_2\\edges.st",
+      "source_sha256": "178daeb66487dac48df36cf76e71247314db512ee65beb42df2f75f37b530a34"
+    },
+    {
+      "profile": "moving_average",
+      "source": "C:\\Users\\29927\\Desktop\\������\\�γ�\\GenAI���ܹ�ҵ���\\����\\plc_agent\\�ɹ�\\����\\plc_probe\\experiments\\luna\\repair_2\\moving_average.st",
+      "source_sha256": "e40bd6e5c6e9e946dc9e06b712031775e594e2e8659990711a43f360e79ce4a6"
+    },
+    {
+      "profile": "ipv4",
+      "source": "C:\\Users\\29927\\Desktop\\������\\�γ�\\GenAI���ܹ�ҵ���\\����\\plc_agent\\�ɹ�\\����\\plc_probe\\experiments\\luna\\repair_2\\ipv4.st",
+      "source_sha256": "0e194aa4eec90fab2bba977adb7f566da5c478c190355a82700f3a4a0bf8b1f9"
+    }
+  ],
+  "findings": [
+    {
+      "id": "ADV-001",
+      "profile": "moving_average",
+      "title": "Trigger rising edge during reset is consumed",
+      "claim": "A trigger rising edge while reset is TRUE may be consumed even though reset suppresses sampling; holding trigger TRUE after reset deasserts then produces no sample. Confirm whether reset is specified to dominate sampling or whether this loses a required trigger event.",
+      "requirement_basis": "Provide an external trigger signal trigger, which reads a new data value and updates the moving average upon each rising edge. The reset clause says reset resets the moving average calculation when TRUE but does not specify precedence when reset and a trigger edge coincide.",
+      "scope": "ambiguous",
+      "rationale": "TriggerRise and PreviousTrigger are updated before the reset branch. Thus the scan with the edge during reset clears averaging history but does not sample; on the following scan, if trigger remains TRUE and cyclicExecution is FALSE, there is no new rising edge and no sample. This is a concrete probe of an unspecified interaction, not a confirmed violation. The asserted outputs are those following the candidate behavior and should be adjudicated against any intended reset/trigger precedence.",
+      "scenario": {
+        "name": "trigger_edge_while_reset_then_held",
+        "trace": [
+          {
+            "time_ms": 0,
+            "cyclicExecution": 0,
+            "trigger": 0,
+            "value": 5.0,
+            "windowSize": 2,
+            "reset": 1
+          },
+          {
+            "time_ms": 10,
+            "cyclicExecution": 0,
+            "trigger": 1,
+            "value": 10.0,
+            "windowSize": 2,
+            "reset": 1
+          },
+          {
+            "time_ms": 20,
+            "cyclicExecution": 0,
+            "trigger": 1,
+            "value": 20.0,
+            "windowSize": 2,
+            "reset": 0
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "scan": 2,
+          "output": "average",
+          "expected": 0.0
+        },
+        {
+          "scan": 2,
+          "output": "windowSizeReached",
+          "expected": false
+        },
+        {
+          "scan": 2,
+          "output": "error",
+          "expected": false
+        },
+        {
+          "scan": 2,
+          "output": "status",
+          "expected": 0
+        }
+      ]
+    }
+  ]
+}

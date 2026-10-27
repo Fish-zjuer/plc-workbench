@@ -1,0 +1,33 @@
+{
+  "backend": "STruC++ 0.7.0 + g++; not CODESYS",
+  "sampling": "Inputs at time_ms are used for this invocation; outputs are observed after it. Timer starts at elapsed=0 on the first eligible scan.",
+  "task_feedback": [
+    {
+      "profile": "motor",
+      "status": "passed_current_finite_tests"
+    },
+    {
+      "profile": "blower",
+      "status": "passed_current_finite_tests"
+    },
+    {
+      "profile": "edges",
+      "status": "passed_current_finite_tests"
+    },
+    {
+      "profile": "moving_average",
+      "status": "passed_current_finite_tests"
+    },
+    {
+      "profile": "ipv4",
+      "status": "backend_error",
+      "details": {
+        "status": "compile_error",
+        "phase": "native_compile",
+        "returncode": 1,
+        "stdout": "",
+        "stderr": "candidate.cpp: In member function 'void strucpp::IPV4PARSER::operator()()':\ncandidate.cpp:30:36: error: 'class strucpp::IECStringVar<254>' has no member named 'at'\n   30 |             CHARACTERCODE = IPTEXT.at(POSITION);\n      |                                    ^~\n"
+      }
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "counts": {
+    "verified": 16,
+    "backend_ltime_unavailable": 2,
+    "backend_open_array_unavailable": 1,
+    "backend_variant_unavailable": 1
+  },
+  "code_repairs": [
+    "05",
+    "10",
+    "14",
+    "15"
+  ],
+  "new_behavior_coverage": [
+    "07",
+    "17"
+  ],
+  "model_generation_requests": 11,
+  "verified_replays": 16,
+  "unseen_scans_per_run": 1258,
+  "observed_cost_cny": "0.20",
+  "natural_language_trials": [
+    {
+      "file": "natural_language_integration.json",
+      "status": "step_limit",
+      "workflow_status": "repair_limit",
+      "requests": 9,
+      "configuration": null
+    },
+    {
+      "file": "natural_language_integration_focused.json",
+      "status": "workflow_blocked",
+      "workflow_status": "repair_limit",
+      "requests": 10,
+      "configuration": null
+    },
+    {
+      "file": "natural_language_integration_thinking.json",
+      "status": "idle",
+      "workflow_status": "verified",
+      "requests": 10,
+      "configuration": {
+        "base_url": "https://api.deepseek.com",
+        "model": "deepseek-flash",
+        "key_env": "PLC_AGENT_API_KEY",
+        "tool_mode": "native",
+        "stream": true,
+        "context_window": 64000,
+        "max_output_tokens": 16384,
+        "max_steps": 10,
+        "timeout": 120,
+        "review_model": "",
+        "extra_body": {
+          "thinking": {
+            "type": "enabled"
+          },
+          "reasoning_effort": "low"
+        }
+      }
+    }
+  ],
+  "limitation": "Finite offline checks; R2 repair/coverage experiment, not independent model accuracy or CODESYS proof."
+}

@@ -1,0 +1,62 @@
+{
+  "question_id": "15",
+  "project_id": "741a2995433f",
+  "session_id": "1af27adb8d77",
+  "baseline_sha256": "f89b7c918d77bf8b7664fe7b6813c3d73ac90196263a3b7f1ab9b0cf55f1a0e1",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "15",
+    "source": "candidate.st",
+    "source_sha256": "e0754b46ee37539056626d7875786d56e375ea00234e46bcfa13487a6338bd92",
+    "attempts": [
+      {
+        "revision": 1,
+        "source_sha256": "e0754b46ee37539056626d7875786d56e375ea00234e46bcfa13487a6338bd92",
+        "model_summary": "修复自动流程步骤30在检测到80cm后同一扫描未进入开C步骤的问题：步骤30判断processMode为TRUE时在同扫描直接置valveCRun=TRUE并进入步骤32，使测试在80cm后下一扫描即可见valveCRun=TRUE。",
+        "assumptions": [
+          "自动启动仅在空闲步0时接受autoStart上升沿。",
+          "液位判据使用>=。",
+          "80cm关闭B后同一扫描进入步骤30，processMode=TRUE时同扫描即打开C，使下一扫描测试可见valveCRun=TRUE。",
+          "收到mixMotorComplete上升沿后关闭搅拌并打开阀门D，自动流程回到空闲；D保持打开直到下一次流程或模式/急停改变。",
+          "手动按钮均为上升沿翻转保持输出；切换自动或急停会清除手动保持。"
+        ],
+        "status": "pass",
+        "evidence": "workflow_runs/74e2538588f9/evaluation_01.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "15",
+      "source_sha256": "e0754b46ee37539056626d7875786d56e375ea00234e46bcfa13487a6338bd92",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_3dc96bb109b31a8b512011d0\\build.json",
+      "summary": {
+        "scenarios": 6,
+        "scans": 52,
+        "failed": 0
+      },
+      "first_failure": null,
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+    },
+    "backend": "STruC++ 0.7.0 + g++; not CODESYS",
+    "run_path": "workflow_runs/74e2538588f9"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4617,
+        "completion_tokens": 1687,
+        "total_tokens": 6304,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 4617
+      },
+      "seconds": 11.141
+    }
+  ],
+  "receipt_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\741a2995433f\\workspace\\workflow_runs\\74e2538588f9\\receipt.json"
+}

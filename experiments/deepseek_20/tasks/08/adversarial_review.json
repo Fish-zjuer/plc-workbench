@@ -1,0 +1,60 @@
+{
+  "question_id": "08",
+  "source_sha256": "3be5ba84cc7e8ed7ae2f627a81a71f31ff9cec148f34fb663b5104b77a97bad2",
+  "model": "deepseek-flash",
+  "review": {
+    "findings": [
+      {
+        "id": "REV-001",
+        "title": "限值无效时对温度模式也返回16#8002，题面仅要求非温度线性模式检查限值",
+        "category": "explicit_requirement",
+        "requirement_basis": "要求7：\"If hiLIM is less than or equal to loLIM, set that channel's retVal to 16#8002 and skip its conversion.\" 要求4/5 对 measuringMode 1/2 只规定 outputValue=raw/10 或 raw/100，未附加限值条件；要求7本身措辞通用，但温度模式不使用 hiLIM/loLIM。",
+        "code_evidence": "measuringMode=1 分支：IF NOT limValid THEN retVal:=16#8002 ELSE outputValue:=INT_TO_REAL(rawVal)/10.0 ... 同样 measuringMode=2 分支亦有 IF NOT limValid 包裹。limValid := channels[cIdx].hiLIM > channels[cIdx].loLIM;",
+        "trigger_sequence": "channels[k].enable=TRUE, measuringMode=1（或2）, rawVal=1000, hiLIM=0.0, loLIM=0.0（hiLIM<=loLIM）",
+        "expected": "按单条要求4/5字面，温度模式应输出100.0（或10.0）并可能置16#0000；若严格按要求7通用措辞则可能置16#8002。题面存在歧义，但代码选择了对温度模式也应用限值检查。",
+        "predicted_actual": "outputValue 未被写入（保持旧值/初值），retVal=16#8002",
+        "confidence": "medium"
+      },
+      {
+        "id": "REV-002",
+        "title": "禁用通道不写retVal/outputValue，输出字段可能保留旧值",
+        "category": "ambiguity",
+        "requirement_basis": "要求1/2 规定按enable使能并写retVal与outputValue；未明确enable=FALSE时输出字段处置方式。",
+        "code_evidence": "IF channels[cIdx].enable THEN ... END_IF 内层全部写入；enable=FALSE 时整个分支跳过，无 else 清零/初始化。",
+        "trigger_sequence": "channels[k].enable=FALSE, retVal 与 outputValue 之前被置为任意非零值",
+        "expected": "题面未规定禁用通道输出；若期望禁用即不转换，则保留旧值可接受，但可能被视为未定义输出。",
+        "predicted_actual": "retVal/outputValue 维持调用前值",
+        "confidence": "low"
+      },
+      {
+        "id": "REV-003",
+        "title": "count为负时FOR循环边界行为依赖方言",
+        "category": "portability",
+        "requirement_basis": "要求1：count 由调用方提供 0..较小数组长度，题面约束调用方提供合法范围；未规定越界/负值处理。",
+        "code_evidence": "nProc := count; IF nProc > aLen... ; FOR i := 0 TO nProc - 1 DO",
+        "trigger_sequence": "count = -1（违反调用方契约）",
+        "expected": "题面约束 count>=0，不应出现负值；若出现，行为未定义。",
+        "predicted_actual": "若 nProc-1 = -2，FOR 0 TO -2 在部分方言中不执行，在另一些方言中可能回绕执行，行为依赖编译器",
+        "confidence": "low"
+      }
+    ]
+  },
+  "status": "pending_independent_validation",
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2223,
+        "completion_tokens": 720,
+        "total_tokens": 2943,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2223
+      },
+      "seconds": 9.266
+    }
+  ],
+  "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+}

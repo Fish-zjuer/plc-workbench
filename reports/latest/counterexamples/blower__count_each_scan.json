@@ -1,0 +1,118 @@
+{
+  "schema": "plc-probe-counterexample-v1",
+  "profile": "blower",
+  "source_sha256": "c4cafe7990c31cf814f3dbf2727c775a0168da738e0acb1188161ed04def9bd6",
+  "monitor_version": "1",
+  "target_property": "blower.start_count",
+  "original_failure_prefix_scans": 8,
+  "minimized_scans": 3,
+  "candidate_replays": 18,
+  "minimality": "deletion reduction under an explicit replay budget; not guaranteed globally shortest",
+  "scenario": {
+    "name": "estop_at_2ms_for_1ms_minimized",
+    "family": "minimized",
+    "trace": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "DO_LOW": 1,
+          "AERATION_E_STOP_NC": 1
+        }
+      },
+      {
+        "time_ms": 5000,
+        "inputs": {
+          "DO_LOW": 1,
+          "AERATION_E_STOP_NC": 1
+        }
+      },
+      {
+        "time_ms": 5001,
+        "inputs": {
+          "DO_LOW": 1,
+          "AERATION_E_STOP_NC": 1
+        }
+      }
+    ]
+  },
+  "reproduced": true,
+  "result": {
+    "name": "estop_at_2ms_for_1ms_minimized",
+    "family": "minimized",
+    "status": "fail",
+    "first_failure": {
+      "scan": 2,
+      "time_ms": 5001,
+      "property": "blower.start_count",
+      "description": "只在实际运行指令由 FALSE 变为 TRUE 时增加一次启动计数。",
+      "output": "AERATION_BLOWER_CYCLE_COUNT",
+      "expected": 1,
+      "actual": 2
+    },
+    "rows": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "DO_LOW": 1,
+          "AERATION_E_STOP_NC": 1
+        },
+        "actual": {
+          "BLOWER_RUN": 0,
+          "AERATION_BLOWER_CYCLE_COUNT": 0
+        },
+        "expected": {
+          "BLOWER_RUN": 0,
+          "AERATION_BLOWER_CYCLE_COUNT": 0
+        },
+        "violations": []
+      },
+      {
+        "time_ms": 5000,
+        "inputs": {
+          "DO_LOW": 1,
+          "AERATION_E_STOP_NC": 1
+        },
+        "actual": {
+          "BLOWER_RUN": 1,
+          "AERATION_BLOWER_CYCLE_COUNT": 1
+        },
+        "expected": {
+          "BLOWER_RUN": 1,
+          "AERATION_BLOWER_CYCLE_COUNT": 1
+        },
+        "violations": []
+      },
+      {
+        "time_ms": 5001,
+        "inputs": {
+          "DO_LOW": 1,
+          "AERATION_E_STOP_NC": 1
+        },
+        "actual": {
+          "BLOWER_RUN": 1,
+          "AERATION_BLOWER_CYCLE_COUNT": 2
+        },
+        "expected": {
+          "BLOWER_RUN": 1,
+          "AERATION_BLOWER_CYCLE_COUNT": 1
+        },
+        "violations": [
+          {
+            "property": "blower.start_count",
+            "description": "只在实际运行指令由 FALSE 变为 TRUE 时增加一次启动计数。",
+            "output": "AERATION_BLOWER_CYCLE_COUNT",
+            "expected": 1,
+            "actual": 2
+          }
+        ]
+      }
+    ]
+  },
+  "evidence_scope": {
+    "execution": "Actual ST source transpiled by STruC++ 0.7.0 and executed as native C++",
+    "evaluation": "Finite scan-sequence tests against independent handwritten contracts",
+    "codesys_compile": "not_executed",
+    "formal_verification": "not_executed",
+    "hardware_validation": "not_executed"
+  }
+}

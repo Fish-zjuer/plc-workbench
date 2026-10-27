@@ -1,0 +1,60 @@
+{
+  "question_id": "10",
+  "source_sha256": "b6825c2d35cd06806d1644cc930ea40fe2ef383c84147d168f56c8cd1fb68e10",
+  "model": "deepseek-flash",
+  "review": {
+    "findings": [
+      {
+        "id": "REV-001",
+        "title": "连续加热计时基于 xHeaterOn 计算，但过热/故障强制关闭后计时不清零且下次恢复会误判",
+        "category": "explicit_requirement",
+        "requirement_basis": "需求5：加热器连续工作超过5s触发过热保护",
+        "code_evidence": "IF xHeaterOn THEN ... tHeatDur := tNow - tHeatStart; ELSE tHeatStart:=tNow; tHeatDur:=T#0S; END_IF",
+        "trigger_sequence": "温度低于设定值使 xHeaterReq=TRUE，加热器启动；当 xHeaterOn 由加热请求驱动且实际连续运行累计到5s前，若因传感器故障或过热保护使 xHeaterOn=FALSE，则下一扫描 ELSE 分支将 tHeatStart 重置；但关键问题在启动时：xHeatRise 用 xHeaterOn AND NOT xHeatRunPrev，而 tHeatStart 在 ELSIF xOverheat 分支中 xHeaterOn 为 FALSE，导致 xHeaterOn 从 FALSE 变为 TRUE 时 xHeatRise 为真，tHeatStart=tNow，逻辑上计时起点正确。",
+        "expected": "连续加热时长应从加热器真正开启时刻起算，且仅当加热器关闭时清零",
+        "predicted_actual": "静态看计时起点在上升沿设置，关闭时清零，基本符合；但存在过热触发后同一扫描 xHeaterOn 先仍为真再置 FALSE 的时序，tHeatDur 在下扫描才清零，属于下一扫描边界，未必然违反需求。此条置信度低，暂不作为确定缺陷。",
+        "confidence": "low"
+      },
+      {
+        "id": "REV-002",
+        "title": "过热保护解除条件与加热请求无关联，保护期满后立即恢复加热且可能反复触发",
+        "category": "ambiguity",
+        "requirement_basis": "需求5：过热保护需等待3s才能解除；需求3：低于设定温度开加热器",
+        "code_evidence": "IF tOverDur >= T_OVERHEAT_HOLD_MS THEN xOverheat := FALSE; END_IF ... IF xSensorFault THEN xHeaterOn := FALSE ELSIF xOverheat THEN xHeaterOn := FALSE ELSE xHeaterOn := xHeaterReq END_IF",
+        "trigger_sequence": "温度持续低于设定值（xHeaterReq=TRUE），加热器连续工作5s触发 xOverheat=TRUE，HeaterOutput=FALSE；3s后 xOverheat=FALSE，下一扫描 xHeaterOn=xHeaterReq=TRUE，加热器重新启动，再过5s再次过热",
+        "expected": "题面允许保护解除后若温度仍低于设定则重新加热，故3s后重启是合理的；但需确认‘连续加热’是否指 HeaterOutput 实际为ON。此行为符合字面需求，不构成明确错误。",
+        "predicted_actual": "保护解除后按温度请求重新加热，符合需求3和5的字面组合，属可接受行为。",
+        "confidence": "low"
+      },
+      {
+        "id": "REV-003",
+        "title": "传感器故障期间 tHeatStart 被重置导致故障恢复后连续加热计时丢失，可能绕过5s过热保护",
+        "category": "explicit_requirement",
+        "requirement_basis": "需求5：加热器连续工作超过5s应触发过热保护",
+        "code_evidence": "IF xHeaterOn THEN ... ELSE tHeatStart := tNow; tHeatDur := T#0S; END_IF，且 xSensorFault 时 xHeaterOn:=FALSE",
+        "trigger_sequence": "温度低于设定，加热器已连续运行4s；此时 TemperatureSensorInput 变为 -1（故障），xSensorFault=TRUE，xHeaterOn=FALSE，tHeatStart 被重置为当前时刻、tHeatDur=0；下一扫描传感器恢复正常（如温度仍低于设定），xHeaterOn=TRUE，xHeatRise 为真，tHeatStart 重新设为 tNow，继续计时5s才触发过热。",
+        "expected": "加热器实际已工作4s，若故障后恢复继续加热，'连续工作'是否应累计存在歧义；但加热器在故障期间已关闭，严格连续工作被打断，清零可解释。",
+        "predicted_actual": "因故障期间 HeaterOutput=FALSE，连续工作确实中断，清零合理；不构成明确缺陷。",
+        "confidence": "low"
+      }
+    ]
+  },
+  "status": "pending_independent_validation",
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2241,
+        "completion_tokens": 944,
+        "total_tokens": 3185,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2241
+      },
+      "seconds": 10.734
+    }
+  ],
+  "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+}

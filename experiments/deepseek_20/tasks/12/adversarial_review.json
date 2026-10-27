@@ -1,0 +1,61 @@
+{
+  "question_id": "12",
+  "source_sha256": "00a3a6cd171b04675cb5b328b79a49700acfcd4a48e0c9f98c9be204cd8f3bbd",
+  "model": "deepseek-flash",
+  "review": {
+    "findings": [
+      {
+        "id": "REV-001",
+        "title": "报警保持计时使用条件块的 CycleTime，故障撤销后保持时长可能不足 500 ms",
+        "category": "explicit_requirement",
+        "requirement_basis": "要求 1：故障变为 TRUE 时立即激活报警，并保持每个已触发报警至少 500 ms。",
+        "code_evidence": "holdTimer := holdTimer + CycleTime; IF holdTimer >= T#500MS THEN ...",
+        "trigger_sequence": "扫描 N：THICKNESS_SIGNAL_VALID=TRUE, THICKNESS_FAULT=TRUE，报警置位，holdTimer=0。扫描 N+1：THICKNESS_FAULT 变为 FALSE，CycleTime=T#499MS。扫描 N+2：CycleTime=T#1MS，THICKNESS_FAULT=FALSE。",
+        "expected": "报警从首次激活到释放应至少持续 500 ms 的真实时间。",
+        "predicted_actual": "保持计时仅在故障撤销后的扫描中累加 CycleTime，故障持续期间 holdTimer 被清零。若故障仅持续一个扫描且撤销后 CycleTime 合计不足 500 ms，报警会被过早释放（示例中在 N+2 后达到恰好 500 ms 边界，若 CycleTime 更小则更早，如撤销后首个 CycleTime=T#1MS，下一扫描仍不足则继续，但故障持续段未被计入总保持时长）。关键点：故障持续期间的 CycleTime 未计入保持时长，因此从激活时刻起的总报警时长可能小于 500 ms。",
+        "confidence": "medium"
+      },
+      {
+        "id": "REV-002",
+        "title": "信号在故障持续期间变无效时，Counter 与 History 已记录但报警被清除，随后信号恢复会再次记录同一故障",
+        "category": "ambiguity",
+        "requirement_basis": "要求 2 规定仅在有效故障的 FALSE-to-TRUE 上升沿记录；要求 4 规定信号无效时清除报警与保持状态且不添加记录。",
+        "code_evidence": "IF THICKNESS_SIGNAL_VALID AND THICKNESS_FAULT THEN ... lastValidFault := TRUE; ELSE lastValidFault := FALSE; END_IF; 以及 IF NOT THICKNESS_SIGNAL_VALID THEN ... alarmLatched := FALSE; THICKNESS_ALARM := FALSE; END_IF",
+        "trigger_sequence": "扫描 A：VALID=TRUE, FAULT=TRUE → 记录一次，lastValidFault=TRUE。扫描 B：VALID=FALSE, FAULT 仍为 TRUE → 进入 ELSE，lastValidFault=FALSE，报警清除。扫描 C：VALID=TRUE, FAULT=TRUE → 再次进入上升沿分支，Counter 再 +1，History 再记录。",
+        "expected": "题面未明确信号无效期间故障是否视为中断；若视为中断，则视为新故障合理；若视为同一持续故障，则重复记录。存在歧义，但代码选择在信号无效时重置 lastValidFault，未保留故障连续性。",
+        "predicted_actual": "同一物理故障在信号短暂失效后会被计为两次故障记录。",
+        "confidence": "low"
+      },
+      {
+        "id": "REV-003",
+        "title": "输出历史数组对外可写，未满足“外部调用者不得修改历史条目”",
+        "category": "explicit_requirement",
+        "requirement_basis": "要求 5：Statistics and history are for observation and maintenance only；external callers must not modify history entries。接口说明中 Slab_Fault_History 标注 read-only to callers。",
+        "code_evidence": "Slab_Fault_History : ARRAY[0..4] OF DINT; 位于 VAR_OUTPUT，且每扫描由 historyBuf 覆盖赋值。",
+        "trigger_sequence": "外部调用者在 FB 调用后直接写 Q12_instance.Slab_Fault_History[0] := 12345；下一扫描 FB 会用 historyBuf[0] 覆盖回原值。",
+        "expected": "调用者不能修改历史记录。",
+        "predicted_actual": "在 ST 中 VAR_OUTPUT 通常可被外部写入；虽然下一扫描会被内部缓冲覆盖，但调用者在两次扫描之间仍可写入并可能被其他逻辑读取，且接口层面未提供只读保护。注释声称“调用方只能读取输出”与 VAR_OUTPUT 的可写性不符。",
+        "confidence": "medium"
+      }
+    ],
+    "no_additional_issue_found": false
+  },
+  "status": "pending_independent_validation",
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2300,
+        "completion_tokens": 933,
+        "total_tokens": 3233,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2300
+      },
+      "seconds": 10.609
+    }
+  ],
+  "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+}

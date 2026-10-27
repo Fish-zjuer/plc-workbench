@@ -1,0 +1,95 @@
+{
+  "schema": "plc-probe-counterexample-v1",
+  "profile": "motor",
+  "source_sha256": "c59662ed85e919f2832389c21e84ec263c5fc8131d3830a7563a2cb4137fdbc5",
+  "monitor_version": "1",
+  "target_property": "motor.hold",
+  "original_failure_prefix_scans": 4,
+  "minimized_scans": 2,
+  "candidate_replays": 4,
+  "minimality": "deletion reduction under an explicit replay budget; not guaranteed globally shortest",
+  "scenario": {
+    "name": "all_inputs_depth3_032_minimized",
+    "family": "minimized",
+    "trace": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "StartBtn": 1,
+          "StopBtn": 0,
+          "EStop": 0
+        }
+      },
+      {
+        "time_ms": 100,
+        "inputs": {
+          "StartBtn": 0,
+          "StopBtn": 0,
+          "EStop": 0
+        }
+      }
+    ]
+  },
+  "reproduced": true,
+  "result": {
+    "name": "all_inputs_depth3_032_minimized",
+    "family": "minimized",
+    "status": "fail",
+    "first_failure": {
+      "scan": 1,
+      "time_ms": 100,
+      "property": "motor.hold",
+      "description": "没有新启动或停止事件时，应保持原运行状态。",
+      "output": "Motor",
+      "expected": 1,
+      "actual": 0
+    },
+    "rows": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "StartBtn": 1,
+          "StopBtn": 0,
+          "EStop": 0
+        },
+        "actual": {
+          "Motor": 1
+        },
+        "expected": {
+          "Motor": 1
+        },
+        "violations": []
+      },
+      {
+        "time_ms": 100,
+        "inputs": {
+          "StartBtn": 0,
+          "StopBtn": 0,
+          "EStop": 0
+        },
+        "actual": {
+          "Motor": 0
+        },
+        "expected": {
+          "Motor": 1
+        },
+        "violations": [
+          {
+            "property": "motor.hold",
+            "description": "没有新启动或停止事件时，应保持原运行状态。",
+            "output": "Motor",
+            "expected": 1,
+            "actual": 0
+          }
+        ]
+      }
+    ]
+  },
+  "evidence_scope": {
+    "execution": "Actual ST source transpiled by STruC++ 0.7.0 and executed as native C++",
+    "evaluation": "Finite scan-sequence tests against independent handwritten contracts",
+    "codesys_compile": "not_executed",
+    "formal_verification": "not_executed",
+    "hardware_validation": "not_executed"
+  }
+}

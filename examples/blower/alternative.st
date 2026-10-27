@@ -1,0 +1,29 @@
+FUNCTION_BLOCK BlowerControl
+VAR_INPUT
+    DO_LOW : BOOL;
+    AERATION_E_STOP_NC : BOOL;
+END_VAR
+VAR_OUTPUT
+    BLOWER_RUN : BOOL := FALSE;
+    AERATION_BLOWER_CYCLE_COUNT : UINT := 0;
+END_VAR
+VAR
+    waiting : BOOL := FALSE;
+    began : TIME := T#0ms;
+    previousRun : BOOL := FALSE;
+END_VAR
+IF NOT (DO_LOW AND AERATION_E_STOP_NC) THEN
+    waiting := FALSE;
+    BLOWER_RUN := FALSE;
+ELSE
+    IF NOT waiting THEN
+        began := TIME();
+        waiting := TRUE;
+    END_IF;
+    BLOWER_RUN := (TIME() - began) >= T#5s;
+END_IF;
+IF BLOWER_RUN AND NOT previousRun THEN
+    AERATION_BLOWER_CYCLE_COUNT := AERATION_BLOWER_CYCLE_COUNT + 1;
+END_IF;
+previousRun := BLOWER_RUN;
+END_FUNCTION_BLOCK

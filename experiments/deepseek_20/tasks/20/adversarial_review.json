@@ -1,0 +1,61 @@
+{
+  "question_id": "20",
+  "source_sha256": "e8adc1f68057695880e3fa7d07c651038680a02c5b7eb08b72ae785df8e30df0",
+  "model": "deepseek-flash",
+  "review": {
+    "findings": [
+      {
+        "id": "REV-001",
+        "title": "不合格品剔除后状态机卡死在S_AT_WEIGHT，产线无法继续",
+        "category": "explicit_requirement",
+        "requirement_basis": "自动模式下称重完成且不合格时执行kick剔除；剔除后物料离开称重站（SensorWeight变FALSE），产线应能回到等待/进料状态继续处理下一件物料。",
+        "code_evidence": "ELSE rejectItem := TRUE; MotorForward := FALSE; state := S_AT_WEIGHT; END_IF; 以及 IF Mode AND rejectItem THEN kick := TRUE; IF NOT SensorWeight THEN rejectItem := FALSE; END_IF; ELSE kick := FALSE; END_IF;",
+        "trigger_sequence": "Mode=1；物料到达称重站 SensorWeight=TRUE；weightComplete=TRUE 且 weight=50（<100，不合格）；kick置TRUE剔除物料，随后 SensorWeight 变为 FALSE。",
+        "expected": "物料被剔除后产线应恢复，能够接受下一件物料（回到可检测 SensorFeed/再次称重的推进状态）。",
+        "predicted_actual": "rejectItem 仅在 kick 分支中被清为 FALSE，但 state 仍为 S_AT_WEIGHT；S_AT_WEIGHT 只响应 weightComplete，不会因 SensorWeight 消失而离开。下一件物料到达时若 weightComplete 不再出现（或对旧站点信号），状态机将一直停留在 S_AT_WEIGHT，自动序列无法回到 S_IDLE，产线卡死。",
+        "confidence": "high"
+      },
+      {
+        "id": "REV-002",
+        "title": "不合格品剔除后若 weightComplete 保持TRUE会重复判定并可能误动作",
+        "category": "ambiguity",
+        "requirement_basis": "weightComplete 表示本次称重完成信号；对同一件物料应只处理一次，剔除后不应再按同一 weightComplete 重复判定。",
+        "code_evidence": "S_AT_WEIGHT : IF weightComplete THEN ... ELSE rejectItem := TRUE; ... state := S_AT_WEIGHT; END_IF; 注释声明 weightComplete 一次性评估，但代码未使用 weightDone 来阻止重复进入。",
+        "trigger_sequence": "Mode=1；SensorWeight=TRUE；weightComplete 保持 TRUE 多个扫描周期，weight=50；第一周期进入不合格分支置 kick；之后 weightComplete 仍 TRUE。",
+        "expected": "同一物料的 weightComplete 只应触发一次判定/剔除。",
+        "predicted_actual": "每个扫描周期都会重新进入 IF weightComplete 分支，反复将 rejectItem 置 TRUE 并把状态保持为 S_AT_WEIGHT；一旦 SensorWeight 短暂丢失使 rejectItem 清 FALSE，下一个周期又会重新置位 kick，产生重复剔除或错误剔除后续物料。",
+        "confidence": "medium"
+      },
+      {
+        "id": "REV-003",
+        "title": "手动/自动切换复位时未复位 kick 与 firingTemp 等输出状态",
+        "category": "ambiguity",
+        "requirement_basis": "模式切换应使产线状态一致复位（候选注释声称序列在模式变化时复位）；kick 是剔除输出，切换后不应遗留上一模式/上一物料的剔除命令。",
+        "code_evidence": "IF Mode <> prevMode THEN prevMode := Mode; state := S_IDLE; rejectItem := FALSE; weightDone := FALSE; END_IF; 但 kick 仅在 IF Mode AND rejectItem THEN ... ELSE kick := FALSE 中赋值，切到手动后 kick 走 ELSE 清 FALSE 尚可；然而 firingTemp 无复位，且从手动切回自动时 state=S_IDLE 但 firingTemp 保留旧值。",
+        "trigger_sequence": "自动模式完成一件合格品 firingTemp=525；切到手动 Mode=0；再切回自动 Mode=1，state 复位为 S_IDLE，但 firingTemp 仍为 525。",
+        "expected": "模式切换复位后，若题面要求 firingTemp 输出用于当前产品，则在新产品计算前不应残留旧值为有效输出（至少需明确保持策略）。",
+        "predicted_actual": "firingTemp 在模式切换复位路径中未清零，切换后仍输出上一件产品的温度，可能被下游误当作有效温度。",
+        "confidence": "low"
+      }
+    ],
+    "no_additional_issue_found": false
+  },
+  "status": "pending_independent_validation",
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3335,
+        "completion_tokens": 905,
+        "total_tokens": 4240,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 3335
+      },
+      "seconds": 10.953
+    }
+  ],
+  "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+}

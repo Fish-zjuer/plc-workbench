@@ -1,0 +1,128 @@
+{
+  "schema": "plc-probe-review-results-v1",
+  "status": "needs_review",
+  "generated_at": "2026-10-26T20:40:31.583404+08:00",
+  "reviewer": {
+    "model": "gpt-6-luna",
+    "role": "independent_adversarial"
+  },
+  "proposals_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\adversarial_review\\round_1\\proposals_v2.json",
+  "proposals_sha256": "abdd4d8c2f73d6b3a5e941199ecb77edba9563c094d8f199f503b9458e82deca",
+  "candidates": [
+    {
+      "profile": "motor",
+      "source": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\luna\\repair_2\\motor.st",
+      "source_sha256": "9ccb79b6e125ce9e685ceeffde4650ffc610bd72e8bde325fcafda8a7492a5f7"
+    },
+    {
+      "profile": "blower",
+      "source": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\luna\\repair_2\\blower.st",
+      "source_sha256": "9eac784e0151f1233a78ce8ecf9274c1804bba8b0ea2541fafc7b36081b4fbcc"
+    },
+    {
+      "profile": "edges",
+      "source": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\luna\\repair_2\\edges.st",
+      "source_sha256": "178daeb66487dac48df36cf76e71247314db512ee65beb42df2f75f37b530a34"
+    },
+    {
+      "profile": "moving_average",
+      "source": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\luna\\repair_2\\moving_average.st",
+      "source_sha256": "e40bd6e5c6e9e946dc9e06b712031775e594e2e8659990711a43f360e79ce4a6"
+    },
+    {
+      "profile": "ipv4",
+      "source": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\luna\\repair_2\\ipv4.st",
+      "source_sha256": "0e194aa4eec90fab2bba977adb7f566da5c478c190355a82700f3a4a0bf8b1f9"
+    }
+  ],
+  "adjudication_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\adversarial_review\\round_1\\adjudication.json",
+  "adjudication_sha256": "ac797110da6d6c2b0575d74595f65472e4327d49bd27e92b8583aa2a41f8c2b8",
+  "monitor_version": "1",
+  "monitor_sha256": "19defe1a05036d0492516adda109193cdc54adbd5795eaed660c72455487b91c",
+  "comparison_tolerance": {
+    "relative": 1e-09,
+    "absolute": 1e-09
+  },
+  "counts": {
+    "proposals": 1,
+    "confirmed": 0,
+    "unresolved": 1,
+    "by_status": {
+      "needs_requirement_clarification": 1
+    }
+  },
+  "findings": [
+    {
+      "id": "ADV-001",
+      "profile": "moving_average",
+      "title": "Trigger rising edge during reset is consumed",
+      "proposed_scope": "ambiguous",
+      "adjudication": {
+        "id": "ADV-001",
+        "decision": "ambiguous",
+        "reason": "题面规定上升沿采样与复位，但未定义复位与采样同周期时的优先级，亦未要求缓存复位期间的触发沿。既有CONTRACTS.md明确排除该同时事件，空历史的average亦未评分。此提案断言记录候选行为，可用于澄清，不能作为代码缺陷。"
+      },
+      "source_sha256": "e40bd6e5c6e9e946dc9e06b712031775e594e2e8659990711a43f360e79ce4a6",
+      "fresh_process_replays": 2,
+      "stable": true,
+      "assertion_mismatch_reproduced": false,
+      "checks": [
+        {
+          "scan": 2,
+          "output": "average",
+          "expected": 0.0,
+          "actual": 0.0,
+          "matches_assertion": true,
+          "monitor_scored": false,
+          "monitor_expected": null,
+          "oracle_agrees": false,
+          "monitor_properties": []
+        },
+        {
+          "scan": 2,
+          "output": "windowSizeReached",
+          "expected": false,
+          "actual": 0,
+          "matches_assertion": true,
+          "monitor_scored": true,
+          "monitor_expected": 0,
+          "oracle_agrees": true,
+          "monitor_properties": []
+        },
+        {
+          "scan": 2,
+          "output": "error",
+          "expected": false,
+          "actual": 0,
+          "matches_assertion": true,
+          "monitor_scored": true,
+          "monitor_expected": 0,
+          "oracle_agrees": true,
+          "monitor_properties": []
+        },
+        {
+          "scan": 2,
+          "output": "status",
+          "expected": 0,
+          "actual": 0,
+          "matches_assertion": true,
+          "monitor_scored": true,
+          "monitor_expected": 0,
+          "oracle_agrees": true,
+          "monitor_properties": []
+        }
+      ],
+      "monitor_failed_in_trace": false,
+      "status": "needs_requirement_clarification",
+      "evidence_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\experiments\\adversarial_review\\round_1\\evaluation_evidence\\finding_01.json"
+    }
+  ],
+  "evidence_scope": {
+    "execution": "Actual ST source transpiled by STruC++ 0.7.0 and executed as native C++",
+    "evaluation": "Finite scan-sequence tests against independent handwritten contracts",
+    "codesys_compile": "not_executed",
+    "formal_verification": "not_executed",
+    "hardware_validation": "not_executed"
+  },
+  "limitation": "A model hypothesis and a supplied adjudication are not proof; no confirmed counterexample is not a correctness claim."
+}

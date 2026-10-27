@@ -1,0 +1,103 @@
+{
+  "schema": "plc-probe-counterexample-v1",
+  "profile": "edges",
+  "source_sha256": "ca80e80bfdc9ebe85c1437f88483fd9242abfaeb6c93573c61ceb7c6796ab3f8",
+  "monitor_version": "1",
+  "target_property": "edges.changed",
+  "original_failure_prefix_scans": 3,
+  "minimized_scans": 2,
+  "candidate_replays": 7,
+  "minimality": "deletion reduction under an explicit replay budget; not guaranteed globally shortest",
+  "scenario": {
+    "name": "bit_0_rise_hold_fall_minimized",
+    "family": "minimized",
+    "trace": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "value": 1
+        }
+      },
+      {
+        "time_ms": 100,
+        "inputs": {
+          "value": 1
+        }
+      }
+    ]
+  },
+  "reproduced": true,
+  "result": {
+    "name": "bit_0_rise_hold_fall_minimized",
+    "family": "minimized",
+    "status": "fail",
+    "first_failure": {
+      "scan": 1,
+      "time_ms": 100,
+      "property": "edges.changed",
+      "description": "hasChanged 应反映 DWORD 与上轮输入是否不同。",
+      "output": "hasChanged",
+      "expected": 0,
+      "actual": 1
+    },
+    "rows": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "value": 1
+        },
+        "actual": {
+          "hasChanged": 1,
+          "hasRisingEdges": 1,
+          "risingBits": 1,
+          "noOfRisingBits": 1,
+          "hasFallingEdges": 0,
+          "fallingBits": 0,
+          "noOfFallingBits": 0
+        },
+        "expected": {},
+        "violations": []
+      },
+      {
+        "time_ms": 100,
+        "inputs": {
+          "value": 1
+        },
+        "actual": {
+          "hasChanged": 1,
+          "hasRisingEdges": 0,
+          "risingBits": 0,
+          "noOfRisingBits": 0,
+          "hasFallingEdges": 0,
+          "fallingBits": 0,
+          "noOfFallingBits": 0
+        },
+        "expected": {
+          "hasChanged": 0,
+          "hasRisingEdges": 0,
+          "risingBits": 0,
+          "noOfRisingBits": 0,
+          "hasFallingEdges": 0,
+          "fallingBits": 0,
+          "noOfFallingBits": 0
+        },
+        "violations": [
+          {
+            "property": "edges.changed",
+            "description": "hasChanged 应反映 DWORD 与上轮输入是否不同。",
+            "output": "hasChanged",
+            "expected": 0,
+            "actual": 1
+          }
+        ]
+      }
+    ]
+  },
+  "evidence_scope": {
+    "execution": "Actual ST source transpiled by STruC++ 0.7.0 and executed as native C++",
+    "evaluation": "Finite scan-sequence tests against independent handwritten contracts",
+    "codesys_compile": "not_executed",
+    "formal_verification": "not_executed",
+    "hardware_validation": "not_executed"
+  }
+}

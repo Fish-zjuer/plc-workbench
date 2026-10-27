@@ -1,0 +1,50 @@
+{
+  "unit_tests": {
+    "command": "python -B -m unittest discover -s tests -v",
+    "passed": 29,
+    "failed": 0
+  },
+  "cli": {
+    "command": [
+      "C:\\Users\\29927\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+      "-B",
+      "-m",
+      "plc_probe",
+      "review",
+      "experiments\\adversarial_review\\round_1\\proposals_v2.json",
+      "--adjudication",
+      "experiments\\adversarial_review\\round_1\\adjudication.json"
+    ],
+    "expected_exit": 1,
+    "actual_exit": 1,
+    "status": "needs_review",
+    "counts": {
+      "proposals": 1,
+      "confirmed": 0,
+      "unresolved": 1,
+      "by_status": {
+        "needs_requirement_clarification": 1
+      }
+    }
+  },
+  "sources_unchanged_since_repair_2": true,
+  "frozen_evaluation_code": {
+    "contracts.py": true,
+    "scenarios.py": true
+  },
+  "ordinary_evaluation": {
+    "tasks": 5,
+    "compiled": 5,
+    "behavior_passed": 5,
+    "behavior_failed": 0,
+    "not_behavior_evaluated": 0
+  },
+  "adversarial_scan_invocations": 6,
+  "evidence_scope": {
+    "execution": "Actual ST source transpiled by STruC++ 0.7.0 and executed as native C++",
+    "evaluation": "Finite scan-sequence tests against independent handwritten contracts",
+    "codesys_compile": "not_executed",
+    "formal_verification": "not_executed",
+    "hardware_validation": "not_executed"
+  }
+}

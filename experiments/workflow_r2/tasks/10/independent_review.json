@@ -1,0 +1,377 @@
+{
+  "question_id": "10",
+  "source_sha256": "47cc4873b4db5722a433351c16d2413b39d2a1fd6daeda46b4c261175a6aa54f",
+  "reviewer_model": "deepseek-flash",
+  "findings": [
+    {
+      "proposal": {
+        "id": "REV-01",
+        "title": "过热保护在加热器被保护关断后立即自解除，无法保持3s",
+        "basis": "题面要求：过热保护触发后必须等待3s才能解除。候选源码中 tHeatDur 仅在 xHeaterOn 为 TRUE 时累加；触发过热时在同扫描置 xOverheat、tOverStart=tNow，随后输出合成阶段因 xOverheat 把 xHeaterOn 置 FALSE。下一扫描 IF xHeaterOn 为假，进入 ELSE 分支把 tHeatStart:=tNow、tHeatDur:=0；同时 5a 的触发条件 xHeaterOn AND ... 不再满足。5b 中 tOverDur:=tNow-tOverStart，但 tOverStart 在上一扫描 5b 的 ELSE 分支（xOverheat 原本为 FALSE）已在置位前被赋为旧 tNow？需核实：触发扫描内 5b 于置位后运行，xOverheat=TRUE，tOverDur=tNow-tOverStart=0，未满3s，保持 TRUE。下一扫描 5a 不触发，5b 计算 tOverDur 约为两次调用间隔；若调用间隔很小则仍保持，但 5a 的 ELSE 分支未影响 tOverStart，故实际保持由时间差决定。关键问题：触发扫描中 5b 于置位后执行，xOverheat 为 TRUE 时 tOverDur=tNow-tOverStart 用刚赋的同一 tNow 得0，正常。但同扫描 5a 的 ELSE（加热器未工作）分支在本扫描尚未将 tOverStart 清零，因为 5a 在置位之前已执行。下一扫描 5a 的 ELSE 只清 tHeatStart/tHeatDur，不清 tOverStart。因此保护保持期实际依赖 tOverStart，而 tOverStart 在触发扫描被正确设为 tNow，后续扫描 5b 持续计算 tOverDur，满3s后解除，逻辑上保持成立。但候选存在真正缺陷：触发过热后加热器被关断，下一扫描 5a 的 ELSE 清零 tHeatDur，使再次启动时重新计5s，属预期。保护解除后同扫描最终 xHeaterOn 为 xHeaterReq=TRUE 立即重新加热。该点符合题面。经核查保持逻辑无明显违反。",
+        "scope": "ambiguous",
+        "trace": [
+          {
+            "time_ms": 0,
+            "inputs": {
+              "TemperatureSensorInput": 20.0,
+              "SetTemperature": 30.0
+            },
+            "expected": {
+              "HeaterOutput": 1,
+              "OverheatProtection": 0
+            }
+          },
+          {
+            "time_ms": 5000,
+            "inputs": {
+              "TemperatureSensorInput": 20.0,
+              "SetTemperature": 30.0
+            },
+            "expected": {
+              "HeaterOutput": 0,
+              "OverheatProtection": 1
+            }
+          },
+          {
+            "time_ms": 8000,
+            "inputs": {
+              "TemperatureSensorInput": 20.0,
+              "SetTemperature": 30.0
+            },
+            "expected": {
+              "OverheatProtection": 0,
+              "HeaterOutput": 1
+            }
+          }
+        ]
+      },
+      "status": "needs_requirement_clarification",
+      "mismatches": [
+        [],
+        []
+      ],
+      "runs": [
+        {
+          "name": "REV-01",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "HeaterOutput": 1,
+                "OverheatProtection": 0
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 1.0,
+                "OverheatProtection": 0.0,
+                "HeaterOutput": 1.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 5000,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "HeaterOutput": 0,
+                "OverheatProtection": 1
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 0.0,
+                "OverheatProtection": 1.0,
+                "HeaterOutput": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 8000,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "OverheatProtection": 0,
+                "HeaterOutput": 1
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 1.0,
+                "OverheatProtection": 0.0,
+                "HeaterOutput": 1.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "REV-01",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "HeaterOutput": 1,
+                "OverheatProtection": 0
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 1.0,
+                "OverheatProtection": 0.0,
+                "HeaterOutput": 1.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 5000,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "HeaterOutput": 0,
+                "OverheatProtection": 1
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 0.0,
+                "OverheatProtection": 1.0,
+                "HeaterOutput": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 8000,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "OverheatProtection": 0,
+                "HeaterOutput": 1
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 1.0,
+                "OverheatProtection": 0.0,
+                "HeaterOutput": 1.0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "proposal": {
+        "id": "REV-02",
+        "title": "过热保持期结束后同一扫描立即恢复加热，且保持计时起点依赖触发扫描内同扫描写入的tNow，存在同扫描内自比较风险",
+        "basis": "题面仅要求保护期间关断加热器、等待约3s后可解除；未规定解除后是否应在本扫描抑制加热。候选在解除过热后直接 xHeaterOn:=xHeaterReq，解除扫描即恢复输出，属题面未定义，不判定违反。但保持计时的可验证性：触发扫描内 5a 先置 tOverStart:=tNow，5b 随即以同一 tNow 计算 tOverDur=0；若某实现中 TIME() 在同扫描返回相同值，则触发扫描 tOverDur=0 正常。下一扫描 tOverDur 为调用间隔。若两次调用间隔≥3s（例如裸单元扫描间隔较大），保护会在触发后的第一次后续观察前即被解除，导致“刚触发保护就解除”的可观测现象。题面未限定扫描周期，故该行为在长调用间隔下与“必须等待3s”存在歧义冲突。",
+        "scope": "ambiguous",
+        "trace": [
+          {
+            "time_ms": 0,
+            "inputs": {
+              "TemperatureSensorInput": 20.0,
+              "SetTemperature": 30.0
+            },
+            "expected": {
+              "HeaterOutput": 1,
+              "OverheatProtection": 0
+            }
+          },
+          {
+            "time_ms": 5000,
+            "inputs": {
+              "TemperatureSensorInput": 20.0,
+              "SetTemperature": 30.0
+            },
+            "expected": {
+              "HeaterOutput": 0,
+              "OverheatProtection": 1
+            }
+          },
+          {
+            "time_ms": 8001,
+            "inputs": {
+              "TemperatureSensorInput": 20.0,
+              "SetTemperature": 30.0
+            },
+            "expected": {
+              "OverheatProtection": 0
+            }
+          }
+        ]
+      },
+      "status": "needs_requirement_clarification",
+      "mismatches": [
+        [],
+        []
+      ],
+      "runs": [
+        {
+          "name": "REV-02",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "HeaterOutput": 1,
+                "OverheatProtection": 0
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 1.0,
+                "OverheatProtection": 0.0,
+                "HeaterOutput": 1.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 5000,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "HeaterOutput": 0,
+                "OverheatProtection": 1
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 0.0,
+                "OverheatProtection": 1.0,
+                "HeaterOutput": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 8001,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "OverheatProtection": 0
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 1.0,
+                "OverheatProtection": 0.0,
+                "HeaterOutput": 1.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "REV-02",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "HeaterOutput": 1,
+                "OverheatProtection": 0
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 1.0,
+                "OverheatProtection": 0.0,
+                "HeaterOutput": 1.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 5000,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "HeaterOutput": 0,
+                "OverheatProtection": 1
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 0.0,
+                "OverheatProtection": 1.0,
+                "HeaterOutput": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 8001,
+              "inputs": {
+                "TemperatureSensorInput": 20.0,
+                "SetTemperature": 30.0
+              },
+              "expected": {
+                "OverheatProtection": 0
+              },
+              "actual": {
+                "CurrentTemperature": 20.0,
+                "SetTempDisplay": 30.0,
+                "HeaterStatus": 1.0,
+                "OverheatProtection": 0.0,
+                "HeaterOutput": 1.0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1950,
+        "completion_tokens": 1022,
+        "total_tokens": 2972,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1950
+      },
+      "seconds": 11.25
+    }
+  ],
+  "scope": "Fresh review without tests or author history. Mismatch is not a confirmed requirement violation; separate adjudication required."
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "plc-probe-counterexample-v1",
+  "profile": "motor",
+  "source_sha256": "db712a4282dd69003c1095a8ada339c333a6ec3a1395a3fe8d814a23a80bf626",
+  "monitor_version": "1",
+  "target_property": "motor.stop_priority",
+  "original_failure_prefix_scans": 4,
+  "minimized_scans": 1,
+  "candidate_replays": 4,
+  "minimality": "deletion reduction under an explicit replay budget; not guaranteed globally shortest",
+  "scenario": {
+    "name": "all_inputs_depth3_005_minimized",
+    "family": "minimized",
+    "trace": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "StartBtn": 1,
+          "StopBtn": 0,
+          "EStop": 1
+        }
+      }
+    ]
+  },
+  "reproduced": true,
+  "result": {
+    "name": "all_inputs_depth3_005_minimized",
+    "family": "minimized",
+    "status": "fail",
+    "first_failure": {
+      "scan": 0,
+      "time_ms": 0,
+      "property": "motor.stop_priority",
+      "description": "停止或急停输入有效时，本轮执行后的电机指令应关闭。",
+      "output": "Motor",
+      "expected": 0,
+      "actual": 1
+    },
+    "rows": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "StartBtn": 1,
+          "StopBtn": 0,
+          "EStop": 1
+        },
+        "actual": {
+          "Motor": 1
+        },
+        "expected": {
+          "Motor": 0
+        },
+        "violations": [
+          {
+            "property": "motor.stop_priority",
+            "description": "停止或急停输入有效时，本轮执行后的电机指令应关闭。",
+            "output": "Motor",
+            "expected": 0,
+            "actual": 1
+          }
+        ]
+      }
+    ]
+  },
+  "evidence_scope": {
+    "execution": "Actual ST source transpiled by STruC++ 0.7.0 and executed as native C++",
+    "evaluation": "Finite scan-sequence tests against independent handwritten contracts",
+    "codesys_compile": "not_executed",
+    "formal_verification": "not_executed",
+    "hardware_validation": "not_executed"
+  }
+}

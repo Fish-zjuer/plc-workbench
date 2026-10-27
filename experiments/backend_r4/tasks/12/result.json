@@ -1,0 +1,255 @@
+{
+  "question_id": "12",
+  "project_id": "f7c48b7bba05",
+  "session_id": "afd3b922020f",
+  "baseline_sha256": "00a3a6cd171b04675cb5b328b79a49700acfcd4a48e0c9f98c9be204cd8f3bbd",
+  "before_status": "fail",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "12",
+    "source": "candidate.st",
+    "source_sha256": "7c206e5ae871c456408db8cade59337002e143437555951db05e5995de7c3217",
+    "attempts": [
+      {
+        "proposal": 1,
+        "revision": 1,
+        "source_sha256": "60a2e1ea09da63a4565b9841c045c775f14e75653eef2b4d77e9fd41d67f2600",
+        "model_summary": "Rebuilt the 500 ms minimum-hold logic so each new valid fault rising edge restarts the timer, including faults that occur while the previous alarm hold is still active. Alarm release now requires the restarted hold to have elapsed. Invalid signal still clears the alarm and hold state immediately.",
+        "assumptions": [
+          "The minimum hold requirement means each valid fault rising edge restarts a fresh 500 ms hold interval; this includes a new fault that occurs while an earlier alarm is still being held.",
+          "The alarm is released on the first valid scan after the most recent trigger's 500 ms hold has elapsed and THICKNESS_FAULT has returned to FALSE. This finite-check timing convention follows the supplied backend notes.",
+          "THICKNESS_SIGNAL_VALID=FALSE takes priority over all other alarm behavior and immediately clears the alarm and holding state.",
+          "UINT fault counting saturates at 65535 rather than wrapping.",
+          "CycleTime values <= 0 are ignored for runtime accumulation."
+        ],
+        "status": "fail",
+        "first_failure": {
+          "scenario": "hold_validity_and_runtime",
+          "scan": 4,
+          "time_ms": 510,
+          "output": "THICKNESS_ALARM",
+          "expected": 0,
+          "actual": 1
+        },
+        "evidence": "workflow_runs/e018825e92eb/evaluation_01.json"
+      },
+      {
+        "proposal": 2,
+        "revision": 2,
+        "source_sha256": "7c206e5ae871c456408db8cade59337002e143437555951db05e5995de7c3217",
+        "model_summary": "修订 500 ms 保持计时：在每个有效故障上升沿的同一扫描内先复位 TON 再立即启动，使首次故障和保持期间的新故障都从各自触发扫描开始完整计时。信号无效时立即清除报警与保持。保留计数、历史移位、运行时累加和输出刷新逻辑。",
+        "assumptions": [
+          "500 ms 最小保持从有效故障上升沿被观察到的扫描开始计时；在该扫描内先复位 TON 再立即启动 TON，使首次故障和保持期间的新故障都从各自触发扫描完整计时。",
+          "报警在故障撤销后且保持时间已满的第一个扫描释放；信号无效时立即关闭报警并清除保持状态。",
+          "CycleTime 仅用于正常切割运行时间累加，不作为 500 ms 保持定时器的计时源；保持定时器使用 TON 的实际扫描时间语义。",
+          "上电后首次调用若已存在有效故障，则按一次 FALSE-to-TRUE 上升沿记录故障，因为 lastValidFault 初始为 FALSE。",
+          "Slab_Fault_History 每个扫描由内部 historyBuf 刷新到输出，以尽量保证输出只反映内部维护的最新五个故障记录。"
+        ],
+        "status": "pass",
+        "first_failure": null,
+        "evidence": "workflow_runs/e018825e92eb/evaluation_02.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "12",
+      "source_sha256": "7c206e5ae871c456408db8cade59337002e143437555951db05e5995de7c3217",
+      "behavior_tested": true,
+      "first_failure": null,
+      "summary": {
+        "scenarios": 3,
+        "scans": 336,
+        "failed": 0
+      },
+      "scope": "Additional finite duration/history checks; Q12 alarm only asserts minimum hold outside original fixed examples.",
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\4e4c92202fb01fc5ae3e\\builds\\bank_816f505d96b4d736084b87f9\\build.json",
+      "original_finite_status": "pass",
+      "original_finite_scans": 21,
+      "original_finite_summary": {
+        "scenarios": 2,
+        "scans": 21,
+        "failed": 0
+      }
+    },
+    "backend": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "b19cb4e7ec0ac18a1ccd896ac0df001b44667a68a3bdb56b9d5e8196bb63430a",
+    "run_path": "workflow_runs/e018825e92eb"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4315,
+        "completion_tokens": 8141,
+        "total_tokens": 12456,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 6619
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 4315
+      },
+      "seconds": 49.172
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4848,
+        "completion_tokens": 2916,
+        "total_tokens": 7764,
+        "prompt_tokens_details": {
+          "cached_tokens": 768
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1316
+        },
+        "prompt_cache_hit_tokens": 768,
+        "prompt_cache_miss_tokens": 4080
+      },
+      "seconds": 20.266
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4507,
+        "completion_tokens": 8586,
+        "total_tokens": 13093,
+        "prompt_tokens_details": {
+          "cached_tokens": 768
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 6854
+        },
+        "prompt_cache_hit_tokens": 768,
+        "prompt_cache_miss_tokens": 3739
+      },
+      "seconds": 52.766
+    }
+  ],
+  "receipt_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\f7c48b7bba05\\workspace\\workflow_runs\\e018825e92eb\\receipt.json",
+  "followup_stages": [
+    {
+      "trigger": "Expanded duration/hold checks",
+      "previous_status": "fail",
+      "previous_first_failure": {
+        "scenario": "each_new_fault_restarts_its_minimum_hold",
+        "scan": 5,
+        "time_ms": 700,
+        "output": "THICKNESS_ALARM",
+        "expected": 1,
+        "actual": 0.0
+      },
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 4848,
+            "completion_tokens": 2916,
+            "total_tokens": 7764,
+            "prompt_tokens_details": {
+              "cached_tokens": 768
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 1316
+            },
+            "prompt_cache_hit_tokens": 768,
+            "prompt_cache_miss_tokens": 4080
+          },
+          "seconds": 20.266
+        },
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 4507,
+            "completion_tokens": 8586,
+            "total_tokens": 13093,
+            "prompt_tokens_details": {
+              "cached_tokens": 768
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 6854
+            },
+            "prompt_cache_hit_tokens": 768,
+            "prompt_cache_miss_tokens": 3739
+          },
+          "seconds": 52.766
+        }
+      ],
+      "receipt": {
+        "schema": "plc-workflow-receipt-v1",
+        "status": "verified",
+        "question_id": "12",
+        "source": "candidate.st",
+        "source_sha256": "7c206e5ae871c456408db8cade59337002e143437555951db05e5995de7c3217",
+        "attempts": [
+          {
+            "proposal": 1,
+            "revision": 1,
+            "source_sha256": "60a2e1ea09da63a4565b9841c045c775f14e75653eef2b4d77e9fd41d67f2600",
+            "model_summary": "Rebuilt the 500 ms minimum-hold logic so each new valid fault rising edge restarts the timer, including faults that occur while the previous alarm hold is still active. Alarm release now requires the restarted hold to have elapsed. Invalid signal still clears the alarm and hold state immediately.",
+            "assumptions": [
+              "The minimum hold requirement means each valid fault rising edge restarts a fresh 500 ms hold interval; this includes a new fault that occurs while an earlier alarm is still being held.",
+              "The alarm is released on the first valid scan after the most recent trigger's 500 ms hold has elapsed and THICKNESS_FAULT has returned to FALSE. This finite-check timing convention follows the supplied backend notes.",
+              "THICKNESS_SIGNAL_VALID=FALSE takes priority over all other alarm behavior and immediately clears the alarm and holding state.",
+              "UINT fault counting saturates at 65535 rather than wrapping.",
+              "CycleTime values <= 0 are ignored for runtime accumulation."
+            ],
+            "status": "fail",
+            "first_failure": {
+              "scenario": "hold_validity_and_runtime",
+              "scan": 4,
+              "time_ms": 510,
+              "output": "THICKNESS_ALARM",
+              "expected": 0,
+              "actual": 1
+            },
+            "evidence": "workflow_runs/e018825e92eb/evaluation_01.json"
+          },
+          {
+            "proposal": 2,
+            "revision": 2,
+            "source_sha256": "7c206e5ae871c456408db8cade59337002e143437555951db05e5995de7c3217",
+            "model_summary": "修订 500 ms 保持计时：在每个有效故障上升沿的同一扫描内先复位 TON 再立即启动，使首次故障和保持期间的新故障都从各自触发扫描开始完整计时。信号无效时立即清除报警与保持。保留计数、历史移位、运行时累加和输出刷新逻辑。",
+            "assumptions": [
+              "500 ms 最小保持从有效故障上升沿被观察到的扫描开始计时；在该扫描内先复位 TON 再立即启动 TON，使首次故障和保持期间的新故障都从各自触发扫描完整计时。",
+              "报警在故障撤销后且保持时间已满的第一个扫描释放；信号无效时立即关闭报警并清除保持状态。",
+              "CycleTime 仅用于正常切割运行时间累加，不作为 500 ms 保持定时器的计时源；保持定时器使用 TON 的实际扫描时间语义。",
+              "上电后首次调用若已存在有效故障，则按一次 FALSE-to-TRUE 上升沿记录故障，因为 lastValidFault 初始为 FALSE。",
+              "Slab_Fault_History 每个扫描由内部 historyBuf 刷新到输出，以尽量保证输出只反映内部维护的最新五个故障记录。"
+            ],
+            "status": "pass",
+            "first_failure": null,
+            "evidence": "workflow_runs/e018825e92eb/evaluation_02.json"
+          }
+        ],
+        "final_evaluation": {
+          "status": "pass",
+          "question_id": "12",
+          "source_sha256": "7c206e5ae871c456408db8cade59337002e143437555951db05e5995de7c3217",
+          "behavior_tested": true,
+          "first_failure": null,
+          "summary": {
+            "scenarios": 3,
+            "scans": 336,
+            "failed": 0
+          },
+          "scope": "Additional finite duration/history checks; Q12 alarm only asserts minimum hold outside original fixed examples.",
+          "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\4e4c92202fb01fc5ae3e\\builds\\bank_816f505d96b4d736084b87f9\\build.json",
+          "original_finite_status": "pass",
+          "original_finite_scans": 21,
+          "original_finite_summary": {
+            "scenarios": 2,
+            "scans": 21,
+            "failed": 0
+          }
+        },
+        "backend": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+        "backend_fingerprint": "b19cb4e7ec0ac18a1ccd896ac0df001b44667a68a3bdb56b9d5e8196bb63430a",
+        "run_path": "workflow_runs/e018825e92eb"
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "question_id": "09",
+  "source_sha256": "9e3e1eec3833037cbe55170f15c14c336571fcba8312909ce1fb8b6529c84f54",
+  "model": "deepseek-flash",
+  "review": {
+    "findings": [
+      {
+        "id": "REV-001",
+        "title": "环形缓冲在窗口满后首次替换会覆盖新写入位置且不更新为最老值判断",
+        "category": "explicit_requirement",
+        "requirement_basis": "要求：每个新数据替换最老数据点后重算平均值，窗口满时平均应始终为 windowSize 个最新样本的算术平均",
+        "code_evidence": "IF nCount >= windowSize THEN IF nIndex >= windowSize THEN nIndex := 0; END_IF; nIndex := nIndex + 1; lrSum := lrSum - aBuffer[nIndex] + value; aBuffer[nIndex] := value;",
+        "trigger_sequence": "windowSize=3, cyclicExecution=TRUE, 依次输入 value=1,2,3,4。第1~3扫描后 nCount=3,nIndex=3,sum=6,average=2。第4扫描：nCount>=3，nIndex=3 不重置（>=3 成立则置0再+1=1），写入索引1，lrSum=6-aBuffer[1](=1)+4=9，average=9/3=3。正确应为(2+3+4)/3=3。",
+        "expected": "窗口满后替换最老样本，和恒为窗口内最新 windowSize 个值之和",
+        "predicted_actual": "nIndex>=windowSize 的归零发生在自增之前，导致满窗时写入位置回绕错误（应为 (nIndex MOD windowSize)+1），在窗口未满与满窗边界切换时索引错位，替换的不是最老值",
+        "confidence": "medium"
+      },
+      {
+        "id": "REV-002",
+        "title": "窗口尺寸在运行中改变时缓冲/计数未按新窗口重同步",
+        "category": "ambiguity",
+        "requirement_basis": "windowSize 为输入，1..100 校验；题意要求移动平均基于当前 windowSize 个连续数据点",
+        "code_evidence": "ELSE error:=FALSE; ... windowSizeReached := (nCount >= windowSize); 但 nCount、nIndex、aBuffer 仅在同 reset 或错误分支清空，正常分支未处理 windowSize 变化",
+        "trigger_sequence": "先 windowSize=5 输入5个值使 nCount=5，随后 windowSize=2。下一扫描 nCount(5)>=windowSize(2)，进入替换分支，lrSum 减去 aBuffer 某槽但窗口语义应为最近2个值；average 仍除以 nCount=5",
+        "expected": "窗口缩小后应体现最近 windowSize=2 个样本平均，windowSizeReached 与 average 一致",
+        "predicted_actual": "nCount 保持5，average=lrSum/5，与 windowSize=2 不一致；windowSizeReached 判定基于旧 nCount",
+        "confidence": "low"
+      },
+      {
+        "id": "REV-003",
+        "title": "reset 与窗口非法同时存在时错误状态被复位覆盖",
+        "category": "explicit_requirement",
+        "requirement_basis": "要求：若窗口尺寸小于1或大于100，输出错误状态和状态码 16#8200",
+        "code_evidence": "IF reset THEN ... error:=FALSE; status:=16#0000; ELSIF (windowSize<1) OR (windowSize>100) THEN error:=TRUE; status:=16#8200;",
+        "trigger_sequence": "reset=TRUE 且 windowSize=0 的扫描周期",
+        "expected": "windowSize 非法时应输出 error=TRUE、status=16#8200",
+        "predicted_actual": "reset 分支优先，error=FALSE、status=16#0000，非法窗口尺寸未被报告",
+        "confidence": "low"
+      }
+    ],
+    "no_additional_issue_found": false
+  },
+  "status": "pending_independent_validation",
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1731,
+        "completion_tokens": 796,
+        "total_tokens": 2527,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 1731
+      },
+      "seconds": 9.515
+    }
+  ],
+  "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+}

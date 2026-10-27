@@ -1,0 +1,68 @@
+{
+  "question_id": "12",
+  "project_id": "f7c48b7bba05",
+  "session_id": "afd3b922020f",
+  "baseline_sha256": "00a3a6cd171b04675cb5b328b79a49700acfcd4a48e0c9f98c9be204cd8f3bbd",
+  "before_status": "fail",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "12",
+    "source": "candidate.st",
+    "source_sha256": "602550109dd65d80a5c92caacf6a55f51e65f3762e6d7532fa108fdc972dd644",
+    "attempts": [
+      {
+        "proposal": 1,
+        "revision": 1,
+        "source_sha256": "602550109dd65d80a5c92caacf6a55f51e65f3762e6d7532fa108fdc972dd644",
+        "model_summary": "将 500 ms 报警保持改为使用 TON 按触发后的真实经过时间计时，使故障撤销后仍在触发满 500 ms 的首个有效扫描释放；信号无效时仍立即清除报警与保持状态。保留边沿计数、历史移位和正常切割时间累加逻辑。",
+        "assumptions": [
+          "按有限检查约定，报警从有效故障触发开始计满 500 ms；若故障先撤销，则在触发满 500 ms 后的首个有效扫描释放报警。",
+          "TON 使用运行时经过时间计时，用于实现 500 ms 最小保持。",
+          "THICKNESS_SIGNAL_VALID=FALSE 时立即清除报警和保持状态，不记录故障、不累加正常切割时间。",
+          "Slab_Fault_History 的输出内容由内部历史缓冲刷新，外部写入不会改变内部维护的历史。"
+        ],
+        "status": "pass",
+        "first_failure": null,
+        "evidence": "workflow_runs/862748c3960a/evaluation_01.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "12",
+      "source_sha256": "602550109dd65d80a5c92caacf6a55f51e65f3762e6d7532fa108fdc972dd644",
+      "behavior_tested": true,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\4e4c92202fb01fc5ae3e\\builds\\bank_43b2a86891ea6e79278422ce\\build.json",
+      "summary": {
+        "scenarios": 2,
+        "scans": 21,
+        "failed": 0
+      },
+      "first_failure": null,
+      "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+    },
+    "backend": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "b19cb4e7ec0ac18a1ccd896ac0df001b44667a68a3bdb56b9d5e8196bb63430a",
+    "run_path": "workflow_runs/862748c3960a"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 4315,
+        "completion_tokens": 8141,
+        "total_tokens": 12456,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 6619
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 4315
+      },
+      "seconds": 49.172
+    }
+  ],
+  "receipt_path": "C:\\Users\\29927\\Desktop\\工作区\\课程\\GenAI赋能工业编程\\任务\\plc_agent\\成果\\代码\\plc_probe\\agent_data\\projects\\f7c48b7bba05\\workspace\\workflow_runs\\862748c3960a\\receipt.json"
+}

@@ -1,0 +1,1128 @@
+{
+  "reviews": [
+    {
+      "question_id": "02",
+      "source_sha256": "40bfbc8b672ffd261df157d9e50c605e3e79d6031e82eade1b622f3109fa8ad5",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "首周期仍会计算并可能报告边沿，因为赋值在检测之后才执行但首次调用已用当前值覆盖previousValue",
+            "category": "ambiguity",
+            "requirement_basis": "题面要求每周期检测输入变化与边沿；源注释声称‘首次调用之前的初始化为当前值，因此第一次扫描不报告边沿’，但代码先执行 initialised 赋 previousValue:=value，随后立即用同一值计算掩码，所以首周期 risingBits/fallingBits 为0，实际不会报告边沿；此条为潜在歧义说明，非明确错误",
+            "code_evidence": "IF NOT initialised THEN previousValue := value; initialised := TRUE; END_IF; risingBits := value AND (NOT previousValue);",
+            "trigger_sequence": "上电后第一次调用，value=16#00000001，initialised=FALSE",
+            "expected": "依据注释，首次调用不报告边沿且内部状态初始化为当前值",
+            "predicted_actual": "static推断：previousValue先被置为value，随后掩码计算得0，因此与注释一致，不构成可复现错误",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": true
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1172,
+            "completion_tokens": 264,
+            "total_tokens": 1436,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1172
+          },
+          "seconds": 7.219
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "01",
+      "source_sha256": "83d8ad9ccd754a0371f32fbbd372023135fd002a626adfebbd9a97e966dfe7da",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "同一扫描周期内按钮电平会跨阶段级联推进，跳过连续工序确认",
+            "category": "explicit_requirement",
+            "requirement_basis": "题面要求每个工序完成后由对应操作员按钮触发才自动启动下一步（cleaning→filling、filling→capping、capping→packing、packing→light）",
+            "code_evidence": "CASE Phase OF 各分支使用 IF xxxButton THEN Phase := 下一阶段 END_IF，而 Phase 变量在本周期内即被更新；同一 CASE 不会重入，但下一扫描周期若多个按钮仍为 TRUE 会继续推进。关键问题是进入 Q01_IDLE 后，若 bottleSensor 保持 TRUE（瓶在位）且按钮电平保持，会立即重新进入 CLEANING 并连锁推进",
+            "trigger_sequence": "上电 Phase=IDLE；bottleSensor=TRUE 且保持为 TRUE；cleaningConfirmButton、fillingConfirmButton、cappingConfirmButton、packingConfirmButton 在后续若干扫描周期内依次或同时为 TRUE 并保持",
+            "expected": "每个确认按钮只推进其对应的一步，且需操作员针对当前工序单独动作；IDLE 应等待新的瓶子检测边沿",
+            "predicted_actual": "由于采用电平判定且无上升沿/握手锁存，按钮保持 TRUE 时会在其到达的每一扫描周期重复推进；下一次周期开始后 bottleSensor 仍为 TRUE 会直接进入 CLEANING，若确认按钮仍保持则连续推进，跳过操作员逐工序确认的时序",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "bottleSensor 电平触发而非检测事件，瓶子留在传感器上会导致重复启泵",
+            "category": "ambiguity",
+            "requirement_basis": "题面：当 bottleSensor 检测到瓶子时触发清洗泵启动并持续工作，整个流程结束由 finishedButton 复位，准备下一瓶",
+            "code_evidence": "Q01_IDLE: IF bottleSensor THEN Phase := Q01_CLEANING; END_IF; 以及 Q01_DONE: IF finishedButton THEN Phase := Q01_IDLE; END_IF;",
+            "trigger_sequence": "瓶子检测后 bottleSensor 一直保持 TRUE（瓶子未离开传感器），完成一个周期并按 finishedButton 回到 IDLE",
+            "expected": "完成并取走瓶子后才准备下一瓶，不应因传感器仍检测到同一瓶子而重新启动清洗",
+            "predicted_actual": "finishedButton 使 Phase 回到 IDLE 的同一/下一扫描周期，bottleSensor 若仍为 TRUE 立即重新进入 CLEANING，导致同一瓶子被再次清洗，形成循环",
+            "confidence": "medium"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1729,
+            "completion_tokens": 582,
+            "total_tokens": 2311,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1729
+          },
+          "seconds": 10.484
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "03",
+      "source_sha256": "8d89b848f8b18bc546b01772ff4793957c0cde953786416c2db9f5f0b88b8c34",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "负滞环值被额外判为错误，题面未要求",
+            "category": "explicit_requirement",
+            "requirement_basis": "题面只定义两个错误条件：loLevel>=hiLevel 得16#8001；hystWindow >= (hiLevel-loLevel) 得16#8002。负 hystWindow 未定义",
+            "code_evidence": "IF (hystWindow < 0.0) OR (hystWindow >= (hiLevel - loLevel)) THEN error := TRUE; status := 16#8002;",
+            "trigger_sequence": "hystWindow = -1.0, hiLevel = 100.0, loLevel = 0.0（loLevel<hiLevel 且 -1.0 < 100.0，不满足任何题面错误条件）",
+            "expected": "按题面两个错误条件均不成立，不应置 error=true/16#8002（负值未定义，可保留告警逻辑正常运行）",
+            "predicted_actual": "error=TRUE, status=16#8002, hiAlarm/loAlarm强制FALSE并返回",
+            "confidence": "medium"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1193,
+            "completion_tokens": 263,
+            "total_tokens": 1456,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1193
+          },
+          "seconds": 6.422
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "04",
+      "source_sha256": "458f097c619796369721e3404b6a652f0a1b1dde570733c836dff61b69a3b44e",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "首次调用时 TON 初始化前的计时器实例语义与上电初始化不一致（局部声明无初值，且初始化块仅复位一次）",
+            "category": "ambiguity",
+            "requirement_basis": "要求 5：上电时 VFD_RUN=OFF、累计运行=0、维护提示=FALSE；要求 1：VISCOSITY_OK 连续为 TRUE 达到 DebounceTime 才认可。",
+            "code_evidence": "IF NOT fbInit THEN ... rtTimer(IN := FALSE, PT := T#0S); END_IF; 随后立即 rtTimer(IN := VISCOSITY_OK, PT := DebounceTime);",
+            "trigger_sequence": "上电后首次调用：fbInit 初值 FALSE（已声明 := FALSE），进入初始化块，执行 rtTimer(IN:=FALSE,PT:=T#0S)，接着同一扫描立即以 IN:=VISCOSITY_OK(TRUE)、PT:=DebounceTime 调用。",
+            "expected": "上电初始化后计时器应处于已复位/无累积状态，且本次调用按新 PT 重新计时，不应带有初始化调用的残留计时。",
+            "predicted_actual": "在同一次调用内对同一 TON 实例先后以不同 PT 调用，静态上 TON 内部 PT/Q 相关状态可能在第二次调用前已被第一次调用的 T#0S 覆盖或复位；若实现按 PT 变化判定触发，第二次调用 PT 由 T#0S 变为 DebounceTime 可能产生一次伪触发或状态不一致，导致首个扫描就提前认可条件（具体取决于编译器 TON 实现）。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-002",
+            "title": "VISCOSITY_OK 与急停同时为 FALSE 及急停期间去抖复位后恢复的时序，存在对 TON 同扫描双调用的依赖",
+            "category": "ambiguity",
+            "requirement_basis": "要求 1：输入变 FALSE 立即失效；要求 2：急停立即禁止运行并清除未完成去抖计时。",
+            "code_evidence": "rtTimer(IN := VISCOSITY_OK, PT := DebounceTime); ... IF NOT PASTE_E_STOP_NC THEN rtTimer(IN := FALSE, PT := DebounceTime); VFD_RUN := FALSE;",
+            "trigger_sequence": "急停 FALSE 且 VISCOSITY_OK=TRUE 的扫描：先 rtTimer(IN:=TRUE,PT:=DebounceTime)，再 rtTimer(IN:=FALSE,PT:=DebounceTime)。",
+            "expected": "急停时应清除未完成去抖，恢复后须重新连续 TRUE 达到 DebounceTime 才认可。",
+            "predicted_actual": "同扫描对同一 TON 先 TRUE 后 FALSE 两次调用，第二次调用清除 ET，但若编译器对同一扫描内多次调用的 ET 累加/复位语义与预期不同（例如按 IN 采样一次或按前一次 Q 缓存），可能保留部分计时或产生竞态；静态上无法确认清除彻底。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-003",
+            "title": "rtTimer 在急停分支之外仍以 VISCOSITY_OK 调用，且初始化只在首次调用执行一次，去抖计时跨急停恢复的保持性依赖 TON 复位语义",
+            "category": "portability",
+            "requirement_basis": "要求 2：急停立即禁用运行并清除任何不完整去抖计时。",
+            "code_evidence": "rtTimer(IN := VISCOSITY_OK, PT := DebounceTime); ... IF NOT PASTE_E_STOP_NC THEN rtTimer(IN := FALSE, PT := DebounceTime);",
+            "trigger_sequence": "VISCOSITY_OK=TRUE 持续未达 DebounceTime 时急停短暂 FALSE 一个扫描后恢复 TRUE。",
+            "expected": "恢复后去抖应从零重新计时，不应沿用急停前的累积。",
+            "predicted_actual": "依赖 CODESYS TON 在 IN:=FALSE 且 PT 相同时将 ET 归零；多数实现如此，但若目标后端 TON 在 IN 下降沿不立即清 ET 或对同扫描多次调用有差异，则恢复后可能提前达到 Q。属于编译器/方言兼容风险而非明确逻辑错误。",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1679,
+            "completion_tokens": 931,
+            "total_tokens": 2610,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1679
+          },
+          "seconds": 10.844
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "05",
+      "source_sha256": "b40e7d1a4472c44505f32fc10164e1397840300e9eee3808ada8c65325979de5",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "未实现5秒初始化计时，bInitDone永不为TRUE，监控无法恢复",
+            "category": "explicit_requirement",
+            "requirement_basis": "要求2：上电后开始5秒初始化抑制期；要求3：初始化结束后恢复间隙监控",
+            "code_evidence": "VAR中无初始化计时器变量；IF NOT bInitDone THEN ... END_IF块内仅置Operator_Alert:=FALSE、Weld_Soft_Start_Active:=TRUE、清零防抖，并将rtDebounceElapsed赋值两次，从未累计5秒，也从未将bInitDone置TRUE",
+            "trigger_sequence": "上电后Weld_E_Stop_NC=TRUE，经过任意长时间（如10s、60s），Gap_Exceeded保持TRUE超过DebounceTime",
+            "expected": "5秒后Weld_Soft_Start_Active变为FALSE，恢复监控；Gap_Exceeded持续TRUE达到DebounceTime后Operator_Alert变为TRUE",
+            "predicted_actual": "bInitDone始终为FALSE，Weld_Soft_Start_Active始终为TRUE，Operator_Alert始终为FALSE，永不报警",
+            "confidence": "high"
+          },
+          {
+            "id": "REV-002",
+            "title": "正常监控与防抖逻辑完全缺失",
+            "category": "explicit_requirement",
+            "requirement_basis": "要求3：恢复监控后Gap_Exceeded持续TRUE达到DebounceTime才允许报警；信号变FALSE时关闭报警并清除防抖计时",
+            "code_evidence": "文件中不存在对Gap_Exceeded的读取，不存在rtDebounceElapsed累加或与DebounceTime比较，不存在将Operator_Alert置TRUE的分支；bDebounceActive仅在急停和初始化中置FALSE",
+            "trigger_sequence": "假设bInitDone已为TRUE，Gap_Exceeded=TRUE持续超过DebounceTime",
+            "expected": "Operator_Alert变为TRUE；Gap_Exceeded变FALSE后Operator_Alert立即变为FALSE",
+            "predicted_actual": "Operator_Alert无任何置TRUE路径，报警功能不存在；信号FALSE时也无清除逻辑",
+            "confidence": "high"
+          },
+          {
+            "id": "REV-003",
+            "title": "急停松开后无条件重启5秒初始化，不符合题面仅上电初始化",
+            "category": "ambiguity",
+            "requirement_basis": "要求2：上电后进入5秒初始化抑制期；要求4：急停仅要求立即关断报警并清除防抖，未要求松开后重新初始化",
+            "code_evidence": "急停分支中bForceInitReset:=TRUE; bInitDone:=FALSE; 释放后IF bForceInitReset THEN bForceInitReset:=FALSE; bInitDone:=FALSE; END_IF",
+            "trigger_sequence": "正常运行中（假设bInitDone=TRUE）Weld_E_Stop_NC短暂变FALSE再变TRUE",
+            "expected": "依据题面，初始化仅在上电时进行；松开急停后应直接恢复监控并立即开始防抖累计",
+            "predicted_actual": "急停释放后重新进入NOT bInitDone分支，Weld_Soft_Start_Active再次为TRUE并抑制监控，且因REV-001该状态永久保持",
+            "confidence": "medium"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1214,
+            "completion_tokens": 701,
+            "total_tokens": 1915,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1214
+          },
+          "seconds": 8.719
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "06",
+      "source_sha256": "96917836d4d97fb5d42b7a636e04ffe3a6f0cf4d367e6cecc9527c9cf186f646",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [],
+        "no_additional_issue_found": true
+      },
+      "status": "no_hypothesis_proposed",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1396,
+            "completion_tokens": 16,
+            "total_tokens": 1412,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1396
+          },
+          "seconds": 5.266
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "07",
+      "source_sha256": "397076a598a2e15225371bf58c7d2a377ec590909c85282a4ebf1fe7a851bd35",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "自动模式排序数组未清空导致残留索引参与运行命令",
+            "category": "explicit_requirement",
+            "requirement_basis": "自动模式要求按优先级选出3台较高优先级泵供水；写入的 RunComd 必须对应优先级前三的泵。",
+            "code_evidence": "rankIdx 仅在 VAR 中声明，未在每周期或排序前初始化；排序循环执行 rankIdx[k+1] := i，其中 k 由优先级比较得到，对于 5 个互不相同的优先级 k 恰为 0..4，会覆盖全部 5 个元素。",
+            "trigger_sequence": "但若两个泵 priority 相等，则 k 的取值集合仍为 0..4 吗？对每个 i，k 是严格排在其前的泵数；当优先级相等时按 j<i 打破平局，仍构成全序，k 仍为 0..4，rankIdx[1..5] 均被赋值，因此排序数组在本例中不残留。",
+            "expected": "自动模式按优先级前三写入 TRUE，其余 FALSE。",
+            "predicted_actual": "静态分析显示排序赋值覆盖全部 5 个下标，未发现残留导致的错误；此条不成立。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-002",
+            "title": "自动模式在 start=FALSE 时全部停止符合“启动按钮用于启动”的描述",
+            "category": "ambiguity",
+            "requirement_basis": "start 描述为“启动按钮，用于启动手动选择或自动选择的泵”，未明确其是否为电平信号以及停止后是否保持运行。",
+            "code_evidence": "IF (i <= 3) AND start THEN pumpGroup[rankIdx[i]].RunComd := TRUE; ELSE pumpGroup[rankIdx[i]].RunComd := FALSE; END_IF;",
+            "trigger_sequence": "自动模式，start 由 TRUE 变为 FALSE，stop=FALSE。",
+            "expected": "题面未定义 start 为脉冲还是电平，也未定义命令是否自保持；若按钮为瞬时脉冲，预期启动后保持运行。",
+            "predicted_actual": "候选实现将 start 视为电平，start=FALSE 时前三台泵 RunComd 全部变为 FALSE，即按钮释放即停泵。",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-003",
+            "title": "手动模式同样将 start 视为电平，按钮释放即停止所选泵",
+            "category": "ambiguity",
+            "requirement_basis": "手动模式要求根据 selection 控制所选泵的启停；start 描述为启动按钮，stop 描述为停止所有泵。",
+            "code_evidence": "pumpGroup[i].RunComd := pumpGroup[i].selection AND start;",
+            "trigger_sequence": "手动模式，selection[2]=TRUE，start 先 TRUE 后 FALSE，stop=FALSE。",
+            "expected": "若 start 是启动按钮脉冲，预期泵 2 在 start 脉冲后保持运行，直到 stop 到来。",
+            "predicted_actual": "RunComd[2] 随 start 变为 FALSE 立即变为 FALSE，未保持。",
+            "confidence": "medium"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1596,
+            "completion_tokens": 670,
+            "total_tokens": 2266,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1596
+          },
+          "seconds": 9.016
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "08",
+      "source_sha256": "3be5ba84cc7e8ed7ae2f627a81a71f31ff9cec148f34fb663b5104b77a97bad2",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "限值无效时对温度模式也返回16#8002，题面仅要求非温度线性模式检查限值",
+            "category": "explicit_requirement",
+            "requirement_basis": "要求7：\"If hiLIM is less than or equal to loLIM, set that channel's retVal to 16#8002 and skip its conversion.\" 要求4/5 对 measuringMode 1/2 只规定 outputValue=raw/10 或 raw/100，未附加限值条件；要求7本身措辞通用，但温度模式不使用 hiLIM/loLIM。",
+            "code_evidence": "measuringMode=1 分支：IF NOT limValid THEN retVal:=16#8002 ELSE outputValue:=INT_TO_REAL(rawVal)/10.0 ... 同样 measuringMode=2 分支亦有 IF NOT limValid 包裹。limValid := channels[cIdx].hiLIM > channels[cIdx].loLIM;",
+            "trigger_sequence": "channels[k].enable=TRUE, measuringMode=1（或2）, rawVal=1000, hiLIM=0.0, loLIM=0.0（hiLIM<=loLIM）",
+            "expected": "按单条要求4/5字面，温度模式应输出100.0（或10.0）并可能置16#0000；若严格按要求7通用措辞则可能置16#8002。题面存在歧义，但代码选择了对温度模式也应用限值检查。",
+            "predicted_actual": "outputValue 未被写入（保持旧值/初值），retVal=16#8002",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "禁用通道不写retVal/outputValue，输出字段可能保留旧值",
+            "category": "ambiguity",
+            "requirement_basis": "要求1/2 规定按enable使能并写retVal与outputValue；未明确enable=FALSE时输出字段处置方式。",
+            "code_evidence": "IF channels[cIdx].enable THEN ... END_IF 内层全部写入；enable=FALSE 时整个分支跳过，无 else 清零/初始化。",
+            "trigger_sequence": "channels[k].enable=FALSE, retVal 与 outputValue 之前被置为任意非零值",
+            "expected": "题面未规定禁用通道输出；若期望禁用即不转换，则保留旧值可接受，但可能被视为未定义输出。",
+            "predicted_actual": "retVal/outputValue 维持调用前值",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-003",
+            "title": "count为负时FOR循环边界行为依赖方言",
+            "category": "portability",
+            "requirement_basis": "要求1：count 由调用方提供 0..较小数组长度，题面约束调用方提供合法范围；未规定越界/负值处理。",
+            "code_evidence": "nProc := count; IF nProc > aLen... ; FOR i := 0 TO nProc - 1 DO",
+            "trigger_sequence": "count = -1（违反调用方契约）",
+            "expected": "题面约束 count>=0，不应出现负值；若出现，行为未定义。",
+            "predicted_actual": "若 nProc-1 = -2，FOR 0 TO -2 在部分方言中不执行，在另一些方言中可能回绕执行，行为依赖编译器",
+            "confidence": "low"
+          }
+        ]
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2223,
+            "completion_tokens": 720,
+            "total_tokens": 2943,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2223
+          },
+          "seconds": 9.266
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "09",
+      "source_sha256": "9e3e1eec3833037cbe55170f15c14c336571fcba8312909ce1fb8b6529c84f54",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "环形缓冲在窗口满后首次替换会覆盖新写入位置且不更新为最老值判断",
+            "category": "explicit_requirement",
+            "requirement_basis": "要求：每个新数据替换最老数据点后重算平均值，窗口满时平均应始终为 windowSize 个最新样本的算术平均",
+            "code_evidence": "IF nCount >= windowSize THEN IF nIndex >= windowSize THEN nIndex := 0; END_IF; nIndex := nIndex + 1; lrSum := lrSum - aBuffer[nIndex] + value; aBuffer[nIndex] := value;",
+            "trigger_sequence": "windowSize=3, cyclicExecution=TRUE, 依次输入 value=1,2,3,4。第1~3扫描后 nCount=3,nIndex=3,sum=6,average=2。第4扫描：nCount>=3，nIndex=3 不重置（>=3 成立则置0再+1=1），写入索引1，lrSum=6-aBuffer[1](=1)+4=9，average=9/3=3。正确应为(2+3+4)/3=3。",
+            "expected": "窗口满后替换最老样本，和恒为窗口内最新 windowSize 个值之和",
+            "predicted_actual": "nIndex>=windowSize 的归零发生在自增之前，导致满窗时写入位置回绕错误（应为 (nIndex MOD windowSize)+1），在窗口未满与满窗边界切换时索引错位，替换的不是最老值",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "窗口尺寸在运行中改变时缓冲/计数未按新窗口重同步",
+            "category": "ambiguity",
+            "requirement_basis": "windowSize 为输入，1..100 校验；题意要求移动平均基于当前 windowSize 个连续数据点",
+            "code_evidence": "ELSE error:=FALSE; ... windowSizeReached := (nCount >= windowSize); 但 nCount、nIndex、aBuffer 仅在同 reset 或错误分支清空，正常分支未处理 windowSize 变化",
+            "trigger_sequence": "先 windowSize=5 输入5个值使 nCount=5，随后 windowSize=2。下一扫描 nCount(5)>=windowSize(2)，进入替换分支，lrSum 减去 aBuffer 某槽但窗口语义应为最近2个值；average 仍除以 nCount=5",
+            "expected": "窗口缩小后应体现最近 windowSize=2 个样本平均，windowSizeReached 与 average 一致",
+            "predicted_actual": "nCount 保持5，average=lrSum/5，与 windowSize=2 不一致；windowSizeReached 判定基于旧 nCount",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-003",
+            "title": "reset 与窗口非法同时存在时错误状态被复位覆盖",
+            "category": "explicit_requirement",
+            "requirement_basis": "要求：若窗口尺寸小于1或大于100，输出错误状态和状态码 16#8200",
+            "code_evidence": "IF reset THEN ... error:=FALSE; status:=16#0000; ELSIF (windowSize<1) OR (windowSize>100) THEN error:=TRUE; status:=16#8200;",
+            "trigger_sequence": "reset=TRUE 且 windowSize=0 的扫描周期",
+            "expected": "windowSize 非法时应输出 error=TRUE、status=16#8200",
+            "predicted_actual": "reset 分支优先，error=FALSE、status=16#0000，非法窗口尺寸未被报告",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1731,
+            "completion_tokens": 796,
+            "total_tokens": 2527,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1731
+          },
+          "seconds": 9.515
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "11",
+      "source_sha256": "87f685ea880777c2d1286fa070bcf4d20205d86b86a9330a58e047374ebb356f",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "手动模式按钮上升沿触发而非电平控制，导致按住按钮电机不持续运转",
+            "category": "ambiguity",
+            "requirement_basis": "要求2：“In manual mode, the forward rotation button (ForwardButton) controls the forward rotation of the motor, and the reverse rotation button (ReverseButton) controls the reverse rotation of the motor.”",
+            "code_evidence": "R_Forward := ForwardButton AND NOT PrevForward; ... IF R_Forward AND NOT ReverseButton THEN MotorForward := TRUE; ELSIF R_Reverse AND NOT ForwardButton THEN MotorReverse := TRUE; END_IF",
+            "trigger_sequence": "手动模式（Mode=FALSE），ForwardButton 保持 TRUE 多个扫描周期；第一个周期 R_Forward=TRUE 使 MotorForward=TRUE，之后 PrevForward=TRUE 使 R_Forward=FALSE，MotorForward 在后续周期变为 FALSE，即使按钮仍按住",
+            "expected": "按钮作为手动正/反转控制，按住期间电机应持续正转，松开才停（常见点动/电平语义）",
+            "predicted_actual": "仅在按下瞬间输出一个扫描周期，随后电机停止，表现为脉冲而非持续运转",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "自动模式移动中若传感器信号缺失/产品未到位则电机无限正转",
+            "category": "ambiguity",
+            "requirement_basis": "要求3：电机将产品从A送到B、B送到C，传感器检测到位后停止",
+            "code_evidence": "Q11_MOVE_AB: MotorForward := TRUE; IF SensorB THEN MotorForward := FALSE; State := Q11_AT_B; END_IF;（Q11_MOVE_BC 同构，仅依赖 SensorC）",
+            "trigger_sequence": "自动模式，Q11_MOVE_AB 状态下 SensorB 始终为 FALSE（例如传感器故障或产品卡住），状态长期停留 MOVE_AB",
+            "expected": "题面未明确要求超时保护；仅要求到位停。此项不应视为明确错误",
+            "predicted_actual": "持续正转无超时/无反转恢复手段",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-003",
+            "title": "模式切换瞬间的 ButtonC 上升沿对齐分支无实际意义且可能与边沿采样冲突",
+            "category": "portability",
+            "requirement_basis": "要求3：SensorC 检测到产品，ButtonC 触发后 CompletionLight 点亮",
+            "code_evidence": "IF SensorC AND ButtonC AND NOT PrevButtonC THEN State := Q11_AT_C; END_IF（模式切换块内）；随后 CASE Q11_AT_C: IF R_ButtonC THEN State := Q11_DONE; END_IF",
+            "trigger_sequence": "手动模式按住 ButtonC 时切到自动模式，且 SensorC=TRUE：模式切换时该分支把 State 设为 AT_C，但 R_ButtonC 已在本次扫描开头按 PrevButtonC 计算（PrevButtonC 可能为 TRUE，故 R_ButtonC=FALSE），不会立即 DONE；需要松开再按一次",
+            "expected": "题面未定义切换模式时已按按钮的处理；无明确时序要求",
+            "predicted_actual": "该对齐语句是冗余的（前面 SensorC 分支已设 AT_C），不改变最终行为，仅是兼容/清晰性问题",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2513,
+            "completion_tokens": 712,
+            "total_tokens": 3225,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2513
+          },
+          "seconds": 9.281
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "10",
+      "source_sha256": "b6825c2d35cd06806d1644cc930ea40fe2ef383c84147d168f56c8cd1fb68e10",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "连续加热计时基于 xHeaterOn 计算，但过热/故障强制关闭后计时不清零且下次恢复会误判",
+            "category": "explicit_requirement",
+            "requirement_basis": "需求5：加热器连续工作超过5s触发过热保护",
+            "code_evidence": "IF xHeaterOn THEN ... tHeatDur := tNow - tHeatStart; ELSE tHeatStart:=tNow; tHeatDur:=T#0S; END_IF",
+            "trigger_sequence": "温度低于设定值使 xHeaterReq=TRUE，加热器启动；当 xHeaterOn 由加热请求驱动且实际连续运行累计到5s前，若因传感器故障或过热保护使 xHeaterOn=FALSE，则下一扫描 ELSE 分支将 tHeatStart 重置；但关键问题在启动时：xHeatRise 用 xHeaterOn AND NOT xHeatRunPrev，而 tHeatStart 在 ELSIF xOverheat 分支中 xHeaterOn 为 FALSE，导致 xHeaterOn 从 FALSE 变为 TRUE 时 xHeatRise 为真，tHeatStart=tNow，逻辑上计时起点正确。",
+            "expected": "连续加热时长应从加热器真正开启时刻起算，且仅当加热器关闭时清零",
+            "predicted_actual": "静态看计时起点在上升沿设置，关闭时清零，基本符合；但存在过热触发后同一扫描 xHeaterOn 先仍为真再置 FALSE 的时序，tHeatDur 在下扫描才清零，属于下一扫描边界，未必然违反需求。此条置信度低，暂不作为确定缺陷。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-002",
+            "title": "过热保护解除条件与加热请求无关联，保护期满后立即恢复加热且可能反复触发",
+            "category": "ambiguity",
+            "requirement_basis": "需求5：过热保护需等待3s才能解除；需求3：低于设定温度开加热器",
+            "code_evidence": "IF tOverDur >= T_OVERHEAT_HOLD_MS THEN xOverheat := FALSE; END_IF ... IF xSensorFault THEN xHeaterOn := FALSE ELSIF xOverheat THEN xHeaterOn := FALSE ELSE xHeaterOn := xHeaterReq END_IF",
+            "trigger_sequence": "温度持续低于设定值（xHeaterReq=TRUE），加热器连续工作5s触发 xOverheat=TRUE，HeaterOutput=FALSE；3s后 xOverheat=FALSE，下一扫描 xHeaterOn=xHeaterReq=TRUE，加热器重新启动，再过5s再次过热",
+            "expected": "题面允许保护解除后若温度仍低于设定则重新加热，故3s后重启是合理的；但需确认‘连续加热’是否指 HeaterOutput 实际为ON。此行为符合字面需求，不构成明确错误。",
+            "predicted_actual": "保护解除后按温度请求重新加热，符合需求3和5的字面组合，属可接受行为。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-003",
+            "title": "传感器故障期间 tHeatStart 被重置导致故障恢复后连续加热计时丢失，可能绕过5s过热保护",
+            "category": "explicit_requirement",
+            "requirement_basis": "需求5：加热器连续工作超过5s应触发过热保护",
+            "code_evidence": "IF xHeaterOn THEN ... ELSE tHeatStart := tNow; tHeatDur := T#0S; END_IF，且 xSensorFault 时 xHeaterOn:=FALSE",
+            "trigger_sequence": "温度低于设定，加热器已连续运行4s；此时 TemperatureSensorInput 变为 -1（故障），xSensorFault=TRUE，xHeaterOn=FALSE，tHeatStart 被重置为当前时刻、tHeatDur=0；下一扫描传感器恢复正常（如温度仍低于设定），xHeaterOn=TRUE，xHeatRise 为真，tHeatStart 重新设为 tNow，继续计时5s才触发过热。",
+            "expected": "加热器实际已工作4s，若故障后恢复继续加热，'连续工作'是否应累计存在歧义；但加热器在故障期间已关闭，严格连续工作被打断，清零可解释。",
+            "predicted_actual": "因故障期间 HeaterOutput=FALSE，连续工作确实中断，清零合理；不构成明确缺陷。",
+            "confidence": "low"
+          }
+        ]
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2241,
+            "completion_tokens": 944,
+            "total_tokens": 3185,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2241
+          },
+          "seconds": 10.734
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "13",
+      "source_sha256": "987a5c748b6d175de5de3093598af36eab7e07a9299fba5ffdfabbf55716584b",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "首次扫描分支提前写入输出后又继续执行正常计算，初始化值无法在本周期生效",
+            "category": "explicit_requirement",
+            "requirement_basis": "要求6：“Initialize outputs to OFF and zero at power-up; update them from current inputs when normal calculation begins.”",
+            "code_evidence": "IF xFirstScan THEN xFirstScan := FALSE; SUPPLY_FAN_RUN := FALSE; TEMP_SETPOINT_ADJUST := 0; fbStartDelay(IN := FALSE, PT := T#30S); END_IF ... 随后无条件执行 SUPPLY_FAN_RUN := xDelayEnabled AND fbStartDelay.Q; 以及 TEMP_SETPOINT_ADJUST := iAdjust;",
+            "trigger_sequence": "上电首周期，OCCUPANCY_DETECTED=TRUE、HVAC_MODE_SELECTOR=0（Auto）、ENERGY_SAVING_MODE=FALSE。xFirstScan 置 FALSE 并写 OUTPUT=0/FALSE，但同一周期继续执行正常计算，覆盖初始化值。",
+            "expected": "上电初始化输出为 OFF/0，正常计算从后续周期开始（或至少初始化语义不被同周期覆盖）。",
+            "predicted_actual": "首周期输出被正常计算覆盖：TEMP_SETPOINT_ADJUST 变为 Auto/占用对应的 0（此例恰好为0），而 SUPPLY_FAN_RUN 变为 FALSE（延时未满仍为FALSE）；在 Night 模式首周期 TEMP_SETPOINT_ADJUST 会直接变为 4 而非 0，初始化值不可观测。",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "首次扫描分支以 IN:=FALSE 调用 TON，可能导致延时计时被本周期内重复调用覆盖",
+            "category": "ambiguity",
+            "requirement_basis": "要求2：满足条件需保持 30 秒后 SUPPLY_FAN_RUN 才为 TRUE；要求6 初始化输出。",
+            "code_evidence": "IF xFirstScan THEN ... fbStartDelay(IN := FALSE, PT := T#30S); END_IF ... fbStartDelay(IN := xDelayEnabled, PT := T#30S);",
+            "trigger_sequence": "上电首周期即满足 OCCUPANCY_DETECTED=TRUE 且 HVAC_MODE_SELECTOR≠3，xDelayEnabled=TRUE。",
+            "expected": "首周期不应立即输出 TRUE，但从该周期开始计时；满30秒后置位。",
+            "predicted_actual": "首次分支先以 IN:=FALSE 复位 TON，随后同周期以 IN:=TRUE 再次调用。取决于 TON 实现（单次调用/多次调用），计时起点可能延后一周期或状态被覆盖；静态无法确定是否影响最终30秒判定。",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1646,
+            "completion_tokens": 619,
+            "total_tokens": 2265,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1646
+          },
+          "seconds": 8.828
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "12",
+      "source_sha256": "00a3a6cd171b04675cb5b328b79a49700acfcd4a48e0c9f98c9be204cd8f3bbd",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "报警保持计时使用条件块的 CycleTime，故障撤销后保持时长可能不足 500 ms",
+            "category": "explicit_requirement",
+            "requirement_basis": "要求 1：故障变为 TRUE 时立即激活报警，并保持每个已触发报警至少 500 ms。",
+            "code_evidence": "holdTimer := holdTimer + CycleTime; IF holdTimer >= T#500MS THEN ...",
+            "trigger_sequence": "扫描 N：THICKNESS_SIGNAL_VALID=TRUE, THICKNESS_FAULT=TRUE，报警置位，holdTimer=0。扫描 N+1：THICKNESS_FAULT 变为 FALSE，CycleTime=T#499MS。扫描 N+2：CycleTime=T#1MS，THICKNESS_FAULT=FALSE。",
+            "expected": "报警从首次激活到释放应至少持续 500 ms 的真实时间。",
+            "predicted_actual": "保持计时仅在故障撤销后的扫描中累加 CycleTime，故障持续期间 holdTimer 被清零。若故障仅持续一个扫描且撤销后 CycleTime 合计不足 500 ms，报警会被过早释放（示例中在 N+2 后达到恰好 500 ms 边界，若 CycleTime 更小则更早，如撤销后首个 CycleTime=T#1MS，下一扫描仍不足则继续，但故障持续段未被计入总保持时长）。关键点：故障持续期间的 CycleTime 未计入保持时长，因此从激活时刻起的总报警时长可能小于 500 ms。",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "信号在故障持续期间变无效时，Counter 与 History 已记录但报警被清除，随后信号恢复会再次记录同一故障",
+            "category": "ambiguity",
+            "requirement_basis": "要求 2 规定仅在有效故障的 FALSE-to-TRUE 上升沿记录；要求 4 规定信号无效时清除报警与保持状态且不添加记录。",
+            "code_evidence": "IF THICKNESS_SIGNAL_VALID AND THICKNESS_FAULT THEN ... lastValidFault := TRUE; ELSE lastValidFault := FALSE; END_IF; 以及 IF NOT THICKNESS_SIGNAL_VALID THEN ... alarmLatched := FALSE; THICKNESS_ALARM := FALSE; END_IF",
+            "trigger_sequence": "扫描 A：VALID=TRUE, FAULT=TRUE → 记录一次，lastValidFault=TRUE。扫描 B：VALID=FALSE, FAULT 仍为 TRUE → 进入 ELSE，lastValidFault=FALSE，报警清除。扫描 C：VALID=TRUE, FAULT=TRUE → 再次进入上升沿分支，Counter 再 +1，History 再记录。",
+            "expected": "题面未明确信号无效期间故障是否视为中断；若视为中断，则视为新故障合理；若视为同一持续故障，则重复记录。存在歧义，但代码选择在信号无效时重置 lastValidFault，未保留故障连续性。",
+            "predicted_actual": "同一物理故障在信号短暂失效后会被计为两次故障记录。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-003",
+            "title": "输出历史数组对外可写，未满足“外部调用者不得修改历史条目”",
+            "category": "explicit_requirement",
+            "requirement_basis": "要求 5：Statistics and history are for observation and maintenance only；external callers must not modify history entries。接口说明中 Slab_Fault_History 标注 read-only to callers。",
+            "code_evidence": "Slab_Fault_History : ARRAY[0..4] OF DINT; 位于 VAR_OUTPUT，且每扫描由 historyBuf 覆盖赋值。",
+            "trigger_sequence": "外部调用者在 FB 调用后直接写 Q12_instance.Slab_Fault_History[0] := 12345；下一扫描 FB 会用 historyBuf[0] 覆盖回原值。",
+            "expected": "调用者不能修改历史记录。",
+            "predicted_actual": "在 ST 中 VAR_OUTPUT 通常可被外部写入；虽然下一扫描会被内部缓冲覆盖，但调用者在两次扫描之间仍可写入并可能被其他逻辑读取，且接口层面未提供只读保护。注释声称“调用方只能读取输出”与 VAR_OUTPUT 的可写性不符。",
+            "confidence": "medium"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2300,
+            "completion_tokens": 933,
+            "total_tokens": 3233,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2300
+          },
+          "seconds": 10.609
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "14",
+      "source_sha256": "54c7912fc58fc58076a13e2721d4dc8f600f13e8b798236a0040f9a38ec7ceec",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "空字符串导致 FOR 越界并可能误判合法输入",
+            "category": "explicit_requirement",
+            "requirement_basis": "要求 ipText 包含四个非空十进制段，否则 ipValue 置 0；空字符串属于错误输入。",
+            "code_evidence": "n := LEN(ipText); FOR i := 0 TO n - 1 DO ... n为0时循环执行至 i=-1",
+            "trigger_sequence": "ipText = ''（LEN=0）",
+            "expected": "ipValue := 0，无异常",
+            "predicted_actual": "FOR 的终止值 n-1 = -1，i 从0递减执行；LEFT(ipText,i+1) 在 i=-1 时取 LEFT(...,0)，随后 RIGHT(...,1) 可能得空串或异常，oneChar[1] 读取越界；行为取决于编译器，可能置 ok=FALSE 也可能出错",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "段长未限制，':' digit 上限依赖提前累加检测",
+            "category": "ambiguity",
+            "requirement_basis": "每段值 0..255；无效段应输出0。",
+            "code_evidence": "segVal := segVal * 10 + ...; IF segVal > 255 THEN ok := FALSE; END_IF",
+            "trigger_sequence": "ipText='000000000000000001.0.0.1' 或长串数字段",
+            "expected": "段值按十进制解释，超过255即无效，输出0",
+            "predicted_actual": "segVal 为 UDINT，在多位数下会溢出回绕；一旦某步回绕到<=255，ok 已被置FALSE，但 result 仍会累加该回绕值；最终 ok false 时输出0，因此结果正确，但中途无长度限制并且 static 上依赖 ok 的黏滞标志；对极长串若发生异常不在此题接口内",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-003",
+            "title": "分隔符处理顺序可能接受 4 个以上段的部分结果",
+            "category": "explicit_requirement",
+            "requirement_basis": "必须恰好四段，段数不对输出0。",
+            "code_evidence": "IF segCount >= 3 THEN ok := FALSE; END_IF; result := (result*256)+segVal; segCount := segCount+1",
+            "trigger_sequence": "ipText='1.2.3.4.5'",
+            "expected": "ipValue=0（段数为5，非法）",
+            "predicted_actual": "在第四个'.'后 segCount 变为4，处理 '5' 结束；最后 segCount=4<>3 使 ok=FALSE，ipValue=0，符合；但 '1.2.3.4.' 末尾空段同样置0。未发现错误",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1134,
+            "completion_tokens": 633,
+            "total_tokens": 1767,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1134
+          },
+          "seconds": 9.172
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "15",
+      "source_sha256": "f89b7c918d77bf8b7664fe7b6813c3d73ac90196263a3b7f1ab9b0cf55f1a0e1",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "自动流程结束后阀门D仅在单个扫描周期内输出TRUE",
+            "category": "explicit_requirement",
+            "requirement_basis": "题面：processMode=false 时“收到混合完成信号后停搅拌电机、打开阀门D，自动流程结束”；processMode=true 同理“打开阀门D，自动流程结束”。要求打开阀门D是流程结束时的输出状态。",
+            "code_evidence": "40 步中：IF rtComplete.Q THEN mixMotorRun := FALSE; valveDRun := TRUE; autoStep := 0; 随后 CASE 结束；下一扫描 autoStep=0 分支为空语句，valveDRun 不再被赋值，而其值来源于上一周期输出（在 case 0 无赋值即保持上一扫描的 TRUE 还是被清取决于实现）。",
+            "trigger_sequence": "自动模式运行到 autoStep=40，mixMotorComplete 由 FALSE→TRUE 触发 rtComplete.Q，本扫描执行 valveDRun:=TRUE、autoStep:=0；下一扫描 autoStep=0 进入空闲，未对 valveDRun 赋值。",
+            "expected": "收到混合完成信号后阀门D保持打开（至少保持到流程真正结束/下一流程启动），作为输出交付物料。",
+            "predicted_actual": "静态推断：进入 autoStep=0 空闲后 valveDRun 不再被显式置 TRUE；若实现按输出保持则为 TRUE，但空闲分支无任何赋值，依赖扫描保持语义；在后续手动模式或再次自动启动时会被改写。是否保持打开在题面要求下不可靠，存在流程结束即关闭阀门D的风险。",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "自动流程结束后再次按 autoStart 重启但 valveDRun 与搅拌状态未显式复位",
+            "category": "ambiguity",
+            "requirement_basis": "题面未规定流程结束后阀门D保持还是关闭；但要求“自动流程结束”，再次按 autoStart 应“先打开阀门A”。",
+            "code_evidence": "0 步为空语句; 10 步显式设置 valveARun:=TRUE; valveBRun:=FALSE; valveCRun:=FALSE; valveDRun:=FALSE; ... 但 autoStep:=10 后同扫描执行 CASE 进入 10，valveDRun:=FALSE 会关闭D。",
+            "trigger_sequence": "流程结束（autoStep=0，valveDRun 可能为TRUE）后再次 autoStart 上升沿：autoStep:=10，同扫描 CASE 10 将 valveDRun:=FALSE。",
+            "expected": "重新启动时先打开阀门A，其余阀门关闭。",
+            "predicted_actual": "该行为符合预期，但空闲步 0 未显式维持阀D状态，导致“流程结束”与“再启动”之间 valveDRun 的实际值取决于扫描保持，语义含糊。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-003",
+            "title": "自动模式下 mixMotorComplete 上升沿在步40之前被边沿检测消耗，可能丢失完成信号",
+            "category": "portability",
+            "requirement_basis": "题面：自动模式 processMode=false 时“启动搅拌电机；收到混合完成信号后停搅拌电机”；processMode=true 时“到100cm关C、启动搅拌电机；收到混合完成信号后停搅拌”。要求收到该信号即响应。",
+            "code_evidence": "rtComplete(CLK := mixMotorComplete) 在 FB 顶部每扫描无条件调用；步40 才检查 rtComplete.Q。",
+            "trigger_sequence": "若 mixMotorComplete 在进入步40之前（例如步32液位到100同扫描刚启动搅拌时或步30/32期间）由 FALSE→TRUE，则 rtComplete.Q 在该扫描为 TRUE，但当时 autoStep 仍为32或30，未在步40检查；进入步40后 mixMotorComplete 已为TRUE但 rtComplete.Q 不再为TRUE（R_TRIG仅上升沿一个扫描）。",
+            "expected": "步40等待 mixMotorComplete 信号，收到后停搅拌开D。",
+            "predicted_actual": "若完成信号以脉冲/早于步40到达，步40将永远等不到 rtComplete.Q=TRUE，流程卡死在40，搅拌电机持续运行。",
+            "confidence": "medium"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2756,
+            "completion_tokens": 923,
+            "total_tokens": 3679,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2756
+          },
+          "seconds": 11.031
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "17",
+      "source_sha256": "13af2e71f6ef2bff899819507f3667c2357b1b3e23fedb368dd460f6488aca30",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "多个请求信号同时为真时输出互相覆盖，未定义优先级且可能产生矛盾的成功/错误结果",
+            "category": "ambiguity",
+            "requirement_basis": "题面为 addRecipe/deleteRecipe/modifyRecipe/queryRecipe 四个独立请求信号，各条款分别描述单个信号触发时的行为，未规定多信号同时为 TRUE 的处理。",
+            "code_evidence": "四个独立的 IF queryRecipe / IF addRecipe / IF deleteRecipe / IF modifyRecipe 顺序执行块，共享 error、status、idx、emptySlot，且 idx/emptySlot 在块外仅计算一次。",
+            "trigger_sequence": "在某一周期 queryRecipe=TRUE 且 addRecipe=TRUE，recipeIn.recipeID 不存在（idx=0 且 emptySlot≠0）：查询块先置 error:=TRUE,status:=16#8001；添加块随后在无错误分支 recipe[emptySlot]:=recipeIn, recipeAdded:=TRUE，但 error 仍为 TRUE、status 仍为 16#8001。",
+            "expected": "题面仅定义单请求语义；若允许多请求，应给出确定且一致的输出，至少不应同时出现 recipeAdded=TRUE 与 error=TRUE 且 status 描述查询失败。",
+            "predicted_actual": "同一周期内出现 recipeAdded=TRUE 且 error=TRUE、status=16#8001 的矛盾组合；不同信号组合下 status 被最后执行的块覆盖，结果取决于代码书写顺序而非题面规定。",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "成功操作后 status 保持 16#0000，但题面未说明成功状态码，且上一周期错误在下一周期被无条件清除",
+            "category": "ambiguity",
+            "requirement_basis": "题面仅在错误时规定 status=16#8001~8005，未定义成功时 status 取值，也未规定 error/status 的复位或锁存时机。",
+            "code_evidence": "每个周期开头 status := 16#0000; error := FALSE; 成功分支不设置 status；错误仅在触发周期有效。",
+            "trigger_sequence": "周期1 addRecipe=TRUE 且 recipeID 重复 → error=TRUE,status=16#8002；周期2 addRecipe=FALSE → 开头复位使 error=FALSE,status=16#0000。",
+            "expected": "题面未明确；若期望错误状态可被操作员读取/需保持，则应锁存至下一次请求或显式复位。",
+            "predicted_actual": "错误仅脉冲一个扫描周期，随后自动清除；调用方若未在同一周期采样将丢失 status。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-003",
+            "title": "查询结果 recipeQueryResult 在查询失败或未查询时不更新/不保持，可能残留旧值",
+            "category": "ambiguity",
+            "requirement_basis": "题面要求查询存在时输出到 recipeQueryResult；对查询不存在时 recipeQueryResult 的取值（清零、保持还是不变）未规定。",
+            "code_evidence": "recipeQueryResult 未在周期开头复位；仅 queryRecipe=TRUE 且 idx≠0 时执行 recipeQueryResult := recipe[idx]。",
+            "trigger_sequence": "周期1 查询已存在配方 A，recipeQueryResult=A；周期2 queryRecipe=TRUE 但 recipeIn.recipeID 不存在 → error=TRUE,status=16#8001，recipeQueryResult 仍为 A。",
+            "expected": "题面未规定失败时输出；若要求查询结果反映本次查询，失败时应清零或定义为保持。",
+            "predicted_actual": "查询失败后 recipeQueryResult 保持上一次成功查询的旧配方，调用方若忽略 error 可能误用陈旧数据。",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2195,
+            "completion_tokens": 806,
+            "total_tokens": 3001,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2195
+          },
+          "seconds": 10.063
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "16",
+      "source_sha256": "ae469378ff8c60ab720b82ff9a154d0d3c84720e6a6fd295bcc903cda5d13f9d",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "首个目标站为1#时启动即误判到达并进入等待完成逻辑",
+            "category": "ambiguity",
+            "requirement_basis": "题面：按下启动后查询processSequence第一个元素，启动输送带把原料送到对应工位，送到后停止；仅在到达2#..4#处理工位后才等待该工位完成信号。",
+            "code_evidence": "Idle 分支 target := processSequence[1]; stepNo := 1; 进入 CASE 1 后先根据 curPos=1 计算方向，再 IF arrived THEN ... curPos := target; 而 1# 的 arrived 由 target=1 得 sensor1。启动条件本身要求 sensor1=TRUE。",
+            "trigger_sequence": "sensor1=TRUE、station1Start 上升沿、processLength=2、processSequence[1]=1、processSequence[2]=5。",
+            "expected": "第一个目标就是当前所在工位时应视为已到达/无运动，然后应索引到下一个有效条目继续路由。",
+            "predicted_actual": "第一个扫描周期 arrived=TRUE，立即把 curPos 置 1 并进入 2#..4# 分支；因 procDone=FALSE 一直等待 station2Complete，永远不推进到 processSequence[2]，产品无法送往5#。",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-002",
+            "title": "完成信号边沿检测未按当前目标工位隔离，切换目标时可能误触发",
+            "category": "ambiguity",
+            "requirement_basis": "题面要求接收“对应工位”的加工完成信号后才继续查询下一元素；应按当前目标工位的完成信号判断。",
+            "code_evidence": "compSignal 按 target 选择，但 compMem 全局保存 compSignal 的历史值；target 从2#切到3#时，compMem 保存的是2#信号历史，若此时 station3Complete 已为TRUE，则 procDone := compSignal AND NOT compMem 立即为TRUE。",
+            "trigger_sequence": "到达2#后 station2Complete 上升沿使 idx/target 切换到3#；同一扫描周期或之前 station3Complete 已保持TRUE（例如按钮/信号未释放），target 变为3。",
+            "expected": "切换目标后应只把该目标工位完成信号的上升沿作为有效完成，不能把切换前已为TRUE的3#信号当成本次完成。",
+            "predicted_actual": "target 变为3的下一扫描周期 procDone 可能由 compSignal(3#=TRUE) AND NOT compMem(仍为2#信号历史=FALSE) 置真，跳过等待3#实际完成边沿。",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-003",
+            "title": "无效路线条目分支不可达，与注释声称的“无运动并停留”不符",
+            "category": "ambiguity",
+            "requirement_basis": "题面约定调用方提供的序列满足契约（有效条目为2#..4#，最后为5#），但候选代码注释额外声称越界条目会“stay put and keep conveyor off”。",
+            "code_evidence": "CASE 1 中先根据 target 计算方向：IF target > curPos THEN conveyorRight := TRUE; ... ELSIF target>=1 AND target<curPos THEN conveyorLeft := TRUE; 越界条目如 target=6 会置 conveyorRight。随后 IF arrived THEN ... ELSE stepNo := 1; 的 ELSE 属于 IF arrived，而越界 target 的 arrived=FALSE，因此 ELSE 分支永不执行，输送带保持运行。",
+            "trigger_sequence": "processSequence[1]=6、processLength>=1，启动后 stepNo=1。",
+            "expected": "依据候选注释，越界条目应无运动并保持停止；依据题面契约则不应出现该输入，但代码不应在越界时继续驱动输送带。",
+            "predicted_actual": "target=6 > curPos=1，conveyorRight 被置TRUE并持续，直到外部复位或重新进入 idle，可能造成越界方向持续运行。",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2926,
+            "completion_tokens": 883,
+            "total_tokens": 3809,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2926
+          },
+          "seconds": 10.984
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "18",
+      "source_sha256": "f1574c21b40697acade4a6042d5beebe25032fd2fee7a31b0849bd8bd34649c4",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "dequeue 的 pItem 未在 pFrom 赋值前重置，但更关键的是入队拷贝后 item 指针被修改只影响局部副本",
+            "category": "ambiguity",
+            "requirement_basis": "item 是 IN_OUT VARIANT，入队读值、出队写回；buffer 元素类型必须与 item 一致。",
+            "code_evidence": "入队: pItem := __VARINFO(item).pData（在 xOk 分支）然后循环 pTo^:=pItem^; pItem:=pItem+1。出队分支重新 pItem := __VARINFO(item).pData。",
+            "trigger_sequence": "enqueue 上升沿成功入队后再来 dequeue 上升沿。",
+            "expected": "出队将队首值写入 item。",
+            "predicted_actual": "出队分支确实重新取 pItem，功能上可写回；但该变量是指针副本，不改变调用者 item。此条仅为指针副本语义，不构成明确错误，降级为提示。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-002",
+            "title": "同时出现 enqueue 与 dequeue 上升沿时静默忽略，未定义 reject 状态",
+            "category": "ambiguity",
+            "requirement_basis": "题面：调用者不得在同一次调用同时请求 enqueue 和 dequeue。",
+            "code_evidence": "IF xDoEnqueue AND NOT xDoDequeue ... ELSIF xDoDequeue AND NOT xDoEnqueue ... 无 ELSE；status 保持 16#0000。",
+            "trigger_sequence": "某周期 enqueue 由 FALSE→TRUE 且 dequeue 也 FALSE→TRUE。",
+            "expected": "题面禁止该情形，未规定状态码；但也不应误报无错误。",
+            "predicted_actual": "两者都被忽略，elementCount 不变，status=16#0000（无错误），可能掩盖调用者违约。",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-003",
+            "title": "类型类别掩码 16#000F/16#000D 与 ElementSize 判等对 VARIANT 数组/标量的假设可能不可移植",
+            "category": "portability",
+            "requirement_basis": "要求从 caller-supplied buffer 推导容量与元素类型，item 具体类型须与数组元素类型一致。",
+            "code_evidence": "IF (dwVariantType AND 16#0000FFFF) = 16#000F THEN ... xOk := ((dwItemType AND 16#0000FFFF)=16#000D) AND (__VARINFO(item).ElementSize=diBytes)",
+            "trigger_sequence": "在 TypeClass 编码不同的编译器/版本下关联合法一维数组与标量 item。",
+            "expected": "合法绑定应被接受并正常入队/出队。",
+            "predicted_actual": "若 TypeClass 数值编码不同，xBindFault 或 xOk=FALSE，队列永久不可用且 status 仍可能为 16#0000（xOk 为 false 时无状态码）。",
+            "confidence": "medium"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2876,
+            "completion_tokens": 669,
+            "total_tokens": 3545,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2876
+          },
+          "seconds": 9.313
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "19",
+      "source_sha256": "6a868e24dcedb5825b032d273d86efa5d00af22259c2230df46f8f082bbbc656",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "单步模式启动需两次上升沿才能执行首个动作",
+            "category": "explicit_requirement",
+            "requirement_basis": "单步模式：按一次启动按钮，机械臂执行下行动作 MoveDown，到下限位停。",
+            "code_evidence": "SingleStepMode 分支仅在 edgeStart 时 armed := NOT armed；ST_IDLE 仅当 edgeStart AND (SingleCycleMode OR ContinuousMode) 才 armed := TRUE，单步不置位；随后 IF armed THEN state := ST_DOWN1。",
+            "trigger_sequence": "初始 state=ST_IDLE，armed=FALSE，SingleStepMode=TRUE，第一次 Start 上升沿：edgeStart=TRUE，SingleStepMode 分支使 armed := NOT armed = TRUE；但 ST_IDLE 的 edgeStart AND (SingleCycleMode OR ContinuousMode) 不成立，armed 又未被置位；同扫描 armed=TRUE 后进入 ST_DOWN1 实际会执行。需核对：第一次上升沿 armed 变 TRUE，state 变 ST_DOWN1，动作确实启动。见下条修正分析。",
+            "expected": "第一次 Start 上升沿后执行 MoveDown。",
+            "predicted_actual": "按静态逐行执行，第一次上升沿 armed 翻转 TRUE，ST_IDLE 中 armed 为 TRUE 后进入 ST_DOWN1，首个动作启动，符合要求。此条不成立。",
+            "confidence": "low"
+          },
+          {
+            "id": "REV-002",
+            "title": "单步模式下 ST_LEFT 完成后 armed 被清 FALSE 且 state 置 ST_IDLE，但再次 Start 的上升沿会直接切到 ST_DOWN1，存在进入 ST_IDLE 后同扫描 armed 翻转导致动作不等待确认",
+            "category": "explicit_requirement",
+            "requirement_basis": "单步模式每个动作完成后操作员需确认后再执行下一动作；每次按 Start 只执行一个动作并停在其完成位置。",
+            "code_evidence": "每个状态到达限位后 IF SingleStepMode THEN armed := FALSE; 但状态仍立即迁移到下一状态（如 ST_DOWN1 DownLimitSwitch -> state := ST_GRIP）。下一扫描若 Start 仍为 TRUE，edgeStart 已为 FALSE，不会立即前进；但若操作员在动作完成前按住 Start 跨越多个扫描，edgeStart 只在首个扫描为 TRUE，不会重复触发。静态看每个限位后立即迁移到下一状态，而下一状态输出立即为 TRUE（如 ST_GRIP ActivateGrip := TRUE），并不等待下一次 Start。",
+            "trigger_sequence": "SingleStepMode=TRUE，Start 按一次并保持；ST_DOWN1 到达 DownLimitSwitch 后 state:=ST_GRIP，下一扫描 ST_GRIP 立即 ActivateGrip:=TRUE，无需第二次 Start 确认。",
+            "expected": "单步模式每个动作完成后应停止，等待操作员再次按 Start 才执行下一动作。",
+            "predicted_actual": "状态机在限位到达时直接迁移到下一动作状态，下一扫描即输出下一动作命令，单步确认机制失效。",
+            "confidence": "high"
+          },
+          {
+            "id": "REV-003",
+            "title": "手动模式下 Grip/Release 限位被用作禁止输出，与手动动作语义可能相反",
+            "category": "ambiguity",
+            "requirement_basis": "手动模式允许操作员单独控制每个动作，例如按下 DownButton 且未到 DownLimitSwitch 时 MoveDown=1；到限位则停止。抓取/释放以 GripLimitSwitch/ReleaseLimitSwitch 为完成反馈。",
+            "code_evidence": "IF GripButton AND NOT GripLimitSwitch THEN ActivateGrip := TRUE; IF ReleaseButton AND NOT ReleaseLimitSwitch THEN ActivateRelease := TRUE;",
+            "trigger_sequence": "机械臂当前已抓取（GripLimitSwitch=TRUE），操作员按 GripButton：ActivateGrip=FALSE；按 ReleaseButton 且 ReleaseLimitSwitch=FALSE：ActivateRelease=TRUE。",
+            "expected": "题面仅明确位置限位用于停止相应移动；对 Grip/Release 限位作为完成反馈，是否应阻止再次抓取/释放未明确。",
+            "predicted_actual": "代码把 GripLimitSwitch/ReleaseLimitSwitch 当作禁止输出条件，在已抓取时按抓取按钮不动作，属合理但题面未明确的解释。",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2863,
+            "completion_tokens": 949,
+            "total_tokens": 3812,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 2863
+          },
+          "seconds": 11.0
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    },
+    {
+      "question_id": "20",
+      "source_sha256": "e8adc1f68057695880e3fa7d07c651038680a02c5b7eb08b72ae785df8e30df0",
+      "model": "deepseek-flash",
+      "review": {
+        "findings": [
+          {
+            "id": "REV-001",
+            "title": "不合格品剔除后状态机卡死在S_AT_WEIGHT，产线无法继续",
+            "category": "explicit_requirement",
+            "requirement_basis": "自动模式下称重完成且不合格时执行kick剔除；剔除后物料离开称重站（SensorWeight变FALSE），产线应能回到等待/进料状态继续处理下一件物料。",
+            "code_evidence": "ELSE rejectItem := TRUE; MotorForward := FALSE; state := S_AT_WEIGHT; END_IF; 以及 IF Mode AND rejectItem THEN kick := TRUE; IF NOT SensorWeight THEN rejectItem := FALSE; END_IF; ELSE kick := FALSE; END_IF;",
+            "trigger_sequence": "Mode=1；物料到达称重站 SensorWeight=TRUE；weightComplete=TRUE 且 weight=50（<100，不合格）；kick置TRUE剔除物料，随后 SensorWeight 变为 FALSE。",
+            "expected": "物料被剔除后产线应恢复，能够接受下一件物料（回到可检测 SensorFeed/再次称重的推进状态）。",
+            "predicted_actual": "rejectItem 仅在 kick 分支中被清为 FALSE，但 state 仍为 S_AT_WEIGHT；S_AT_WEIGHT 只响应 weightComplete，不会因 SensorWeight 消失而离开。下一件物料到达时若 weightComplete 不再出现（或对旧站点信号），状态机将一直停留在 S_AT_WEIGHT，自动序列无法回到 S_IDLE，产线卡死。",
+            "confidence": "high"
+          },
+          {
+            "id": "REV-002",
+            "title": "不合格品剔除后若 weightComplete 保持TRUE会重复判定并可能误动作",
+            "category": "ambiguity",
+            "requirement_basis": "weightComplete 表示本次称重完成信号；对同一件物料应只处理一次，剔除后不应再按同一 weightComplete 重复判定。",
+            "code_evidence": "S_AT_WEIGHT : IF weightComplete THEN ... ELSE rejectItem := TRUE; ... state := S_AT_WEIGHT; END_IF; 注释声明 weightComplete 一次性评估，但代码未使用 weightDone 来阻止重复进入。",
+            "trigger_sequence": "Mode=1；SensorWeight=TRUE；weightComplete 保持 TRUE 多个扫描周期，weight=50；第一周期进入不合格分支置 kick；之后 weightComplete 仍 TRUE。",
+            "expected": "同一物料的 weightComplete 只应触发一次判定/剔除。",
+            "predicted_actual": "每个扫描周期都会重新进入 IF weightComplete 分支，反复将 rejectItem 置 TRUE 并把状态保持为 S_AT_WEIGHT；一旦 SensorWeight 短暂丢失使 rejectItem 清 FALSE，下一个周期又会重新置位 kick，产生重复剔除或错误剔除后续物料。",
+            "confidence": "medium"
+          },
+          {
+            "id": "REV-003",
+            "title": "手动/自动切换复位时未复位 kick 与 firingTemp 等输出状态",
+            "category": "ambiguity",
+            "requirement_basis": "模式切换应使产线状态一致复位（候选注释声称序列在模式变化时复位）；kick 是剔除输出，切换后不应遗留上一模式/上一物料的剔除命令。",
+            "code_evidence": "IF Mode <> prevMode THEN prevMode := Mode; state := S_IDLE; rejectItem := FALSE; weightDone := FALSE; END_IF; 但 kick 仅在 IF Mode AND rejectItem THEN ... ELSE kick := FALSE 中赋值，切到手动后 kick 走 ELSE 清 FALSE 尚可；然而 firingTemp 无复位，且从手动切回自动时 state=S_IDLE 但 firingTemp 保留旧值。",
+            "trigger_sequence": "自动模式完成一件合格品 firingTemp=525；切到手动 Mode=0；再切回自动 Mode=1，state 复位为 S_IDLE，但 firingTemp 仍为 525。",
+            "expected": "模式切换复位后，若题面要求 firingTemp 输出用于当前产品，则在新产品计算前不应残留旧值为有效输出（至少需明确保持策略）。",
+            "predicted_actual": "firingTemp 在模式切换复位路径中未清零，切换后仍输出上一件产品的温度，可能被下游误当作有效温度。",
+            "confidence": "low"
+          }
+        ],
+        "no_additional_issue_found": false
+      },
+      "status": "pending_independent_validation",
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 3335,
+            "completion_tokens": 905,
+            "total_tokens": 4240,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 3335
+          },
+          "seconds": 10.953
+        }
+      ],
+      "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+    }
+  ],
+  "counts": {
+    "tasks": 20,
+    "hypotheses": 51
+  },
+  "budget_estimate_cny": 0.2313,
+  "limitation": "Static model hypotheses; not included in confirmed failure counts"
+}

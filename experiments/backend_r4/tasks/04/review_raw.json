@@ -1,0 +1,19 @@
+{
+  "text": "{\"findings\":[{\"id\":\"ADV-1\",\"title\":\"Debounce timing completes one invocation later than specified continuous duration\",\"basis\":\"TON is called at the top of each cycle, then VFD_RUN samples rtTimer.Q. On the invocation where the accumulated input-valid time first reaches DebounceTime, the TON.Q reflects the state computed at the start of that scan, so it becomes TRUE only on the following invocation. The requirement says to accept the viscosity condition after VISCOSITY_OK has remained TRUE for DebounceTime, i.e., it should be valid at the end of the qualifying interval, not one cycle later. A trace where the sum of CycleTime first meets DebounceTime cannot demonstrate the mandated behavior, so the timing boundary is unspecified.\",\"scope\":\"ambiguous\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"VISCOSITY_OK\":1,\"PASTE_E_STOP_NC\":1,\"DebounceTime\":100,\"CycleTime\":100},\"expected\":{\"VFD_RUN\":0,\"PUMP_MAINT_DUE\":0,\"PUMP_RUNTIME_ACC\":0}},{\"time_ms\":100,\"inputs\":{\"VISCOSITY_OK\":1,\"PASTE_E_STOP_NC\":1,\"DebounceTime\":100,\"CycleTime\":100},\"expected\":{\"VFD_RUN\":0,\"PUMP_MAINT_DUE\":0,\"PUMP_RUNTIME_ACC\":0}}]},{\"id\":\"ADV-2\",\"title\":\"First-call initialization resets outputs computed later in the same invocation\",\"basis\":\"The fbInit block sets PUMP_MAINT_DUE and PUMP_RUNTIME_ACC before debounce/accumulation logic runs, but rtAccNs is reset to 0 and then accumulation may occur in the same first invocation if VFD_RUN becomes TRUE. On a fresh instance no defined power-up order exists in the spec regarding whether a first-invocation run can accumulate before initialization completes, so outputs on the very first call are ambiguous.\",\"scope\":\"ambiguous\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"VISCOSITY_OK\":1,\"PASTE_E_STOP_NC\":1,\"DebounceTime\":1,\"CycleTime\":1},\"expected\":{\"VFD_RUN\":0,\"PUMP_MAINT_DUE\":0,\"PUMP_RUNTIME_ACC\":0}}]}]}",
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2010,
+        "completion_tokens": 495,
+        "total_tokens": 2505,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 1882
+      },
+      "seconds": 8.282
+    }
+  ]
+}

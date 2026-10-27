@@ -1,0 +1,225 @@
+{
+  "status": "fail",
+  "question_id": "10",
+  "source_sha256": "b6825c2d35cd06806d1644cc930ea40fe2ef383c84147d168f56c8cd1fb68e10",
+  "behavior_tested": true,
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\builds\\bank_aaa0d364dd06ab2a3c5bcbb2\\build.json",
+  "summary": {
+    "scenarios": 4,
+    "scans": 8,
+    "failed": 1
+  },
+  "first_failure": {
+    "scenario": "heating_and_cooldown",
+    "scan": 3,
+    "time_ms": 7999,
+    "output": "HeaterOutput",
+    "expected": 0,
+    "actual": 1
+  },
+  "cases": [
+    {
+      "name": "heating_and_cooldown",
+      "status": "fail",
+      "first_failure": {
+        "scan": 3,
+        "time_ms": 7999,
+        "output": "HeaterOutput",
+        "expected": 0,
+        "actual": 1
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": 1,
+            "HeaterStatus": 1
+          },
+          "actual": {
+            "CurrentTemperature": 20.0,
+            "SetTempDisplay": 30.0,
+            "HeaterStatus": 1,
+            "OverheatProtection": 0,
+            "HeaterOutput": 1
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4999,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": 1
+          },
+          "actual": {
+            "CurrentTemperature": 20.0,
+            "SetTempDisplay": 30.0,
+            "HeaterStatus": 1,
+            "OverheatProtection": 0,
+            "HeaterOutput": 1
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5001,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": 0,
+            "OverheatProtection": 1
+          },
+          "actual": {
+            "CurrentTemperature": 20.0,
+            "SetTempDisplay": 30.0,
+            "HeaterStatus": 0,
+            "OverheatProtection": 1,
+            "HeaterOutput": 0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7999,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": 0,
+            "OverheatProtection": 1
+          },
+          "actual": {
+            "CurrentTemperature": 20.0,
+            "SetTempDisplay": 30.0,
+            "HeaterStatus": 1,
+            "OverheatProtection": 0,
+            "HeaterOutput": 1
+          },
+          "violations": [
+            {
+              "output": "HeaterOutput",
+              "expected": 0,
+              "actual": 1
+            },
+            {
+              "output": "OverheatProtection",
+              "expected": 1,
+              "actual": 0
+            }
+          ]
+        },
+        {
+          "time_ms": 8010,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": 1,
+            "OverheatProtection": 0
+          },
+          "actual": {
+            "CurrentTemperature": 20.0,
+            "SetTempDisplay": 30.0,
+            "HeaterStatus": 1,
+            "OverheatProtection": 0,
+            "HeaterOutput": 1
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "sensor_or_no_demand_-1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "TemperatureSensorInput": -1,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": 0,
+            "HeaterStatus": 0,
+            "CurrentTemperature": -1,
+            "SetTempDisplay": 30
+          },
+          "actual": {
+            "CurrentTemperature": -1.0,
+            "SetTempDisplay": 30.0,
+            "HeaterStatus": 0,
+            "OverheatProtection": 0,
+            "HeaterOutput": 0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "sensor_or_no_demand_101",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "TemperatureSensorInput": 101,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": 0,
+            "HeaterStatus": 0,
+            "CurrentTemperature": 101,
+            "SetTempDisplay": 30
+          },
+          "actual": {
+            "CurrentTemperature": 101.0,
+            "SetTempDisplay": 30.0,
+            "HeaterStatus": 0,
+            "OverheatProtection": 0,
+            "HeaterOutput": 0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "sensor_or_no_demand_45",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "TemperatureSensorInput": 45,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": 0,
+            "HeaterStatus": 0,
+            "CurrentTemperature": 45,
+            "SetTempDisplay": 30
+          },
+          "actual": {
+            "CurrentTemperature": 45.0,
+            "SetTempDisplay": 30.0,
+            "HeaterStatus": 0,
+            "OverheatProtection": 0,
+            "HeaterOutput": 0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+}

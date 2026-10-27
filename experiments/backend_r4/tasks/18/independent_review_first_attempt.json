@@ -1,0 +1,43 @@
+{
+  "question_id": "18",
+  "source_sha256": "f0aaa13aa029dd19373e7074b1218da512ca2552d2a4832ffd1e8be321b1fd1a",
+  "findings": [
+    {
+      "proposal": {
+        "id": "F1",
+        "title": "绑定失败时静默以错误状态码伪造拒绝原因",
+        "basis": "当 xBindFault 为真（item 与 buffer 元素类型不兼容）时，dequeue 返回 16#8001（空队列），enqueue 返回 16#8002（满队列）。而题面规定 16#8001/16#8002 的语义分别是队列空/队列满导致的拒绝；绑定失败既不是空队列也不是满队列，status 会被报告为错误原因。同时题面要求 item 类型必须与数组元素类型匹配，属于调用方契约违规，实现未定义对应状态码；在非空/非满情况下把它映射为满/空是错误的状态语义。",
+        "scope": "ambiguous"
+      },
+      "status": "invalid_proposal",
+      "message": "'element_type'"
+    },
+    {
+      "proposal": {
+        "id": "F2",
+        "title": "绑定失败或宏操作失败时不更新 elementCount 一致性可被观察",
+        "basis": "PV_WRITE 或 PV_READ 失败时实现不更新 diCount/head/tail，但也不设置任何错误 status（保持 16#0000），然后 elementCount:=diCount。这与题面『成功入队/出队』后总数应变化、以及 status 反映本次调用结果的规定不一致：一次上升沿请求被静默丢弃却报告无错误。题面未明确宏失败时的状态码，故为 ambiguous；但若 PV_READ/WRITE 返回 FALSE 表示实际未完成操作，宿主独立判定 elementCount/status 时会与『每次成功边沿计数变化 + status 无错误』的语义冲突。",
+        "scope": "ambiguous"
+      },
+      "status": "invalid_proposal",
+      "message": "'element_type'"
+    }
+  ],
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1800,
+        "completion_tokens": 342,
+        "total_tokens": 2142,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 1672
+      },
+      "seconds": 7.563
+    }
+  ],
+  "scope": "New independent model context, no author history/test results; hypotheses are not self-certified defects."
+}

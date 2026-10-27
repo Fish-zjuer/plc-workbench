@@ -1,0 +1,1075 @@
+{
+  "results": [
+    {
+      "question_id": "04",
+      "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+      "findings": [
+        {
+          "proposal": {
+            "id": "ADV-1",
+            "title": "Debounce timing completes one invocation later than specified continuous duration",
+            "basis": "TON is called at the top of each cycle, then VFD_RUN samples rtTimer.Q. On the invocation where the accumulated input-valid time first reaches DebounceTime, the TON.Q reflects the state computed at the start of that scan, so it becomes TRUE only on the following invocation. The requirement says to accept the viscosity condition after VISCOSITY_OK has remained TRUE for DebounceTime, i.e., it should be valid at the end of the qualifying interval, not one cycle later. A trace where the sum of CycleTime first meets DebounceTime cannot demonstrate the mandated behavior, so the timing boundary is unspecified.",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "VISCOSITY_OK": 1,
+                  "PASTE_E_STOP_NC": 1,
+                  "DebounceTime": 100,
+                  "CycleTime": 100
+                },
+                "expected": {
+                  "VFD_RUN": 0,
+                  "PUMP_MAINT_DUE": 0,
+                  "PUMP_RUNTIME_ACC": 0
+                }
+              },
+              {
+                "time_ms": 100,
+                "inputs": {
+                  "VISCOSITY_OK": 1,
+                  "PASTE_E_STOP_NC": 1,
+                  "DebounceTime": 100,
+                  "CycleTime": 100
+                },
+                "expected": {
+                  "VFD_RUN": 0,
+                  "PUMP_MAINT_DUE": 0,
+                  "PUMP_RUNTIME_ACC": 0
+                }
+              }
+            ]
+          },
+          "status": "ambiguous",
+          "runs": [
+            {
+              "status": "fail",
+              "cases": [
+                {
+                  "name": "ADV-1",
+                  "status": "fail",
+                  "first_failure": {
+                    "scan": 1,
+                    "time_ms": 100,
+                    "output": "VFD_RUN",
+                    "expected": 0,
+                    "actual": 1.0
+                  },
+                  "rows": [
+                    {
+                      "time_ms": 0,
+                      "inputs": {
+                        "VISCOSITY_OK": 1,
+                        "PASTE_E_STOP_NC": 1,
+                        "DebounceTime": 100,
+                        "CycleTime": 100
+                      },
+                      "expected": {
+                        "VFD_RUN": 0,
+                        "PUMP_MAINT_DUE": 0,
+                        "PUMP_RUNTIME_ACC": 0
+                      },
+                      "actual": {
+                        "VFD_RUN": 0.0,
+                        "PUMP_MAINT_DUE": 0.0,
+                        "PUMP_RUNTIME_ACC": 0.0
+                      },
+                      "violations": []
+                    },
+                    {
+                      "time_ms": 100,
+                      "inputs": {
+                        "VISCOSITY_OK": 1,
+                        "PASTE_E_STOP_NC": 1,
+                        "DebounceTime": 100,
+                        "CycleTime": 100
+                      },
+                      "expected": {
+                        "VFD_RUN": 0,
+                        "PUMP_MAINT_DUE": 0,
+                        "PUMP_RUNTIME_ACC": 0
+                      },
+                      "actual": {
+                        "VFD_RUN": 1.0,
+                        "PUMP_MAINT_DUE": 0.0,
+                        "PUMP_RUNTIME_ACC": 100.0
+                      },
+                      "violations": [
+                        {
+                          "output": "VFD_RUN",
+                          "expected": 0,
+                          "actual": 1.0
+                        },
+                        {
+                          "output": "PUMP_RUNTIME_ACC",
+                          "expected": 0,
+                          "actual": 100.0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\builds\\bank_7b121cec1c8d2343638af538\\build.json",
+              "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+              "scans": 2
+            },
+            {
+              "status": "fail",
+              "cases": [
+                {
+                  "name": "ADV-1",
+                  "status": "fail",
+                  "first_failure": {
+                    "scan": 1,
+                    "time_ms": 100,
+                    "output": "VFD_RUN",
+                    "expected": 0,
+                    "actual": 1.0
+                  },
+                  "rows": [
+                    {
+                      "time_ms": 0,
+                      "inputs": {
+                        "VISCOSITY_OK": 1,
+                        "PASTE_E_STOP_NC": 1,
+                        "DebounceTime": 100,
+                        "CycleTime": 100
+                      },
+                      "expected": {
+                        "VFD_RUN": 0,
+                        "PUMP_MAINT_DUE": 0,
+                        "PUMP_RUNTIME_ACC": 0
+                      },
+                      "actual": {
+                        "VFD_RUN": 0.0,
+                        "PUMP_MAINT_DUE": 0.0,
+                        "PUMP_RUNTIME_ACC": 0.0
+                      },
+                      "violations": []
+                    },
+                    {
+                      "time_ms": 100,
+                      "inputs": {
+                        "VISCOSITY_OK": 1,
+                        "PASTE_E_STOP_NC": 1,
+                        "DebounceTime": 100,
+                        "CycleTime": 100
+                      },
+                      "expected": {
+                        "VFD_RUN": 0,
+                        "PUMP_MAINT_DUE": 0,
+                        "PUMP_RUNTIME_ACC": 0
+                      },
+                      "actual": {
+                        "VFD_RUN": 1.0,
+                        "PUMP_MAINT_DUE": 0.0,
+                        "PUMP_RUNTIME_ACC": 100.0
+                      },
+                      "violations": [
+                        {
+                          "output": "VFD_RUN",
+                          "expected": 0,
+                          "actual": 1.0
+                        },
+                        {
+                          "output": "PUMP_RUNTIME_ACC",
+                          "expected": 0,
+                          "actual": 100.0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\builds\\bank_7b121cec1c8d2343638af538\\build.json",
+              "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+              "scans": 2
+            }
+          ]
+        },
+        {
+          "proposal": {
+            "id": "ADV-2",
+            "title": "First-call initialization resets outputs computed later in the same invocation",
+            "basis": "The fbInit block sets PUMP_MAINT_DUE and PUMP_RUNTIME_ACC before debounce/accumulation logic runs, but rtAccNs is reset to 0 and then accumulation may occur in the same first invocation if VFD_RUN becomes TRUE. On a fresh instance no defined power-up order exists in the spec regarding whether a first-invocation run can accumulate before initialization completes, so outputs on the very first call are ambiguous.",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "VISCOSITY_OK": 1,
+                  "PASTE_E_STOP_NC": 1,
+                  "DebounceTime": 1,
+                  "CycleTime": 1
+                },
+                "expected": {
+                  "VFD_RUN": 0,
+                  "PUMP_MAINT_DUE": 0,
+                  "PUMP_RUNTIME_ACC": 0
+                }
+              }
+            ]
+          },
+          "status": "ambiguous",
+          "runs": [
+            {
+              "status": "pass",
+              "cases": [
+                {
+                  "name": "ADV-2",
+                  "status": "pass",
+                  "first_failure": null,
+                  "rows": [
+                    {
+                      "time_ms": 0,
+                      "inputs": {
+                        "VISCOSITY_OK": 1,
+                        "PASTE_E_STOP_NC": 1,
+                        "DebounceTime": 1,
+                        "CycleTime": 1
+                      },
+                      "expected": {
+                        "VFD_RUN": 0,
+                        "PUMP_MAINT_DUE": 0,
+                        "PUMP_RUNTIME_ACC": 0
+                      },
+                      "actual": {
+                        "VFD_RUN": 0.0,
+                        "PUMP_MAINT_DUE": 0.0,
+                        "PUMP_RUNTIME_ACC": 0.0
+                      },
+                      "violations": []
+                    }
+                  ]
+                }
+              ],
+              "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\builds\\bank_7b121cec1c8d2343638af538\\build.json",
+              "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+              "scans": 1
+            },
+            {
+              "status": "pass",
+              "cases": [
+                {
+                  "name": "ADV-2",
+                  "status": "pass",
+                  "first_failure": null,
+                  "rows": [
+                    {
+                      "time_ms": 0,
+                      "inputs": {
+                        "VISCOSITY_OK": 1,
+                        "PASTE_E_STOP_NC": 1,
+                        "DebounceTime": 1,
+                        "CycleTime": 1
+                      },
+                      "expected": {
+                        "VFD_RUN": 0,
+                        "PUMP_MAINT_DUE": 0,
+                        "PUMP_RUNTIME_ACC": 0
+                      },
+                      "actual": {
+                        "VFD_RUN": 0.0,
+                        "PUMP_MAINT_DUE": 0.0,
+                        "PUMP_RUNTIME_ACC": 0.0
+                      },
+                      "violations": []
+                    }
+                  ]
+                }
+              ],
+              "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\builds\\bank_7b121cec1c8d2343638af538\\build.json",
+              "source_sha256": "6442323361d8fc498970b4749c89ef23ff610804e5bdc15bed94b5f5e3c926d9",
+              "scans": 1
+            }
+          ]
+        }
+      ],
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2010,
+            "completion_tokens": 495,
+            "total_tokens": 2505,
+            "prompt_tokens_details": {
+              "cached_tokens": 128
+            },
+            "prompt_cache_hit_tokens": 128,
+            "prompt_cache_miss_tokens": 1882
+          },
+          "seconds": 8.282
+        }
+      ],
+      "scope": "New independent model context, no author history/test results; hypotheses are not self-certified defects."
+    },
+    {
+      "question_id": "08",
+      "source_sha256": "3be5ba84cc7e8ed7ae2f627a81a71f31ff9cec148f34fb663b5104b77a97bad2",
+      "findings": [
+        {
+          "proposal": {
+            "id": "ADV-08-1",
+            "title": "未校验上限仅按测量模式生效，测量模式1/2错误将hiLIM<=loLIM覆盖为有效转换",
+            "basis": "题面第3条将hiLIM<=loLIM的检查与retVal=16#8002作为独立规则，位于测量模式分支之外；候选把limValid检查只放进各模式分支内，且在模式1/2中先判limValid再转换，模式0亦同，但模式非法时跳过limValid判定直接返回16#8001。因此当measuringMode=1/2且hiLIM<=loLIM时，候选仍执行温度转换并把retVal写成16#0000，违反第7条。例如hiLIM=0、loLIM=0、measuringMode=1、raw=1000，按题意应retVal=16#8002且不转换，候选得到retVal=16#0000、outputValue=100.0。",
+            "scope": "specified",
+            "analog_lower": 0,
+            "channel_lower": 0,
+            "steps": [
+              {
+                "count": 1,
+                "raw": [
+                  1000
+                ],
+                "channels": [
+                  [
+                    1,
+                    0.0,
+                    0.0,
+                    0,
+                    1,
+                    0,
+                    0
+                  ]
+                ]
+              },
+              {
+                "count": 1,
+                "raw": [
+                  -500
+                ],
+                "channels": [
+                  [
+                    1,
+                    5.0,
+                    5.0,
+                    1,
+                    2,
+                    0,
+                    0
+                  ]
+                ]
+              }
+            ]
+          },
+          "status": "not_reproduced",
+          "runs": [
+            {
+              "status": "pass",
+              "question_id": "08",
+              "source_sha256": "3be5ba84cc7e8ed7ae2f627a81a71f31ff9cec148f34fb663b5104b77a97bad2",
+              "behavior_tested": true,
+              "summary": {
+                "scenarios": 1,
+                "scans": 2,
+                "failed": 0
+              },
+              "cases": [
+                {
+                  "name": "ADV-08-1",
+                  "status": "pass",
+                  "first_failure": null,
+                  "rows": [
+                    {
+                      "count": 1,
+                      "raw": [
+                        1000
+                      ],
+                      "channels": [
+                        [
+                          1,
+                          0.0,
+                          0.0,
+                          0,
+                          1,
+                          0,
+                          0
+                        ]
+                      ],
+                      "expected": [
+                        [
+                          1,
+                          0.0,
+                          0.0,
+                          0,
+                          1,
+                          32770,
+                          0
+                        ]
+                      ],
+                      "actual": {
+                        "raw": [
+                          1000.0
+                        ],
+                        "channels": [
+                          [
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0,
+                            32770.0,
+                            0.0
+                          ]
+                        ]
+                      },
+                      "violations": []
+                    },
+                    {
+                      "count": 1,
+                      "raw": [
+                        -500
+                      ],
+                      "channels": [
+                        [
+                          1,
+                          5.0,
+                          5.0,
+                          1,
+                          2,
+                          0,
+                          0
+                        ]
+                      ],
+                      "expected": [
+                        [
+                          1,
+                          5.0,
+                          5.0,
+                          1,
+                          2,
+                          32770,
+                          0
+                        ]
+                      ],
+                      "actual": {
+                        "raw": [
+                          -500.0
+                        ],
+                        "channels": [
+                          [
+                            1.0,
+                            5.0,
+                            5.0,
+                            1.0,
+                            2.0,
+                            32770.0,
+                            0.0
+                          ]
+                        ]
+                      },
+                      "violations": []
+                    }
+                  ]
+                }
+              ],
+              "first_failure": null,
+              "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\builds\\refs_7692627bdc721b1fef1d10b0\\build.json",
+              "scope": "Fixed finite caller-reference tests. VARIANT uses local PV descriptor ABI; not a Siemens/CODESYS binary-compatibility proof."
+            },
+            {
+              "status": "pass",
+              "question_id": "08",
+              "source_sha256": "3be5ba84cc7e8ed7ae2f627a81a71f31ff9cec148f34fb663b5104b77a97bad2",
+              "behavior_tested": true,
+              "summary": {
+                "scenarios": 1,
+                "scans": 2,
+                "failed": 0
+              },
+              "cases": [
+                {
+                  "name": "ADV-08-1",
+                  "status": "pass",
+                  "first_failure": null,
+                  "rows": [
+                    {
+                      "count": 1,
+                      "raw": [
+                        1000
+                      ],
+                      "channels": [
+                        [
+                          1,
+                          0.0,
+                          0.0,
+                          0,
+                          1,
+                          0,
+                          0
+                        ]
+                      ],
+                      "expected": [
+                        [
+                          1,
+                          0.0,
+                          0.0,
+                          0,
+                          1,
+                          32770,
+                          0
+                        ]
+                      ],
+                      "actual": {
+                        "raw": [
+                          1000.0
+                        ],
+                        "channels": [
+                          [
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0,
+                            32770.0,
+                            0.0
+                          ]
+                        ]
+                      },
+                      "violations": []
+                    },
+                    {
+                      "count": 1,
+                      "raw": [
+                        -500
+                      ],
+                      "channels": [
+                        [
+                          1,
+                          5.0,
+                          5.0,
+                          1,
+                          2,
+                          0,
+                          0
+                        ]
+                      ],
+                      "expected": [
+                        [
+                          1,
+                          5.0,
+                          5.0,
+                          1,
+                          2,
+                          32770,
+                          0
+                        ]
+                      ],
+                      "actual": {
+                        "raw": [
+                          -500.0
+                        ],
+                        "channels": [
+                          [
+                            1.0,
+                            5.0,
+                            5.0,
+                            1.0,
+                            2.0,
+                            32770.0,
+                            0.0
+                          ]
+                        ]
+                      },
+                      "violations": []
+                    }
+                  ]
+                }
+              ],
+              "first_failure": null,
+              "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\builds\\refs_7692627bdc721b1fef1d10b0\\build.json",
+              "scope": "Fixed finite caller-reference tests. VARIANT uses local PV descriptor ABI; not a Siemens/CODESYS binary-compatibility proof."
+            }
+          ]
+        },
+        {
+          "proposal": {
+            "id": "ADV-08-2",
+            "title": "count为负时nProc不回填为0，FOR循环边界行为依后端未定义",
+            "basis": "题面规定caller提供count从0到较小长度，故负count属题面未明确场景；候选将nProc:=count后仅做上界裁剪，未把负值钳到0，随后FOR i:=0 TO nProc-1在nProc<0时是否执行、且若执行则访问越界索引，取决于后端对FOR终止条件的实现，题面与接口未规定负count的初始调用行为及越界处理，属ambiguous。",
+            "scope": "ambiguous",
+            "analog_lower": 0,
+            "channel_lower": 0,
+            "steps": [
+              {
+                "count": -1,
+                "raw": [
+                  1000
+                ],
+                "channels": [
+                  [
+                    1,
+                    100.0,
+                    0.0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                ]
+              }
+            ]
+          },
+          "status": "invalid_proposal",
+          "message": "Bad count/length"
+        }
+      ],
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2545,
+            "completion_tokens": 485,
+            "total_tokens": 3030,
+            "prompt_tokens_details": {
+              "cached_tokens": 128
+            },
+            "prompt_cache_hit_tokens": 128,
+            "prompt_cache_miss_tokens": 2417
+          },
+          "seconds": 8.25
+        }
+      ],
+      "scope": "New independent model context, no author history/test results; hypotheses are not self-certified defects."
+    },
+    {
+      "question_id": "12",
+      "source_sha256": "7c206e5ae871c456408db8cade59337002e143437555951db05e5995de7c3217",
+      "findings": [
+        {
+          "proposal": {
+            "id": "ADV-12-1",
+            "title": "holdRestart 复位 TON 后在同扫描内再次以 IN=TRUE 调用，导致新故障在触发扫描不进入计时，且保持时长依赖后续调用时刻",
+            "basis": "在有效故障上升沿扫描，代码先设置 holdRestart，随后执行 holdTonic(IN:=FALSE) 再立即 holdTonic(IN:=alarmLatched=TRUE)。按题面 TON 语义，IN 由 FALSE 变 TRUE 的这次调用将 elapsed 置 0 并开始计时；然而同一扫描内首次复位调用使 holdTonic 状态清零，第二次调用才启动计时，触发扫描本身的 CycleTime 是否计入取决于 TON 是否在首次合格调用即计时。题面要求“触发时立即激活并至少保持 500ms”，但候选把计时起点绑定到扫描调用而非触发时刻，若后续调用间隔不等于实际时间，实际保持可能不足或超过 500ms；题面未明确单次调用内部 TON 复位的具体计时语义，因此保持时长是否满足“至少 500ms”不可由给定数据独立判定。",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "THICKNESS_FAULT": 1,
+                  "THICKNESS_SIGNAL_VALID": 1,
+                  "CUTTING_RUN": 0,
+                  "FaultTimestamp": 100,
+                  "CycleTime": 1
+                },
+                "expected": {
+                  "THICKNESS_ALARM": 1,
+                  "Slab_Fault_Counter": 1,
+                  "Slab_Runtime_Accumulator": 0,
+                  "Slab_Fault_History": [
+                    100,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              },
+              {
+                "time_ms": 1,
+                "inputs": {
+                  "THICKNESS_FAULT": 0,
+                  "THICKNESS_SIGNAL_VALID": 1,
+                  "CUTTING_RUN": 0,
+                  "FaultTimestamp": 0,
+                  "CycleTime": 1
+                },
+                "expected": {
+                  "THICKNESS_ALARM": 1,
+                  "Slab_Fault_Counter": 1,
+                  "Slab_Runtime_Accumulator": 0,
+                  "Slab_Fault_History": [
+                    100,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              },
+              {
+                "time_ms": 500,
+                "inputs": {
+                  "THICKNESS_FAULT": 0,
+                  "THICKNESS_SIGNAL_VALID": 1,
+                  "CUTTING_RUN": 0,
+                  "FaultTimestamp": 0,
+                  "CycleTime": 1
+                },
+                "expected": {
+                  "THICKNESS_ALARM": 1,
+                  "Slab_Fault_Counter": 1,
+                  "Slab_Runtime_Accumulator": 0,
+                  "Slab_Fault_History": [
+                    100,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              },
+              {
+                "time_ms": 502,
+                "inputs": {
+                  "THICKNESS_FAULT": 0,
+                  "THICKNESS_SIGNAL_VALID": 1,
+                  "CUTTING_RUN": 0,
+                  "FaultTimestamp": 0,
+                  "CycleTime": 1
+                },
+                "expected": {
+                  "THICKNESS_ALARM": 0,
+                  "Slab_Fault_Counter": 1,
+                  "Slab_Runtime_Accumulator": 0,
+                  "Slab_Fault_History": [
+                    100,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          "status": "invalid_proposal",
+          "message": "Invalid fields"
+        },
+        {
+          "proposal": {
+            "id": "ADV-12-2",
+            "title": "持续故障期间不重新触发保持定时器，但题面“每次触发报警至少保持500ms”在持续故障下与故障消失后的释放条件存在歧义",
+            "basis": "代码仅在 THICKNESS_FAULT 的 FALSE-to-TRUE 扫描设置 holdRestart，故障持续期间不再重启 TON。若故障持续超过 500ms 后撤销，holdTonic.Q 已为 TRUE，因此下一个非故障扫描会立即释放报警，而不是从“故障撤销时刻”再保持 500ms。题面第 1 条写“hold each triggered alarm for at least 500 ms. Keep the alarm active while the fault persists.”，可解读为只要求从触发时刻起至少 500ms，也可解读为撤销后仍需保持；候选选择前者。该差异在持续故障后撤销的序列中产生不同输出，题面未明确保持计时是否应在故障持续期间被刷新或仅在上升沿计一次，故判定为 ambiguous。",
+            "scope": "ambiguous",
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "THICKNESS_FAULT": 1,
+                  "THICKNESS_SIGNAL_VALID": 1,
+                  "CUTTING_RUN": 1,
+                  "FaultTimestamp": 10,
+                  "CycleTime": 10
+                },
+                "expected": {
+                  "THICKNESS_ALARM": 1,
+                  "Slab_Fault_Counter": 1,
+                  "Slab_Runtime_Accumulator": 0,
+                  "Slab_Fault_History": [
+                    10,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              },
+              {
+                "time_ms": 600,
+                "inputs": {
+                  "THICKNESS_FAULT": 1,
+                  "THICKNESS_SIGNAL_VALID": 1,
+                  "CUTTING_RUN": 1,
+                  "FaultTimestamp": 0,
+                  "CycleTime": 100
+                },
+                "expected": {
+                  "THICKNESS_ALARM": 1,
+                  "Slab_Fault_Counter": 1,
+                  "Slab_Runtime_Accumulator": 0,
+                  "Slab_Fault_History": [
+                    10,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              },
+              {
+                "time_ms": 701,
+                "inputs": {
+                  "THICKNESS_FAULT": 0,
+                  "THICKNESS_SIGNAL_VALID": 1,
+                  "CUTTING_RUN": 1,
+                  "FaultTimestamp": 0,
+                  "CycleTime": 101
+                },
+                "expected": {
+                  "THICKNESS_ALARM": 0,
+                  "Slab_Fault_Counter": 1,
+                  "Slab_Runtime_Accumulator": 101,
+                  "Slab_Fault_History": [
+                    10,
+                    0,
+                    0,
+                    0,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          "status": "invalid_proposal",
+          "message": "Invalid fields"
+        }
+      ],
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 2714,
+            "completion_tokens": 1171,
+            "total_tokens": 3885,
+            "prompt_tokens_details": {
+              "cached_tokens": 128
+            },
+            "prompt_cache_hit_tokens": 128,
+            "prompt_cache_miss_tokens": 2586
+          },
+          "seconds": 10.422
+        }
+      ],
+      "scope": "New independent model context, no author history/test results; hypotheses are not self-certified defects."
+    },
+    {
+      "question_id": "18",
+      "source_sha256": "f0aaa13aa029dd19373e7074b1218da512ca2552d2a4832ffd1e8be321b1fd1a",
+      "findings": [
+        {
+          "proposal": {
+            "id": "Q18-1",
+            "title": "enqueue和dequeue同周期上升沿时计数不变但边沿标志被更新(静默吞掉操作)",
+            "basis": "题面规定调用方不得同时请求 enqueue 和 dequeue,但若两者在同一调用中同时为上升沿(candidate 用 xDoEnqueue AND NOT xDoDequeue 分支),两个操作都不执行、status 保持 16#0000,且 xEnqueuePrev/xDequeuePrev 已被更新为 TRUE,后续即使仍为 TRUE 也不再触发。这等于静默丢失一次请求且不报告。属于题面未明确的同时请求行为,status 只在空队列 dequeue/满队列 enqueue 时有规定。",
+            "scope": "ambiguous",
+            "element_type": "dint",
+            "capacity": 2,
+            "steps": [
+              {
+                "enqueue": 1,
+                "dequeue": 1,
+                "reset": 0,
+                "item": 5
+              },
+              {
+                "enqueue": 0,
+                "dequeue": 0,
+                "reset": 0,
+                "item": 5
+              },
+              {
+                "enqueue": 1,
+                "dequeue": 0,
+                "reset": 0,
+                "item": 5
+              },
+              {
+                "enqueue": 1,
+                "dequeue": 0,
+                "reset": 0,
+                "item": 6
+              },
+              {
+                "enqueue": 0,
+                "dequeue": 1,
+                "reset": 0,
+                "item": 0
+              }
+            ]
+          },
+          "status": "invalid_proposal",
+          "message": "Bad requests"
+        },
+        {
+          "proposal": {
+            "id": "Q18-2",
+            "title": "首次调用为 reset 时跳过 buffer 绑定,后续绑定失败/xBindFault 时 enqueue 误报 8002、dequeue 误报 8001",
+            "basis": "candidate 在 reset 分支直接 RETURN,不执行 PV_COUNT/PV_COMPATIBLE 绑定;若首调用 reset=TRUE 后再绑定,绑定失败或容量无效时,满/空判定把 xBindFault 归入 8002/8001,而题面这些状态码仅表示满队列/空队列的拒绝原因,类型不兼容并不属于满或空。题面未规定绑定失败应如何报告,故为 ambiguous。",
+            "scope": "ambiguous",
+            "element_type": "real",
+            "capacity": 1,
+            "steps": [
+              {
+                "enqueue": 0,
+                "dequeue": 0,
+                "reset": 1,
+                "item": 0.0
+              },
+              {
+                "enqueue": 1,
+                "dequeue": 0,
+                "reset": 0,
+                "item": 3.5
+              },
+              {
+                "enqueue": 0,
+                "dequeue": 1,
+                "reset": 0,
+                "item": 0.0
+              }
+            ]
+          },
+          "status": "ambiguous",
+          "runs": [
+            {
+              "status": "pass",
+              "question_id": "18",
+              "source_sha256": "f0aaa13aa029dd19373e7074b1218da512ca2552d2a4832ffd1e8be321b1fd1a",
+              "behavior_tested": true,
+              "summary": {
+                "scenarios": 1,
+                "scans": 3,
+                "failed": 0
+              },
+              "cases": [
+                {
+                  "name": "Q18-2",
+                  "status": "pass",
+                  "first_failure": null,
+                  "rows": [
+                    {
+                      "enqueue": 0,
+                      "dequeue": 0,
+                      "reset": 1,
+                      "item": 0.0,
+                      "actual": {
+                        "elementCount": 0,
+                        "status": 0,
+                        "item": 0.0,
+                        "buffer": [
+                          0.0
+                        ]
+                      },
+                      "violations": []
+                    },
+                    {
+                      "enqueue": 1,
+                      "dequeue": 0,
+                      "reset": 0,
+                      "item": 3.5,
+                      "actual": {
+                        "elementCount": 1,
+                        "status": 0,
+                        "item": 3.5,
+                        "buffer": [
+                          3.5
+                        ]
+                      },
+                      "violations": []
+                    },
+                    {
+                      "enqueue": 0,
+                      "dequeue": 1,
+                      "reset": 0,
+                      "item": 0.0,
+                      "actual": {
+                        "elementCount": 0,
+                        "status": 0,
+                        "item": 3.5,
+                        "buffer": [
+                          3.5
+                        ]
+                      },
+                      "violations": []
+                    }
+                  ]
+                }
+              ],
+              "first_failure": null,
+              "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\builds\\refs_dfaed0d7c211e7896bd9c4ac\\build.json",
+              "scope": "Fixed finite caller-reference tests. VARIANT uses local PV descriptor ABI; not a Siemens/CODESYS binary-compatibility proof."
+            },
+            {
+              "status": "pass",
+              "question_id": "18",
+              "source_sha256": "f0aaa13aa029dd19373e7074b1218da512ca2552d2a4832ffd1e8be321b1fd1a",
+              "behavior_tested": true,
+              "summary": {
+                "scenarios": 1,
+                "scans": 3,
+                "failed": 0
+              },
+              "cases": [
+                {
+                  "name": "Q18-2",
+                  "status": "pass",
+                  "first_failure": null,
+                  "rows": [
+                    {
+                      "enqueue": 0,
+                      "dequeue": 0,
+                      "reset": 1,
+                      "item": 0.0,
+                      "actual": {
+                        "elementCount": 0,
+                        "status": 0,
+                        "item": 0.0,
+                        "buffer": [
+                          0.0
+                        ]
+                      },
+                      "violations": []
+                    },
+                    {
+                      "enqueue": 1,
+                      "dequeue": 0,
+                      "reset": 0,
+                      "item": 3.5,
+                      "actual": {
+                        "elementCount": 1,
+                        "status": 0,
+                        "item": 3.5,
+                        "buffer": [
+                          3.5
+                        ]
+                      },
+                      "violations": []
+                    },
+                    {
+                      "enqueue": 0,
+                      "dequeue": 1,
+                      "reset": 0,
+                      "item": 0.0,
+                      "actual": {
+                        "elementCount": 0,
+                        "status": 0,
+                        "item": 3.5,
+                        "buffer": [
+                          3.5
+                        ]
+                      },
+                      "violations": []
+                    }
+                  ]
+                }
+              ],
+              "first_failure": null,
+              "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\builds\\refs_dfaed0d7c211e7896bd9c4ac\\build.json",
+              "scope": "Fixed finite caller-reference tests. VARIANT uses local PV descriptor ABI; not a Siemens/CODESYS binary-compatibility proof."
+            }
+          ]
+        }
+      ],
+      "requests": [
+        {
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 1983,
+            "completion_tokens": 582,
+            "total_tokens": 2565,
+            "prompt_tokens_details": {
+              "cached_tokens": 128
+            },
+            "prompt_cache_hit_tokens": 128,
+            "prompt_cache_miss_tokens": 1855
+          },
+          "seconds": 8.828
+        }
+      ],
+      "scope": "New independent model context, no author history/test results; hypotheses are not self-certified defects."
+    }
+  ]
+}

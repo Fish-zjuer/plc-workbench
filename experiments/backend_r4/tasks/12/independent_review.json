@@ -1,0 +1,201 @@
+{
+  "question_id": "12",
+  "source_sha256": "7c206e5ae871c456408db8cade59337002e143437555951db05e5995de7c3217",
+  "findings": [
+    {
+      "proposal": {
+        "id": "ADV-12-1",
+        "title": "holdRestart 复位 TON 后在同扫描内再次以 IN=TRUE 调用，导致新故障在触发扫描不进入计时，且保持时长依赖后续调用时刻",
+        "basis": "在有效故障上升沿扫描，代码先设置 holdRestart，随后执行 holdTonic(IN:=FALSE) 再立即 holdTonic(IN:=alarmLatched=TRUE)。按题面 TON 语义，IN 由 FALSE 变 TRUE 的这次调用将 elapsed 置 0 并开始计时；然而同一扫描内首次复位调用使 holdTonic 状态清零，第二次调用才启动计时，触发扫描本身的 CycleTime 是否计入取决于 TON 是否在首次合格调用即计时。题面要求“触发时立即激活并至少保持 500ms”，但候选把计时起点绑定到扫描调用而非触发时刻，若后续调用间隔不等于实际时间，实际保持可能不足或超过 500ms；题面未明确单次调用内部 TON 复位的具体计时语义，因此保持时长是否满足“至少 500ms”不可由给定数据独立判定。",
+        "scope": "ambiguous",
+        "trace": [
+          {
+            "time_ms": 0,
+            "inputs": {
+              "THICKNESS_FAULT": 1,
+              "THICKNESS_SIGNAL_VALID": 1,
+              "CUTTING_RUN": 0,
+              "FaultTimestamp": 100,
+              "CycleTime": 1
+            },
+            "expected": {
+              "THICKNESS_ALARM": 1,
+              "Slab_Fault_Counter": 1,
+              "Slab_Runtime_Accumulator": 0,
+              "Slab_Fault_History": [
+                100,
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "time_ms": 1,
+            "inputs": {
+              "THICKNESS_FAULT": 0,
+              "THICKNESS_SIGNAL_VALID": 1,
+              "CUTTING_RUN": 0,
+              "FaultTimestamp": 0,
+              "CycleTime": 1
+            },
+            "expected": {
+              "THICKNESS_ALARM": 1,
+              "Slab_Fault_Counter": 1,
+              "Slab_Runtime_Accumulator": 0,
+              "Slab_Fault_History": [
+                100,
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "time_ms": 500,
+            "inputs": {
+              "THICKNESS_FAULT": 0,
+              "THICKNESS_SIGNAL_VALID": 1,
+              "CUTTING_RUN": 0,
+              "FaultTimestamp": 0,
+              "CycleTime": 1
+            },
+            "expected": {
+              "THICKNESS_ALARM": 1,
+              "Slab_Fault_Counter": 1,
+              "Slab_Runtime_Accumulator": 0,
+              "Slab_Fault_History": [
+                100,
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "time_ms": 502,
+            "inputs": {
+              "THICKNESS_FAULT": 0,
+              "THICKNESS_SIGNAL_VALID": 1,
+              "CUTTING_RUN": 0,
+              "FaultTimestamp": 0,
+              "CycleTime": 1
+            },
+            "expected": {
+              "THICKNESS_ALARM": 0,
+              "Slab_Fault_Counter": 1,
+              "Slab_Runtime_Accumulator": 0,
+              "Slab_Fault_History": [
+                100,
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "status": "invalid_proposal",
+      "message": "Invalid fields"
+    },
+    {
+      "proposal": {
+        "id": "ADV-12-2",
+        "title": "持续故障期间不重新触发保持定时器，但题面“每次触发报警至少保持500ms”在持续故障下与故障消失后的释放条件存在歧义",
+        "basis": "代码仅在 THICKNESS_FAULT 的 FALSE-to-TRUE 扫描设置 holdRestart，故障持续期间不再重启 TON。若故障持续超过 500ms 后撤销，holdTonic.Q 已为 TRUE，因此下一个非故障扫描会立即释放报警，而不是从“故障撤销时刻”再保持 500ms。题面第 1 条写“hold each triggered alarm for at least 500 ms. Keep the alarm active while the fault persists.”，可解读为只要求从触发时刻起至少 500ms，也可解读为撤销后仍需保持；候选选择前者。该差异在持续故障后撤销的序列中产生不同输出，题面未明确保持计时是否应在故障持续期间被刷新或仅在上升沿计一次，故判定为 ambiguous。",
+        "scope": "ambiguous",
+        "trace": [
+          {
+            "time_ms": 0,
+            "inputs": {
+              "THICKNESS_FAULT": 1,
+              "THICKNESS_SIGNAL_VALID": 1,
+              "CUTTING_RUN": 1,
+              "FaultTimestamp": 10,
+              "CycleTime": 10
+            },
+            "expected": {
+              "THICKNESS_ALARM": 1,
+              "Slab_Fault_Counter": 1,
+              "Slab_Runtime_Accumulator": 0,
+              "Slab_Fault_History": [
+                10,
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "time_ms": 600,
+            "inputs": {
+              "THICKNESS_FAULT": 1,
+              "THICKNESS_SIGNAL_VALID": 1,
+              "CUTTING_RUN": 1,
+              "FaultTimestamp": 0,
+              "CycleTime": 100
+            },
+            "expected": {
+              "THICKNESS_ALARM": 1,
+              "Slab_Fault_Counter": 1,
+              "Slab_Runtime_Accumulator": 0,
+              "Slab_Fault_History": [
+                10,
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "time_ms": 701,
+            "inputs": {
+              "THICKNESS_FAULT": 0,
+              "THICKNESS_SIGNAL_VALID": 1,
+              "CUTTING_RUN": 1,
+              "FaultTimestamp": 0,
+              "CycleTime": 101
+            },
+            "expected": {
+              "THICKNESS_ALARM": 0,
+              "Slab_Fault_Counter": 1,
+              "Slab_Runtime_Accumulator": 101,
+              "Slab_Fault_History": [
+                10,
+                0,
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "status": "invalid_proposal",
+      "message": "Invalid fields"
+    }
+  ],
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2714,
+        "completion_tokens": 1171,
+        "total_tokens": 3885,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 2586
+      },
+      "seconds": 10.422
+    }
+  ],
+  "scope": "New independent model context, no author history/test results; hypotheses are not self-certified defects."
+}

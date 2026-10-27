@@ -1,0 +1,61 @@
+{
+  "question_id": "17",
+  "source_sha256": "13af2e71f6ef2bff899819507f3667c2357b1b3e23fedb368dd460f6488aca30",
+  "model": "deepseek-flash",
+  "review": {
+    "findings": [
+      {
+        "id": "REV-001",
+        "title": "多个请求信号同时为真时输出互相覆盖，未定义优先级且可能产生矛盾的成功/错误结果",
+        "category": "ambiguity",
+        "requirement_basis": "题面为 addRecipe/deleteRecipe/modifyRecipe/queryRecipe 四个独立请求信号，各条款分别描述单个信号触发时的行为，未规定多信号同时为 TRUE 的处理。",
+        "code_evidence": "四个独立的 IF queryRecipe / IF addRecipe / IF deleteRecipe / IF modifyRecipe 顺序执行块，共享 error、status、idx、emptySlot，且 idx/emptySlot 在块外仅计算一次。",
+        "trigger_sequence": "在某一周期 queryRecipe=TRUE 且 addRecipe=TRUE，recipeIn.recipeID 不存在（idx=0 且 emptySlot≠0）：查询块先置 error:=TRUE,status:=16#8001；添加块随后在无错误分支 recipe[emptySlot]:=recipeIn, recipeAdded:=TRUE，但 error 仍为 TRUE、status 仍为 16#8001。",
+        "expected": "题面仅定义单请求语义；若允许多请求，应给出确定且一致的输出，至少不应同时出现 recipeAdded=TRUE 与 error=TRUE 且 status 描述查询失败。",
+        "predicted_actual": "同一周期内出现 recipeAdded=TRUE 且 error=TRUE、status=16#8001 的矛盾组合；不同信号组合下 status 被最后执行的块覆盖，结果取决于代码书写顺序而非题面规定。",
+        "confidence": "medium"
+      },
+      {
+        "id": "REV-002",
+        "title": "成功操作后 status 保持 16#0000，但题面未说明成功状态码，且上一周期错误在下一周期被无条件清除",
+        "category": "ambiguity",
+        "requirement_basis": "题面仅在错误时规定 status=16#8001~8005，未定义成功时 status 取值，也未规定 error/status 的复位或锁存时机。",
+        "code_evidence": "每个周期开头 status := 16#0000; error := FALSE; 成功分支不设置 status；错误仅在触发周期有效。",
+        "trigger_sequence": "周期1 addRecipe=TRUE 且 recipeID 重复 → error=TRUE,status=16#8002；周期2 addRecipe=FALSE → 开头复位使 error=FALSE,status=16#0000。",
+        "expected": "题面未明确；若期望错误状态可被操作员读取/需保持，则应锁存至下一次请求或显式复位。",
+        "predicted_actual": "错误仅脉冲一个扫描周期，随后自动清除；调用方若未在同一周期采样将丢失 status。",
+        "confidence": "low"
+      },
+      {
+        "id": "REV-003",
+        "title": "查询结果 recipeQueryResult 在查询失败或未查询时不更新/不保持，可能残留旧值",
+        "category": "ambiguity",
+        "requirement_basis": "题面要求查询存在时输出到 recipeQueryResult；对查询不存在时 recipeQueryResult 的取值（清零、保持还是不变）未规定。",
+        "code_evidence": "recipeQueryResult 未在周期开头复位；仅 queryRecipe=TRUE 且 idx≠0 时执行 recipeQueryResult := recipe[idx]。",
+        "trigger_sequence": "周期1 查询已存在配方 A，recipeQueryResult=A；周期2 queryRecipe=TRUE 但 recipeIn.recipeID 不存在 → error=TRUE,status=16#8001，recipeQueryResult 仍为 A。",
+        "expected": "题面未规定失败时输出；若要求查询结果反映本次查询，失败时应清零或定义为保持。",
+        "predicted_actual": "查询失败后 recipeQueryResult 保持上一次成功查询的旧配方，调用方若忽略 error 可能误用陈旧数据。",
+        "confidence": "low"
+      }
+    ],
+    "no_additional_issue_found": false
+  },
+  "status": "pending_independent_validation",
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2195,
+        "completion_tokens": 806,
+        "total_tokens": 3001,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2195
+      },
+      "seconds": 10.063
+    }
+  ],
+  "protocol": "Fresh context with question and candidate only; no author dialogue or existing test outcomes; static hypotheses, not confirmed defects"
+}

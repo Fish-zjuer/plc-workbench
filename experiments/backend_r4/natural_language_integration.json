@@ -1,0 +1,264 @@
+{
+  "configuration": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-flash",
+    "key_env": "PLC_AGENT_API_KEY",
+    "tool_mode": "native",
+    "stream": true,
+    "context_window": 64000,
+    "max_output_tokens": 16384,
+    "max_steps": 12,
+    "timeout": 120,
+    "review_model": "",
+    "extra_body": {
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "low"
+    },
+    "compact_keep_turns": 2,
+    "compact_target_ratio": 0.5,
+    "compact_summary_tokens": 2048,
+    "compact_extra_body": {
+      "thinking": {
+        "type": "disabled"
+      }
+    }
+  },
+  "project_id": "c2b4afb7f0ed",
+  "session_id": "03c7de315635",
+  "answer": "专用PLC流程已完成，当前源码通过本轮有限检查。\n流程状态：verified；这不是CODESYS或形式化证明。",
+  "status": "idle",
+  "receipt": {
+    "schema": "plc-workflow-receipt-v1",
+    "status": "verified",
+    "question_id": "18",
+    "source": "code/fifo.st",
+    "source_sha256": "1e813ffb658c179def8d06fb17397dfb641367aa23f2f03aa7ce80c4d9aec476",
+    "attempts": [
+      {
+        "proposal": 1,
+        "revision": 1,
+        "source_sha256": "1e813ffb658c179def8d06fb17397dfb641367aa23f2f03aa7ce80c4d9aec476",
+        "model_summary": "修复枚举到 WORD 的编译错误，改用字面量状态码；使用 PV_COUNT/PV_COMPATIBLE/PV_WRITE/PV_READ 实现真实的元素存取与容量绑定。",
+        "assumptions": [
+          "enqueue 和 dequeue 同时出现上升沿时视为非法调用，不执行任何操作且 status 为 16#0000。",
+          "PV_WRITE/PV_READ 的索引参数为从 0 起始的序数位置（由后端说明确定）。",
+          "若 buffer 非数组、空数组或元素类型与 item 不匹配，则首次调用后进入绑定故障，elementCount 保持 0，不执行入队/出队。"
+        ],
+        "status": "pass",
+        "first_failure": null,
+        "evidence": "workflow_runs/05463ae9ccbd/evaluation_01.json"
+      }
+    ],
+    "final_evaluation": {
+      "status": "pass",
+      "question_id": "18",
+      "source_sha256": "1e813ffb658c179def8d06fb17397dfb641367aa23f2f03aa7ce80c4d9aec476",
+      "behavior_tested": true,
+      "summary": {
+        "scenarios": 12,
+        "scans": 2280,
+        "failed": 0
+      },
+      "first_failure": null,
+      "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\builds\\refs_789d97e2f4d88c8138b6a3fa\\build.json",
+      "scope": "Fixed finite caller-reference tests. VARIANT uses local PV descriptor ABI; not a Siemens/CODESYS binary-compatibility proof."
+    },
+    "backend": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "evaluation_fingerprint": "1b806222b5d8128a1a64d9e89465f0579178b502e87d4a8f1ddf1cbcb63d1257",
+    "run_path": "workflow_runs/05463ae9ccbd"
+  },
+  "requests": [
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 1869,
+        "completion_tokens": 60,
+        "total_tokens": 1929,
+        "prompt_tokens_details": {
+          "cached_tokens": 128
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 128,
+        "prompt_cache_miss_tokens": 1741
+      },
+      "seconds": 5.547
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 2683,
+        "completion_tokens": 48,
+        "total_tokens": 2731,
+        "prompt_tokens_details": {
+          "cached_tokens": 1920
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 7
+        },
+        "prompt_cache_hit_tokens": 1920,
+        "prompt_cache_miss_tokens": 763
+      },
+      "seconds": 5.563
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3781,
+        "completion_tokens": 277,
+        "total_tokens": 4058,
+        "prompt_tokens_details": {
+          "cached_tokens": 2688
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 172
+        },
+        "prompt_cache_hit_tokens": 2688,
+        "prompt_cache_miss_tokens": 1093
+      },
+      "seconds": 6.61
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 5583,
+        "completion_tokens": 246,
+        "total_tokens": 5829,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 166
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 1615
+      },
+      "seconds": 6.75
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 8585,
+        "completion_tokens": 768,
+        "total_tokens": 9353,
+        "prompt_tokens_details": {
+          "cached_tokens": 256
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 707
+        },
+        "prompt_cache_hit_tokens": 256,
+        "prompt_cache_miss_tokens": 8329
+      },
+      "seconds": 10.593
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 12422,
+        "completion_tokens": 1223,
+        "total_tokens": 13645,
+        "prompt_tokens_details": {
+          "cached_tokens": 9344
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1143
+        },
+        "prompt_cache_hit_tokens": 9344,
+        "prompt_cache_miss_tokens": 3078
+      },
+      "seconds": 13.782
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 5619,
+        "completion_tokens": 1723,
+        "total_tokens": 7342,
+        "prompt_tokens_details": {
+          "cached_tokens": 4352
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 757
+        },
+        "prompt_cache_hit_tokens": 4352,
+        "prompt_cache_miss_tokens": 1267
+      },
+      "seconds": 12.718
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 14419,
+        "completion_tokens": 77,
+        "total_tokens": 14496,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 36
+        },
+        "prompt_cache_hit_tokens": 384,
+        "prompt_cache_miss_tokens": 14035
+      },
+      "seconds": 6.141
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 15607,
+        "completion_tokens": 307,
+        "total_tokens": 15914,
+        "prompt_tokens_details": {
+          "cached_tokens": 14464
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 237
+        },
+        "prompt_cache_hit_tokens": 14464,
+        "prompt_cache_miss_tokens": 1143
+      },
+      "seconds": 7.157
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 17902,
+        "completion_tokens": 797,
+        "total_tokens": 18699,
+        "prompt_tokens_details": {
+          "cached_tokens": 15872
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 475
+        },
+        "prompt_cache_hit_tokens": 15872,
+        "prompt_cache_miss_tokens": 2030
+      },
+      "seconds": 9.094
+    },
+    {
+      "model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 20317,
+        "completion_tokens": 527,
+        "total_tokens": 20844,
+        "prompt_tokens_details": {
+          "cached_tokens": 18688
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 205
+        },
+        "prompt_cache_hit_tokens": 18688,
+        "prompt_cache_miss_tokens": 1629
+      },
+      "seconds": 7.75
+    }
+  ],
+  "verified": true,
+  "scope": "One actual natural-language entry example with a fresh original flawed FIFO candidate; not a success-rate estimate."
+}

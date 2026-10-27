@@ -1,0 +1,345 @@
+{
+  "status": "fail",
+  "question_id": "04",
+  "source_sha256": "458f097c619796369721e3404b6a652f0a1b1dde570733c836dff61b69a3b44e",
+  "behavior_tested": true,
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\4e4c92202fb01fc5ae3e\\builds\\bank_c3a190bf8a15619abb501a63\\build.json",
+  "summary": {
+    "scenarios": 2,
+    "scans": 15,
+    "failed": 1
+  },
+  "first_failure": {
+    "scenario": "maintenance_is_informational",
+    "scan": 1,
+    "time_ms": 1,
+    "output": "PUMP_RUNTIME_ACC",
+    "expected": 1,
+    "actual": 1e-06
+  },
+  "cases": [
+    {
+      "name": "debounce_stop_reset_runtime",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 0
+          },
+          "actual": {
+            "VFD_RUN": 0,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 99,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 0
+          },
+          "actual": {
+            "VFD_RUN": 0,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 1
+          },
+          "actual": {
+            "VFD_RUN": 1,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 1e-05
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 1
+          },
+          "actual": {
+            "VFD_RUN": 1,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 2e-05
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 0,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 0
+          },
+          "actual": {
+            "VFD_RUN": 0,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 2e-05
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 0
+          },
+          "actual": {
+            "VFD_RUN": 0,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 2e-05
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 229,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 0
+          },
+          "actual": {
+            "VFD_RUN": 0,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 2e-05
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 1
+          },
+          "actual": {
+            "VFD_RUN": 1,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 3e-05
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "VISCOSITY_OK": 0,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 0
+          },
+          "actual": {
+            "VFD_RUN": 0,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 3e-05
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 0
+          },
+          "actual": {
+            "VFD_RUN": 0,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 3e-05
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": 1
+          },
+          "actual": {
+            "VFD_RUN": 1,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 4e-05
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "maintenance_is_informational",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "time_ms": 1,
+        "output": "PUMP_RUNTIME_ACC",
+        "expected": 1,
+        "actual": 1e-06
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 1,
+            "CycleTime": 1
+          },
+          "expected": {},
+          "actual": {
+            "VFD_RUN": 0,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 1,
+            "CycleTime": 1
+          },
+          "expected": {
+            "VFD_RUN": 1,
+            "PUMP_RUNTIME_ACC": 1,
+            "PUMP_MAINT_DUE": 0
+          },
+          "actual": {
+            "VFD_RUN": 1,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 1e-06
+          },
+          "violations": [
+            {
+              "output": "PUMP_RUNTIME_ACC",
+              "expected": 1,
+              "actual": 1e-06
+            }
+          ]
+        },
+        {
+          "time_ms": 1800000001,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 1,
+            "DebounceTime": 1,
+            "CycleTime": 1800000000
+          },
+          "expected": {
+            "VFD_RUN": 1,
+            "PUMP_RUNTIME_ACC": 1800000001,
+            "PUMP_MAINT_DUE": 1
+          },
+          "actual": {
+            "VFD_RUN": 1,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 1800.000001
+          },
+          "violations": [
+            {
+              "output": "PUMP_RUNTIME_ACC",
+              "expected": 1800000001,
+              "actual": 1800.000001
+            },
+            {
+              "output": "PUMP_MAINT_DUE",
+              "expected": 1,
+              "actual": 0
+            }
+          ]
+        },
+        {
+          "time_ms": 1800000002,
+          "inputs": {
+            "VISCOSITY_OK": 1,
+            "PASTE_E_STOP_NC": 0,
+            "DebounceTime": 1,
+            "CycleTime": 1
+          },
+          "expected": {
+            "VFD_RUN": 0,
+            "PUMP_RUNTIME_ACC": 1800000001,
+            "PUMP_MAINT_DUE": 1
+          },
+          "actual": {
+            "VFD_RUN": 0,
+            "PUMP_MAINT_DUE": 0,
+            "PUMP_RUNTIME_ACC": 1800.000001
+          },
+          "violations": [
+            {
+              "output": "PUMP_RUNTIME_ACC",
+              "expected": 1800000001,
+              "actual": 1800.000001
+            },
+            {
+              "output": "PUMP_MAINT_DUE",
+              "expected": 1,
+              "actual": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scope": "Sparse finite question-bank checks, not full correctness or CODESYS/formal proof"
+}

@@ -1,0 +1,31 @@
+{
+  "backend": "Observed STruC++ 0.7.0",
+  "fingerprints": {
+    "strucpp.exe": "2520c0097d91c237861d217b0581e99675135c12d651e642bf476ad615eae586",
+    "runtime/include/iec_array.hpp": "eaa58512b47cd1b09ccb932a34df7d4574a1184c9ddd8e5b5c7393c6e87e9986"
+  },
+  "unsupported": [
+    {
+      "pattern": "\\bLTIME\\b",
+      "status": "backend_ltime_unavailable",
+      "feature": "LTIME",
+      "message": "当前指纹匹配的STruC++后端缺少LTIME，尚无法完成本题的原接口验证。",
+      "evidence": "experiments/workflow_r2/tasks/04/result.json; tasks/12/result.json"
+    },
+    {
+      "pattern": "ARRAY\\s*\\[\\s*\\*\\s*\\]",
+      "status": "backend_open_array_unavailable",
+      "feature": "open_array",
+      "message": "当前后端的开放数组成员缺少默认构造及绑定支持；没有改变原接口来规避。",
+      "evidence": "experiments/workflow_r2/tasks/08/result.json"
+    },
+    {
+      "pattern": "\\bVARIANT\\b",
+      "status": "backend_variant_unavailable",
+      "feature": "VARIANT",
+      "message": "当前后端没有VARIANT支持，不能生成已验证的泛型FIFO；目标厂商语义也需明确，禁止用只维护计数的占位实现代替。",
+      "evidence": "experiments/workflow_r2/tasks/18/result.json"
+    }
+  ],
+  "rule": "Only enforce observed limits when compiler/runtime fingerprints match. A changed backend must be probed again."
+}
