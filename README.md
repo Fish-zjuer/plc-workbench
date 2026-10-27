@@ -1,6 +1,6 @@
 # PLC Workbench · 小组预览版 R4
 
-2026-10-27｜[下载可分享的ZIP](https://github.com/Fish-zjuer/plc-workbench/releases/latest)｜用于组内交流、试用和继续开发。它是我们负责的agent与工具部分，尚不是完整期末作业提交。
+2026-10-27｜[下载可分享的ZIP](https://github.com/Fish-zjuer/plc-workbench/releases/tag/v0.4.0-preview)｜用于组内交流、试用和继续开发。它是我们负责的agent与工具部分，尚不是完整期末作业提交。
 
 这是一个本地终端agent：上传题面或ST代码，先制定计划，再生成代码、编译测试、依据反例修复。模型通过自己填写的`base_url / api_key / model`接入，不依赖Codex登录或某家厂商的SDK。
 
