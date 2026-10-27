@@ -1,0 +1,36 @@
+{
+  "schema": "plc-task-receipt-v1",
+  "task_id": "6cffbd0a51b9",
+  "run_id": "28dd1b3cbde1",
+  "status": "new_assumptions_require_plan",
+  "source": "code/6cffbd0a51b9.st",
+  "source_sha256": null,
+  "workspace_source_sha256": null,
+  "contract_sha256": "465b7ea2839358fdf6194cdc641f72d183a1f3b468de9dbfa385987a974b65ea",
+  "target": "portable",
+  "executor": "offline",
+  "target_compile": "not_executed",
+  "requirements_sha256": "602e35a92eec4bc0a2ec6ae113f07bfc6933322fb69fe8dee416e5a67217e2a2",
+  "formal_verification": "not_executed",
+  "hardware_execution": "not_executed",
+  "attempts": [],
+  "final_evaluation": {
+    "status": "new_assumptions_require_plan",
+    "proposed_assumptions": [
+      "使用标准 IEC 61131-3 TON：当 IN 由 TRUE 变为 FALSE 时立即复位 ET 并清零，Q 立即为 FALSE。"
+    ]
+  },
+  "reviews": [],
+  "capabilities": {
+    "status": "ready_for_offline_checks",
+    "target": "portable",
+    "executor": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "target_compile": "not_executed",
+    "blockers": [],
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim.",
+    "scope": "Local finite checks only; target-platform compile/execution is a separate evidence stage."
+  },
+  "execution_fingerprint": null,
+  "scope": "Finite checks against a user-confirmed contract, plus isolated review. No full correctness proof."
+}

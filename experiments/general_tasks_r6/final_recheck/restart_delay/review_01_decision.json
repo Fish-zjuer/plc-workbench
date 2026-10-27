@@ -1,0 +1,329 @@
+{
+  "status": "review_pass",
+  "summary": "No clear discrepancy found between the code and R1-R3. The TON is driven by request AND NOT inhibit, so request FALSE or inhibit TRUE resets the timer and forces running FALSE; exact delay and zero-delay boundaries match the stated semantics. Scenarios cover zero delay, exact nonzero delay, inhibit interruption, request interruption, and inhibit priority.",
+  "questions": [],
+  "unresolved_questions": [],
+  "adjudications": [],
+  "reused_with_user_decisions": false,
+  "findings": [
+    {
+      "name": "zero_delay_after_eligibility",
+      "basis": "R3: at exactly delay elapsed running is TRUE; with delay=0 the first eligible invocation has elapsed=0.",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "exact_nonzero_delay_boundary",
+      "basis": "R1/R3: TON starts elapsed=0 on first eligible invocation; running is TRUE at exactly delay elapsed.",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "inhibit_interrupt_full_rearm",
+      "basis": "R2: inhibit TRUE immediately sets running FALSE and resets elapsed; R3: after interruption recovery waits the full delay again even with request held TRUE.",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "request_false_resets_full_rearm",
+      "basis": "R2: request FALSE immediately sets running FALSE and resets elapsed; R3: recovery after interruption waits the full delay again.",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "inhibit_priority_zero_delay",
+      "basis": "R2: inhibit TRUE immediately sets running FALSE even with request TRUE; R1: with delay=0, first eligible invocation after inhibit clears is TRUE at elapsed=0.",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    }
+  ],
+  "proposals": [
+    {
+      "name": "zero_delay_after_eligibility",
+      "covers": [
+        "R1",
+        "R3"
+      ],
+      "basis": "R3: at exactly delay elapsed running is TRUE; with delay=0 the first eligible invocation has elapsed=0.",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": false,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "exact_nonzero_delay_boundary",
+      "covers": [
+        "R1",
+        "R3"
+      ],
+      "basis": "R1/R3: TON starts elapsed=0 on first eligible invocation; running is TRUE at exactly delay elapsed.",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 999,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 1000,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "inhibit_interrupt_full_rearm",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "basis": "R2: inhibit TRUE immediately sets running FALSE and resets elapsed; R3: after interruption recovery waits the full delay again even with request held TRUE.",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "request": true,
+            "inhibit": true,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 1599,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 2599,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "request_false_resets_full_rearm",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "basis": "R2: request FALSE immediately sets running FALSE and resets elapsed; R3: recovery after interruption waits the full delay again.",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "request": false,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 501,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 1500,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 1501,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 1000
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "inhibit_priority_zero_delay",
+      "covers": [
+        "R1",
+        "R2"
+      ],
+      "basis": "R2: inhibit TRUE immediately sets running FALSE even with request TRUE; R1: with delay=0, first eligible invocation after inhibit clears is TRUE at elapsed=0.",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": true,
+            "delay": 0
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 2,
+          "inputs": {
+            "request": false,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": false
+          }
+        }
+      ]
+    }
+  ],
+  "regression_cases": [],
+  "contract_result": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 5,
+      "scans": 18,
+      "assertions": 7,
+      "failed": 0,
+      "property_activations": {
+        "P_OFF": 3,
+        "P_INHIBIT": 2,
+        "P_ZERO": 2
+      }
+    },
+    "source_sha256": "9fef6c7f218d412567d52b8b5f969447275abb7f2515794e485e5d5911110df9",
+    "execution_fingerprint": "c33e4bf73caa71049b4a9b0eeed331b527b6da96e701049ffea78f50dae06fbc",
+    "behavior_tested": true,
+    "target_compile": "not_executed"
+  },
+  "replayed_processes": 2,
+  "source_sha256": "9fef6c7f218d412567d52b8b5f969447275abb7f2515794e485e5d5911110df9",
+  "contract_sha256": "b3a8dd847249b483f7bd5d75e9e6eccb579d2b7d1ecc74821749fe8892273677",
+  "model": "deepseek-flash",
+  "context_isolated": true
+}

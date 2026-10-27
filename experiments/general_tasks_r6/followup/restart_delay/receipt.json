@@ -1,0 +1,483 @@
+{
+  "schema": "plc-task-receipt-v1",
+  "task_id": "7872c22aafaf",
+  "run_id": "7229d92d6c1e",
+  "status": "review_disagreement",
+  "source": "code/7872c22aafaf.st",
+  "source_sha256": "faa35fb66243bab7ae8528ca75dfed8a0909e78172cb5a3e2b08aa940492e123",
+  "workspace_source_sha256": "faa35fb66243bab7ae8528ca75dfed8a0909e78172cb5a3e2b08aa940492e123",
+  "contract_sha256": "465b7ea2839358fdf6194cdc641f72d183a1f3b468de9dbfa385987a974b65ea",
+  "target": "portable",
+  "executor": "offline",
+  "target_compile": "not_executed",
+  "requirements_sha256": "602e35a92eec4bc0a2ec6ae113f07bfc6933322fb69fe8dee416e5a67217e2a2",
+  "formal_verification": "not_executed",
+  "hardware_execution": "not_executed",
+  "attempts": [
+    {
+      "summary": "Implemented RestartDelay using a standard TON instance. The timer's IN is request AND NOT inhibit, so it starts from elapsed=0 on the first eligible scan, resets immediately when request becomes FALSE or inhibit becomes TRUE, and requires the full delay to elapse again after any interruption. running is assigned from the timer's Q output, becoming TRUE exactly when elapsed reaches delay.",
+      "source_sha256": "faa35fb66243bab7ae8528ca75dfed8a0909e78172cb5a3e2b08aa940492e123",
+      "status": "pass"
+    }
+  ],
+  "proposal_rejections": [],
+  "final_evaluation": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 2,
+      "scans": 14,
+      "assertions": 18,
+      "failed": 0,
+      "property_activations": {
+        "P_OFF": 3,
+        "P_INHIBIT": 1
+      }
+    },
+    "source_sha256": "faa35fb66243bab7ae8528ca75dfed8a0909e78172cb5a3e2b08aa940492e123",
+    "contract_sha256": "465b7ea2839358fdf6194cdc641f72d183a1f3b468de9dbfa385987a974b65ea",
+    "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+    "behavior_tested": true,
+    "target_compile": "not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_5t9v1o0g\\build.json",
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+  },
+  "reviews": [
+    {
+      "status": "review_disagreement",
+      "summary": "代码与R1-R3一致：TON的IN为request AND NOT inhibit，running直接取timer.Q；request FALSE或inhibit TRUE会使TON失电并复位elapsed，恢复后需重新累计完整delay。未发现与题面明确需求冲突的实现，也无需提出新的语义问题。",
+      "questions": [],
+      "findings": [
+        {
+          "name": "basic_exact_boundary",
+          "basis": "R1首次eligible从elapsed=0开始；R3在elapsed正好等于delay时running为TRUE。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "request_false_resets_full_delay",
+          "basis": "R2要求request FALSE立即running FALSE并复位等待时间；R3要求中断后重新等待完整delay。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "inhibit_true_resets_and_full_recovery",
+          "basis": "R2要求inhibit TRUE立即running FALSE并复位等待时间；R3要求恢复后重新等待完整delay。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "zero_delay_first_eligible",
+          "basis": "R1规定首次eligible TON调用elapsed=0；R3规定elapsed正好等于delay时running TRUE，因此delay=0时首次eligible即处于边界；R2规定失eligibility立即复位。",
+          "scope": "specified",
+          "verdict": "requires_requirement_decision",
+          "claim_failure": {
+            "scan": 0,
+            "time_ms": 0,
+            "kind": "example",
+            "output": "running",
+            "expected": true,
+            "actual": false
+          },
+          "contract_failure": null
+        },
+        {
+          "name": "inhibit_at_exact_boundary_priority",
+          "basis": "R2规定inhibit TRUE立即设置running FALSE；R3规定正好到达delay时running才为TRUE，但同一扫描的inhibit TRUE应优先复位。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        }
+      ],
+      "proposals": [
+        {
+          "name": "basic_exact_boundary",
+          "covers": [
+            "R1",
+            "R3"
+          ],
+          "basis": "R1首次eligible从elapsed=0开始；R3在elapsed正好等于delay时running为TRUE。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 99,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 101,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "request_false_resets_full_delay",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2要求request FALSE立即running FALSE并复位等待时间；R3要求中断后重新等待完整delay。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 80,
+              "inputs": {
+                "request": false,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 199,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 200,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "inhibit_true_resets_and_full_recovery",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2要求inhibit TRUE立即running FALSE并复位等待时间；R3要求恢复后重新等待完整delay。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 50
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 50
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "request": true,
+                "inhibit": true,
+                "delay": 50
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 50
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 99,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 50
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 50
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "zero_delay_first_eligible",
+          "covers": [
+            "R1",
+            "R3",
+            "R2"
+          ],
+          "basis": "R1规定首次eligible TON调用elapsed=0；R3规定elapsed正好等于delay时running TRUE，因此delay=0时首次eligible即处于边界；R2规定失eligibility立即复位。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 0
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 0
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "request": false,
+                "inhibit": false,
+                "delay": 0
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 3,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 0
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "inhibit_at_exact_boundary_priority",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2规定inhibit TRUE立即设置running FALSE；R3规定正好到达delay时running才为TRUE，但同一扫描的inhibit TRUE应优先复位。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 99,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "request": true,
+                "inhibit": true,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 101,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 200,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 201,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        }
+      ],
+      "regression_cases": [],
+      "contract_result": {
+        "status": "pass",
+        "summary": {
+          "scenarios": 5,
+          "scans": 26,
+          "assertions": 4,
+          "failed": 0,
+          "property_activations": {
+            "P_OFF": 2,
+            "P_INHIBIT": 2
+          }
+        }
+      },
+      "replayed_processes": 2,
+      "source_sha256": "faa35fb66243bab7ae8528ca75dfed8a0909e78172cb5a3e2b08aa940492e123",
+      "contract_sha256": "465b7ea2839358fdf6194cdc641f72d183a1f3b468de9dbfa385987a974b65ea",
+      "model": "deepseek-flash",
+      "context_isolated": true
+    }
+  ],
+  "capabilities": {
+    "status": "ready_for_offline_checks",
+    "target": "portable",
+    "executor": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "target_compile": "not_executed",
+    "blockers": [],
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim.",
+    "scope": "Local finite checks only; target-platform compile/execution is a separate evidence stage."
+  },
+  "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+  "scope": "Finite checks against a user-confirmed contract, plus isolated review. No full correctness proof.",
+  "delivery": {
+    "status": "exported",
+    "task_id": "7872c22aafaf",
+    "result_status": "review_disagreement",
+    "path": "<local_project>\\workspace\\deliverables\\7872c22aafaf_7229d92d6c1e.zip",
+    "sha256": "797321dda1d51bec147440a4f1a432f2ad9951f030f8d7fa91ddc99bb42c8619",
+    "files": 11
+  }
+}

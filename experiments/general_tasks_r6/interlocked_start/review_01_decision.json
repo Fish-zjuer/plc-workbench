@@ -1,0 +1,324 @@
+{
+  "status": "review_pass",
+  "summary": "代码逐扫描先计算 startRising 并更新 previousStart，再按 stop/permit 清除优先、否则上升沿置位 running。该顺序满足 R1-R3：停止或失许可立即清除并压过同扫描启动边沿；阻塞扫描仍记录启动边沿；许可恢复但 start 仍保持时不会重启。未发现可由题面支撑的新语义问题。",
+  "questions": [],
+  "findings": [
+    {
+      "name": "rising_edge_latches_and_holds_until_stop",
+      "basis": "R1: running 仅在 start 上升沿且 permit TRUE、stop FALSE 时置 TRUE；R2: stop TRUE 立即清除；R3: start 边沿记忆每次扫描更新。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "stop_dominates_simultaneous_start_edge",
+      "basis": "R2: stop TRUE 立即清除且压过同时启动边沿；R3: 被阻塞扫描仍更新 start 边沿记忆，之后按住 start 不重启。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "permit_false_blocks_and_updates_edge_memory",
+      "basis": "R2: permit FALSE 立即清除 running；R3: 阻塞扫描仍更新 start 边沿记忆，恢复 permit 时若 start 仍保持则不得重启。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "startup_previous_start_false_allows_first_scan_edge",
+      "basis": "R1: 启动时 previous start 为 FALSE；因此首扫描 start 从 FALSE 到 TRUE 可被识别为上升沿。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    }
+  ],
+  "proposals": [
+    {
+      "name": "rising_edge_latches_and_holds_until_stop",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "basis": "R1: running 仅在 start 上升沿且 permit TRUE、stop FALSE 时置 TRUE；R2: stop TRUE 立即清除；R3: start 边沿记忆每次扫描更新。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "start": true,
+            "stop": true,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "stop_dominates_simultaneous_start_edge",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "basis": "R2: stop TRUE 立即清除且压过同时启动边沿；R3: 被阻塞扫描仍更新 start 边沿记忆，之后按住 start 不重启。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": true,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "permit_false_blocks_and_updates_edge_memory",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "basis": "R2: permit FALSE 立即清除 running；R3: 阻塞扫描仍更新 start 边沿记忆，恢复 permit 时若 start 仍保持则不得重启。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "startup_previous_start_false_allows_first_scan_edge",
+      "covers": [
+        "R1"
+      ],
+      "basis": "R1: 启动时 previous start 为 FALSE；因此首扫描 start 从 FALSE 到 TRUE 可被识别为上升沿。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    }
+  ],
+  "regression_cases": [],
+  "contract_result": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 4,
+      "scans": 20,
+      "assertions": 4,
+      "failed": 0,
+      "property_activations": {
+        "P_STOP": 2,
+        "P_INTERLOCK": 2
+      }
+    }
+  },
+  "replayed_processes": 2,
+  "source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+  "contract_sha256": "cbc967c468dcf3fe6ed228b3d029fb8b691d1d24c9f99feb1febf660e4d44da6",
+  "model": "deepseek-flash",
+  "context_isolated": true
+}

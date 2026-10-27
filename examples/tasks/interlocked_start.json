@@ -1,0 +1,240 @@
+{
+  "schema": "plc-task-v1",
+  "title": "互锁恢复后必须重新启动",
+  "block": "InterlockedStart",
+  "target": "portable",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "running latches TRUE only on a rising edge of start while permit is TRUE and stop is FALSE. At startup previous start is FALSE."
+    },
+    {
+      "id": "R2",
+      "text": "stop TRUE or permit FALSE immediately clears running. This dominates a simultaneous start edge."
+    },
+    {
+      "id": "R3",
+      "text": "Start edge memory is updated on every scan, including blocked scans. Restoring permit while start remains held does not restart; a new release/press is required."
+    }
+  ],
+  "inputs": {
+    "start": "BOOL",
+    "stop": "BOOL",
+    "permit": "BOOL"
+  },
+  "outputs": {
+    "running": "BOOL"
+  },
+  "scenarios": [
+    {
+      "name": "start_stop_priority",
+      "covers": [
+        "R1",
+        "R2"
+      ],
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": true,
+            "stop": true,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "permit_loss_held_start",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "id": "P_STOP",
+      "requirement": "R2",
+      "when": {
+        "inputs.stop": true
+      },
+      "then": {
+        "outputs.running": false
+      }
+    },
+    {
+      "id": "P_INTERLOCK",
+      "requirement": "R2",
+      "when": {
+        "inputs.permit": false
+      },
+      "then": {
+        "outputs.running": false
+      }
+    }
+  ],
+  "assumptions": [
+    "This is a software control example; no safety-rated emergency-stop or physical actuator is modeled."
+  ],
+  "questions": []
+}

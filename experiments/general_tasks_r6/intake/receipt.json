@@ -1,0 +1,322 @@
+{
+  "schema": "plc-task-receipt-v1",
+  "task_id": "f4f9cbd539be",
+  "run_id": "a838c919c9c1",
+  "status": "offline_pass_target_pending",
+  "source": "fan_hysteresis.st",
+  "source_sha256": "87b32279c54c68e64c988981fee4e025026677c6f14b9f2bacaa070f069bff56",
+  "workspace_source_sha256": "87b32279c54c68e64c988981fee4e025026677c6f14b9f2bacaa070f069bff56",
+  "contract_sha256": "102bd0c7f7fd453519f4c2a7359423d9305c8b1dfb4480effed5b7e4a6c26af9",
+  "target": "portable",
+  "executor": "offline",
+  "target_compile": "not_executed",
+  "requirements_sha256": "1d888e59af84b2b5a92109f7b8730c287afbfbb2be5d310438601b39d30f6eed",
+  "regression_sha256": "75063ba733844649def8e9c2be8a6a388bdcee9488c21b436dc13f2a2d4e86bb",
+  "regression_scenarios": 0,
+  "formal_verification": "not_executed",
+  "hardware_execution": "not_executed",
+  "attempts": [
+    {
+      "summary": "实现 FanHysteresis：在 enabled=FALSE 时强制 fan=FALSE 且不保留历史；在 enabled=TRUE 时，temperature>=30.0 置 TRUE，temperature<=25.0 置 FALSE，25.0<temperature<30.0 保持上一扫描状态；输出 fan 默认初值为 FALSE，因此全新实例首次扫描在带内即为 FALSE，符合 R1–R6。",
+      "source_sha256": "87b32279c54c68e64c988981fee4e025026677c6f14b9f2bacaa070f069bff56",
+      "status": "pass"
+    }
+  ],
+  "proposal_rejections": [],
+  "final_evaluation": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 6,
+      "scans": 26,
+      "assertions": 26,
+      "failed": 0,
+      "property_activations": {}
+    },
+    "source_sha256": "87b32279c54c68e64c988981fee4e025026677c6f14b9f2bacaa070f069bff56",
+    "contract_sha256": "102bd0c7f7fd453519f4c2a7359423d9305c8b1dfb4480effed5b7e4a6c26af9",
+    "execution_fingerprint": "c33e4bf73caa71049b4a9b0eeed331b527b6da96e701049ffea78f50dae06fbc",
+    "behavior_tested": true,
+    "target_compile": "not_executed",
+    "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\task_builds\\task_tinxtvbo\\build.json",
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "审查未发现与明确需求冲突。代码实现符合 R1-R6：初始 fan=FALSE，enabled=FALSE 每扫描强制 FALSE，30.0 包含置 TRUE，25.0 包含置 FALSE，带内保持上一状态，且禁用后重新启用不恢复禁用前 TRUE。未发现需要另行提问的未规定优先级。",
+      "questions": [],
+      "unresolved_questions": [],
+      "adjudications": [],
+      "reused_with_user_decisions": false,
+      "findings": [
+        {
+          "name": "fresh_inside_band_initial_false",
+          "basis": "R1：全新 FB 首次扫描且温度严格位于 25.0 与 30.0 之间时，fan 不得为 TRUE。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "boundaries_and_band_retention",
+          "basis": "R3 规定 30.0 含在置 TRUE 条件；R4 规定 25.0 含在置 FALSE 条件；R5 规定带内保持上一 fan 状态。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "disable_forces_false_every_scan",
+          "basis": "R2：每次扫描 enabled=FALSE 时 fan 必须为 FALSE，与温度和之前 fan 状态无关。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "reenable_after_disable_does_not_restore_true",
+          "basis": "R6：禁用后重新启用且温度在带内时 fan 保持 FALSE，直到温度达到 30.0；R3：30.0 含在置 TRUE 条件。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        }
+      ],
+      "proposals": [
+        {
+          "name": "fresh_inside_band_initial_false",
+          "covers": [
+            "R1"
+          ],
+          "basis": "R1：全新 FB 首次扫描且温度严格位于 25.0 与 30.0 之间时，fan 不得为 TRUE。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "enabled": true,
+                "temperature": 27.0
+              },
+              "expect": {
+                "fan": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "enabled": true,
+                "temperature": 27.0
+              },
+              "expect": {
+                "fan": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "boundaries_and_band_retention",
+          "covers": [
+            "R3",
+            "R4",
+            "R5"
+          ],
+          "basis": "R3 规定 30.0 含在置 TRUE 条件；R4 规定 25.0 含在置 FALSE 条件；R5 规定带内保持上一 fan 状态。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "enabled": true,
+                "temperature": 30.0
+              },
+              "expect": {
+                "fan": true
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "enabled": true,
+                "temperature": 27.0
+              },
+              "expect": {
+                "fan": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "enabled": true,
+                "temperature": 25.0
+              },
+              "expect": {
+                "fan": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "enabled": true,
+                "temperature": 27.0
+              },
+              "expect": {
+                "fan": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "disable_forces_false_every_scan",
+          "covers": [
+            "R2"
+          ],
+          "basis": "R2：每次扫描 enabled=FALSE 时 fan 必须为 FALSE，与温度和之前 fan 状态无关。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "enabled": true,
+                "temperature": 35.0
+              },
+              "expect": {
+                "fan": true
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "enabled": false,
+                "temperature": 35.0
+              },
+              "expect": {
+                "fan": false
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "enabled": false,
+                "temperature": 20.0
+              },
+              "expect": {
+                "fan": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "enabled": false,
+                "temperature": 27.0
+              },
+              "expect": {
+                "fan": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "reenable_after_disable_does_not_restore_true",
+          "covers": [
+            "R6",
+            "R3"
+          ],
+          "basis": "R6：禁用后重新启用且温度在带内时 fan 保持 FALSE，直到温度达到 30.0；R3：30.0 含在置 TRUE 条件。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "enabled": true,
+                "temperature": 35.0
+              },
+              "expect": {
+                "fan": true
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "enabled": false,
+                "temperature": 20.0
+              },
+              "expect": {
+                "fan": false
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "enabled": true,
+                "temperature": 27.0
+              },
+              "expect": {
+                "fan": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "enabled": true,
+                "temperature": 29.9
+              },
+              "expect": {
+                "fan": false
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "enabled": true,
+                "temperature": 30.0
+              },
+              "expect": {
+                "fan": true
+              }
+            }
+          ]
+        }
+      ],
+      "regression_cases": [],
+      "contract_result": {
+        "status": "pass",
+        "summary": {
+          "scenarios": 4,
+          "scans": 15,
+          "assertions": 0,
+          "failed": 0,
+          "property_activations": {}
+        },
+        "source_sha256": "87b32279c54c68e64c988981fee4e025026677c6f14b9f2bacaa070f069bff56",
+        "execution_fingerprint": "c33e4bf73caa71049b4a9b0eeed331b527b6da96e701049ffea78f50dae06fbc",
+        "behavior_tested": true,
+        "target_compile": "not_executed"
+      },
+      "replayed_processes": 2,
+      "source_sha256": "87b32279c54c68e64c988981fee4e025026677c6f14b9f2bacaa070f069bff56",
+      "contract_sha256": "102bd0c7f7fd453519f4c2a7359423d9305c8b1dfb4480effed5b7e4a6c26af9",
+      "model": "deepseek-flash",
+      "context_isolated": true
+    }
+  ],
+  "capabilities": {
+    "status": "ready_for_offline_checks",
+    "target": "portable",
+    "executor": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "target_compile": "not_executed",
+    "blockers": [],
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim.",
+    "scope": "Local finite checks only; target-platform compile/execution is a separate evidence stage."
+  },
+  "execution_fingerprint": "c33e4bf73caa71049b4a9b0eeed331b527b6da96e701049ffea78f50dae06fbc",
+  "scope": "Finite checks against a user-confirmed contract, plus isolated review. No full correctness proof.",
+  "delivery": {
+    "status": "exported",
+    "task_id": "f4f9cbd539be",
+    "result_status": "offline_pass_target_pending",
+    "path": "<local_project>\\workspace\\deliverables\\f4f9cbd539be_a838c919c9c1.zip",
+    "sha256": "3940c4aefa1c9d878d2d033c2d223e6f1e5ef3c2230535ba7c47fd4462ae314b",
+    "files": 13
+  }
+}

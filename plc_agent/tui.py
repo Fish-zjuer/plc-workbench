@@ -175,6 +175,10 @@ HELP = """**PLC Workbench** · 上传题面和 ST，先讨论计划，再执行�
 `/new 项目名` 新项目 · `/sessions` 恢复 · `/export` 导出 · `/test` 测试模型连接
 `/audit 接口 源码路径 需求文本路径` 独立审查（执行模式）
 `/solve 05` 专用PLC流程：计划模式只制定计划，执行模式自动生成/修复并测试
+`/task plan 合约JSON路径` 导入一般PLC任务；也可上传需求后让助手调用任务规划工具
+`/task show 任务ID` 看需求和检查；`/task accept 任务ID` 确认本版约定
+`/task run 任务ID` 实现→编译→扫描检查→独立审查→导出；`/task status 任务ID` 核对结果
+`/task reject 任务ID Q1 "依据"` 人工驳回审查误报；再次 run 会重新编译和重放
 `/adjudicate 轮次ID 发现ID ambiguous 依据` 裁决审查（也支持 requirement/contract/reject）
 
 `/memory` 查看工作记忆 · `/history 关键词` 检索原始会话
@@ -224,6 +228,8 @@ class Workbench(App):
             with Vertical(id="sidebar"):
                 yield Static("PROJECT", classes="heading")
                 yield Static("", id="project-state")
+                yield Static('PLC 任务',classes='heading')
+                yield Static('上传需求后先制定任务计划',id='task-state')
                 yield Static("计划", classes="heading")
                 yield Static("尚未制定计划", id="plan-state")
                 yield Static("附件", classes="heading")
@@ -238,6 +244,7 @@ class Workbench(App):
         with Horizontal(id="buttons"):
             yield Button("发送", variant="primary", id="send")
             yield Button("上传", id="upload")
+            yield Button('任务',id='tasks')
             yield Button("切换模式", id="mode")
             yield Button("模型配置", id="config")
             yield Button("压缩", id="compact")
@@ -260,6 +267,14 @@ class Workbench(App):
 
     def refresh_state(self):
         data = self.session.data
+        task=data.get('task_plan')
+        if task:
+            from .task_ui import STATUS_LABELS
+            receipt=data.get('last_task',{})
+            state=receipt.get('status','not_run') if receipt.get('task_id')==task['id'] else 'not_run'
+            self.query_one('#task-state',Static).update(Text(task['title'][:40]+'\n'+task['id']+'\n'+
+                ('约定已确认' if task.get('accepted') else '约定待确认')+'\n'+STATUS_LABELS.get(state,state)))
+        else:self.query_one('#task-state',Static).update(Text('上传需求后，要求助手建立通用PLC任务。'))
         self.query_one("#project-state", Static).update(Text(f"{self.session.project.data['title']}\n{self.session.project.data['id']}\n会话 {data['id']}"))
         plan = "\n".join(f"{'✓' if s['status']=='completed' else '▶' if s['status']=='in_progress' else '·'} {s['step']}" for s in data["plan"])
         self.query_one("#plan-state", Static).update(Text(plan or "尚未制定计划"))
@@ -274,9 +289,9 @@ class Workbench(App):
         if usage:
             context += f"\n上次服务计数 {usage.get('total_tokens', '未提供')}"
         self.query_one("#context-state", Static).update(Text(context))
-        mode = "计划 · 项目只读" if data["mode"] == "plan" else "执行 · 可写项目"
+        mode = "计划 · 只规划，不执行代码" if data["mode"] == "plan" else "执行 · 可写项目"
         self.query_one("#status", Static).update(Text(f"{mode} | {data['status']} | {self.config.model or '未配置模型'} | 上下文 ≈{stats['ratio']:.0%}"))
-        for name in ("mode", "compact", "sessions", "config", "upload"):
+        for name in ("mode", "compact", "sessions", "config", "upload",'tasks'):
             self.query_one("#" + name, Button).disabled = self.busy
 
     def render_event(self, kind, payload):
@@ -312,6 +327,7 @@ class Workbench(App):
     @on(Button.Pressed)
     def button(self, event):
         actions = {"send": self.action_send, "upload": self.action_upload, "mode": self.action_mode,
+                   'tasks':self.action_tasks,
                    "config": self.action_config, "compact": self.action_compact, "sessions": self.action_sessions, "stop": self.action_stop}
         if event.button.id in actions:
             actions[event.button.id]()
@@ -393,6 +409,8 @@ class Workbench(App):
             self.start_job("adjudicate", rest)
         elif command == "/solve":
             self.start_job("solve", rest)
+        elif command == '/task':
+            self.start_job('task',rest)
         else:
             self.notify("未知命令，使用 /help 查看", severity="warning")
         self.refresh_state()
@@ -408,6 +426,18 @@ class Workbench(App):
 
     def action_mode(self):
         self.set_mode("execute" if self.session.data["mode"] == "plan" else "plan")
+
+    def action_tasks(self):
+        if self.busy:return
+        task=self.session.data.get('task_plan')
+        if not task:
+            self.notify('先上传需求，并让助手建立通用PLC任务，或 /task plan 合约JSON路径');return
+        from .task_store import TaskStore
+        from .task_ui import TaskInspector
+        try:
+            store=TaskStore(self.session);spec=store.load(task['id']);view=store.show(task['id']);receipt=store.latest(task['id'])
+            self.push_screen(TaskInspector(spec,view,receipt),lambda action:self.start_job('task',action+' '+task['id']) if action else None)
+        except (OSError,ValueError,KeyError) as exc:self.notify(str(exc),severity='error')
 
     def action_upload(self):
         if not self.busy:
@@ -486,6 +516,23 @@ class Workbench(App):
                                        lambda k,p:self.call_from_thread(self.receive,k,p)).run(parts[0].zfill(2),parts[1] if len(parts)==2 else None,already_leased=True)
                     self.engine.checkpoint()
                 self.engine.emit('notice',text='PLC流程：'+result['status'])
+            elif kind == 'task':
+                from .task_cli import perform
+                parts=[p.strip('"') for p in shlex.split(value,posix=False)]
+                extra={}
+                if parts[:1]==['reject'] and len(parts)>=4:
+                    extra={'item':parts[2],'reason':' '.join(parts[3:])};parts=parts[:2]
+                if len(parts)!=2:
+                    raise ValueError('用法：/task plan 合约JSON路径，或 /task show/accept/run/status/export 任务ID')
+                with self.session.lease():
+                    self.engine.sync_from_disk()
+                    self.engine.provider.cancel_event.clear()
+                    self.engine.cancel_event.clear()
+                    self.engine.scoped_provider.reset()
+                    result=perform(self.session,self.config,*parts,base=self.session.project.workspace,
+                        provider=self.engine.scoped_provider,notify=lambda k,p:self.call_from_thread(self.receive,k,p),already_leased=True,**extra)
+                    self.engine.checkpoint()
+                self.engine.emit('notice',text=json.dumps(result,ensure_ascii=False,indent=2)[:24000])
             elif kind == "attach":
                 with self.session.lease():
                     self.engine.sync_from_disk()

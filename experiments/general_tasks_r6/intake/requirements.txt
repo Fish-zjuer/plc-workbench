@@ -1,0 +1,7 @@
+Build FUNCTION_BLOCK FanHysteresis.
+VAR_INPUT temperature: REAL; enabled: BOOL; VAR_OUTPUT fan: BOOL.
+fan is initially FALSE. On each scan enabled=FALSE forces fan=FALSE.
+When enabled=TRUE, temperature>=30.0 sets fan=TRUE, temperature<=25.0 sets fan=FALSE.
+Strictly between 25.0 and 30.0 retain the previous fan state.
+After disabling and enabling again in this intermediate band, fan stays FALSE until temperature reaches 30.0.
+The temperature input is a finite REAL value. No timing, hardware or safety-rated function is required.

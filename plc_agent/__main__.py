@@ -28,6 +28,9 @@ def select_session(project_id=None, session_id=None, new_title=None, model=""):
 
 
 def main():
+    if sys.argv[1:2]==['task']:
+        from .task_cli import main as task_main
+        return task_main(sys.argv[2:])
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="PLC Workbench · 厂商无关的本地终端 agent")

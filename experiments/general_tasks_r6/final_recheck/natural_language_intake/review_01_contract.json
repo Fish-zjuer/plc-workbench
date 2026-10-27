@@ -1,0 +1,339 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "name": "FreshInsideBandDefaultsFalse",
+      "covers": [
+        "R1",
+        "R5"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "enabled": true,
+            "temperature": 27.5
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "enabled": true,
+            "temperature": 25.1
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "InclusiveOnAndOffThresholds",
+      "covers": [
+        "R3",
+        "R4"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "enabled": true,
+            "temperature": 29.999
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "enabled": true,
+            "temperature": 30.0
+          },
+          "expect": {
+            "fan": true
+          },
+          "actual": {
+            "fan": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "enabled": true,
+            "temperature": 25.0
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "RetainInsideBandFromTrue",
+      "covers": [
+        "R5",
+        "R4"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "enabled": true,
+            "temperature": 30.0
+          },
+          "expect": {
+            "fan": true
+          },
+          "actual": {
+            "fan": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "enabled": true,
+            "temperature": 27.0
+          },
+          "expect": {
+            "fan": true
+          },
+          "actual": {
+            "fan": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "enabled": true,
+            "temperature": 25.1
+          },
+          "expect": {
+            "fan": true
+          },
+          "actual": {
+            "fan": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "enabled": true,
+            "temperature": 25.0
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "enabled": true,
+            "temperature": 26.0
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "DisableOverridesAndDoesNotRestore",
+      "covers": [
+        "R2",
+        "R6",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "enabled": true,
+            "temperature": 30.0
+          },
+          "expect": {
+            "fan": true
+          },
+          "actual": {
+            "fan": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "enabled": false,
+            "temperature": 35.0
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "enabled": true,
+            "temperature": 27.0
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "enabled": true,
+            "temperature": 30.0
+          },
+          "expect": {
+            "fan": true
+          },
+          "actual": {
+            "fan": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "DisableWhileHotThenEnableInsideBand",
+      "covers": [
+        "R6",
+        "R2",
+        "R5"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "enabled": true,
+            "temperature": 30.0
+          },
+          "expect": {
+            "fan": true
+          },
+          "actual": {
+            "fan": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "enabled": true,
+            "temperature": 26.0
+          },
+          "expect": {
+            "fan": true
+          },
+          "actual": {
+            "fan": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "enabled": false,
+            "temperature": 26.0
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "enabled": true,
+            "temperature": 26.0
+          },
+          "expect": {
+            "fan": false
+          },
+          "actual": {
+            "fan": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "enabled": true,
+            "temperature": 30.0
+          },
+          "expect": {
+            "fan": true
+          },
+          "actual": {
+            "fan": true
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 5,
+    "scans": 19,
+    "assertions": 0,
+    "failed": 0,
+    "property_activations": {}
+  },
+  "source_sha256": "87b32279c54c68e64c988981fee4e025026677c6f14b9f2bacaa070f069bff56",
+  "execution_fingerprint": "c33e4bf73caa71049b4a9b0eeed331b527b6da96e701049ffea78f50dae06fbc",
+  "behavior_tested": true,
+  "target_compile": "not_executed"
+}

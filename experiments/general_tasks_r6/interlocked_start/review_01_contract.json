@@ -1,0 +1,359 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "name": "rising_edge_latches_and_holds_until_stop",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "start": true,
+            "stop": true,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "stop_dominates_simultaneous_start_edge",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": true,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "permit_false_blocks_and_updates_edge_memory",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "startup_previous_start_false_allows_first_scan_edge",
+      "covers": [
+        "R1"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 4,
+    "scans": 20,
+    "assertions": 4,
+    "failed": 0,
+    "property_activations": {
+      "P_STOP": 2,
+      "P_INTERLOCK": 2
+    }
+  }
+}

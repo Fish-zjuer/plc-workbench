@@ -1,0 +1,17 @@
+{
+  "text": "{\"summary\":\"修复零延时首次扫描不输出的问题：在 TON 输出基础上，对 delay=0 且 request 为 TRUE、inhibit 为 FALSE 的工况直接置 running 为 TRUE；不改变原有计时、复位及中断后重新计时的逻辑。\",\"code\":\"FUNCTION_BLOCK RestartDelay\\nVAR_INPUT\\n    request : BOOL;\\n    inhibit : BOOL;\\n    delay : TIME;\\nEND_VAR\\nVAR_OUTPUT\\n    running : BOOL;\\nEND_VAR\\nVAR\\n    timer : TON;\\nEND_VAR\\n\\ntimer(IN := request AND NOT inhibit, PT := delay);\\nrunning := timer.Q OR (request AND NOT inhibit AND (delay <= T#0ms));\\n\\nEND_FUNCTION_BLOCK\",\"assumptions\":[]}",
+  "usage": {
+    "prompt_tokens": 2165,
+    "completion_tokens": 829,
+    "total_tokens": 2994,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 652
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 1397
+  },
+  "model": "deepseek-flash"
+}

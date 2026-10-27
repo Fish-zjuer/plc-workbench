@@ -1,0 +1,270 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "name": "start_stop_priority",
+      "covers": [
+        "R1",
+        "R2"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": true,
+            "stop": true,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "permit_loss_held_start",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 2,
+    "scans": 15,
+    "assertions": 19,
+    "failed": 0,
+    "property_activations": {
+      "P_STOP": 1,
+      "P_INTERLOCK": 3
+    }
+  },
+  "source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+  "contract_sha256": "cbc967c468dcf3fe6ed228b3d029fb8b691d1d24c9f99feb1febf660e4d44da6",
+  "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+  "behavior_tested": true,
+  "target_compile": "not_executed",
+  "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_foxt59bh\\build.json",
+  "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+}

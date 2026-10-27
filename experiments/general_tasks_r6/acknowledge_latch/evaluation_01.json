@@ -1,0 +1,241 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "name": "fault_dominates_acknowledge",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "repeated_ack_while_fault_active",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 2,
+    "scans": 14,
+    "assertions": 20,
+    "failed": 0,
+    "property_activations": {
+      "P_FAULT": 6
+    }
+  },
+  "source_sha256": "77110814c40a2cd6d9fe1e31e99f6a29db90878b5d6087c1d0bfbcbae3bef987",
+  "contract_sha256": "e48659b4ec63e19e2c128999a26ad4391d6fdb9019c15a36ad1c1d04ef831fe6",
+  "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+  "behavior_tested": true,
+  "target_compile": "not_executed",
+  "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_ejte0i5_\\build.json",
+  "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+}

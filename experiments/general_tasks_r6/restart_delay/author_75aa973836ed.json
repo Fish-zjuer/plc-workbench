@@ -1,0 +1,17 @@
+{
+  "text": "{\"summary\":\"实现 RestartDelay：用标准 TON 计时，仅在 request 为 TRUE 且 inhibit 为 FALSE 时计时；计时满 delay 后 running 置 TRUE。request 或 inhibit 任一条件不满足时，TON 的 IN 立即复位，从而清零等待时间并立刻将 running 置 FALSE；恢复后需重新计满完整 delay，满足 R1/R2/R3。\",\"code\":\"FUNCTION_BLOCK RestartDelay\\nVAR_INPUT\\n    request : BOOL;\\n    inhibit : BOOL;\\n    delay   : TIME;\\nEND_VAR\\nVAR_OUTPUT\\n    running : BOOL;\\nEND_VAR\\nVAR\\n    tonDelay : TON;\\n    eligible : BOOL;\\nEND_VAR\\n\\neligible := request AND NOT inhibit;\\ntonDelay(IN := eligible, PT := delay);\\nrunning := eligible AND tonDelay.Q;\\n\\nEND_FUNCTION_BLOCK\",\"assumptions\":[\"使用标准 IEC 61131-3 TON：当 IN 由 TRUE 变为 FALSE 时立即复位 ET 并清零，Q 立即为 FALSE。\"]}",
+  "usage": {
+    "prompt_tokens": 1311,
+    "completion_tokens": 1161,
+    "total_tokens": 2472,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 919
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1311
+  },
+  "model": "deepseek-flash"
+}

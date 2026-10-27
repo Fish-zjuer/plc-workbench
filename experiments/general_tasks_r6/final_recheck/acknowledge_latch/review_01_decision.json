@@ -1,0 +1,342 @@
+{
+  "status": "review_pass",
+  "summary": "代码逻辑符合R1-R3：alarm 初始为 FALSE，fault 优先置位并保持，acknowledge 上升沿仅在 fault 为 FALSE 时清除报警，且 ackPrev 每扫描更新。未发现明确需求下的边界、优先级、状态保持、复位或计时缺陷。",
+  "questions": [],
+  "unresolved_questions": [],
+  "adjudications": [],
+  "reused_with_user_decisions": false,
+  "findings": [
+    {
+      "name": "初始FALSE与无沿保持",
+      "basis": "R1 规定 alarm 初始为 FALSE；R2 规定 fault 为 FALSE 且无 acknowledge 上升沿时保持状态。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "故障置位后无新沿保持",
+      "basis": "R1 规定 fault 为 TRUE 时置位 alarm；R2 规定 fault 变为 FALSE 后若无 acknowledge 上升沿则保持报警。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "故障优先于同步确认沿",
+      "basis": "R1 规定 fault 与 acknowledge 上升沿同时出现时 fault 优先；R3 规定故障消失后保持的 acknowledge 不得清除报警，需释放后再次按下；R2 规定新的上升沿可清除。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "故障期间保持确认历史后重按清除",
+      "basis": "R3 规定 acknowledge 历史在 fault 有效期间也更新，held acknowledge 在 fault 消失后不得清除报警，释放并再次按下才形成新上升沿。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "故障期间多次释放按下后故障消失",
+      "basis": "R3 规定每个扫描周期无条件更新 acknowledge 历史；R1 规定 fault 置位并保持；R2 规定 fault 为 FALSE 时新的上升沿清除报警。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    }
+  ],
+  "proposals": [
+    {
+      "name": "初始FALSE与无沿保持",
+      "covers": [
+        "R1",
+        "R2"
+      ],
+      "basis": "R1 规定 alarm 初始为 FALSE；R2 规定 fault 为 FALSE 且无 acknowledge 上升沿时保持状态。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "故障置位后无新沿保持",
+      "covers": [
+        "R1",
+        "R2"
+      ],
+      "basis": "R1 规定 fault 为 TRUE 时置位 alarm；R2 规定 fault 变为 FALSE 后若无 acknowledge 上升沿则保持报警。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "故障优先于同步确认沿",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "basis": "R1 规定 fault 与 acknowledge 上升沿同时出现时 fault 优先；R3 规定故障消失后保持的 acknowledge 不得清除报警，需释放后再次按下；R2 规定新的上升沿可清除。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "故障期间保持确认历史后重按清除",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "basis": "R3 规定 acknowledge 历史在 fault 有效期间也更新，held acknowledge 在 fault 消失后不得清除报警，释放并再次按下才形成新上升沿。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "故障期间多次释放按下后故障消失",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "basis": "R3 规定每个扫描周期无条件更新 acknowledge 历史；R1 规定 fault 置位并保持；R2 规定 fault 为 FALSE 时新的上升沿清除报警。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          }
+        }
+      ]
+    }
+  ],
+  "regression_cases": [],
+  "contract_result": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 5,
+      "scans": 21,
+      "assertions": 7,
+      "failed": 0,
+      "property_activations": {
+        "P_FAULT": 7
+      }
+    },
+    "source_sha256": "77110814c40a2cd6d9fe1e31e99f6a29db90878b5d6087c1d0bfbcbae3bef987",
+    "execution_fingerprint": "c33e4bf73caa71049b4a9b0eeed331b527b6da96e701049ffea78f50dae06fbc",
+    "behavior_tested": true,
+    "target_compile": "not_executed"
+  },
+  "replayed_processes": 2,
+  "source_sha256": "77110814c40a2cd6d9fe1e31e99f6a29db90878b5d6087c1d0bfbcbae3bef987",
+  "contract_sha256": "e48659b4ec63e19e2c128999a26ad4391d6fdb9019c15a36ad1c1d04ef831fe6",
+  "model": "deepseek-flash",
+  "context_isolated": true
+}

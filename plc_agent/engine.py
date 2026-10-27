@@ -21,7 +21,11 @@ SYSTEM = """你是 PLC Workbench 中的工业编程助手，用中文与用户�
 计划模式下可以读资料和 update_plan，但禁止写代码、编译或执行。仅用户能切换执行模式。
 执行模式下对明确任务持续完成：计划→实现→测试→按证据修复→回归→说明结果与局限。
 plc_compile_unit 可编译一般 ST 单元；有自动行为判据的工具目前仅支持 motor/blower/edges/moving_average/ipv4。
-未知接口可做编译检查、生成测试规约，但不能冒充已经执行并验证其功能。
+题库以外的任务先调用 plc_task_schema，再读取需求并调用 plc_task_plan 建立接口、需求、扫描轨迹和不变量。
+任务计划需要用户通过 /task show 和 /task accept 确认测试语义；模型没有批准或修改已冻结约定的工具。
+确认后使用 plc_task_run 自动实现、编译、扫描测试、隔离上下文的独立审查和导出。不得退回只写计划后宣称完成。
+通用任务当前支持标量接口；未支持的数组/字符串/引用应给出适配方案，保留原接口，不静默降级。
+plc_task_status 会重新核对版本身份。review_disagreement 是需求争议，不可自动当作已确认缺陷。
 公共题库另有 plc_bank_test：按指定题号运行预先定义的有限检查；明确报告尚不支持的引用/VARIANT桥接。
 实际后端能力由应用状态说明。PLC-R4的VARIANT是本地PV1引用接口，不宣称与Siemens/CODESYS二进制兼容。
 实现或修复公共题优先使用 plc_solve_bank，它会自动组织源码修订和真实测试，不要先反复探测无关工具。
@@ -104,6 +108,13 @@ class Engine:
             state['planned_question_id']=self.session.data['planned_question_id']
         if self.session.data.get('planned_task'):
             state['planned_task']=self.session.data['planned_task']
+        if self.session.data.get('task_plan'):
+            state['general_task_plan']=self.session.data['task_plan']
+        if self.session.data.get('last_task'):
+            from .task_store import TaskStore
+            try:task=TaskStore(self.session).latest(self.session.data['last_task']['task_id'])
+            except (OSError,ValueError,KeyError):task={'status':'unavailable_evidence','task_id':self.session.data['last_task']['task_id']}
+            state['last_general_task']={k:task[k] for k in ('task_id','status','source','source_sha256','contract_sha256','target_compile','stale_reasons') if k in task}
         memory=self.session.data.get('working_memory')
         if memory:
             state['history_memory']={k:memory[k] for k in ('archive_path','strategy','retained_user_turns') if k in memory}
@@ -231,10 +242,14 @@ class Engine:
                         if not text.strip():
                             raise ProviderError("模型返回空回答，未完成任务")
                         if workflow_result:
-                            latest = source_hash_for_receipt(self.toolbox, workflow_result)
-                            verified = workflow_result['status']=='verified' and latest
-                            text += '\n\n程序验证记录：' + ('当前源码通过本轮有限检查。' if verified else
-                                      f"{workflow_result['status']}；尚无当前源码验证通过的结论。")
+                            if workflow_result.get('schema')=='plc-task-receipt-v1':
+                                verification,verified=general_task_summary(self.session,workflow_result)
+                                text+='\n\n程序验证记录：'+verification
+                            else:
+                                latest = source_hash_for_receipt(self.toolbox, workflow_result)
+                                verified = workflow_result['status']=='verified' and latest
+                                text += '\n\n程序验证记录：' + ('当前源码通过本轮有限检查。' if verified else
+                                          f"{workflow_result['status']}；尚无当前源码验证通过的结论。")
                             if workflow_result.get('candidate_warnings'):
                                 text+='\n实现缺失：'+workflow_result['candidate_warnings'][0]['message']
                         self.messages.append({"role": "assistant", "content": text})
@@ -267,7 +282,7 @@ class Engine:
                                 self.notify("tool_start", {"name": call["name"], "arguments": call["arguments"]})
                                 result = ({'status':'cancelled','message':'用户停止；工具未执行'} if self.cancel_event.is_set()
                                           else self.toolbox.call(call["name"], call["arguments"]))
-                                if call['name']=='plc_solve_bank':
+                                if call['name'] in ('plc_solve_bank','plc_task_run'):
                                     workflow_result=result
                         self.emit("tool", name=call["name"], arguments=call["arguments"], result=result)
                         result_text = json.dumps(result, ensure_ascii=False, allow_nan=False)
@@ -282,10 +297,14 @@ class Engine:
                         self.checkpoint()
                     if self.cancel_event.is_set():raise Cancelled('已停止')
                     if workflow_result and self.scoped_provider.calls>=self.config.max_steps:
-                        verified=workflow_result.get('status')=='verified' and source_hash_for_receipt(self.toolbox,workflow_result)
-                        text=('专用PLC流程已完成，当前源码通过本轮有限检查。' if verified else
-                              '模型调用预算已用完；专用PLC流程尚未验证通过，当前文件与证据已保存。')
-                        text+='\n流程状态：'+workflow_result.get('status','unknown')+'；这不是CODESYS或形式化证明。'
+                        if workflow_result.get('schema')=='plc-task-receipt-v1':
+                            text,verified=general_task_summary(self.session,workflow_result)
+                            text+='\n模型调用预算已用完，直接使用执行记录报告结果。'
+                        else:
+                            verified=workflow_result.get('status')=='verified' and source_hash_for_receipt(self.toolbox,workflow_result)
+                            text=('专用PLC流程已完成，当前源码通过本轮有限检查。' if verified else
+                                  '模型调用预算已用完；专用PLC流程尚未验证通过，当前文件与证据已保存。')
+                            text+='\n流程状态：'+workflow_result.get('status','unknown')+'；这不是CODESYS或形式化证明。'
                         if workflow_result.get('candidate_warnings'):text+='\n实现缺失：'+workflow_result['candidate_warnings'][0]['message']
                         self.messages.append({'role':'assistant','content':text});self.emit('assistant',text=text)
                         self.session.data['status']='idle' if verified else 'workflow_blocked'
@@ -311,6 +330,17 @@ class Engine:
             finally:
                 self.messages=reconcile_tools(self.messages)
                 self.checkpoint()
+
+
+def general_task_summary(session,receipt):
+    from .task_store import TaskStore
+    try:current=TaskStore(session).latest(receipt['task_id'])
+    except (OSError,ValueError,KeyError):return '任务记录无法复核，不能声明完成。',False
+    passed=current.get('status') in ('reviewed_offline_pass','offline_pass_target_pending','reviewed_target_pass')
+    text='通用任务 '+receipt['task_id']+'：'+current['status']+'。'
+    text+='当前源码通过本轮有限检查与审查。' if passed else '仍有未解决问题，已有源码和证据保留。'
+    text+='目标平台编译：'+current.get('target_compile','not_executed')+'；未运行形式化验证或实体 PLC。'
+    return text,passed
 
 
 def source_hash_for_receipt(toolbox, receipt):

@@ -1,0 +1,368 @@
+{
+  "assumptions": [
+    "Sampling: fresh FB instance per scenario; inputs are assigned before every invocation and outputs are observed after the invocation; time_ms is a bookkeeping marker (10 ms per scan) with no real-time claim.",
+    "The FB is invoked once per scan by a cyclic program; only post-invocation outputs are observed.",
+    "The temperature input is always a finite REAL value; NaN/Inf behaviour is out of scope, so no special handling is required or tested.",
+    "No state is kept outside the FB instance: disabling does not memorise the earlier fan=TRUE state.",
+    "Exactly 30.0 is treated as '>= 30.0' and exactly 25.0 as '<= 25.0'; no rounding logic is expected.",
+    "No timing, hardware access or safety-rated behaviour is claimed; target portable is an offline reference execution, not a CODESYS compile."
+  ],
+  "block": "FanHysteresis",
+  "inputs": {
+    "enabled": "BOOL",
+    "temperature": "REAL"
+  },
+  "outputs": {
+    "fan": "BOOL"
+  },
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "Fan state starts FALSE: the first scan of a fresh FB with temperature strictly inside the band never reports fan=TRUE."
+    },
+    {
+      "id": "R2",
+      "text": "On every scan with enabled=FALSE the output fan is FALSE, regardless of temperature and of the previous fan state."
+    },
+    {
+      "id": "R3",
+      "text": "With enabled=TRUE, temperature >= 30.0 (30.0 inclusive) sets fan=TRUE."
+    },
+    {
+      "id": "R4",
+      "text": "With enabled=TRUE, temperature <= 25.0 (25.0 inclusive) sets fan=FALSE."
+    },
+    {
+      "id": "R5",
+      "text": "With enabled=TRUE and 25.0 < temperature < 30.0 the previous fan state is retained unchanged."
+    },
+    {
+      "id": "R6",
+      "text": "After enabled=FALSE (which forces fan=FALSE) and enabled=TRUE again inside the band 25.0 < temperature < 30.0, fan remains FALSE until temperature reaches 30.0; the pre-disable TRUE state is not restored."
+    }
+  ],
+  "scenarios": [
+    {
+      "covers": [
+        "R1",
+        "R2"
+      ],
+      "name": "fresh_fb_starts_off",
+      "trace": [
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": false,
+            "temperature": 27
+          },
+          "time_ms": 0
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": false,
+            "temperature": 40
+          },
+          "time_ms": 10
+        }
+      ]
+    },
+    {
+      "covers": [
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "name": "enable_at_upper_threshold_then_retain",
+      "trace": [
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 30
+          },
+          "time_ms": 0
+        },
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 27
+          },
+          "time_ms": 10
+        },
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 25.1
+          },
+          "time_ms": 20
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 25
+          },
+          "time_ms": 30
+        }
+      ]
+    },
+    {
+      "covers": [
+        "R5",
+        "R3"
+      ],
+      "name": "band_retains_false_until_30",
+      "trace": [
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 26
+          },
+          "time_ms": 0
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 29.9
+          },
+          "time_ms": 10
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 29.99
+          },
+          "time_ms": 20
+        },
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 30
+          },
+          "time_ms": 30
+        }
+      ]
+    },
+    {
+      "covers": [
+        "R2"
+      ],
+      "name": "disabled_overrides_hot_temperature",
+      "trace": [
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 31
+          },
+          "time_ms": 0
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": false,
+            "temperature": 31
+          },
+          "time_ms": 10
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": false,
+            "temperature": 25
+          },
+          "time_ms": 20
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": false,
+            "temperature": 45
+          },
+          "time_ms": 30
+        }
+      ]
+    },
+    {
+      "covers": [
+        "R6",
+        "R3"
+      ],
+      "name": "reenable_in_band_stays_off",
+      "trace": [
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 31
+          },
+          "time_ms": 0
+        },
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 28
+          },
+          "time_ms": 10
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": false,
+            "temperature": 28
+          },
+          "time_ms": 20
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 28
+          },
+          "time_ms": 30
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 29.99
+          },
+          "time_ms": 40
+        },
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 30
+          },
+          "time_ms": 50
+        }
+      ]
+    },
+    {
+      "covers": [
+        "R3",
+        "R4"
+      ],
+      "name": "full_cycle_boundaries",
+      "trace": [
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 30
+          },
+          "time_ms": 0
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 25
+          },
+          "time_ms": 10
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 24.9
+          },
+          "time_ms": 20
+        },
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 30
+          },
+          "time_ms": 30
+        },
+        {
+          "expect": {
+            "fan": true
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 26
+          },
+          "time_ms": 40
+        },
+        {
+          "expect": {
+            "fan": false
+          },
+          "inputs": {
+            "enabled": true,
+            "temperature": 25
+          },
+          "time_ms": 50
+        }
+      ]
+    }
+  ],
+  "schema": "plc-task-v1",
+  "target": "portable",
+  "title": "风机启停滞环（FanHysteresis）",
+  "tolerance": 1e-06,
+  "executor": "offline",
+  "inouts": {},
+  "properties": [],
+  "questions": []
+}

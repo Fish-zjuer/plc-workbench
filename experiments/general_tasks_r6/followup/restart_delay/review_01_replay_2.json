@@ -1,0 +1,482 @@
+{
+  "status": "fail",
+  "cases": [
+    {
+      "name": "basic_exact_boundary",
+      "covers": [
+        "R1",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 99,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 101,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "request_false_resets_full_delay",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "request": false,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 199,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "inhibit_true_resets_and_full_recovery",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 50
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 50
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "request": true,
+            "inhibit": true,
+            "delay": 50
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 50
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 99,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 50
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 50
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "zero_delay_first_eligible",
+      "covers": [
+        "R1",
+        "R3",
+        "R2"
+      ],
+      "status": "fail",
+      "first_failure": {
+        "scan": 0,
+        "time_ms": 0,
+        "kind": "example",
+        "output": "running",
+        "expected": true,
+        "actual": false
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": [
+            {
+              "kind": "example",
+              "output": "running",
+              "expected": true,
+              "actual": false
+            }
+          ]
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2,
+          "inputs": {
+            "request": false,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": [
+            {
+              "kind": "example",
+              "output": "running",
+              "expected": true,
+              "actual": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "inhibit_at_exact_boundary_priority",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 99,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "request": true,
+            "inhibit": true,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 101,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          },
+          "actual": {
+            "running": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 201,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": true
+          },
+          "actual": {
+            "running": true
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 5,
+    "scans": 26,
+    "assertions": 30,
+    "failed": 1,
+    "property_activations": {
+      "P_OFF": 2,
+      "P_INHIBIT": 2
+    }
+  }
+}

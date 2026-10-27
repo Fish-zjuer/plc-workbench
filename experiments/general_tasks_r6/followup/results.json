@@ -1,0 +1,70 @@
+{
+  "model": "deepseek-flash",
+  "results": [
+    {
+      "name": "restart_delay",
+      "status": "review_disagreement",
+      "source_sha256": "faa35fb66243bab7ae8528ca75dfed8a0909e78172cb5a3e2b08aa940492e123",
+      "contract_sha256": "465b7ea2839358fdf6194cdc641f72d183a1f3b468de9dbfa385987a974b65ea",
+      "revisions": 1,
+      "review_rounds": 1,
+      "model_requests": 2,
+      "final_evaluation": {
+        "status": "pass",
+        "summary": {
+          "scenarios": 2,
+          "scans": 14,
+          "assertions": 18,
+          "failed": 0,
+          "property_activations": {
+            "P_OFF": 3,
+            "P_INHIBIT": 1
+          }
+        },
+        "source_sha256": "faa35fb66243bab7ae8528ca75dfed8a0909e78172cb5a3e2b08aa940492e123",
+        "contract_sha256": "465b7ea2839358fdf6194cdc641f72d183a1f3b468de9dbfa385987a974b65ea",
+        "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+        "behavior_tested": true,
+        "target_compile": "not_executed",
+        "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_5t9v1o0g\\build.json",
+        "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+      },
+      "target_compile": "not_executed",
+      "usage": [
+        {
+          "usage": {
+            "prompt_tokens": 1311,
+            "completion_tokens": 2825,
+            "total_tokens": 4136,
+            "prompt_tokens_details": {
+              "cached_tokens": 1152
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 2635
+            },
+            "prompt_cache_hit_tokens": 1152,
+            "prompt_cache_miss_tokens": 159
+          }
+        },
+        {
+          "usage": {
+            "prompt_tokens": 573,
+            "completion_tokens": 4420,
+            "total_tokens": 4993,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "completion_tokens_details": {
+              "reasoning_tokens": 3295
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 573
+          }
+        }
+      ],
+      "private_project_id": "94604b7cebc6",
+      "task_id": "7872c22aafaf"
+    }
+  ],
+  "scope": "Three new task fixtures; one run each from empty source, frozen developer-authored contracts. Not a broad accuracy estimate or vendor compilation."
+}

@@ -18,7 +18,7 @@ from plc_agent.config import ModelConfig
 from plc_agent.deepseek_credentials import candidates
 
 FOLDERS=('plc_agent','plc_probe','tests','scripts','docs','backend_extensions','examples','experiments','reports')
-ROOT_FILES=('launch.cmd','requirements.lock','.env.example','.gitignore','AGENT_README.md','README_TEAM.md')
+ROOT_FILES=('launch.cmd','requirements.lock','.env.example','.gitignore','AGENT_README.md','README_TEAM.md','agent_tools.py')
 OMIT_PARTS={'__pycache__','.git','.venv','.runtime','agent_data','node_modules'}
 ACCOUNT_KEYS={'balance','balance_after','before_balance','after_balance','balance_infos',
               'credential_file','credential_fingerprint','credentials','credential_discovery'}
@@ -105,7 +105,7 @@ def main():
         if path.is_file():
             scanned+=1
             if contains_secret(path.read_bytes(),secrets):raise ValueError('Private credential matched in '+str(path.relative_to(stage)))
-    manifest={'schema':'plc-workbench-team-source-v1','release':'R4 team preview','created_date':'2026-10-27',
+    manifest={'schema':'plc-workbench-team-source-v1','release':args.name,'created_date':datetime.now().date().isoformat(),
               'contains':'Source, course materials, historical public evidence, pinned Python wheels; no preinstalled compiler/runtime or model configuration.',
               'excludes':['agent_data','API credentials','account balance records','virtual environments','compiler/build caches','Node/npm dependencies'],
               'historical_json_account_fields_removed':scrubbed,

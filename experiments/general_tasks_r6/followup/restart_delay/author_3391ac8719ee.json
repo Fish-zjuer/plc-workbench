@@ -1,0 +1,17 @@
+{
+  "text": "{\n  \"summary\": \"Implemented RestartDelay using a standard TON instance. The timer's IN is request AND NOT inhibit, so it starts from elapsed=0 on the first eligible scan, resets immediately when request becomes FALSE or inhibit becomes TRUE, and requires the full delay to elapse again after any interruption. running is assigned from the timer's Q output, becoming TRUE exactly when elapsed reaches delay.\",\n  \"code\": \"FUNCTION_BLOCK RestartDelay\\nVAR_INPUT\\n    request : BOOL;\\n    inhibit : BOOL;\\n    delay : TIME;\\nEND_VAR\\nVAR_OUTPUT\\n    running : BOOL;\\nEND_VAR\\nVAR\\n    timer : TON;\\nEND_VAR\\n\\ntimer(IN := request AND NOT inhibit, PT := delay);\\nrunning := timer.Q;\\n\\nEND_FUNCTION_BLOCK\",\n  \"assumptions\": []\n}",
+  "usage": {
+    "prompt_tokens": 1311,
+    "completion_tokens": 2825,
+    "total_tokens": 4136,
+    "prompt_tokens_details": {
+      "cached_tokens": 1152
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2635
+    },
+    "prompt_cache_hit_tokens": 1152,
+    "prompt_cache_miss_tokens": 159
+  },
+  "model": "deepseek-flash"
+}

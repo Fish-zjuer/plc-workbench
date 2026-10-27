@@ -1,0 +1,17 @@
+{
+  "text": "{\"summary\":\"使用每个扫描周期更新的 start 上升沿记忆，并在 stop 或 permit 无效时优先清零 running；running 仅在允许条件下由 start 上升沿置位并保持。\",\"code\":\"FUNCTION_BLOCK InterlockedStart\\nVAR_INPUT\\n    start : BOOL;\\n    stop : BOOL;\\n    permit : BOOL;\\nEND_VAR\\nVAR_OUTPUT\\n    running : BOOL;\\nEND_VAR\\nVAR\\n    previousStart : BOOL := FALSE;\\n    startRising : BOOL;\\nEND_VAR\\n\\nstartRising := start AND NOT previousStart;\\npreviousStart := start;\\n\\nIF stop OR NOT permit THEN\\n    running := FALSE;\\nELSIF startRising THEN\\n    running := TRUE;\\nEND_IF;\\n\\nEND_FUNCTION_BLOCK\",\"assumptions\":[]}",
+  "usage": {
+    "prompt_tokens": 1335,
+    "completion_tokens": 1567,
+    "total_tokens": 2902,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1383
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1335
+  },
+  "model": "deepseek-flash"
+}

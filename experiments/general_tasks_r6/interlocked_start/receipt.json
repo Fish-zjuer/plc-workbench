@@ -1,0 +1,389 @@
+{
+  "schema": "plc-task-receipt-v1",
+  "task_id": "abb7410076c6",
+  "run_id": "ebf401880c95",
+  "status": "offline_pass_target_pending",
+  "source": "code/abb7410076c6.st",
+  "source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+  "workspace_source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+  "contract_sha256": "cbc967c468dcf3fe6ed228b3d029fb8b691d1d24c9f99feb1febf660e4d44da6",
+  "target": "portable",
+  "executor": "offline",
+  "target_compile": "not_executed",
+  "requirements_sha256": "602e35a92eec4bc0a2ec6ae113f07bfc6933322fb69fe8dee416e5a67217e2a2",
+  "formal_verification": "not_executed",
+  "hardware_execution": "not_executed",
+  "attempts": [
+    {
+      "summary": "使用每个扫描周期更新的 start 上升沿记忆，并在 stop 或 permit 无效时优先清零 running；running 仅在允许条件下由 start 上升沿置位并保持。",
+      "source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+      "status": "pass"
+    }
+  ],
+  "final_evaluation": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 2,
+      "scans": 15,
+      "assertions": 19,
+      "failed": 0,
+      "property_activations": {
+        "P_STOP": 1,
+        "P_INTERLOCK": 3
+      }
+    },
+    "source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+    "contract_sha256": "cbc967c468dcf3fe6ed228b3d029fb8b691d1d24c9f99feb1febf660e4d44da6",
+    "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+    "behavior_tested": true,
+    "target_compile": "not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_foxt59bh\\build.json",
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "代码逐扫描先计算 startRising 并更新 previousStart，再按 stop/permit 清除优先、否则上升沿置位 running。该顺序满足 R1-R3：停止或失许可立即清除并压过同扫描启动边沿；阻塞扫描仍记录启动边沿；许可恢复但 start 仍保持时不会重启。未发现可由题面支撑的新语义问题。",
+      "questions": [],
+      "findings": [
+        {
+          "name": "rising_edge_latches_and_holds_until_stop",
+          "basis": "R1: running 仅在 start 上升沿且 permit TRUE、stop FALSE 时置 TRUE；R2: stop TRUE 立即清除；R3: start 边沿记忆每次扫描更新。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "stop_dominates_simultaneous_start_edge",
+          "basis": "R2: stop TRUE 立即清除且压过同时启动边沿；R3: 被阻塞扫描仍更新 start 边沿记忆，之后按住 start 不重启。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "permit_false_blocks_and_updates_edge_memory",
+          "basis": "R2: permit FALSE 立即清除 running；R3: 阻塞扫描仍更新 start 边沿记忆，恢复 permit 时若 start 仍保持则不得重启。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "startup_previous_start_false_allows_first_scan_edge",
+          "basis": "R1: 启动时 previous start 为 FALSE；因此首扫描 start 从 FALSE 到 TRUE 可被识别为上升沿。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        }
+      ],
+      "proposals": [
+        {
+          "name": "rising_edge_latches_and_holds_until_stop",
+          "covers": [
+            "R1",
+            "R2",
+            "R3"
+          ],
+          "basis": "R1: running 仅在 start 上升沿且 permit TRUE、stop FALSE 时置 TRUE；R2: stop TRUE 立即清除；R3: start 边沿记忆每次扫描更新。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 200,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 300,
+              "inputs": {
+                "start": true,
+                "stop": true,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 400,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 500,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 600,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "stop_dominates_simultaneous_start_edge",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2: stop TRUE 立即清除且压过同时启动边沿；R3: 被阻塞扫描仍更新 start 边沿记忆，之后按住 start 不重启。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": true,
+                "stop": true,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "permit_false_blocks_and_updates_edge_memory",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2: permit FALSE 立即清除 running；R3: 阻塞扫描仍更新 start 边沿记忆，恢复 permit 时若 start 仍保持则不得重启。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": false
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "startup_previous_start_false_allows_first_scan_edge",
+          "covers": [
+            "R1"
+          ],
+          "basis": "R1: 启动时 previous start 为 FALSE；因此首扫描 start 从 FALSE 到 TRUE 可被识别为上升沿。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        }
+      ],
+      "regression_cases": [],
+      "contract_result": {
+        "status": "pass",
+        "summary": {
+          "scenarios": 4,
+          "scans": 20,
+          "assertions": 4,
+          "failed": 0,
+          "property_activations": {
+            "P_STOP": 2,
+            "P_INTERLOCK": 2
+          }
+        }
+      },
+      "replayed_processes": 2,
+      "source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+      "contract_sha256": "cbc967c468dcf3fe6ed228b3d029fb8b691d1d24c9f99feb1febf660e4d44da6",
+      "model": "deepseek-flash",
+      "context_isolated": true
+    }
+  ],
+  "capabilities": {
+    "status": "ready_for_offline_checks",
+    "target": "portable",
+    "executor": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "target_compile": "not_executed",
+    "blockers": [],
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim.",
+    "scope": "Local finite checks only; target-platform compile/execution is a separate evidence stage."
+  },
+  "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+  "scope": "Finite checks against a user-confirmed contract, plus isolated review. No full correctness proof.",
+  "delivery": {
+    "status": "exported",
+    "task_id": "abb7410076c6",
+    "result_status": "offline_pass_target_pending",
+    "path": "<local_project>\\workspace\\deliverables\\abb7410076c6_ebf401880c95.zip",
+    "sha256": "3e789316568af8995020b0b34c3c40b602576da6b952ee73f2b00aafd4e5d9e3",
+    "files": 11
+  }
+}

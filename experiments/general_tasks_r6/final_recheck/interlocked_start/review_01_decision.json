@@ -1,0 +1,318 @@
+{
+  "status": "review_pass",
+  "summary": "代码符合R1-R3：上电previousStart为FALSE；仅在stop为FALSE且permit为TRUE时由start上升沿置位running；stop TRUE或permit FALSE优先清零；previousStart每扫描更新，因此阻塞期间保持start不会在解除阻塞后重新触发，必须释放再按下。未发现状态保留、优先级、复位或边缘记忆问题。",
+  "questions": [],
+  "unresolved_questions": [],
+  "adjudications": [],
+  "reused_with_user_decisions": false,
+  "findings": [
+    {
+      "name": "startup_false_then_rising_latch",
+      "basis": "R1规定上电previousStart为FALSE，且start上升沿在permit TRUE、stop FALSE时置位running并保持。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "stop_dominates_simultaneous_start_edge",
+      "basis": "R2规定stop TRUE优先于同时出现的start上升沿清除running；R3规定阻塞扫描仍更新start边沿记忆，故释放前保持start不能重启。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "permit_false_clears_and_restore_held_no_restart",
+      "basis": "R2规定permit FALSE立即清除running；R3规定恢复permit时若start仍保持TRUE，不产生新上升沿，必须释放再按下。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    },
+    {
+      "name": "stop_clears_latched_running",
+      "basis": "R2规定stop TRUE立即清除running，即使running此前已锁存。",
+      "scope": "specified",
+      "verdict": "not_reproduced",
+      "claim_failure": null,
+      "contract_failure": null
+    }
+  ],
+  "proposals": [
+    {
+      "name": "startup_false_then_rising_latch",
+      "covers": [
+        "R1"
+      ],
+      "basis": "R1规定上电previousStart为FALSE，且start上升沿在permit TRUE、stop FALSE时置位running并保持。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "stop_dominates_simultaneous_start_edge",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "basis": "R2规定stop TRUE优先于同时出现的start上升沿清除running；R3规定阻塞扫描仍更新start边沿记忆，故释放前保持start不能重启。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": true,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": true,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "permit_false_clears_and_restore_held_no_restart",
+      "covers": [
+        "R2",
+        "R3"
+      ],
+      "basis": "R2规定permit FALSE立即清除running；R3规定恢复permit时若start仍保持TRUE，不产生新上升沿，必须释放再按下。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": false
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "stop_clears_latched_running",
+      "covers": [
+        "R2"
+      ],
+      "basis": "R2规定stop TRUE立即清除running，即使running此前已锁存。",
+      "scope": "specified",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "start": true,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "start": false,
+            "stop": true,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "start": false,
+            "stop": false,
+            "permit": true
+          },
+          "expect": {
+            "running": false
+          }
+        }
+      ]
+    }
+  ],
+  "regression_cases": [],
+  "contract_result": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 4,
+      "scans": 19,
+      "assertions": 4,
+      "failed": 0,
+      "property_activations": {
+        "P_STOP": 3,
+        "P_INTERLOCK": 1
+      }
+    },
+    "source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+    "execution_fingerprint": "c33e4bf73caa71049b4a9b0eeed331b527b6da96e701049ffea78f50dae06fbc",
+    "behavior_tested": true,
+    "target_compile": "not_executed"
+  },
+  "replayed_processes": 2,
+  "source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+  "contract_sha256": "cbc967c468dcf3fe6ed228b3d029fb8b691d1d24c9f99feb1febf660e4d44da6",
+  "model": "deepseek-flash",
+  "context_isolated": true
+}

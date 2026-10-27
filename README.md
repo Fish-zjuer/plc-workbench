@@ -1,4 +1,8 @@
-# PLC Workbench · 小组预览版 R4
+# PLC Workbench · 通用任务开发版 R6
+
+本分支在 R4 上增加题库以外的 PLC 任务闭环：需求与扫描测试规划、人工确认、完整 ST 生成、真实编译测试、反例修复、独立审查及证据 ZIP。TUI 新增“任务”面板。
+
+**先读：[当前设计及使用流程](docs/AGENT_DESIGN_CURRENT.md) · [本轮实测](experiments/general_tasks_r6/report.md) · [R5 后端合并接口](docs/BACKEND_ADAPTERS.md)。** 通用桥接目前支持标量接口；厂商编译由实际平台后端提供。下文 R4 ZIP 和 20 题结果是已发布历史版本。
 
 2026-10-27｜[下载可分享的ZIP](https://github.com/Fish-zjuer/plc-workbench/releases/tag/v0.4.0-preview)｜用于组内交流、试用和继续开发。它是我们负责的agent与工具部分，尚不是完整期末作业提交。
 

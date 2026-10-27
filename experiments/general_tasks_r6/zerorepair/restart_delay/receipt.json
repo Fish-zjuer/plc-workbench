@@ -1,0 +1,459 @@
+{
+  "schema": "plc-task-receipt-v1",
+  "task_id": "68d3a26af593",
+  "run_id": "cb2486fb3815",
+  "status": "review_questions",
+  "source": "code/68d3a26af593.st",
+  "source_sha256": "9fef6c7f218d412567d52b8b5f969447275abb7f2515794e485e5d5911110df9",
+  "workspace_source_sha256": "9fef6c7f218d412567d52b8b5f969447275abb7f2515794e485e5d5911110df9",
+  "contract_sha256": "b3a8dd847249b483f7bd5d75e9e6eccb579d2b7d1ecc74821749fe8892273677",
+  "target": "portable",
+  "executor": "offline",
+  "target_compile": "not_executed",
+  "requirements_sha256": "602e35a92eec4bc0a2ec6ae113f07bfc6933322fb69fe8dee416e5a67217e2a2",
+  "regression_sha256": "fb013c14569aedc5726ab0e2648b51592affda153e3355d35e24e1f6e5b0c2a5",
+  "regression_scenarios": 0,
+  "formal_verification": "not_executed",
+  "hardware_execution": "not_executed",
+  "attempts": [
+    {
+      "summary": "修复零延时首次扫描不输出的问题：在 TON 输出基础上，对 delay=0 且 request 为 TRUE、inhibit 为 FALSE 的工况直接置 running 为 TRUE；不改变原有计时、复位及中断后重新计时的逻辑。",
+      "source_sha256": "9fef6c7f218d412567d52b8b5f969447275abb7f2515794e485e5d5911110df9",
+      "status": "pass"
+    }
+  ],
+  "proposal_rejections": [],
+  "final_evaluation": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 3,
+      "scans": 18,
+      "assertions": 26,
+      "failed": 0,
+      "property_activations": {
+        "P_OFF": 4,
+        "P_INHIBIT": 2,
+        "P_ZERO": 2
+      }
+    },
+    "source_sha256": "9fef6c7f218d412567d52b8b5f969447275abb7f2515794e485e5d5911110df9",
+    "contract_sha256": "b3a8dd847249b483f7bd5d75e9e6eccb579d2b7d1ecc74821749fe8892273677",
+    "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+    "behavior_tested": true,
+    "target_compile": "not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_yu_0nb4j\\build.json",
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+  },
+  "reviews": [
+    {
+      "status": "review_questions",
+      "summary": "For nonnegative delays, the code matches the specified TON reset/restart semantics: ineligible scans reset the TON and clear running, a full delay is required after any interruption, and running is TRUE at exactly delay elapsed. No counterexample against R1-R3 was found for nonnegative delay. The only semantic gap is negative delay: the code treats delay<=0 as an immediate TRUE path, while the requirements do not define negative delay behavior.",
+      "questions": [
+        "Should delay < 0 be treated as invalid or unspecified? The code's 'delay <= T#0ms' term makes running TRUE immediately on an eligible scan for negative delay, which is not covered by R1-R3."
+      ],
+      "findings": [
+        {
+          "name": "full_delay_exact_100ms",
+          "basis": "R1/R3: first eligible TON invocation has elapsed=0 and running must become TRUE at exactly delay elapsed.",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "inhibit_interrupt_restarts_full_delay",
+          "basis": "R2: inhibit TRUE immediately clears running and resets elapsed waiting time; R3: after release, full delay must elapse again even when request remains TRUE.",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "request_false_interrupt_restarts_full_delay",
+          "basis": "R2: request FALSE immediately clears running and resets elapsed; R3: recovery after interruption must wait the full delay again.",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "inhibit_after_running_resets_immediately",
+          "basis": "R2: inhibit TRUE must immediately set running FALSE and reset elapsed, even after running was TRUE; R3: subsequent recovery requires full delay.",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "zero_delay_first_eligible",
+          "basis": "R1 says first eligible TON invocation has elapsed=0; R3 says running is TRUE at exactly delay elapsed, so delay=0 is exact at the first eligible invocation.",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        }
+      ],
+      "proposals": [
+        {
+          "name": "full_delay_exact_100ms",
+          "covers": [
+            "R1",
+            "R3"
+          ],
+          "basis": "R1/R3: first eligible TON invocation has elapsed=0 and running must become TRUE at exactly delay elapsed.",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 99,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "inhibit_interrupt_restarts_full_delay",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2: inhibit TRUE immediately clears running and resets elapsed waiting time; R3: after release, full delay must elapse again even when request remains TRUE.",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "request": true,
+                "inhibit": true,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 70,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 169,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 170,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "request_false_interrupt_restarts_full_delay",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2: request FALSE immediately clears running and resets elapsed; R3: recovery after interruption must wait the full delay again.",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "request": false,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 159,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 160,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "inhibit_after_running_resets_immediately",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2: inhibit TRUE must immediately set running FALSE and reset elapsed, even after running was TRUE; R3: subsequent recovery requires full delay.",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 101,
+              "inputs": {
+                "request": true,
+                "inhibit": true,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 102,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 201,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 202,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 100
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "zero_delay_first_eligible",
+          "covers": [
+            "R1",
+            "R3"
+          ],
+          "basis": "R1 says first eligible TON invocation has elapsed=0; R3 says running is TRUE at exactly delay elapsed, so delay=0 is exact at the first eligible invocation.",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 0
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "request": false,
+                "inhibit": false,
+                "delay": 0
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "request": true,
+                "inhibit": false,
+                "delay": 0
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        }
+      ],
+      "regression_cases": [],
+      "contract_result": {
+        "status": "pass",
+        "summary": {
+          "scenarios": 5,
+          "scans": 24,
+          "assertions": 6,
+          "failed": 0,
+          "property_activations": {
+            "P_OFF": 2,
+            "P_INHIBIT": 2,
+            "P_ZERO": 2
+          }
+        }
+      },
+      "replayed_processes": 2,
+      "source_sha256": "9fef6c7f218d412567d52b8b5f969447275abb7f2515794e485e5d5911110df9",
+      "contract_sha256": "b3a8dd847249b483f7bd5d75e9e6eccb579d2b7d1ecc74821749fe8892273677",
+      "model": "deepseek-flash",
+      "context_isolated": true
+    }
+  ],
+  "capabilities": {
+    "status": "ready_for_offline_checks",
+    "target": "portable",
+    "executor": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "target_compile": "not_executed",
+    "blockers": [],
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim.",
+    "scope": "Local finite checks only; target-platform compile/execution is a separate evidence stage."
+  },
+  "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+  "scope": "Finite checks against a user-confirmed contract, plus isolated review. No full correctness proof.",
+  "delivery": {
+    "status": "exported",
+    "task_id": "68d3a26af593",
+    "result_status": "review_questions",
+    "path": "<local_project>\\workspace\\deliverables\\68d3a26af593_cb2486fb3815.zip",
+    "sha256": "25dc26918df882b74a244dd0372330cc09847a2b0945136b718ce09aa81fd7d8",
+    "files": 13
+  }
+}

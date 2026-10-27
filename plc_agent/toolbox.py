@@ -52,7 +52,9 @@ for item in PLC_TOOLS:
         continue  # Dedicated independent-review command owns the adjudication boundary.
     TOOLS.append(tool(item["name"], item["description"], item["inputSchema"]["properties"], item["inputSchema"]["required"]))
 
-READ_ONLY = {"list_files", "read_file", "read_attachment", "search_files", "update_plan", "plc_profiles", "plc_environment",'read_bank_question','read_history'}
+from .task_tools import definitions as task_definitions, READ_ONLY as TASK_READ_ONLY
+TOOLS.extend(task_definitions(tool))
+READ_ONLY = {"list_files", "read_file", "read_attachment", "search_files", "update_plan", "plc_profiles", "plc_environment",'read_bank_question','read_history'} | TASK_READ_ONLY
 TEXT_SUFFIXES = {".st", ".txt", ".md", ".json", ".csv", ".yaml", ".yml", ".log"}
 
 
@@ -138,6 +140,9 @@ class Toolbox:
             return {"status": "tool_error", "message": str(exc)[:1500]}
 
     def _call(self, name, args):
+        if name.startswith('plc_task_'):
+            from .task_tools import dispatch
+            return dispatch(self,name,args)
         if name=='read_history':
             start=args.get('start_event',0);limit=args.get('max_events',8);query=args.get('query','').casefold();kind=args.get('kind','all')
             matches=[];last=start;more=False

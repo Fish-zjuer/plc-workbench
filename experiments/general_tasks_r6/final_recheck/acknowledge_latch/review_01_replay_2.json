@@ -1,0 +1,366 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "name": "初始FALSE与无沿保持",
+      "covers": [
+        "R1",
+        "R2"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "故障置位后无新沿保持",
+      "covers": [
+        "R1",
+        "R2"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "故障优先于同步确认沿",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "故障期间保持确认历史后重按清除",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "故障期间多次释放按下后故障消失",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 5,
+    "scans": 21,
+    "assertions": 28,
+    "failed": 0,
+    "property_activations": {
+      "P_FAULT": 7
+    }
+  }
+}

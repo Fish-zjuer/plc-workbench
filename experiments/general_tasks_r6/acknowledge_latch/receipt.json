@@ -1,0 +1,456 @@
+{
+  "schema": "plc-task-receipt-v1",
+  "task_id": "1fd812a5d3ae",
+  "run_id": "59a44371f2ff",
+  "status": "offline_pass_target_pending",
+  "source": "code/1fd812a5d3ae.st",
+  "source_sha256": "77110814c40a2cd6d9fe1e31e99f6a29db90878b5d6087c1d0bfbcbae3bef987",
+  "workspace_source_sha256": "77110814c40a2cd6d9fe1e31e99f6a29db90878b5d6087c1d0bfbcbae3bef987",
+  "contract_sha256": "e48659b4ec63e19e2c128999a26ad4391d6fdb9019c15a36ad1c1d04ef831fe6",
+  "target": "portable",
+  "executor": "offline",
+  "target_compile": "not_executed",
+  "requirements_sha256": "602e35a92eec4bc0a2ec6ae113f07bfc6933322fb69fe8dee416e5a67217e2a2",
+  "formal_verification": "not_executed",
+  "hardware_execution": "not_executed",
+  "attempts": [
+    {
+      "summary": "在AcknowledgeLatch功能块中实现：fault为TRUE时alarm被强制置为TRUE并保持，优先于任何acknowledge边沿；fault为FALSE时，仅在acknowledge上升沿清alarm，否则保持。acknowledge上一扫描值在每个扫描周期无条件更新（包括fault有效期间），因此故障消失后仍按住的acknowledge不会清报警，必须先释放再按下。初始alarm=FALSE，acknowledge历史初值FALSE。",
+      "source_sha256": "77110814c40a2cd6d9fe1e31e99f6a29db90878b5d6087c1d0bfbcbae3bef987",
+      "status": "pass"
+    }
+  ],
+  "final_evaluation": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 2,
+      "scans": 14,
+      "assertions": 20,
+      "failed": 0,
+      "property_activations": {
+        "P_FAULT": 6
+      }
+    },
+    "source_sha256": "77110814c40a2cd6d9fe1e31e99f6a29db90878b5d6087c1d0bfbcbae3bef987",
+    "contract_sha256": "e48659b4ec63e19e2c128999a26ad4391d6fdb9019c15a36ad1c1d04ef831fe6",
+    "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+    "behavior_tested": true,
+    "target_compile": "not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_ejte0i5_\\build.json",
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "代码逐扫描计算上升沿，并在 fault 为 TRUE 时优先置位 alarm，同时无条件更新 acknowledge 历史；符合 R1-R3。未发现边界、优先级、状态保留或复位问题。",
+      "questions": [],
+      "findings": [
+        {
+          "name": "initial_false_fault_sets_and_holds",
+          "basis": "alarm 初始为 FALSE；fault TRUE 置位并保持；无 acknowledge 上升沿时状态保持。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "fault_dominates_simultaneous_ack_edge_and_held_ack",
+          "basis": "fault TRUE 支配同时 acknowledge 上升沿；fault 有效期间仍更新 acknowledge 历史，故障消失后保持的 acknowledge 不得清除 alarm，需释放后重新按下。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "rising_ack_clears_when_fault_false",
+          "basis": "fault FALSE 时 acknowledge 上升沿清除 alarm；保持或释放且无新上升沿时保持。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "held_ack_before_and_during_fault_does_not_clear_after_release",
+          "basis": "acknowledge 历史在 fault 有效期间也更新；故障消失后保持的 acknowledge 不构成新的上升沿，必须释放再按下才能清除。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "reassert_fault_dominates_ack_after_previous_clear",
+          "basis": "清除后再次 fault TRUE 应重新置位；同时 acknowledge 上升沿不得清除；其后保持的 acknowledge 不清除，释放并再次按下才清除。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        }
+      ],
+      "proposals": [
+        {
+          "name": "initial_false_fault_sets_and_holds",
+          "covers": [
+            "R1",
+            "R2"
+          ],
+          "basis": "alarm 初始为 FALSE；fault TRUE 置位并保持；无 acknowledge 上升沿时状态保持。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "fault": true,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "fault_dominates_simultaneous_ack_edge_and_held_ack",
+          "covers": [
+            "R1",
+            "R3"
+          ],
+          "basis": "fault TRUE 支配同时 acknowledge 上升沿；fault 有效期间仍更新 acknowledge 历史，故障消失后保持的 acknowledge 不得清除 alarm，需释放后重新按下。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "fault": true,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "rising_ack_clears_when_fault_false",
+          "covers": [
+            "R2"
+          ],
+          "basis": "fault FALSE 时 acknowledge 上升沿清除 alarm；保持或释放且无新上升沿时保持。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "fault": true,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "held_ack_before_and_during_fault_does_not_clear_after_release",
+          "covers": [
+            "R1",
+            "R3"
+          ],
+          "basis": "acknowledge 历史在 fault 有效期间也更新；故障消失后保持的 acknowledge 不构成新的上升沿，必须释放再按下才能清除。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "fault": true,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "reassert_fault_dominates_ack_after_previous_clear",
+          "covers": [
+            "R1",
+            "R2",
+            "R3"
+          ],
+          "basis": "清除后再次 fault TRUE 应重新置位；同时 acknowledge 上升沿不得清除；其后保持的 acknowledge 不清除，释放并再次按下才清除。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "fault": true,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "fault": true,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 60,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": false
+              }
+            }
+          ]
+        }
+      ],
+      "regression_cases": [],
+      "contract_result": {
+        "status": "pass",
+        "summary": {
+          "scenarios": 5,
+          "scans": 27,
+          "assertions": 6,
+          "failed": 0,
+          "property_activations": {
+            "P_FAULT": 6
+          }
+        }
+      },
+      "replayed_processes": 2,
+      "source_sha256": "77110814c40a2cd6d9fe1e31e99f6a29db90878b5d6087c1d0bfbcbae3bef987",
+      "contract_sha256": "e48659b4ec63e19e2c128999a26ad4391d6fdb9019c15a36ad1c1d04ef831fe6",
+      "model": "deepseek-flash",
+      "context_isolated": true
+    }
+  ],
+  "capabilities": {
+    "status": "ready_for_offline_checks",
+    "target": "portable",
+    "executor": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "target_compile": "not_executed",
+    "blockers": [],
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim.",
+    "scope": "Local finite checks only; target-platform compile/execution is a separate evidence stage."
+  },
+  "execution_fingerprint": "f7c8a265c8ecfe9ff2222ce2968b99751c8712d3b10f1692440908ca9b1ff009",
+  "scope": "Finite checks against a user-confirmed contract, plus isolated review. No full correctness proof.",
+  "delivery": {
+    "status": "exported",
+    "task_id": "1fd812a5d3ae",
+    "result_status": "offline_pass_target_pending",
+    "path": "<local_project>\\workspace\\deliverables\\1fd812a5d3ae_59a44371f2ff.zip",
+    "sha256": "793e5e9aed1c9bc66ad37dc2f834133d26a7afe9f7c2b23cd6154eb5b76e822b",
+    "files": 11
+  }
+}

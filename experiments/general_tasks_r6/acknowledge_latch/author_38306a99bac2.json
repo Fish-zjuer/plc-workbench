@@ -1,0 +1,17 @@
+{
+  "text": "{\"summary\":\"在AcknowledgeLatch功能块中实现：fault为TRUE时alarm被强制置为TRUE并保持，优先于任何acknowledge边沿；fault为FALSE时，仅在acknowledge上升沿清alarm，否则保持。acknowledge上一扫描值在每个扫描周期无条件更新（包括fault有效期间），因此故障消失后仍按住的acknowledge不会清报警，必须先释放再按下。初始alarm=FALSE，acknowledge历史初值FALSE。\",\"code\":\"FUNCTION_BLOCK AcknowledgeLatch\\nVAR_INPUT\\n    fault : BOOL;\\n    acknowledge : BOOL;\\nEND_VAR\\nVAR_OUTPUT\\n    alarm : BOOL;\\nEND_VAR\\nVAR\\n    ackPrev : BOOL;\\n    ackRising : BOOL;\\nEND_VAR\\n\\n(* 上升沿检测基于上一扫描的acknowledge值 *)\\nackRising := acknowledge AND NOT ackPrev;\\n\\n(* fault优先：只要故障存在就置位并保持报警 *)\\nIF fault THEN\\n    alarm := TRUE;\\nELSIF ackRising THEN\\n    alarm := FALSE;\\nEND_IF;\\n\\n(* 每个扫描周期无条件更新历史，fault有效期间也更新 *)\\nackPrev := acknowledge;\\n\\nEND_FUNCTION_BLOCK\",\"assumptions\":[]}",
+  "usage": {
+    "prompt_tokens": 1255,
+    "completion_tokens": 878,
+    "total_tokens": 2133,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 580
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1255
+  },
+  "model": "deepseek-flash"
+}

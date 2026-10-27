@@ -1,0 +1,17 @@
+{
+  "text": "{\"summary\":\"代码符合R1-R3：上电previousStart为FALSE；仅在stop为FALSE且permit为TRUE时由start上升沿置位running；stop TRUE或permit FALSE优先清零；previousStart每扫描更新，因此阻塞期间保持start不会在解除阻塞后重新触发，必须释放再按下。未发现状态保留、优先级、复位或边缘记忆问题。\",\"questions\":[],\"scenarios\":[{\"name\":\"startup_false_then_rising_latch\",\"covers\":[\"R1\"],\"basis\":\"R1规定上电previousStart为FALSE，且start上升沿在permit TRUE、stop FALSE时置位running并保持。\",\"scope\":\"specified\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"start\":false,\"stop\":false,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":10,\"inputs\":{\"start\":true,\"stop\":false,\"permit\":true},\"expect\":{\"running\":true}},{\"time_ms\":20,\"inputs\":{\"start\":false,\"stop\":false,\"permit\":true},\"expect\":{\"running\":true}}]},{\"name\":\"stop_dominates_simultaneous_start_edge\",\"covers\":[\"R2\",\"R3\"],\"basis\":\"R2规定stop TRUE优先于同时出现的start上升沿清除running；R3规定阻塞扫描仍更新start边沿记忆，故释放前保持start不能重启。\",\"scope\":\"specified\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"start\":false,\"stop\":true,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":10,\"inputs\":{\"start\":true,\"stop\":true,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":20,\"inputs\":{\"start\":true,\"stop\":false,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":30,\"inputs\":{\"start\":false,\"stop\":false,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":40,\"inputs\":{\"start\":true,\"stop\":false,\"permit\":true},\"expect\":{\"running\":true}}]},{\"name\":\"permit_false_clears_and_restore_held_no_restart\",\"covers\":[\"R2\",\"R3\"],\"basis\":\"R2规定permit FALSE立即清除running；R3规定恢复permit时若start仍保持TRUE，不产生新上升沿，必须释放再按下。\",\"scope\":\"specified\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"start\":false,\"stop\":false,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":10,\"inputs\":{\"start\":true,\"stop\":false,\"permit\":true},\"expect\":{\"running\":true}},{\"time_ms\":20,\"inputs\":{\"start\":true,\"stop\":false,\"permit\":false},\"expect\":{\"running\":false}},{\"time_ms\":30,\"inputs\":{\"start\":true,\"stop\":false,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":40,\"inputs\":{\"start\":false,\"stop\":false,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":50,\"inputs\":{\"start\":true,\"stop\":false,\"permit\":true},\"expect\":{\"running\":true}}]},{\"name\":\"stop_clears_latched_running\",\"covers\":[\"R2\"],\"basis\":\"R2规定stop TRUE立即清除running，即使running此前已锁存。\",\"scope\":\"specified\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"start\":false,\"stop\":false,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":10,\"inputs\":{\"start\":true,\"stop\":false,\"permit\":true},\"expect\":{\"running\":true}},{\"time_ms\":20,\"inputs\":{\"start\":false,\"stop\":false,\"permit\":true},\"expect\":{\"running\":true}},{\"time_ms\":30,\"inputs\":{\"start\":false,\"stop\":true,\"permit\":true},\"expect\":{\"running\":false}},{\"time_ms\":40,\"inputs\":{\"start\":false,\"stop\":false,\"permit\":true},\"expect\":{\"running\":false}}]}]}",
+  "usage": {
+    "prompt_tokens": 687,
+    "completion_tokens": 2771,
+    "total_tokens": 3458,
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1888
+    },
+    "prompt_cache_hit_tokens": 128,
+    "prompt_cache_miss_tokens": 559
+  },
+  "model": "deepseek-flash"
+}
