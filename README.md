@@ -1,10 +1,18 @@
 # PLC Workbench · 小组预览版 R4
 
-2026-10-27｜[下载可分享的ZIP](https://github.com/Fish-zjuer/plc-workbench/releases/tag/v0.4.0-preview)｜用于组内交流、试用和继续开发。它是我们负责的agent与工具部分，尚不是完整期末作业提交。
+2026-10-28｜[下载可分享的ZIP](https://github.com/Fish-zjuer/plc-workbench/releases/tag/v0.4.0-preview)｜用于组内交流、试用和继续开发。它是我们负责的agent与工具部分，尚不是完整期末作业提交。
 
 这是一个本地终端agent：上传题面或ST代码，先制定计划，再生成代码、编译测试、依据反例修复。模型通过自己填写的`base_url / api_key / model`接入，不依赖Codex登录或某家厂商的SDK。
 
-**先看这三个入口：** [启动程序](launch.cmd) · [Agent架构](docs/AGENT_ARCHITECTURE.md) · [最新20题实验报告](experiments/backend_r4/report.md)。
+**先看这几个入口：** [启动程序](launch.cmd) · [Agent架构](docs/AGENT_ARCHITECTURE.md) · [公共20题实验说明](docs/PUBLIC20_EXPERIMENT.md) · [逐题LTL规约](docs/PUBLIC20_SPEC.md)。
+
+## 当前实验状态（2026-10-28）
+
+- 公共20题已完成 CODESYS 目标编译、有限行为测试和逐题 LTL 书面规约，规约见 `docs/PUBLIC20_SPEC.md`；Q18 的 `VARIANT` 接口在当前目标上仍为 `platform_blocked`。
+- Plan A 正式基线 `four_group_20261028/full_a2` 已完成：Codex/自研 × `deepseek-flash`/`qwen3.8-flash`，四组均关闭思考，共80个任务。去除四组共同的 Q18 `platform_blocked` 后：自研×Qwen 18/19、自研×DeepSeek 16/19、Codex×DeepSeek 14/19、Codex×Qwen 9/19。Codex 的非通过多数来自24次请求上限、429和超时，不能直接当作能力差异。
+- Agent 第一轮迭代已实现：题面需求与字段级只读清单、TON 时序规则、`CASE ELSE` 冒号修复、`CONTINUE` 兼容警告、最佳候选回归保护；Q05/Q08/Q10 子集验证通过，self-only 全量稳定性验证进行中。
+- 下一轮：连续两轮 self-only ≥18/19 后，再处理 Codex 预算/429 的公平对比；10 道自建题与 30 题 × 4 组矩阵尚未开始。
+- 可选扩展：思考模式消融、PLCVerif、TIA Portal；按题号路由只作为额外实验，不进入正式主矩阵。
 
 ## 这个包有什么
 
@@ -149,10 +157,10 @@ R4后端提供LTIME、一维开放数组和本地PV1泛型引用接口。第18�
 
 - 当前20份候选在PLC-R4离线后端下通过有限检查，每题各重放两次；原固定判据没有修改。
 - 另换随机种子检查了3261个扫描点，各重放两次；FIFO比较实际出队值，覆盖整数、浮点、布尔和记录类型。
-- 工具回归运行126项：125通过、1项旧后端专属检查跳过；上游选定类型、数组及转换检查93项通过。
+- 当前工具回归运行160项：159通过、1项跳过；上游选定类型、数组及转换检查93项通过。
 - 自然语言入口从原来错误的FIFO源码出发，实际完成过生成、编译和测试；独立对抗审查及失败尝试都留档。
 
-这来自**既有候选的持续修复＋后端和测试覆盖扩展**，不是独立生成的100%正确率。没有运行厂商编译器、形式化求解器或实体PLC。07/17目前仍使用显式copy-in/copy-out检查；PV1未验证厂商ABI；TIME的离线64位纳秒表示未模拟所有目标平台的溢出行为。
+这来自**既有候选的持续修复＋后端和测试覆盖扩展**，不是独立生成的100%正确率。已接入 CODESYS V3.5 SP22 Patch 4 做目标编译；仍未运行形式化求解器或实体PLC。07/17目前仍使用显式copy-in/copy-out检查；PV1未验证厂商ABI；TIME的离线64位纳秒表示未模拟所有目标平台的溢出行为。
 
 ## 接下来怎么一起开发
 

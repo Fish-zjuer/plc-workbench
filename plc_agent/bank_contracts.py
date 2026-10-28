@@ -88,13 +88,25 @@ def scenarios(question):
         case("invalid_limits_priority",[(0,{}, {"error":1,"status":0x8001})],{"hiLevel":0,"loLevel":0,"hystWindow":10})
         case("invalid_hysteresis",[(0,{}, {"error":1,"status":0x8002})],{"hiLevel":10,"loLevel":0,"hystWindow":10})
     elif ident == "04":
-        case("debounce_stop_reset_runtime",[(0,{}, {"VFD_RUN":0}), (99,{}, {"VFD_RUN":0}),
-             (100,{}, {"VFD_RUN":1}), (110,{}, {"VFD_RUN":1}), (120,{"PASTE_E_STOP_NC":0},{"VFD_RUN":0}),
-             (130,{}, {"VFD_RUN":0}), (229,{}, {"VFD_RUN":0}), (230,{}, {"VFD_RUN":1}),
-             (240,{"VISCOSITY_OK":0},{"VFD_RUN":0}), (250,{}, {"VFD_RUN":0}), (350,{}, {"VFD_RUN":1})],
+        # CycleTime agrees with each actual invocation interval. Both a clock
+        # timer and an input-interval accumulator see the same elapsed time.
+        rows=[]
+        runtime=0
+        for t in range(0,361,10):
+            changed={'CycleTime':0} if t==0 else {}
+            if t==120:changed['PASTE_E_STOP_NC']=0
+            if t==240:changed['VISCOSITY_OK']=0
+            running=t in (100,110,230,350,360)
+            runtime+=10 if running else 0
+            rows.append((t,changed,{'VFD_RUN':int(running),'PUMP_RUNTIME_ACC':runtime,'PUMP_MAINT_DUE':0}))
+        case("debounce_stop_reset_runtime",rows,
              {"VISCOSITY_OK":1,"PASTE_E_STOP_NC":1,"DebounceTime":100,"CycleTime":10})
+        case('irregular_invocation_intervals',[(0,{'CycleTime':0},{'VFD_RUN':0,'PUMP_RUNTIME_ACC':0}),
+             (35,{'CycleTime':35},{'VFD_RUN':0,'PUMP_RUNTIME_ACC':0}),
+             (100,{'CycleTime':65},{'VFD_RUN':1,'PUMP_RUNTIME_ACC':65})],
+             {'VISCOSITY_OK':1,'PASTE_E_STOP_NC':1,'DebounceTime':100,'CycleTime':0})
         # Large represented intervals test LTIME without billions of scan invocations.
-        case("maintenance_is_informational",[(0,{}),(1,{}, {"VFD_RUN":1,"PUMP_RUNTIME_ACC":1,"PUMP_MAINT_DUE":0}),
+        case("maintenance_is_informational",[(0,{'CycleTime':0},{'VFD_RUN':0,'PUMP_RUNTIME_ACC':0}),(1,{}, {"VFD_RUN":1,"PUMP_RUNTIME_ACC":1,"PUMP_MAINT_DUE":0}),
              (1800000001,{"CycleTime":1800000000},{"VFD_RUN":1,"PUMP_RUNTIME_ACC":1800000001,"PUMP_MAINT_DUE":1}),
              (1800000002,{"PASTE_E_STOP_NC":0},{"VFD_RUN":0,"PUMP_RUNTIME_ACC":1800000001,"PUMP_MAINT_DUE":1})],
              {"VISCOSITY_OK":1,"PASTE_E_STOP_NC":1,"DebounceTime":1,"CycleTime":1})
@@ -124,16 +136,34 @@ def scenarios(question):
              (90,{"SensorC":1,"ButtonC":1}), (100,{"SensorC":1},{"CompletionLight":1}),
              (110,{}), (120,{}, {"CompletionLight":0})], {"Mode":1}, invariant)
     elif ident == "12":
-        case("hold_validity_and_runtime",[(0,{}, {"THICKNESS_ALARM":0,"Slab_Fault_Counter":0,"Slab_Runtime_Accumulator":10}),
-             (10,{"THICKNESS_FAULT":1,"FaultTimestamp":10},{"THICKNESS_ALARM":1,"Slab_Fault_Counter":1,"Slab_Fault_History[0]":10}),
-             (20,{}, {"THICKNESS_ALARM":1}), (509,{}, {"THICKNESS_ALARM":1}), (510,{}, {"THICKNESS_ALARM":0}),
-             (520,{"THICKNESS_SIGNAL_VALID":0,"THICKNESS_FAULT":1},{"THICKNESS_ALARM":0,"Slab_Fault_Counter":1})],
+        # The hold is measured with CycleTime, so the trace must contain every
+        # scan. Jumping from 20ms to 510ms gives the FB no elapsed time to count.
+        rows=[]
+        for t in range(0,521,10):
+            changed={}; expected={}
+            if t==0:
+                expected={"THICKNESS_ALARM":0,"Slab_Fault_Counter":0,"Slab_Runtime_Accumulator":10}
+            elif t==10:
+                changed={"THICKNESS_FAULT":1,"FaultTimestamp":10}
+                expected={"THICKNESS_ALARM":1,"Slab_Fault_Counter":1,"Slab_Fault_History[0]":10}
+            elif t==20:
+                changed={"THICKNESS_FAULT":0,"FaultTimestamp":0}
+                expected={"THICKNESS_ALARM":1}
+            elif 20<t<510:
+                expected={"THICKNESS_ALARM":1}
+            elif t==510:
+                expected={"THICKNESS_ALARM":0}
+            elif t==520:
+                changed={"THICKNESS_SIGNAL_VALID":0,"THICKNESS_FAULT":1}
+                expected={"THICKNESS_ALARM":0,"Slab_Fault_Counter":1}
+            rows.append((t,changed,expected) if expected else (t,changed))
+        case("hold_validity_and_runtime",rows,
              {"THICKNESS_SIGNAL_VALID":1,"CUTTING_RUN":1,"CycleTime":10})
-        rows=[(0,{}, {"Slab_Fault_Counter":0})]
+        rows=[(0,{'CycleTime':0}, {"Slab_Fault_Counter":0})]
         history=[]
         for n in range(1,8):
             history=[n*100]+history[:4]
-            rows.append((n*20,{"THICKNESS_FAULT":1,"FaultTimestamp":n*100},{"Slab_Fault_Counter":n,**{f"Slab_Fault_History[{j}]":v for j,v in enumerate(history)}}))
+            rows.append((n*20,{"THICKNESS_FAULT":1,"FaultTimestamp":n*100,'CycleTime':20 if n==1 else 19},{"Slab_Fault_Counter":n,**{f"Slab_Fault_History[{j}]":v for j,v in enumerate(history)}}))
             rows.append((n*20+1,{}))
         case("history_retains_newest_five",rows,{"THICKNESS_SIGNAL_VALID":1,"CycleTime":1})
     elif ident == "13":
@@ -181,22 +211,13 @@ def scenarios(question):
              (10,{"Start":1,"UpLimitSwitch":1,"LeftLimitSwitch":1}), (20,{}, {"MoveDown":1}),
              (30,{"EmergencyStop":0},{k:0 for k in outputs})],{"SingleCycleMode":1,"EmergencyStop":1})
     elif ident == "20":
-        case("manual_interlock",[(0,{}),(10,{"ForwardButton":1},{"MotorForward":1,"MotorReverse":0}),
-             (20,{"ReverseButton":1},{"MotorForward":0,"MotorReverse":1}), (30,{"ForwardButton":1,"ReverseButton":1}),
-             (40,{}, {"MotorForward":0,"MotorReverse":0})],invariants=[{"not_both":["MotorForward","MotorReverse"]}])
-        for weight in [99,100,150,200,201]:
-            expected={"kick":1} if weight<100 or weight>200 else {"firingTemp":500+(weight-100)*.5,"MotorForward":1,"kick":0}
-            rows=[(0,{}),(10,{"SensorFeed":1}),(20,{}, {"MotorForward":1}),
-                  (30,{"SensorWash":1}),(40,{"SensorWash":1},{"MotorForward":0}),
-                  (50,{"SensorWash":1,"washComplete":1}),(60,{}, {"MotorForward":1}),
-                  (70,{"SensorWeight":1}),(80,{"SensorWeight":1},{"MotorForward":0}),
-                  (90,{"SensorWeight":1,"weightComplete":1,"weight":weight},expected)]
-            case(f"weight_boundary_{weight}",rows,{"Mode":1,"weight":weight},[{"not_both":["MotorForward","MotorReverse"]}])
+        from .q20_contract import scenarios as production_scenarios
+        return production_scenarios()
     return cases
 
 
 def protocol():
-    return {"schema": "plc-bank-finite-tests-v1", "source": "handwritten from supplied question statements before DeepSeek generation",
+    return {"schema": "plc-bank-finite-tests-v3", "source": "Original finite checks plus Q20 response windows and invocation-consistent Q04/Q12 time traces; historical experiment protocols remain unchanged",
             "sampling": "Inputs applied at time_ms; outputs checked after invocation; fresh instance per scenario; TIME and LTIME transported in milliseconds",
             "numeric_tolerance": {"REAL_absolute_relative":1e-5,"LREAL_absolute_relative":1e-9},
             "scope": "Sparse finite examples and invariants only; not full behavioral correctness or formal proof. Generic struct/reference/VARIANT bridges excluded.",

@@ -16,7 +16,7 @@ def cases(qid):
     result=[]
     if qid=='04':
         rows=[]
-        for t,cycle in [(0,1),(1,1),(1799999999,1799999998),(1800000000,1),(1800000001,1)]:
+        for t,cycle in [(0,0),(1,1),(1799999999,1799999998),(1800000000,1),(1800000001,1)]:
             rows.append({'time_ms':t,'inputs':{'VISCOSITY_OK':1,'PASTE_E_STOP_NC':1,'DebounceTime':1,'CycleTime':cycle},
                          'expected':{'VFD_RUN':int(t>0),'PUMP_RUNTIME_ACC':t,'PUMP_MAINT_DUE':int(t>=1800000000)}})
         result.append({'name':'maintenance_just_below_at_above_500_hours','trace':rows})
@@ -41,10 +41,12 @@ def cases(qid):
                      'expected':{'THICKNESS_ALARM':0,'Slab_Fault_Counter':0,'Slab_Runtime_Accumulator':runtime}})
     result.append({'name':'long_runtime_more_than_32bit_milliseconds','trace':rows})
     rows=[]
+    previous=0
     for t,fault,alarm,count in [(0,0,0,0),(10,1,1,1),(400,0,1,1),(450,1,1,2),(460,0,1,2),(700,0,1,2),(949,0,1,2),(950,0,None,2)]:
         expected={'Slab_Fault_Counter':count}
         if alarm is not None:expected['THICKNESS_ALARM']=alarm
-        rows.append({'time_ms':t,'inputs':{'THICKNESS_FAULT':fault,'THICKNESS_SIGNAL_VALID':1,'CUTTING_RUN':0,'FaultTimestamp':t,'CycleTime':1},'expected':expected})
+        rows.append({'time_ms':t,'inputs':{'THICKNESS_FAULT':fault,'THICKNESS_SIGNAL_VALID':1,'CUTTING_RUN':0,'FaultTimestamp':t,'CycleTime':t-previous},'expected':expected})
+        previous=t
     result.append({'name':'each_new_fault_restarts_its_minimum_hold','trace':rows})
     rng=random.Random(20261029);rows=[];history=[0]*5;count=0;runtime=0;t=0;old=0;trigger=None
     for i in range(320):

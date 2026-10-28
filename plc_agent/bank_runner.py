@@ -79,6 +79,22 @@ def _compile(source, question):
     return exe,meta
 
 
+def response_window_failures(rows, windows, outputs):
+    failures=[]
+    for window in windows:
+        start,end=window['start_scan'],window['end_scan']
+        def matches(row):
+            return all(math.isclose(row['actual'][name],value,
+                rel_tol=1e-9 if outputs[name]=='LREAL' else 1e-5 if outputs[name]=='REAL' else 0,
+                abs_tol=1e-9 if outputs[name]=='LREAL' else 1e-5 if outputs[name]=='REAL' else 0)
+                for name,value in window['expected'].items())
+        if not any(matches(row) for row in rows[start:end+1]):
+            failures.append({'scan':end,'time_ms':rows[end]['time_ms'],'property':'bounded_response',
+                             'name':window['name'],'start_scan':start,'end_scan':end,
+                             'expected':window['expected'],'actual':rows[end]['actual']})
+    return failures
+
+
 def test_bank(source: Path, question_id: str):
     source=Path(source).resolve()
     if not source.is_file() or source.suffix.lower()!=".st" or source.stat().st_size>2_000_000:
@@ -130,6 +146,10 @@ def test_bank(source: Path, question_id: str):
                     failures.append({"property":"mutual_exclusion","outputs":invariant["not_both"],"actual":actual})
             rows.append({**row,"actual":actual,"violations":failures})
             violations.extend({"scan":scan,"time_ms":row["time_ms"],**failure} for failure in failures)
+        for failure in response_window_failures(rows,case.get('response_windows',[]),outputs):
+            violations.append(failure)
+            rows[failure['scan']]['violations'].append({k:v for k,v in failure.items() if k not in ('scan','time_ms')})
+        violations.sort(key=lambda v:v['scan'])
         results.append({"name":case["name"],"status":"fail" if violations else "pass","first_failure":violations[0] if violations else None,"rows":rows})
     return {"status":"fail" if any(r["status"]=="fail" for r in results) else "pass","question_id":question_id,
             "source_sha256":digest,"behavior_tested":True,"build_evidence":str(meta),
