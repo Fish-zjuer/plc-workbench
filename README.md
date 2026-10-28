@@ -6,12 +6,12 @@
 
 **先看这几个入口：** [启动程序](launch.cmd) · [Agent架构](docs/AGENT_ARCHITECTURE.md) · [公共20题实验说明](docs/PUBLIC20_EXPERIMENT.md) · [逐题LTL规约](docs/PUBLIC20_SPEC.md)。
 
-## 下一阶段实验方向（2026-10-28）
+## 当前实验状态（2026-10-28）
 
-- 已完成公共20题的 CODESYS 目标编译、有限行为测试和逐题 LTL，规约见 `docs/PUBLIC20_SPEC.md`。
-- 当前 `four_group_20261028/full_v3` 正在跑 2×2 矩阵：Codex/自研 × DeepSeek-flash/Qwen3.8-max；DeepSeek 思考 low，Qwen Max 非思考。
-- 下一轮主实验（Plan A）：固定同层模型和非思考模式，Codex/自研 × DeepSeek-flash/Qwen3.8-flash，使用相同题面、预算、CODESYS 与测试判据，分别比较 Agent 框架和模型。
-- 随后补 10 道自建题及对应 LTL/测试，扩展为 30 题 × 4 组；再按“编译/类型、行为时序、接入错误”分类迭代 Agent。
+- 公共20题已完成 CODESYS 目标编译、有限行为测试和逐题 LTL 书面规约，规约见 `docs/PUBLIC20_SPEC.md`；Q18 的 `VARIANT` 接口在当前目标上仍为 `platform_blocked`。
+- Plan A 正式基线 `four_group_20261028/full_a2` 已完成：Codex/自研 × `deepseek-flash`/`qwen3.8-flash`，四组均关闭思考，共80个任务。去除四组共同的 Q18 `platform_blocked` 后：自研×Qwen 18/19、自研×DeepSeek 16/19、Codex×DeepSeek 14/19、Codex×Qwen 9/19。Codex 的非通过多数来自24次请求上限、429和超时，不能直接当作能力差异。
+- Agent 第一轮迭代已实现：题面需求与字段级只读清单、TON 时序规则、`CASE ELSE` 冒号修复、`CONTINUE` 兼容警告、最佳候选回归保护；Q05/Q08/Q10 子集验证通过，self-only 全量稳定性验证进行中。
+- 下一轮：连续两轮 self-only ≥18/19 后，再处理 Codex 预算/429 的公平对比；10 道自建题与 30 题 × 4 组矩阵尚未开始。
 - 可选扩展：思考模式消融、PLCVerif、TIA Portal；按题号路由只作为额外实验，不进入正式主矩阵。
 
 ## 这个包有什么
