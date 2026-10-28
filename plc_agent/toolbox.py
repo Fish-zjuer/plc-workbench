@@ -41,7 +41,7 @@ TOOLS = [
          {'question_id':{'type':'string','enum':[f'{i:02d}' for i in range(1,21)]}},('question_id',)),
     tool("plc_compile_unit", "Compile an ST unit with any FB/function/interface into a C++ object. Useful beyond the five behavioral profiles. This is compilation only: no behavior testing, CODESYS or external library linking.",
          {"source": PATH}, ("source",)),
-    tool("plc_bank_test", "Compile and test one of the twenty supplied public-bank tasks against predefined finite checks. Use the required FB name from the task prompt. Unsupported structure/reference/VARIANT behavioral bridges are explicitly reported; do not change the required interface to game tests.",
+    tool("plc_bank_test", "Validate a public-bank task using this project's configured target. In CODESYS mode static checks, real CODESYS compilation and finite offline behavior must all pass. Missing platform interfaces are blockers; preserve the original task interface.",
          {"source":PATH,"question_id":{"type":"string","enum":[f"{i:02d}" for i in range(1,21)]}},("source","question_id")),
     tool("plc_solve_bank", "Preferred for implementing or repairing a public-bank PLC task. Host owns generation→interface checks→write→immediate compile/test→bounded repair. Avoid manually probing unrelated tools first. Returns an execution-derived receipt, never a self-reported pass.",
          {"question_id":{"type":"string","enum":[f"{i:02d}" for i in range(1,21)]},"source":PATH,
@@ -222,7 +222,9 @@ class Toolbox:
                 converted[field] = str(self.resolve(converted[field]))
         if name == "plc_bank_test":
             from .extended_eval import evaluate as test_bank
-            result = test_bank(Path(converted["source"]), converted["question_id"])
+            from .validation import pipeline_for
+            pipeline=pipeline_for(self.session)
+            result = (pipeline.evaluate if pipeline.config.mode=='codesys' else test_bank)(Path(converted["source"]), converted["question_id"])
         elif name == "plc_compile_unit":
             from .compile_unit import compile_unit
             result = compile_unit(Path(converted["source"]))

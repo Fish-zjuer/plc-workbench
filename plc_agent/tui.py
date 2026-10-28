@@ -358,9 +358,13 @@ class Workbench(App):
             from .backend_r4 import info
             from plc_probe.config import toolchain_dir,cache_dir
             backend=info()
+            from .validation import ValidationConfig,home_for
+            validation=ValidationConfig.load(home_for(self.session))
             self.query_one('#chat',RichLog).write(Text(json.dumps({'label':backend['label'] if backend else 'Preserved STruC++ release',
                 'variant_api':backend.get('variant_api') if backend else None,'home':str(toolchain_dir()),'cache':str(cache_dir()),
-                'scope':'本地有限检查；PV1为本地引用接口，未验证厂商ABI或实体PLC。'},ensure_ascii=False,indent=2)))
+                'validation_mode':validation.mode,'target_profile':validation.profile if validation.mode=='codesys' else None,
+                'required_gates':['静态与接口检查','CODESYS目标编译','有限离线行为检查'] if validation.mode=='codesys' else ['有限离线检查'],
+                'scope':'未运行实体PLC或形式化验证；R4的PV1接口不等于已配置的CODESYS库。'},ensure_ascii=False,indent=2)))
         elif command == "/pin":
             if rest.strip():
                 if len(rest)>4000:

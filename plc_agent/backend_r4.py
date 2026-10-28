@@ -35,7 +35,12 @@ def build():
     patch=ROOT/'backend_extensions/strucpp_r4.patch'
     created=not source.exists()
     if created:
-        run(['git','clone','--no-checkout',REPO,source],base)
+        source.mkdir()
+        run(['git','init'],source)
+        run(['git','remote','add','origin',REPO],source)
+        # Fetch the pinned source only; full upstream history can exceed the
+        # bounded setup timeout on a new machine.
+        run(['git','fetch','--depth','1','origin',COMMIT],source)
         run(['git','-C',source,'checkout','--detach',COMMIT],base)
     head=run(['git','rev-parse','HEAD'],source).strip()
     if head!=COMMIT:raise ValueError('Compiler source is on a different commit; preserving existing checkout')

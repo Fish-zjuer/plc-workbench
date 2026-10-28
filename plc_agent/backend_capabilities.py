@@ -26,6 +26,16 @@ def preflight(question):
 
 
 def candidate_warnings(code,question_id):
+    if question_id=='14':
+        bad=[]
+        if re.search(r'\bCHAR\b',code,re.I):bad.append('CHAR')
+        if '.at(' in code:bad.append('.at()')
+        if re.search(r'\bipText\s*\[',code,re.I):bad.append('ipText[]')
+        if re.search(r'[A-Za-z_]\w*\s*\^',code):bad.append('^ dereference')
+        if bad:
+            return [{'kind':'unsupported_string_syntax','features':bad,
+                     'message':'该目标不支持这些 STRING 语法。请用 p := ADR(ipText); b := p[i]; n := LEN(ipText) 的 BYTE 指针索引方式，并删除 CHAR/^/ipText[]/.at()。'}]
+        return []
     if question_id!='18':return []
     clean=re.sub(r'\(\*.*?\*\)|//[^\n]*','',code,flags=re.S)
     body=re.sub(r'\bVAR(?:_INPUT|_OUTPUT|_IN_OUT)?\b.*?\bEND_VAR\b','',clean,flags=re.I|re.S)

@@ -1,5 +1,7 @@
 # PLC Workbench agent 架构
 
+本地R5扩展已将CODESYS编译加入完成条件，并增加保留字检查、平台预检、有效编译缓存和无进展终止。使用 `agent_data/validation.json` 独立于模型连接配置。详见 [R5实现与本地验证](AGENT_OPTIMIZATION_R5.md)；下文保留原R4架构与历史实验范围。
+
 这是一套本地、模型服务可替换的PLC编程agent。通用对话负责资料、讨论和计划；PLC专用工作流负责可靠地推进源码修订与验证。两者共享文件边界、会话、取消和模型调用预算。
 
 ```mermaid

@@ -3,6 +3,7 @@ $ErrorActionPreference = 'Stop'
 $env:PYTHONUTF8 = '1'
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 $projectRoot = Split-Path -Parent $PSScriptRoot
+. (Join-Path $PSScriptRoot 'activate.ps1')
 . (Join-Path $PSScriptRoot 'runtime-path.ps1')
 $runtimePython = Get-WorkbenchPython -ProjectRoot $projectRoot
 if (!(Test-Path -LiteralPath $runtimePython)) {
