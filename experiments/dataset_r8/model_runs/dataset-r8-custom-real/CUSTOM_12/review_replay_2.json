@@ -1,0 +1,136 @@
+{
+  "status": "pass",
+  "task_id": "CUSTOM_12",
+  "source_sha256": "956cf072bc3e2d9bac79c3608656cb540f20a1516b82b68602bae358f0eede7a",
+  "dataset_sha256": "fb2dcc163fcbd8ba7e147e83a56d3a6758891e37482628ed7291935e447fef16",
+  "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+  "cases": [
+    {
+      "name": "global_score_not_ratio",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "actual": {
+            "SelectedMask": 2.0,
+            "SensorOn": 0.0,
+            "HeaterOn": 1.0,
+            "RadioOn": 0.0,
+            "PowerW": 70.0,
+            "Score": 10.0,
+            "BudgetShortage": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "mandatory_shortage",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "actual": {
+            "SelectedMask": 0.0,
+            "SensorOn": 0.0,
+            "HeaterOn": 0.0,
+            "RadioOn": 0.0,
+            "PowerW": 0.0,
+            "Score": 0.0,
+            "BudgetShortage": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "invalid_budget",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "actual": {
+            "SelectedMask": 0.0,
+            "SensorOn": 0.0,
+            "HeaterOn": 0.0,
+            "RadioOn": 0.0,
+            "PowerW": 0.0,
+            "Score": 0.0,
+            "BudgetShortage": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 3,
+    "scans": 3,
+    "assertions": 24,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\59b0c51c0cfb8bb776d7296c\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

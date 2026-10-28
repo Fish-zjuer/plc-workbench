@@ -1,0 +1,28 @@
+# CUSTOM_02
+# Requirement-level LTL; not native PLCVerif or Z3 syntax.
+# # 统一的观察约定
+# 
+# 本文件是需求层 LTL 草稿，使用明确数学定义的观察器原子命题，不是 PLCVerif/Z3 的原生输入语法；没有声称完成形式化证明。
+# 一次观测 O_t 同时包含本轮调用前的输入 inputs_t 和本轮调用后的输出 outputs_t。
+# pre.y 表示本轮调用前保存的输出/状态；从第二次调用起通常等于上一轮 post.y。首次调用的 pre 状态按题目规定初始化。
+# G p 表示每次观测都满足 p；X p 表示下一轮观测满足 p；F p 表示最终某轮满足 p；U 表示直到。
+# 当前输入触发本轮输出的规则不加 X。涉及上一轮的状态以 pre 或独立观察器表示，不能直接用下一轮输入替代。
+# initial 专指第一次调用前的初始化检查，与正常 O_t 观测分开。初始输出允许在第一次调用后依输入改变。
+# R1(p) := p | X(p)，仅用于题面/既有公共测试允许当拍或下一拍响应的工序输出，不能用于放宽急停、互锁等同拍要求。
+# rise(x) := x_t & !x_(t-1)，首拍历史仅在题目明确时取 FALSE；未明确的首扫历史不评分。
+# 数学表达式先求值为布尔原子命题，再由 LTL 组合。有限数组、掩码上的量词需按实际实例逐项展开；它们不是未定义的模型自报变量。
+# 所有实数输入限定有限值；数值公式是精确数学约束，实际测试按文件中的数值容差比较。测试通过不等于普遍成立。
+# 
+# V := SessionValid AND Role∈{1,2,3}。AllowedPages(1)={1,2}，AllowedPages(2)={1,2,4}，AllowedPages(3)={1,2,3,4}，其他角色为空集。
+# view := V AND Page∈AllowedPages(Role)。write := SessionValid AND Role∈{2,3} AND Page=4。
+# accept := WriteReq AND write AND 0<=WriteValue<=100。所有LREAL输入有限。
+# parameterUpdated := ParamValue=WriteValue；parameterHeld := ParamValue=pre.ParamValue；初始pre.ParamValue=0。
+# Accepted/Denied为本轮结果，WriteReq为调用方提供的单扫描请求；本题不替上游做身份认证。
+
+P01: G(ViewAllowed <-> view)
+P02: G(WriteAllowed <-> write)
+P03: G(Accepted <-> accept)
+P04: G(Denied <-> (WriteReq & !accept))
+P05: G(accept -> parameterUpdated)
+P06: G(!accept -> parameterHeld)
+P07: G(!(Accepted & Denied))

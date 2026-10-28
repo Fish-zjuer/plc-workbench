@@ -27,11 +27,12 @@ def json_value(text: str):
 
 
 class ChatProvider:
-    def __init__(self, config: ModelConfig):
+    def __init__(self, config: ModelConfig, extra_headers=None):
         self.config = config
         self.cancel_event = threading.Event()
         self._response = None
         self.metrics = []
+        self.extra_headers = dict(extra_headers or {})
 
     def cancel(self):
         self.cancel_event.set()
@@ -64,6 +65,7 @@ class ChatProvider:
         if tools:
             body.update(tools=tools, tool_choice="auto")
         headers = {"Content-Type": "application/json", "Accept": "text/event-stream, application/json"}
+        headers.update(self.extra_headers)
         if self.config.api_key:
             headers["Authorization"] = "Bearer " + self.config.api_key
         request = urllib.request.Request(self.config.endpoint,

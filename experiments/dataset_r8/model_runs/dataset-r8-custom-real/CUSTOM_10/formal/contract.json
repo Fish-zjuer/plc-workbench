@@ -1,0 +1,273 @@
+{
+  "schema": "plc-task-v1",
+  "title": "仓库盘点服务请求的延期保留与取消",
+  "block": "FB_InventoryRequest",
+  "target": "offline",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "# Deferred warehouse inventory request lifecycle\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\n1. Implement FB_InventoryRequest for one pending warehouse-inventory service request, not a multi-item queue. Initially Pending, RequestLamp, Dispatched and internal PrevCall are FALSE. Update the previous RequestBtn value every scan, including cancellation scans.\n\n2. Cancel=TRUE has highest priority: clear Pending and Dispatched, but still update button history. Otherwise a rising RequestBtn creates a request. Let Request=previous_Pending OR current_button_rise.\n\n3. If Request AND ServiceReady AND NOT Busy, set Dispatched=TRUE and Pending=FALSE for this scan. Otherwise set Dispatched=FALSE and preserve an unconsumed request in Pending. Busy must not lose a request, even when ServiceReady=TRUE. RequestLamp always equals Pending.\n\n4. A held button must not register repeatedly. A button held across cancellation release must not create a new request. A new request may be dispatched immediately when service is available in the same scan. Dispatched means a task was issued, not that physical inventory work was completed.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `RequestBtn` | `BOOL` | Inventory-request button; rising-edge registration. |\n| Input | `ServiceReady` | `BOOL` | Inventory service can receive a task. |\n| Input | `Busy` | `BOOL` | Inventory resource is busy. |\n| Input | `Cancel` | `BOOL` | Cancel the pending request; highest priority. |\n| Output | `Pending` | `BOOL` | One pending request. |\n| Output | `RequestLamp` | `BOOL` | Pending-request indication. |\n| Output | `Dispatched` | `BOOL` | Task issued in this scan, not work completion. |"
+    }
+  ],
+  "inputs": {
+    "RequestBtn": "BOOL",
+    "ServiceReady": "BOOL",
+    "Busy": "BOOL",
+    "Cancel": "BOOL"
+  },
+  "outputs": {
+    "Pending": "BOOL",
+    "RequestLamp": "BOOL",
+    "Dispatched": "BOOL"
+  },
+  "scenarios": [
+    {
+      "name": "supplied_formal_fixture",
+      "covers": [
+        "R1"
+      ],
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expect": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expect": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expect": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expect": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expect": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expect": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expect": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          }
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expect": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          }
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expect": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          }
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expect": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expect": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          }
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "id": "P04_cancel",
+      "requirement": "R1",
+      "when": {
+        "inputs.Cancel": true
+      },
+      "then": {
+        "outputs.Pending": false,
+        "outputs.Dispatched": false,
+        "outputs.RequestLamp": false
+      }
+    },
+    {
+      "id": "P03_lamp_0",
+      "requirement": "R1",
+      "when": {
+        "outputs.Pending": false
+      },
+      "then": {
+        "outputs.RequestLamp": false
+      }
+    },
+    {
+      "id": "P03_lamp_1",
+      "requirement": "R1",
+      "when": {
+        "outputs.Pending": true
+      },
+      "then": {
+        "outputs.RequestLamp": true
+      }
+    },
+    {
+      "id": "P07_exclusion",
+      "requirement": "R1",
+      "when": {
+        "outputs.Pending": true
+      },
+      "then": {
+        "outputs.Dispatched": false
+      }
+    },
+    {
+      "id": "P02_busy",
+      "requirement": "R1",
+      "when": {
+        "inputs.Busy": true
+      },
+      "then": {
+        "outputs.Dispatched": false
+      }
+    },
+    {
+      "id": "P02_not_ready",
+      "requirement": "R1",
+      "when": {
+        "inputs.ServiceReady": false
+      },
+      "then": {
+        "outputs.Dispatched": false
+      }
+    },
+    {
+      "id": "P05_retain",
+      "requirement": "R1",
+      "when": {
+        "inputs.Cancel": false,
+        "previous.outputs.Pending": true,
+        "inputs.Busy": true
+      },
+      "then": {
+        "outputs.Pending": true,
+        "outputs.Dispatched": false
+      }
+    }
+  ],
+  "formal": {
+    "mode": "required",
+    "bound": 20
+  },
+  "executor": "offline",
+  "inouts": {},
+  "assumptions": [],
+  "questions": [],
+  "tolerance": 1e-06
+}

@@ -1,0 +1,46 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_10",
+  "status": "reviewed_finite_pass",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "a8eb22df27163fe0e071045fba74dc018fb516a34af332a9ef2723b210e20063",
+  "source_sha256": "ba50913ff79f90cf02ea26d2df251ce1e3f6e08efdc5c484f1b858ea319af406",
+  "attempts": [
+    {
+      "summary": "实现单请求仓库盘点服务：取消优先清空请求并仍更新按钮历史；按钮上升沿或已有Pending形成请求；服务可用且不忙时派发并清Pending，否则保留Pending；RequestLamp始终等于Pending。",
+      "status": "written",
+      "source_sha256": "ba50913ff79f90cf02ea26d2df251ce1e3f6e08efdc5c484f1b858ea319af406"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 2,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_10",
+    "source_sha256": "ba50913ff79f90cf02ea26d2df251ce1e3f6e08efdc5c484f1b858ea319af406",
+    "dataset_sha256": "a8eb22df27163fe0e071045fba74dc018fb516a34af332a9ef2723b210e20063",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 66,
+      "scans": 223,
+      "assertions": 669,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\22fc4a290275cf966b818155\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "未发现题面与代码之间的明确缺陷；实现满足取消最高优先级、按钮边沿注册、Busy 时不丢失请求、同扫描派发以及 RequestLamp 始终等于 Pending 等要求。",
+      "questions": [],
+      "proposals": [],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

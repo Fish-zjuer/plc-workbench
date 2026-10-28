@@ -1,0 +1,25 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "PUBLIC_19",
+  "status": "agent_error",
+  "source_origin": "saved weak-model candidate",
+  "dataset_sha256": "a87138e0c2c6b7dc903e8a165ce6a4390acb5d6f4dc33b50d7e2caea94ca841d",
+  "source_sha256": "c17021caabb1d77f8e082870455faf41819dfb5133cf6bd7f652c2111edb668d",
+  "attempts": [
+    {
+      "summary": "Reworked the single-step logic so that each Start rising edge executes exactly one action from the predefined sequence. After the action completes, the block increments the step index and returns to idle, waiting for the next Start press. Single-cycle and continuous modes still run the full sequence automatically, with continuous restarting after the left position. Added explicit mode-change detection to reset the sequence, kept manual mode and emergency stop behaviour unchanged.",
+      "status": "written",
+      "source_sha256": "c17021caabb1d77f8e082870455faf41819dfb5133cf6bd7f652c2111edb668d"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 2,
+  "final_evaluation": {
+    "status": "agent_error",
+    "message": "模型响应未完成（length），未执行任何工具；请调整输出上限或任务范围"
+  },
+  "reviews": [],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

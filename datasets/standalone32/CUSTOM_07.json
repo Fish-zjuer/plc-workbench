@@ -1,0 +1,479 @@
+{
+  "id": "CUSTOM_07",
+  "title": "矿石破碎给料与抽尘风量交叉限幅",
+  "block": "FB_CrusherExtraction",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "Enable",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "Trip",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "FeedDemand",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "FeedActual",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "ExtractionCapacity",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "FeedSP",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "ExtractionSP",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "Error",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06
+  },
+  "scenarios": [
+    {
+      "name": "升负荷时抽尘先行",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 80,
+            "FeedActual": 20,
+            "ExtractionCapacity": 20
+          },
+          "expected": {
+            "FeedSP": 20,
+            "ExtractionSP": 80,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 80,
+            "FeedActual": 20,
+            "ExtractionCapacity": 60
+          },
+          "expected": {
+            "FeedSP": 60,
+            "ExtractionSP": 80
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "降负荷时给料先降",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 20,
+            "FeedActual": 80,
+            "ExtractionCapacity": 80
+          },
+          "expected": {
+            "FeedSP": 20,
+            "ExtractionSP": 80
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 20,
+            "FeedActual": 20,
+            "ExtractionCapacity": 80
+          },
+          "expected": {
+            "FeedSP": 20,
+            "ExtractionSP": 20
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "上下边界与通道不相等",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 0,
+            "FeedActual": 100,
+            "ExtractionCapacity": 100
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 100,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 100
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "非法输入和撤销优先级",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 101,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "Error": true,
+            "FeedSP": 0,
+            "ExtractionSP": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 101,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "Error": false,
+            "FeedSP": 0,
+            "ExtractionSP": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "反馈交叉限幅_非法与停机优先",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 0,
+            "FeedActual": 100,
+            "ExtractionCapacity": 100
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 100,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 100,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 100,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50,
+            "FeedActual": 80,
+            "ExtractionCapacity": 20
+          },
+          "expected": {
+            "FeedSP": 20,
+            "ExtractionSP": 80,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": -1,
+            "FeedActual": 50,
+            "ExtractionCapacity": 50
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50,
+            "FeedActual": 50,
+            "ExtractionCapacity": 101
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": 0,
+            "FeedActual": 100,
+            "ExtractionCapacity": 100
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": 100,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": 50,
+            "FeedActual": 80,
+            "ExtractionCapacity": 20
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": -1,
+            "FeedActual": 50,
+            "ExtractionCapacity": 50
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": 50,
+            "FeedActual": 50,
+            "ExtractionCapacity": 101
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 0,
+            "FeedActual": 100,
+            "ExtractionCapacity": 100
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 100,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 50,
+            "FeedActual": 80,
+            "ExtractionCapacity": 20
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": -1,
+            "FeedActual": 50,
+            "ExtractionCapacity": 50
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 50,
+            "FeedActual": 50,
+            "ExtractionCapacity": 101
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# Crusher feed and dust-extraction cross limiting\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\n1. Implement FB_CrusherExtraction to coordinate ore-crusher feed and dust extraction. FeedDemand, FeedActual and ExtractionCapacity are finite LREAL values in the common normalized dust-load-equivalent range 0..100. ExtractionCapacity is the feed rate supported by measured extraction, and FeedActual is the extraction required by measured feed. Engineering-unit normalization occurs upstream.\n\n2. For Enable=TRUE, Trip=FALSE and legal inputs, compute FeedSP=MIN(FeedDemand,ExtractionCapacity) and ExtractionSP=MAX(FeedDemand,FeedActual) every scan. Use actual measured capabilities, not the other channel setpoint.\n\n3. For an increasing demand, feed remains limited by actual extraction capacity. For a decreasing demand, extraction must remain sufficient for actual feed until feed decreases.\n\n4. Trip=TRUE or Enable=FALSE has priority: set both setpoints to zero and Error=FALSE. Otherwise any numeric value outside 0..100 sets both setpoints to zero and Error=TRUE. Legal computation clears Error.\n\n5. Keep no integral, timer or queue state. Compute directly on the first call. This block only computes normalized setpoints; it does not establish actual dust concentration, implement filter cleaning or model extraction-fan post-purge. Absolute numeric tolerance is 1e-6.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Enable` | `BOOL` | Enable coordination. |\n| Input | `Trip` | `BOOL` | Benchmark setpoint-withdrawal signal. |\n| Input | `FeedDemand` | `LREAL` | Demand, 0..100 equivalent dust load. |\n| Input | `FeedActual` | `LREAL` | Extraction required by measured feed, 0..100. |\n| Input | `ExtractionCapacity` | `LREAL` | Feed supported by measured extraction, 0..100. |\n| Output | `FeedSP` | `LREAL` | Feed-channel setpoint. |\n| Output | `ExtractionSP` | `LREAL` | Dust-extraction setpoint. |\n| Output | `Error` | `BOOL` | Illegal numeric input. |",
+  "ltl": {
+    "id": "CUSTOM_07",
+    "title": "矿石破碎给料与抽尘风量交叉限幅",
+    "definitions": "active := Enable AND !Trip。valid表示FeedDemand、FeedActual、ExtractionCapacity三个有限LREAL均在[0,100]。\nfeedOK := FeedSP=min(FeedDemand,ExtractionCapacity)。extractionOK := ExtractionSP=max(FeedDemand,FeedActual)。\n两个反馈必须来自实际能力，不能使用对方的设定值代替。Trip和禁用优先于参数错误。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(!active -> (FeedSP=0 & ExtractionSP=0 & !Error))"
+      },
+      {
+        "id": "P02",
+        "formula": "G((active & !valid) -> (FeedSP=0 & ExtractionSP=0 & Error))"
+      },
+      {
+        "id": "P03",
+        "formula": "G((active & valid) -> (feedOK & extractionOK & !Error))"
+      },
+      {
+        "id": "P04",
+        "formula": "G((active & valid) -> (FeedSP<=ExtractionCapacity & ExtractionSP>=FeedActual))"
+      },
+      {
+        "id": "P05",
+        "formula": "G(0<=FeedSP & FeedSP<=100 & 0<=ExtractionSP & ExtractionSP<=100)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

@@ -1,0 +1,34 @@
+# CUSTOM_12
+# Requirement-level LTL; not native PLCVerif or Z3 syntax.
+# # 统一的观察约定
+# 
+# 本文件是需求层 LTL 草稿，使用明确数学定义的观察器原子命题，不是 PLCVerif/Z3 的原生输入语法；没有声称完成形式化证明。
+# 一次观测 O_t 同时包含本轮调用前的输入 inputs_t 和本轮调用后的输出 outputs_t。
+# pre.y 表示本轮调用前保存的输出/状态；从第二次调用起通常等于上一轮 post.y。首次调用的 pre 状态按题目规定初始化。
+# G p 表示每次观测都满足 p；X p 表示下一轮观测满足 p；F p 表示最终某轮满足 p；U 表示直到。
+# 当前输入触发本轮输出的规则不加 X。涉及上一轮的状态以 pre 或独立观察器表示，不能直接用下一轮输入替代。
+# initial 专指第一次调用前的初始化检查，与正常 O_t 观测分开。初始输出允许在第一次调用后依输入改变。
+# R1(p) := p | X(p)，仅用于题面/既有公共测试允许当拍或下一拍响应的工序输出，不能用于放宽急停、互锁等同拍要求。
+# rise(x) := x_t & !x_(t-1)，首拍历史仅在题目明确时取 FALSE；未明确的首扫历史不评分。
+# 数学表达式先求值为布尔原子命题，再由 LTL 组合。有限数组、掩码上的量词需按实际实例逐项展开；它们不是未定义的模型自报变量。
+# 所有实数输入限定有限值；数值公式是精确数学约束，实际测试按文件中的数值容差比较。测试通过不等于普遍成立。
+# 
+# V := 0<=BudgetW<=200；B := MandatorySensor AND BudgetW<40。
+# 允许集合A由NeedSensor OR MandatorySensor、NeedHeater、NeedRadio分别决定比特1、2、4。
+# 对m=0..7，p(m)=40*[m&1!=0]+70*[m&2!=0]+60*[m&4!=0]；s(m)=7*[m&1!=0]+10*[m&2!=0]+9*[m&4!=0]。
+# feasible(m) := (m无A以外的比特) AND p(m)<=BudgetW AND (!MandatorySensor OR m&1!=0)。
+# 合法且非B时可行集合非空（至少空集或传感单元），M=按(-s(m),p(m),m)字典序最小的可行掩码。
+# disabled := !Enable；invalid := Enable AND !V；shortage := Enable AND V AND B；normal := Enable AND V AND !B。
+# 前三种分支M=0、功率/分数0、三个负载关闭；Error仅invalid为TRUE，BudgetShortage仅shortage为TRUE。
+# maskMapOK表示SensorOn、HeaterOn、RadioOn与SelectedMask比特1/2/4逐一等价。
+# optimalChoiceOK := SelectedMask=M AND PowerW=p(M) AND Score=s(M)。有限集合定义可完整展开8个选择条件，不按单项分数或性价比贪心。
+
+P01: G(Error <-> invalid)
+P02: G(BudgetShortage <-> shortage)
+P03: G((disabled | invalid | shortage) -> (SelectedMask=0 & PowerW=0 & Score=0 & !SensorOn & !HeaterOn & !RadioOn))
+P04: G(normal -> optimalChoiceOK)
+P05: G(maskMapOK)
+P06: G((Enable & V) -> PowerW<=BudgetW)
+P07: G((normal & MandatorySensor) -> SensorOn)
+P08: G((normal & !NeedHeater) -> !HeaterOn)
+P09: G((normal & !NeedRadio) -> !RadioOn)

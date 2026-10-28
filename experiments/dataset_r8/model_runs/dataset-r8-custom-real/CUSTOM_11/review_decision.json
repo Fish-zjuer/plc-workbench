@@ -1,0 +1,91 @@
+{
+  "status": "review_pass",
+  "summary": "未发现与题面冲突的明确缺陷；代码每次扫描重新计算，先校验量程再计算差值，配对选择与并列顺序、无配对分支、过载阈值及释放许可逻辑均符合需求。以下场景仅作为关键边界复核建议。",
+  "questions": [],
+  "proposals": [
+    {
+      "name": "ab_ac_bc_tie_select_ac",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10100,
+            "LoadC": 10050,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 5,
+            "VotedKg": 10025.0,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "boundary_200_and_overload_threshold",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10000,
+            "LoadC": 10201,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "no_consistent_pair_then_recover",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 20000,
+            "LoadB": 0,
+            "LoadC": 10000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0.0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          }
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "LoadA": 5000,
+            "LoadB": 5100,
+            "LoadC": 5050,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 5,
+            "VotedKg": 5025.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          }
+        }
+      ]
+    }
+  ],
+  "expected_authority": "advisory_model_claim_only"
+}

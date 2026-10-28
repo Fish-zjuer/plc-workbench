@@ -56,8 +56,8 @@ class ModelConfig:
             except (TypeError,ValueError):raise ValueError(f'{name} 必须为有限JSON数据') from None
         if not 4096 <= self.context_window <= 2_000_000 or not 256 <= self.max_output_tokens < self.context_window:
             raise ValueError("上下文窗口至少 4096，输出上限至少 256 且小于窗口")
-        if not 1 <= self.max_steps <= 100 or not 5 <= self.timeout <= 180:
-            raise ValueError("工具轮数须为 1..100，超时须为 5..180 秒")
+        if not 1 <= self.max_steps <= 100 or not 5 <= self.timeout <= 900:
+            raise ValueError("工具轮数须为 1..100，超时须为 5..900 秒")
 
     @property
     def endpoint(self):

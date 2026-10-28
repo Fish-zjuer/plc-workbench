@@ -1,0 +1,140 @@
+{
+  "status": "pass",
+  "task_id": "CUSTOM_11",
+  "source_sha256": "f3346d3baefc65bd79f8defd22cd1b3dfe03dff3d208ca7a982dce57bcae3905",
+  "dataset_sha256": "3e444aa17f298adee4e6e1ba65c6c3cbf34cf2e9fa31948787255cfef5d96be2",
+  "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+  "cases": [
+    {
+      "name": "ab_ac_bc_tie_select_ac",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10100,
+            "LoadC": 10050,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 5,
+            "VotedKg": 10025.0,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "actual": {
+            "PairMask": 5.0,
+            "VotedKg": 10025.0,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "boundary_200_and_overload_threshold",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10000,
+            "LoadC": 10201,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10000.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "no_consistent_pair_then_recover",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 20000,
+            "LoadB": 0,
+            "LoadC": 10000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0.0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "actual": {
+            "PairMask": 0.0,
+            "VotedKg": 0.0,
+            "LoadFault": 1.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "LoadA": 5000,
+            "LoadB": 5100,
+            "LoadC": 5050,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 5,
+            "VotedKg": 5025.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "actual": {
+            "PairMask": 5.0,
+            "VotedKg": 5025.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 3,
+    "scans": 4,
+    "assertions": 20,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\b0ca60f509eeb503e53a5dde\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

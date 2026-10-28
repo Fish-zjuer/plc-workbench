@@ -1,0 +1,716 @@
+{
+  "id": "PUBLIC_04",
+  "title": "Jam Pump Debouncing and Runtime Maintenance",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "VISCOSITY_OK",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "PASTE_E_STOP_NC",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "DebounceTime",
+      "type": "TIME"
+    },
+    {
+      "direction": "Input",
+      "name": "CycleTime",
+      "type": "TIME"
+    },
+    {
+      "direction": "Output",
+      "name": "VFD_RUN",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "PUMP_MAINT_DUE",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "PUMP_RUNTIME_ACC",
+      "type": "LTIME"
+    }
+  ],
+  "adapter_format": "bank_trace",
+  "scenarios": [
+    {
+      "name": "debounce_stop_reset_runtime",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 0
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": true,
+            "PUMP_RUNTIME_ACC": 10,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": true,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": false,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 20,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": true,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "VISCOSITY_OK": false,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 30,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": true,
+            "PUMP_RUNTIME_ACC": 40,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 10
+          },
+          "expected": {
+            "VFD_RUN": true,
+            "PUMP_RUNTIME_ACC": 50,
+            "PUMP_MAINT_DUE": false
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "irregular_invocation_intervals",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 0
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0
+          }
+        },
+        {
+          "time_ms": 35,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 35
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 100,
+            "CycleTime": 65
+          },
+          "expected": {
+            "VFD_RUN": true,
+            "PUMP_RUNTIME_ACC": 65
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "maintenance_is_informational",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 1,
+            "CycleTime": 0
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 0
+          }
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 1,
+            "CycleTime": 1
+          },
+          "expected": {
+            "VFD_RUN": true,
+            "PUMP_RUNTIME_ACC": 1,
+            "PUMP_MAINT_DUE": false
+          }
+        },
+        {
+          "time_ms": 1800000001,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": true,
+            "DebounceTime": 1,
+            "CycleTime": 1800000000
+          },
+          "expected": {
+            "VFD_RUN": true,
+            "PUMP_RUNTIME_ACC": 1800000001,
+            "PUMP_MAINT_DUE": true
+          }
+        },
+        {
+          "time_ms": 1800000002,
+          "inputs": {
+            "VISCOSITY_OK": true,
+            "PASTE_E_STOP_NC": false,
+            "DebounceTime": 1,
+            "CycleTime": 1
+          },
+          "expected": {
+            "VFD_RUN": false,
+            "PUMP_RUNTIME_ACC": 1800000001,
+            "PUMP_MAINT_DUE": true
+          }
+        }
+      ],
+      "invariants": []
+    }
+  ],
+  "origin": "Existing requirement-derived tests; exported without reading candidate ST.",
+  "execution_status": "not_run_in_this_delivery",
+  "block": "Q04",
+  "requirements": "# Jam Pump Debouncing and Runtime Maintenance\n\n- **Difficulty:** Easy (easy)\n\n## Requirements\n\nControl a jam transfer pump on a food production line, including viscosity-signal debouncing, emergency-stop priority, runtime accumulation and a maintenance-due indication.\n\n1. Accept the viscosity condition only after VISCOSITY_OK has remained TRUE for DebounceTime. Invalidate the condition immediately when the input becomes FALSE.\n2. Allow VFD_RUN to be TRUE only when PASTE_E_STOP_NC is TRUE and the viscosity condition is valid. An emergency stop immediately disables the run output and clears any incomplete debounce timing.\n3. Accumulate PUMP_RUNTIME_ACC using the actual invocation interval CycleTime only while VFD_RUN is TRUE. Preserve the accumulated time while the pump is stopped.\n4. Set PUMP_MAINT_DUE when accumulated runtime reaches 500 hours. This indication is informational and must not affect pump operation or the safety permissive.\n5. At power-up, initialize the run output to OFF, accumulated runtime to zero and the maintenance indication to FALSE.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `VISCOSITY_OK` | `BOOL` | Raw signal indicating that viscosity is within the permitted range. |\n| Input | `PASTE_E_STOP_NC` | `BOOL` | Normally closed emergency-stop circuit; TRUE permits operation and FALSE means emergency stop. |\n| Input | `DebounceTime` | `TIME` | Required continuous valid duration for the viscosity signal; must be positive. |\n| Input | `CycleTime` | `TIME` | Actual elapsed interval represented by this invocation; must be positive. |\n| Output | `VFD_RUN` | `BOOL` | Pump variable-frequency-drive run command. |\n| Output | `PUMP_MAINT_DUE` | `BOOL` | Maintenance indication when accumulated runtime reaches 500 hours. |\n| Output | `PUMP_RUNTIME_ACC` | `LTIME` | Accumulated enabled runtime, using a long-duration time type. |",
+  "ltl": {
+    "id": "PUBLIC_04",
+    "title": "Q04 黏度泵、消抖及维护",
+    "definitions_and_rules_markdown": "## Q04 黏度泵、消抖及维护\n\nv3采样约定：CycleTime等于距离上一实际调用的间隔，首拍为0ms；固定扫描不再跳过中间时间却只累计一拍。\n\n`permissive=VISCOSITY_OK & PASTE_E_STOP_NC`；`debounced`由独立连续有效时钟计算，首次有效时elapsed=0，elapsed>=DebounceTime时有效。当前有限测试采用急停恢复后重新确认的解释。`runtimeOK`表示本拍运行时post累计=pre累计+CycleTime，停机时保持；时间统一换算到相同单位。`maintenanceOK`表示PUMP_MAINT_DUE与累计>=500小时等价。\n\n```text\nG(initial -> pumpInitialOK)\nG(!PASTE_E_STOP_NC -> !VFD_RUN)\nG(!VISCOSITY_OK -> !VFD_RUN)\nG(VFD_RUN -> debounced)\nG(permissive & debounced -> VFD_RUN)\nG(runtimeOK)\nG(maintenanceOK)\n```\n\npumpInitialOK为运行关闭、累计0、维护FALSE。维护到期不加入运行许可。已完成消抖后发生急停的恢复策略在题面中有解释空间；若采用不同契约，应作为协议变更而非直接修改历史分数。\n\n\n协议待确认项：原题规定CycleTime为正，迭代分支首拍使用0表示尚无调用间隔；本导出保留原判据并显式标记，不修改原题。500小时=1,800,000,000ms，超出通用task_spec的1e9时间戳上限，应使用专用时间适配器。\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> pumpInitialOK)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!PASTE_E_STOP_NC -> !VFD_RUN)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!VISCOSITY_OK -> !VFD_RUN)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(VFD_RUN -> debounced)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(permissive & debounced -> VFD_RUN)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(runtimeOK)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(maintenanceOK)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

@@ -17,8 +17,8 @@ sys.path.insert(0,str(ROOT))
 from plc_agent.config import ModelConfig
 from plc_agent.deepseek_credentials import candidates
 
-FOLDERS=('plc_agent','plc_probe','tests','scripts','docs','backend_extensions','examples','experiments','reports')
-ROOT_FILES=('launch.cmd','requirements.lock','.env.example','.gitignore','AGENT_README.md','README_TEAM.md','agent_tools.py')
+FOLDERS=('plc_agent','plc_probe','tests','scripts','docs','backend_extensions','examples','experiments','reports','datasets')
+ROOT_FILES=('launch.cmd','requirements.lock','.env.example','.gitignore','AGENT_README.md','README_TEAM.md','agent_tools.py','LOCAL_SETUP.md')
 OMIT_PARTS={'__pycache__','.git','.venv','.runtime','agent_data','node_modules'}
 ACCOUNT_KEYS={'balance','balance_after','before_balance','after_balance','balance_infos',
               'credential_file','credential_fingerprint','credentials','credential_discovery'}

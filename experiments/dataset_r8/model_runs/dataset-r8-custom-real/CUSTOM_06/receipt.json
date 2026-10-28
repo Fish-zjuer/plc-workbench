@@ -1,0 +1,46 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_06",
+  "status": "reviewed_finite_pass",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "4b7fe803d77d783a9918e5c49572e3be0a3db5a8c6ccee277b00d40f63860af0",
+  "source_sha256": "b6b793da99400e7108f9255861d89b1f0f6cf29beeb62b6cadb29ae56c1778b5",
+  "attempts": [
+    {
+      "summary": "Implemented FB_CompressorPressure with LREAL inputs, finite/range validation, Reset/Enable priority, feedforward PI computation, conditional anti-windup, saturation detection, and error handling.",
+      "status": "written",
+      "source_sha256": "b6b793da99400e7108f9255861d89b1f0f6cf29beeb62b6cadb29ae56c1778b5"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 2,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_06",
+    "source_sha256": "b6b793da99400e7108f9255861d89b1f0f6cf29beeb62b6cadb29ae56c1778b5",
+    "dataset_sha256": "4b7fe803d77d783a9918e5c49572e3be0a3db5a8c6ccee277b00d40f63860af0",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 5,
+      "scans": 25,
+      "assertions": 76,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\ae09d15993afc81c3975a3f9\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "未发现明确缺陷：代码逻辑与题面要求一致。",
+      "questions": [],
+      "proposals": [],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

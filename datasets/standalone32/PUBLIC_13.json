@@ -1,0 +1,582 @@
+{
+  "id": "PUBLIC_13",
+  "title": "Office HVAC Multi-mode Energy-Saving Control",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "OCCUPANCY_DETECTED",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "ENERGY_SAVING_MODE",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "HVAC_MODE_SELECTOR",
+      "type": "INT"
+    },
+    {
+      "direction": "Output",
+      "name": "SUPPLY_FAN_RUN",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "TEMP_SETPOINT_ADJUST",
+      "type": "INT"
+    }
+  ],
+  "adapter_format": "bank_trace",
+  "scenarios": [
+    {
+      "name": "setpoint_0_0_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 2
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_0_0_1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 3
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_0_1_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_0_1_1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_1_0_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 1
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_1_0_1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 1
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_1_1_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_1_1_1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_2_0_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_2_0_1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_2_1_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_2_1_1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_3_0_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_3_0_1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_3_1_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "setpoint_3_1_1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "delay_and_night_reset",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          }
+        },
+        {
+          "time_ms": 29999,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          }
+        },
+        {
+          "time_ms": 30000,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": true
+          }
+        },
+        {
+          "time_ms": 30001,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          }
+        },
+        {
+          "time_ms": 30002,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          }
+        },
+        {
+          "time_ms": 60001,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          }
+        },
+        {
+          "time_ms": 60002,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": true
+          }
+        },
+        {
+          "time_ms": 60003,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          }
+        }
+      ],
+      "invariants": []
+    }
+  ],
+  "origin": "Existing requirement-derived tests; exported without reading candidate ST.",
+  "execution_status": "not_run_in_this_delivery",
+  "block": "Q13",
+  "requirements": "# Office HVAC Multi-mode Energy-Saving Control\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\nControl an office-building supply fan and generate a temperature-setpoint adjustment from occupancy, operating mode and the energy-saving selection.\n\n1. Valid HVAC_MODE_SELECTOR values are 0 (Auto), 1 (Comfort), 2 (Economy) and 3 (Night).\n2. Start a 30-second delay only when occupancy is detected and Night mode is not selected. SUPPLY_FAN_RUN becomes TRUE only after these conditions remain satisfied for 30 seconds. Immediately stop the fan and reset timing if occupancy is lost or Night mode is selected. Wait the full 30 seconds again when the conditions recover.\n3. Auto mode: use a 0°C adjustment when occupied. When unoccupied, use +3°C in energy-saving mode or +2°C in standard mode.\n4. Comfort mode: use 0°C when occupied or +1°C when unoccupied. Economy mode: use 0°C when occupied or +4°C when unoccupied.\n5. Night mode: use +4°C regardless of occupancy. The energy-saving selection affects only Auto mode.\n6. Keep TEMP_SETPOINT_ADJUST within ±4°C. Initialize outputs to OFF and zero at power-up; update them from current inputs when normal calculation begins.\n7. The start delay controls only the BOOL fan enable; no continuous speed ramp is required.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `OCCUPANCY_DETECTED` | `BOOL` | Occupancy-detection result derived from the CO₂ sensor. |\n| Input | `ENERGY_SAVING_MODE` | `BOOL` | TRUE selects energy saving; FALSE selects standard operation; affects Auto mode only. |\n| Input | `HVAC_MODE_SELECTOR` | `INT` | 0 Auto, 1 Comfort, 2 Economy, 3 Night; callers supply a valid value. |\n| Output | `SUPPLY_FAN_RUN` | `BOOL` | Supply-fan run enable. |\n| Output | `TEMP_SETPOINT_ADJUST` | `INT` | Temperature-setpoint adjustment in °C. |",
+  "ltl": {
+    "id": "PUBLIC_13",
+    "title": "Q13 HVAC",
+    "definitions_and_rules_markdown": "## Q13 HVAC\n\n`eligible=OCCUPANCY_DETECTED & HVAC_MODE_SELECTOR!=3`；独立延时满30000ms为fanReady，条件失效立即复位。`adjustmentOK`由下表精确求值：Night恒4；其他模式occupied为0；unoccupied的Auto为saving?3:2，Comfort为1，Economy为4。\n\n```text\nG(initial -> hvacInitialOK)\nG(!eligible -> !SUPPLY_FAN_RUN)\nG(SUPPLY_FAN_RUN -> eligible & fanReady)\nG(eligible & fanReady -> SUPPLY_FAN_RUN)\nG(normalCalculation -> adjustmentOK)\nG(adjustmentWithinFourDegrees)\n```\n\n模式输入限定0..3；节能选择只影响Auto。初始OFF/0指调用前初始化，正常计算随后依当前输入更新。\n\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> hvacInitialOK)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!eligible -> !SUPPLY_FAN_RUN)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(SUPPLY_FAN_RUN -> eligible & fanReady)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(eligible & fanReady -> SUPPLY_FAN_RUN)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(normalCalculation -> adjustmentOK)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(adjustmentWithinFourDegrees)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

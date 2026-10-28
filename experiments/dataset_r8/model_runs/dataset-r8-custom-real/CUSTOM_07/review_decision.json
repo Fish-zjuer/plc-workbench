@@ -1,0 +1,173 @@
+{
+  "status": "review_pass",
+  "summary": "未发现明确缺陷：代码实现的计算公式、Trip/Enable 优先级、非法数值清零并置错、合法计算清错以及无状态首扫直接计算均与题面要求一致。",
+  "questions": [],
+  "proposals": [
+    {
+      "name": "normal_increase_decrease",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 40.0,
+            "FeedActual": 30.0,
+            "ExtractionCapacity": 20.0
+          },
+          "expected": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 40.0,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 80.0,
+            "FeedActual": 30.0,
+            "ExtractionCapacity": 20.0
+          },
+          "expected": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 80.0,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 30.0,
+            "FeedActual": 30.0,
+            "ExtractionCapacity": 20.0
+          },
+          "expected": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 30.0,
+            "Error": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "invalid_numeric",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": -1.0,
+            "FeedActual": 50.0,
+            "ExtractionCapacity": 50.0
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": true
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50.0,
+            "FeedActual": 101.0,
+            "ExtractionCapacity": 50.0
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50.0,
+            "FeedActual": 50.0,
+            "ExtractionCapacity": 100.1
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": true
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50.0,
+            "FeedActual": 50.0,
+            "ExtractionCapacity": 50.0
+          },
+          "expected": {
+            "FeedSP": 50.0,
+            "ExtractionSP": 50.0,
+            "Error": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "trip_disable_priority",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": -5.0,
+            "FeedActual": 200.0,
+            "ExtractionCapacity": -10.0
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": -5.0,
+            "FeedActual": 200.0,
+            "ExtractionCapacity": -10.0
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50.0,
+            "FeedActual": 20.0,
+            "ExtractionCapacity": 80.0
+          },
+          "expected": {
+            "FeedSP": 50.0,
+            "ExtractionSP": 50.0,
+            "Error": false
+          }
+        }
+      ]
+    }
+  ],
+  "expected_authority": "advisory_model_claim_only"
+}

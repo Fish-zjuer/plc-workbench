@@ -1,0 +1,18 @@
+{
+  "text": "{\n  \"summary\": \"FB_CraneSpeedCheck validates the three INT inputs against 0..100 with ReferenceSpeed10>0 before any arithmetic, promotes to DINT for the difference and 13*reference computations, and independently recomputes all three outputs each scan so exactly one of SyncOK/SyncBad/Invalid is TRUE.\",\n  \"code\": \"FUNCTION_BLOCK FB_CraneSpeedCheck\\nVAR_INPUT\\n    LeftSpeed10      : INT;\\n    RightSpeed10     : INT;\\n    ReferenceSpeed10 : INT;\\nEND_VAR\\n\\nVAR_OUTPUT\\n    SyncOK  : BOOL;\\n    SyncBad : BOOL;\\n    Invalid : BOOL;\\nEND_VAR\\n\\nVAR\\n    Valid   : BOOL;\\n    DiffLR  : DINT;\\n    DiffSum : DINT;\\n    TwiceRef: DINT;\\n    SumLR   : DINT;\\nEND_VAR\\n\\n// Default: all outputs FALSE, then exactly one TRUE is set below\\nSyncOK  := FALSE;\\nSyncBad := FALSE;\\nInvalid := FALSE;\\n\\n// Range validation before any subtraction or multiplication\\nValid := (LeftSpeed10 >= 0) AND (LeftSpeed10 <= 100)\\n         AND (RightSpeed10 >= 0) AND (RightSpeed10 <= 100)\\n         AND (ReferenceSpeed10 > 0) AND (ReferenceSpeed10 <= 100);\\n\\nIF NOT Valid THEN\\n    Invalid := TRUE;\\nELSE\\n    // Promote to DINT for safe arithmetic\\n    DiffLR   := DINT#(LeftSpeed10) - DINT#(RightSpeed10);\\n    SumLR    := DINT#(LeftSpeed10) + DINT#(RightSpeed10);\\n    TwiceRef := DINT#(13) * DINT#(ReferenceSpeed10);\\n    DiffSum  := SumLR - TwiceRef;\\n\\n    IF (DiffLR < 0) THEN\\n        DiffLR := -DiffLR;\\n    END_IF;\\n    IF (DiffSum < 0) THEN\\n        DiffSum := -DiffSum;\\n    END_IF;\\n\\n    IF (DiffLR <= DINT#1) AND (DiffSum <= DINT#2) THEN\\n        SyncOK := TRUE;\\n    ELSE\\n        SyncBad := TRUE;\\n    END_IF;\\nEND_IF;\\n\\nEND_FUNCTION_BLOCK\"\n}",
+  "calls": [],
+  "usage": {
+    "prompt_tokens": 1181,
+    "completion_tokens": 606,
+    "total_tokens": 1787,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 78
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1181
+  },
+  "reasoning_content": "We need to produce ST code for FB_CraneSpeedCheck. Simple.\n\nValidate: 0<=L<=100, 0<=R<=100, 0<Ref<=100. Then compute with DINT.\n\nSyncOK when abs(L-R)<=1 and abs(L+R-13*Ref)<=2.\n\nOutputs: reset all false, then set one.\n\nWrite."
+}

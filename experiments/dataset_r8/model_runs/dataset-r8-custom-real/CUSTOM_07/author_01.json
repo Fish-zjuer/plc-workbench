@@ -1,0 +1,18 @@
+{
+  "text": "{\"summary\":\"实现 FB_CrusherExtraction：在 Enable=TRUE 且 Trip=FALSE 时校验三个 LREAL 输入均在 [0,100] 且非 NaN/Inf；非法时两路设定值清零并置 Error；合法时 FeedSP=MIN(FeedDemand,ExtractionCapacity)，ExtractionSP=MAX(FeedDemand,FeedActual)。Trip 或禁用优先，清零且 Error=FALSE。无积分、定时器或队列状态。\",\"code\":\"FUNCTION_BLOCK FB_CrusherExtraction\\nVAR_INPUT\\n    Enable : BOOL;\\n    Trip : BOOL;\\n    FeedDemand : LREAL;\\n    FeedActual : LREAL;\\n    ExtractionCapacity : LREAL;\\nEND_VAR\\nVAR_OUTPUT\\n    FeedSP : LREAL;\\n    ExtractionSP : LREAL;\\n    Error : BOOL;\\nEND_VAR\\nVAR\\n    valid : BOOL;\\nEND_VAR\\n\\nIF (NOT Enable) OR Trip THEN\\n    FeedSP := 0.0;\\n    ExtractionSP := 0.0;\\n    Error := FALSE;\\nELSE\\n    valid := (FeedDemand >= 0.0) AND (FeedDemand <= 100.0)\\n         AND (FeedActual >= 0.0) AND (FeedActual <= 100.0)\\n         AND (ExtractionCapacity >= 0.0) AND (ExtractionCapacity <= 100.0);\\n\\n    IF valid THEN\\n        FeedSP := MIN(FeedDemand, ExtractionCapacity);\\n        ExtractionSP := MAX(FeedDemand, FeedActual);\\n        Error := FALSE;\\n    ELSE\\n        FeedSP := 0.0;\\n        ExtractionSP := 0.0;\\n        Error := TRUE;\\n    END_IF\\nEND_IF\\n\\nEND_FUNCTION_BLOCK\"}",
+  "calls": [],
+  "usage": {
+    "prompt_tokens": 1274,
+    "completion_tokens": 939,
+    "total_tokens": 2213,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 528
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 1274
+  },
+  "reasoning_content": "We need implement FB_CrusherExtraction in ST. Requirements straightforward.\n\nNeed check finite: use isfinite? STruC++ 0.7 supports common math functions. \"finite LREAL\" - need check NaN/Inf. Could use `FeedDemand = FeedDemand` for NaN? NaN compares false. Inf is >100 so caught by range check. But need robust finite. We can test `FeedDemand > 1.0E100` etc? Better use standard functions like `ISFINITE`? Not standard. We can implement: valid := (x >= 0.0) AND (x <= 100.0) — NaN fails, Inf fails. That covers finite within range. For values like -Inf fail >=0. NaN: comparisons false so AND false. Good.\n\nPriority: if not active -> zero, Error FALSE. Else if invalid -> zero, Error TRUE. Else compute.\n\nWrite ST.\n\nCASE ELSE no colon irrelevant.\n\nOutput JSON. Code with FUNCTION_BLOCK.\n\nNeed declare outputs maybe VAR_OUTPUT. Interface: outputs FeedSP, ExtractionSP, Error.\n\nImplementation:\n\nFUNCTION_BLOCK FB_CrusherExtraction\nVAR_INPUT\n Enable : BOOL;\n Trip : BOOL;\n FeedDemand : LREAL;\n FeedActual : LREAL;\n ExtractionCapacity : LREAL;\nEND_VAR\nVAR_OUTPUT\n FeedSP : LREAL;\n ExtractionSP : LREAL;\n Error : BOOL;\nEND_VAR\nVAR\n valid : BOOL;\nEND_VAR\n\nIF (NOT Enable) OR Trip THEN\n FeedSP := 0.0;\n ExtractionSP := 0.0;\n Error := FALSE;\nELSE\n valid := (FeedDemand >= 0.0) AND (FeedDemand <= 100.0)\n      AND (FeedActual >= 0.0) AND (FeedActual <= 100.0)\n      AND (ExtractionCapacity >= 0.0) AND (ExtractionCapacity <= 100.0);\n IF valid THEN\n   FeedSP := MIN(FeedDemand, ExtractionCapacity);\n   ExtractionSP := MAX(FeedDemand, FeedActual);\n   Error := FALSE;\n ELSE\n   FeedSP := 0.0;\n   ExtractionSP := 0.0;\n   Error := TRUE;\n END_IF\nEND_IF\nEND_FUNCTION_BLOCK\n\nNaN handling: NaN >= 0 false. Good. But note STruC++ MIN with NaN not reached due valid false.\n\nSummary Chinese/English.\n\nEnsure JSON escaping."
+}

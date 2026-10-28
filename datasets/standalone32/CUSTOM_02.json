@@ -1,0 +1,5595 @@
+{
+  "id": "CUSTOM_02",
+  "title": "工业操作终端权限与参数写入裁决",
+  "block": "FB_HmiAccess",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "SessionValid",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "Role",
+      "type": "USINT"
+    },
+    {
+      "direction": "Input",
+      "name": "Page",
+      "type": "USINT"
+    },
+    {
+      "direction": "Input",
+      "name": "WriteReq",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "WriteValue",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "ViewAllowed",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "WriteAllowed",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Accepted",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Denied",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "ParamValue",
+      "type": "LREAL"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06
+  },
+  "scenarios": [
+    {
+      "name": "普通用户越权写入",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "操作员写参数但不能看生产数据",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "ParamValue": 50
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": false,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "管理员边界值与越界保持",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "ParamValue": 50
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": false,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "Accepted": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.1
+          },
+          "expected": {
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "退出会话后拒绝",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "ParamValue": 50
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": false,
+            "WriteValue": 50
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "Accepted": true,
+            "ParamValue": 100
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.1
+          },
+          "expected": {
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 20
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "权限矩阵_role_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 0,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 0,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "权限矩阵_role_1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 1,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "权限矩阵_role_2",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 2,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "权限矩阵_role_3",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "权限矩阵_role_4",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 4,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "权限矩阵_role_255",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 255,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 0,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 1,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 2,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 3,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": -0.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 255,
+            "Page": 5,
+            "WriteReq": true,
+            "WriteValue": 100.001
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# HMI authorization and parameter write gate\n\n- **Difficulty:** Easy (easy)\n\n## Requirements\n\n1. Implement FB_HmiAccess as an authorization gate for an industrial operator terminal. A trusted upstream authentication module supplies SessionValid and Role. Role 1 is user, 2 operator and 3 administrator; every other role is unauthorized. Page 1 is overview, 2 station, 3 production data and 4 parameter settings; other pages are invalid.\n\n2. With a valid session, administrators may view pages 1..4, operators pages 1,2,4 and users pages 1,2. ViewAllowed reflects the current page permission. WriteAllowed is TRUE only for page 4 with a valid session and role 2 or 3.\n\n3. ParamValue starts at 0.0. The caller provides WriteReq as a one-scan request. Accept a write only when WriteAllowed is TRUE and the finite WriteValue is in the closed interval [0,100]. On acceptance, update ParamValue and set Accepted=TRUE, Denied=FALSE.\n\n4. With no WriteReq, set Accepted=Denied=FALSE. Reject any requested write with insufficient permission or an out-of-range value: set Denied=TRUE, Accepted=FALSE and preserve ParamValue. These result flags describe the current scan and are not latched.\n\n5. Session invalidation and role changes affect permissions in the current scan, but must not erase an already committed parameter. All LREAL inputs are finite. This block authorizes access; it does not authenticate passwords or command production equipment.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `SessionValid` | `BOOL` | Trusted authenticated-session validity. |\n| Input | `Role` | `USINT` | 1 user, 2 operator, 3 administrator; others unauthorized. |\n| Input | `Page` | `USINT` | 1 overview, 2 station, 3 production data, 4 parameters. |\n| Input | `WriteReq` | `BOOL` | One-scan parameter-write request. |\n| Input | `WriteValue` | `LREAL` | Finite requested parameter value. |\n| Output | `ViewAllowed` | `BOOL` | Current page access permission. |\n| Output | `WriteAllowed` | `BOOL` | Current parameter-write permission. |\n| Output | `Accepted` | `BOOL` | Write accepted in this scan. |\n| Output | `Denied` | `BOOL` | Write rejected in this scan. |\n| Output | `ParamValue` | `LREAL` | Committed parameter, initially 0.0. |",
+  "ltl": {
+    "id": "CUSTOM_02",
+    "title": "工业操作终端权限与参数写入裁决",
+    "definitions": "V := SessionValid AND Role∈{1,2,3}。AllowedPages(1)={1,2}，AllowedPages(2)={1,2,4}，AllowedPages(3)={1,2,3,4}，其他角色为空集。\nview := V AND Page∈AllowedPages(Role)。write := SessionValid AND Role∈{2,3} AND Page=4。\naccept := WriteReq AND write AND 0<=WriteValue<=100。所有LREAL输入有限。\nparameterUpdated := ParamValue=WriteValue；parameterHeld := ParamValue=pre.ParamValue；初始pre.ParamValue=0。\nAccepted/Denied为本轮结果，WriteReq为调用方提供的单扫描请求；本题不替上游做身份认证。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(ViewAllowed <-> view)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(WriteAllowed <-> write)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(Accepted <-> accept)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(Denied <-> (WriteReq & !accept))"
+      },
+      {
+        "id": "P05",
+        "formula": "G(accept -> parameterUpdated)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(!accept -> parameterHeld)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(!(Accepted & Denied))"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

@@ -1,0 +1,577 @@
+{
+  "status": "pass",
+  "task_id": "CUSTOM_04",
+  "source_sha256": "d7de542805813a30c9a1983999f536e96104af11feb04adc49d8a26a2816bb68",
+  "dataset_sha256": "d2a22613aa897998aebe0af7aa2fb10c6bc5243ea9038758cc52d48906bf0c0e",
+  "execution_fingerprint": "d1c1eeb85e0e199edd0a73ce2c1b8340f464594e88aeaff09c0fa52781ee3b92",
+  "cases": [
+    {
+      "name": "芯径初始化",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "一圈测量辊的收卷与转速",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "等量放卷与空卷限幅",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 2094.143988051255,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": true
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 2094.143988051255,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "非法脉冲保留估计",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 2094.143988051255,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 2094.143988051255,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": -1,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "Error": true,
+            "MotorRPM": 0,
+            "Diameter": 76,
+            "StoredLength": 0
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "长度上下限_非法保持_初始化忽略脉冲",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 140,
+            "Receiving": true,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 80424.7719318987,
+            "Diameter": 140,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 80424.7719318987,
+            "Diameter": 140.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": true,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 80424.7719318987,
+            "Diameter": 140.0,
+            "MotorRPM": 1705.2315331274501,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 80424.7719318987,
+            "Diameter": 140.0,
+            "MotorRPM": 1705.2315331274501,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": -1,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 0,
+            "SpeedMpm": 15.001
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 0,
+            "SpeedMpm": 0
+          },
+          "expected": {
+            "StoredLength": 0.0,
+            "Diameter": 76,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 5,
+    "scans": 21,
+    "assertions": 82,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\dataset_builds\\631e63d32f54281e547a772e\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

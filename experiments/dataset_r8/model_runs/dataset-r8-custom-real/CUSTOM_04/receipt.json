@@ -1,0 +1,181 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_04",
+  "status": "reviewed_finite_pass",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "d2a22613aa897998aebe0af7aa2fb10c6bc5243ea9038758cc52d48906bf0c0e",
+  "source_sha256": "d7de542805813a30c9a1983999f536e96104af11feb04adc49d8a26a2816bb68",
+  "attempts": [
+    {
+      "summary": "Implements FB_RollGeometry: PI/core/max diameter/thickness constants, first-call or Reset initialization from InitialD (pulse ignored), otherwise deltaL from encoder via 50 mm/1024 ppR roller added or subtracted per Receiving, StoredLength clamped to [0,Lmax] with strict-boundary LimitHit, diameter recomputed from length, RPM from signed SpeedMpm clamped to ±6000. Illegal inputs (SpeedMpm out of ±15, EncoderDelta outside 0..1000000, or bad InitialD during init) set Error, zero RPM, clear LimitHit and preserve length/diameter/initialized; legal calls clear Error. Outputs pre-initialized to 0/76.",
+      "status": "written",
+      "source_sha256": "d7de542805813a30c9a1983999f536e96104af11feb04adc49d8a26a2816bb68"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 2,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_04",
+    "source_sha256": "d7de542805813a30c9a1983999f536e96104af11feb04adc49d8a26a2816bb68",
+    "dataset_sha256": "d2a22613aa897998aebe0af7aa2fb10c6bc5243ea9038758cc52d48906bf0c0e",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 5,
+      "scans": 21,
+      "assertions": 82,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\1fc9771a934a35962ab36c0b\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "未发现明确缺陷；实现与需求条款一致。以下 trace 为待复核建议，不是测试真值。",
+      "questions": [],
+      "proposals": [
+        {
+          "name": "init_ignore_then_update",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Reset": true,
+                "InitialD": 76.0,
+                "Receiving": false,
+                "EncoderDelta": 1000000,
+                "SpeedMpm": 0.0
+              },
+              "expected": {
+                "StoredLength": 0.0,
+                "Diameter": 76.0,
+                "MotorRPM": 0.0,
+                "LimitHit": false,
+                "Error": false
+              }
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "Reset": false,
+                "InitialD": 0.0,
+                "Receiving": true,
+                "EncoderDelta": 1024,
+                "SpeedMpm": 15.0
+              },
+              "expected": {
+                "StoredLength": 157.07963267948966,
+                "Diameter": 76.177424477,
+                "MotorRPM": 3133.89979088,
+                "LimitHit": false,
+                "Error": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "exact_lower_boundary",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Reset": true,
+                "InitialD": 76.0,
+                "Receiving": false,
+                "EncoderDelta": 0,
+                "SpeedMpm": 0.0
+              },
+              "expected": {
+                "StoredLength": 0.0,
+                "Diameter": 76.0,
+                "MotorRPM": 0.0,
+                "LimitHit": false,
+                "Error": false
+              }
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Reset": false,
+                "InitialD": 0.0,
+                "Receiving": true,
+                "EncoderDelta": 0,
+                "SpeedMpm": 0.0
+              },
+              "expected": {
+                "StoredLength": 0.0,
+                "Diameter": 76.0,
+                "MotorRPM": 0.0,
+                "LimitHit": false,
+                "Error": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "invalid_preserves_then_clear",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Reset": true,
+                "InitialD": 100.0,
+                "Receiving": true,
+                "EncoderDelta": 0,
+                "SpeedMpm": 0.0
+              },
+              "expected": {
+                "StoredLength": 24574.23586808016,
+                "Diameter": 100.0,
+                "MotorRPM": 0.0,
+                "LimitHit": false,
+                "Error": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Reset": false,
+                "InitialD": 0.0,
+                "Receiving": true,
+                "EncoderDelta": 0,
+                "SpeedMpm": 20.0
+              },
+              "expected": {
+                "StoredLength": 24574.23586808016,
+                "Diameter": 100.0,
+                "MotorRPM": 0.0,
+                "LimitHit": false,
+                "Error": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Reset": false,
+                "InitialD": 0.0,
+                "Receiving": true,
+                "EncoderDelta": 0,
+                "SpeedMpm": 0.0
+              },
+              "expected": {
+                "StoredLength": 24574.23586808016,
+                "Diameter": 100.0,
+                "MotorRPM": 0.0,
+                "LimitHit": false,
+                "Error": false
+              }
+            }
+          ]
+        }
+      ],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

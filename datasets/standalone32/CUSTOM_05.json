@@ -1,0 +1,657 @@
+{
+  "id": "CUSTOM_05",
+  "title": "轨道巡检车按里程触发图像采集",
+  "block": "FB_InspectionCapture",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "Enable",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "Reset",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "DistanceMm",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "SpacingMm",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "CameraBusy",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "CapturePulse",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "CaptureCount",
+      "type": "UDINT"
+    },
+    {
+      "direction": "Output",
+      "name": "MissedCount",
+      "type": "UDINT"
+    },
+    {
+      "direction": "Output",
+      "name": "Error",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06
+  },
+  "scenarios": [
+    {
+      "name": "建立起点与采样点边界",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 299,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 300,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "跨多个采样点",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 299,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 300,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 750,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 2,
+            "MissedCount": 1
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "忙时漏采不补发",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 299,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 300,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 750,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 2,
+            "MissedCount": 1
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 900,
+            "SpacingMm": 200,
+            "CameraBusy": true
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 2,
+            "MissedCount": 2
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 900,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "MissedCount": 2
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "位置倒退锁存错误及重新起段",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 299,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 300,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 750,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 2,
+            "MissedCount": 1
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 900,
+            "SpacingMm": 200,
+            "CameraBusy": true
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 2,
+            "MissedCount": 2
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 900,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "MissedCount": 2
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 800,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "Error": true,
+            "CapturePulse": false,
+            "CaptureCount": 2
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 1100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "Error": true,
+            "CapturePulse": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 1100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "Error": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "连续扫描触发_忙时丢弃_回退锁存_重建",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 0,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 100,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 200,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 2,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 500,
+            "SpacingMm": 100,
+            "CameraBusy": true
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 2,
+            "MissedCount": 3,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 500,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 2,
+            "MissedCount": 3,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 600,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 3,
+            "MissedCount": 3,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 599,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 3,
+            "MissedCount": 3,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 700,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 3,
+            "MissedCount": 3,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": false,
+            "Reset": false,
+            "DistanceMm": 700,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 3,
+            "MissedCount": 3,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 700,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 800,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# Distance-triggered inspection imaging\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\n1. Implement FB_InspectionCapture to trigger images at distance intervals along a rail-inspection run. DistanceMm is finite, nonnegative cumulative travel and is nondecreasing within a valid segment. SpacingMm is finite and positive when captured. Each segment spans at most 1e9 captured spacings, and the number of crossed sampling points is at most 1e9.\n\n2. On the first call, Reset, or a FALSE-to-TRUE transition of Enable, capture DistanceMm as origin and latch SpacingMm. Clear CaptureCount, MissedCount and the internal crossed-point count; set CapturePulse=FALSE. Do not capture an image on the initialization scan. While disabled, emit no capture and retain counts; Reset may still establish a new segment.\n\n3. During valid enabled operation, let k=FLOOR((DistanceMm-origin)/latched_spacing) and d=k-previous_crossed_count. If d=0, emit no capture. If d>0 and CameraBusy=FALSE, emit one current-scan CapturePulse, increment CaptureCount once and add d-1 to MissedCount. If busy, emit no capture and add d to MissedCount. Then update the crossed-point count to k.\n\n4. Do not replay missed points after the camera becomes available: the vehicle is no longer at those locations. Spacing changes take effect only at Reset or segment re-enabling. The receiver consumes CapturePulse on every scan, not only on rising edges; consecutive crossing scans may both have CapturePulse=TRUE. CaptureCount counts issued requests, not confirmed image storage.\n\n5. An invalid position, invalid initialization spacing, or a decrease below the last valid position latches Error=TRUE, suppresses captures and preserves counts and origin until a legal Reset or legal re-enable initialization. Continuous Reset rebuilds the origin each scan without capture. Counts start at zero.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Enable` | `BOOL` | Segment enable; a rising edge establishes a new segment. |\n| Input | `Reset` | `BOOL` | Reset the origin and counts. |\n| Input | `DistanceMm` | `LREAL` | Nonnegative cumulative travel, mm. |\n| Input | `SpacingMm` | `LREAL` | Positive spacing, mm, captured at segment initialization. |\n| Input | `CameraBusy` | `BOOL` | Camera cannot accept a trigger in this scan. |\n| Output | `CapturePulse` | `BOOL` | One image-capture request for this scan. |\n| Output | `CaptureCount` | `UDINT` | Issued capture requests, not confirmed stored images. |\n| Output | `MissedCount` | `UDINT` | Sampling points crossed without an issued request. |\n| Output | `Error` | `BOOL` | Latched position/configuration error. |",
+  "ltl": {
+    "id": "CUSTOM_05",
+    "title": "轨道巡检车按里程触发图像采集",
+    "definitions": "独立观察器保存first、prevEnable、origin、spacing、lastDistance、k、issued、missed、err；初始first=TRUE，其余计数0、err=FALSE。\ninit := first OR Reset OR (Enable AND !pre.prevEnable)。validInit := DistanceMm>=0 AND SpacingMm>0，实数有限。\ninit且validInit：锁存本轮origin=DistanceMm和spacing=SpacingMm，lastDistance=DistanceMm，k/issued/missed=0，err=FALSE，本轮pulse=FALSE。\ninit且非法：err=TRUE，计数和原点保持，pulse=FALSE。\n非init时，disabled或pre.err为TRUE则计数保持、pulse=FALSE、err保持。\n非init且Enable且!pre.err：若DistanceMm<pre.lastDistance或位置非法，则锁存err且计数保持；\n否则newK=floor((DistanceMm-pre.origin)/pre.spacing)，d=newK-pre.k，pulse=(d>0 AND !CameraBusy)，\nissued=pre.issued+int(pulse)，missed=pre.missed+d-int(pulse)，k=newK，lastDistance=DistanceMm。\n每轮无论是否故障均更新prevEnable=Enable，first=FALSE。段内跨点总数<=1e9。\ncaptureMatch表示CapturePulse/CaptureCount/MissedCount/Error分别等于上述期望。\nvalidRun表示非init、Enable、无既有或本轮位置错误。连续两轮pulse均TRUE合法，不能额外要求脉冲之间插入FALSE。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(captureMatch)"
+      },
+      {
+        "id": "P02",
+        "formula": "G((init & validInit) -> (!CapturePulse & CaptureCount=0 & MissedCount=0 & !Error))"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!Enable -> !CapturePulse)"
+      },
+      {
+        "id": "P04",
+        "formula": "G((validRun & d=0) -> (!CapturePulse & CaptureCount=pre.issued & MissedCount=pre.missed))"
+      },
+      {
+        "id": "P05",
+        "formula": "G((validRun & d>0 & !CameraBusy) -> (CapturePulse & CaptureCount=pre.issued+1 & MissedCount=pre.missed+d-1))"
+      },
+      {
+        "id": "P06",
+        "formula": "G((validRun & CameraBusy) -> (!CapturePulse & CaptureCount=pre.issued & MissedCount=pre.missed+d))"
+      },
+      {
+        "id": "P07",
+        "formula": "G((pre.err & !(init & validInit)) -> Error)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

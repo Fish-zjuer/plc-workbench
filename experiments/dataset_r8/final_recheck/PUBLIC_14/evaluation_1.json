@@ -1,0 +1,1320 @@
+{
+  "status": "pass",
+  "task_id": "PUBLIC_14",
+  "source_sha256": "ae45d00b367dbfab1e5607f9ba763e338e9cd6eb585c66768c72cd03bfaf38ef",
+  "dataset_sha256": "1d20bc316cf965413f8d622a6264060d48a9779e60749ce92f4b2a43c782d5e9",
+  "execution_fingerprint": "d1c1eeb85e0e199edd0a73ce2c1b8340f464594e88aeaff09c0fa52781ee3b92",
+  "cases": [
+    {
+      "name": "normal_common_valid_addresses",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "0.0.0.0"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "127.0.0.1"
+          },
+          "expected": {
+            "ipValue": 2130706433
+          },
+          "actual": {
+            "ipValue": 2130706433.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "192.168.1.10"
+          },
+          "expected": {
+            "ipValue": 3232235786
+          },
+          "actual": {
+            "ipValue": 3232235786.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "ipText": "255.255.255.255"
+          },
+          "expected": {
+            "ipValue": 4294967295
+          },
+          "actual": {
+            "ipValue": 4294967295.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_00",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": ""
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_01",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "."
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_02",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_03",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.4.5"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_04",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1..3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_05",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": ".1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_06",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.4."
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_07",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "-1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_08",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "+1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_09",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": " 1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_10",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.4 "
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_11",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.a.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_12",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "256.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_13",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.256.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_14",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.256.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_15",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.256"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_16",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "999999999999999999999.1.2.3"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_17",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.4junk"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_18",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1/2/3/4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_19",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "0x1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_20",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.\"4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_21",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.\\4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_22",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "001.002.003.004"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_23",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "255.0.0.0"
+          },
+          "expected": {
+            "ipValue": 4278190080
+          },
+          "actual": {
+            "ipValue": 4278190080.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_24",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "0.255.0.0"
+          },
+          "expected": {
+            "ipValue": 16711680
+          },
+          "actual": {
+            "ipValue": 16711680.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_25",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "0.0.255.0"
+          },
+          "expected": {
+            "ipValue": 65280
+          },
+          "actual": {
+            "ipValue": 65280.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_26",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "0.0.0.255"
+          },
+          "expected": {
+            "ipValue": 255
+          },
+          "actual": {
+            "ipValue": 255.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 28,
+    "scans": 85,
+    "assertions": 85,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\dataset_builds\\5fa99cbbc86e1856a15dfe99\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

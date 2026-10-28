@@ -1,0 +1,173 @@
+{
+  "status": "pass",
+  "task_id": "PUBLIC_05",
+  "source_sha256": "4f3823797ceffd49189405b75ed1a9fae04c574b5ab9c6495464d426b00ac9b1",
+  "dataset_sha256": "9529404484466405e965f9783c2dc3247107ff4928a3bc253ead2603ee815a8d",
+  "execution_fingerprint": "d1c1eeb85e0e199edd0a73ce2c1b8340f464594e88aeaff09c0fa52781ee3b92",
+  "cases": [
+    {
+      "name": "startup_no_predebounce_and_estop",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false,
+            "Weld_Soft_Start_Active": true
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4999,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false,
+            "Weld_Soft_Start_Active": true
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5000,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5101,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": true,
+            "Weld_Soft_Start_Active": false
+          },
+          "actual": {
+            "Operator_Alert": 1.0,
+            "Weld_Soft_Start_Active": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5110,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": false,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5120,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5219,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5220,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": true
+          },
+          "actual": {
+            "Operator_Alert": 1.0,
+            "Weld_Soft_Start_Active": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5230,
+          "inputs": {
+            "Gap_Exceeded": false,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 1,
+    "scans": 9,
+    "assertions": 12,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\dataset_builds\\9f83dda2b63bc698579e202a\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

@@ -1,0 +1,290 @@
+{
+  "status": "pass",
+  "task_id": "CUSTOM_02",
+  "source_sha256": "f1ec284819a247656ac042fceb531b4292217df4ced32b3b69625fa5f62b8f5a",
+  "dataset_sha256": "b5de70afac5760a55f77bd014f4ff0637c3095a2c955636b460c1bc776589b6d",
+  "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+  "cases": [
+    {
+      "name": "admin_write_then_session_invalid",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": false,
+            "WriteValue": 0.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": false,
+            "ParamValue": 0.0
+          },
+          "actual": {
+            "ViewAllowed": 1.0,
+            "WriteAllowed": 0.0,
+            "Accepted": 0.0,
+            "Denied": 0.0,
+            "ParamValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 50.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 50.0
+          },
+          "actual": {
+            "ViewAllowed": 1.0,
+            "WriteAllowed": 1.0,
+            "Accepted": 1.0,
+            "Denied": 0.0,
+            "ParamValue": 50.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 60.0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 50.0
+          },
+          "actual": {
+            "ViewAllowed": 0.0,
+            "WriteAllowed": 0.0,
+            "Accepted": 0.0,
+            "Denied": 1.0,
+            "ParamValue": 50.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "operator_accept_and_out_of_range_deny",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": false,
+            "WriteValue": 0.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": false,
+            "ParamValue": 0.0
+          },
+          "actual": {
+            "ViewAllowed": 1.0,
+            "WriteAllowed": 0.0,
+            "Accepted": 0.0,
+            "Denied": 0.0,
+            "ParamValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 100.0
+          },
+          "actual": {
+            "ViewAllowed": 1.0,
+            "WriteAllowed": 1.0,
+            "Accepted": 1.0,
+            "Denied": 0.0,
+            "ParamValue": 100.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.5
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100.0
+          },
+          "actual": {
+            "ViewAllowed": 1.0,
+            "WriteAllowed": 1.0,
+            "Accepted": 0.0,
+            "Denied": 1.0,
+            "ParamValue": 100.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": false,
+            "WriteValue": 0.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": false,
+            "Denied": false,
+            "ParamValue": 100.0
+          },
+          "actual": {
+            "ViewAllowed": 1.0,
+            "WriteAllowed": 1.0,
+            "Accepted": 0.0,
+            "Denied": 0.0,
+            "ParamValue": 100.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "user_denied_then_admin_accepted_then_invalid_role",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 10.0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0.0
+          },
+          "actual": {
+            "ViewAllowed": 0.0,
+            "WriteAllowed": 0.0,
+            "Accepted": 0.0,
+            "Denied": 1.0,
+            "ParamValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 10.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 10.0
+          },
+          "actual": {
+            "ViewAllowed": 1.0,
+            "WriteAllowed": 1.0,
+            "Accepted": 1.0,
+            "Denied": 0.0,
+            "ParamValue": 10.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 20.0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 10.0
+          },
+          "actual": {
+            "ViewAllowed": 0.0,
+            "WriteAllowed": 0.0,
+            "Accepted": 0.0,
+            "Denied": 1.0,
+            "ParamValue": 10.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 3,
+    "scans": 10,
+    "assertions": 50,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\980deba00f5ab4a971f6382c\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

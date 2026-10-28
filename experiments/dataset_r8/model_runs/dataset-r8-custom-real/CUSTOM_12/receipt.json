@@ -1,0 +1,125 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_12",
+  "status": "reviewed_finite_pass",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "fb2dcc163fcbd8ba7e147e83a56d3a6758891e37482628ed7291935e447fef16",
+  "source_sha256": "956cf072bc3e2d9bac79c3608656cb540f20a1516b82b68602bae358f0eede7a",
+  "attempts": [
+    {
+      "summary": "实现浮标功率预算功能块：每扫描复位输出，优先处理禁用、非法预算和强制传感器短缺，正常时枚举 0..7 全部候选掩码，按最大分数、最小功率、最小掩码选择全局最优，并同步输出位映射。",
+      "status": "written",
+      "source_sha256": "956cf072bc3e2d9bac79c3608656cb540f20a1516b82b68602bae358f0eede7a"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 2,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_12",
+    "source_sha256": "956cf072bc3e2d9bac79c3608656cb540f20a1516b82b68602bae358f0eede7a",
+    "dataset_sha256": "fb2dcc163fcbd8ba7e147e83a56d3a6758891e37482628ed7291935e447fef16",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 5,
+      "scans": 299,
+      "assertions": 2358,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\59b0c51c0cfb8bb776d7296c\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "未发现明确缺陷。代码的使能/非法预算/强制传感器缺电优先级、子集枚举、Score→PowerW→Mask 平局规则以及输出与 SelectedMask 一致性均与题面要求一致。以下场景仅作为待复核建议。",
+      "questions": [],
+      "proposals": [
+        {
+          "name": "global_score_not_ratio",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Enable": true,
+                "BudgetW": 100,
+                "NeedSensor": true,
+                "NeedHeater": true,
+                "NeedRadio": false,
+                "MandatorySensor": false
+              },
+              "expected": {
+                "SelectedMask": 2,
+                "SensorOn": false,
+                "HeaterOn": true,
+                "RadioOn": false,
+                "PowerW": 70,
+                "Score": 10,
+                "BudgetShortage": false,
+                "Error": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "mandatory_shortage",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Enable": true,
+                "BudgetW": 39,
+                "NeedSensor": false,
+                "NeedHeater": true,
+                "NeedRadio": true,
+                "MandatorySensor": true
+              },
+              "expected": {
+                "SelectedMask": 0,
+                "SensorOn": false,
+                "HeaterOn": false,
+                "RadioOn": false,
+                "PowerW": 0,
+                "Score": 0,
+                "BudgetShortage": true,
+                "Error": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "invalid_budget",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Enable": true,
+                "BudgetW": 201,
+                "NeedSensor": true,
+                "NeedHeater": true,
+                "NeedRadio": true,
+                "MandatorySensor": true
+              },
+              "expected": {
+                "SelectedMask": 0,
+                "SensorOn": false,
+                "HeaterOn": false,
+                "RadioOn": false,
+                "PowerW": 0,
+                "Score": 0,
+                "BudgetShortage": false,
+                "Error": true
+              }
+            }
+          ]
+        }
+      ],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

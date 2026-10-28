@@ -1,0 +1,61 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "PUBLIC_19",
+  "status": "review_questions",
+  "source_origin": "saved weak-model candidate",
+  "source": "<experiment_cache>\\dataset-r8-review-short\\PUBLIC_19\\candidate.st",
+  "dataset_sha256": "a87138e0c2c6b7dc903e8a165ce6a4390acb5d6f4dc33b50d7e2caea94ca841d",
+  "source_sha256": "c17021caabb1d77f8e082870455faf41819dfb5133cf6bd7f652c2111edb668d",
+  "attempts": [],
+  "model": "deepseek-flash",
+  "model_calls": 1,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "PUBLIC_19",
+    "source_sha256": "c17021caabb1d77f8e082870455faf41819dfb5133cf6bd7f652c2111edb668d",
+    "dataset_sha256": "a87138e0c2c6b7dc903e8a165ce6a4390acb5d6f4dc33b50d7e2caea94ca841d",
+    "execution_fingerprint": "d1c1eeb85e0e199edd0a73ce2c1b8340f464594e88aeaff09c0fa52781ee3b92",
+    "summary": {
+      "scenarios": 10,
+      "scans": 149,
+      "assertions": 195,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\ec5e759dd8d76734ee4b4e41\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_questions",
+      "summary": "对照需求与代码，模式互斥、手动点动、单步流程、单周期流程、连续循环及急停清零逻辑均与题面一致；未发现仅由题面可明确判定的逻辑缺陷。限位同一扫描内仍输出一个扫描、急停释放后是否需重新启动等属于题面未规定的扫描/复位语义，不列为明确缺陷。",
+      "questions": [
+        "当动作限位在当前扫描变为 TRUE 时，是否要求同一扫描立即将该动作输出置 FALSE？题面未规定扫描时序，当前实现会先置输出 TRUE 再迁移状态。",
+        "急停释放后，若手动按钮仍保持或 Start 仍保持，是否允许立即恢复动作或必须重新产生上升沿/重新按启动？题面未规定复位策略。"
+      ],
+      "proposals": [],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "supplied_evaluation": {
+    "status": "pass",
+    "task_id": "PUBLIC_19",
+    "source_sha256": "c17021caabb1d77f8e082870455faf41819dfb5133cf6bd7f652c2111edb668d",
+    "dataset_sha256": "a87138e0c2c6b7dc903e8a165ce6a4390acb5d6f4dc33b50d7e2caea94ca841d",
+    "execution_fingerprint": "d1c1eeb85e0e199edd0a73ce2c1b8340f464594e88aeaff09c0fa52781ee3b92",
+    "summary": {
+      "scenarios": 10,
+      "scans": 149,
+      "assertions": 195,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\ec5e759dd8d76734ee4b4e41\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

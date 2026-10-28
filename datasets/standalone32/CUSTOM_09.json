@@ -1,0 +1,971 @@
+{
+  "id": "CUSTOM_09",
+  "title": "在线光谱仪维护后的重新标定许可",
+  "block": "FB_SpectrometerQualification",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "Maintenance",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "CalibDone",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "MeasureReq",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "State",
+      "type": "USINT"
+    },
+    {
+      "direction": "Output",
+      "name": "CalibReq",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "MaintLamp",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "MeasurePermit",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06
+  },
+  "scenarios": [
+    {
+      "name": "16-A：维护及重新标定",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "状态0_输入000",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态0_输入001",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态0_输入010",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态0_输入011",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态0_输入100",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态0_输入101",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态0_输入110",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态0_输入111",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态1_输入000",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态1_输入001",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态1_输入010",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态1_输入011",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态1_输入100",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态1_输入101",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态1_输入110",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态1_输入111",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态2_输入000",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态2_输入001",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态2_输入010",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态2_输入011",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态2_输入100",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态2_输入101",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态2_输入110",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "状态2_输入111",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# Spectrometer recalibration after maintenance\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\n1. Implement FB_SpectrometerQualification for measurement eligibility after maintenance of an online spectrometer. State 0 means waiting for calibration, 1 ready and 2 maintenance. Initially State=0, CalibReq=TRUE, MaintLamp=FALSE and MeasurePermit=FALSE.\n\n2. Maintenance=TRUE has priority and moves every state to 2. With Maintenance=FALSE, a pre-scan State of 2 must first move to 0, even if CalibDone=TRUE on the same call. A pre-scan State of 0 moves to 1 only when CalibDone=TRUE, otherwise remains 0. State 1 remains ready while not in maintenance.\n\n3. Perform at most one transition per call, using the pre-scan state. CalibReq is TRUE exactly when the updated State is 0; MaintLamp exactly when it is 2. MeasurePermit equals the current MeasureReq AND updated State=1.\n\n4. CalibDone is a completion level supplied by an external calibration module. No fresh edge is required; the specific constraint is that the maintenance-exit scan cannot skip state 0. Spectral fitting, calibration computation and physical measurement are outside scope.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Maintenance` | `BOOL` | Maintenance mode. |\n| Input | `CalibDone` | `BOOL` | External calibration-complete level. |\n| Input | `MeasureReq` | `BOOL` | Measurement request. |\n| Output | `State` | `USINT` | 0 waiting for calibration, 1 ready, 2 maintenance. |\n| Output | `CalibReq` | `BOOL` | Request the upstream calibration module. |\n| Output | `MaintLamp` | `BOOL` | Maintenance indication. |\n| Output | `MeasurePermit` | `BOOL` | Ordinary measurement eligibility. |",
+  "ltl": {
+    "id": "CUSTOM_09",
+    "title": "在线光谱仪维护后的重新标定许可",
+    "definitions": "独立状态S初始0（等待标定），1就绪、2维护。每轮从pre.S决定且最多转换一次：\nS=(Maintenance?2:(pre.S=2?0:(pre.S=0 AND CalibDone?1:pre.S)))。\nMaintenance优先；退出维护的同轮即使CalibDone为TRUE仍进入0，下一轮完成电平持续TRUE则允许转入1。\nstateMatch := State=S；输出映射使用本轮更新后的State。\n调用前初始CalibReq=TRUE、MaintLamp=FALSE、MeasurePermit=FALSE。没有新增CalibDone上升沿要求。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(stateMatch)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(Maintenance -> State=2)"
+      },
+      {
+        "id": "P03",
+        "formula": "G((!Maintenance & pre.S=2) -> State=0)"
+      },
+      {
+        "id": "P04",
+        "formula": "G((!Maintenance & pre.S=0 & CalibDone) -> State=1)"
+      },
+      {
+        "id": "P05",
+        "formula": "G((!Maintenance & pre.S=0 & !CalibDone) -> State=0)"
+      },
+      {
+        "id": "P06",
+        "formula": "G((!Maintenance & pre.S=1) -> State=1)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(CalibReq <-> State=0)"
+      },
+      {
+        "id": "P08",
+        "formula": "G(MaintLamp <-> State=2)"
+      },
+      {
+        "id": "P09",
+        "formula": "G(MeasurePermit <-> (MeasureReq & State=1))"
+      },
+      {
+        "id": "P10",
+        "formula": "G(State=0 | State=1 | State=2)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

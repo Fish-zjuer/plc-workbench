@@ -1,0 +1,6706 @@
+{
+  "id": "CUSTOM_12",
+  "title": "海洋监测浮标的辅助负载功率预算",
+  "block": "FB_BuoyPowerBudget",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "Enable",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "BudgetW",
+      "type": "UINT"
+    },
+    {
+      "direction": "Input",
+      "name": "NeedSensor",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "NeedHeater",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "NeedRadio",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "MandatorySensor",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "SelectedMask",
+      "type": "USINT"
+    },
+    {
+      "direction": "Output",
+      "name": "SensorOn",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "HeaterOn",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "RadioOn",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "PowerW",
+      "type": "UINT"
+    },
+    {
+      "direction": "Output",
+      "name": "Score",
+      "type": "USINT"
+    },
+    {
+      "direction": "Output",
+      "name": "BudgetShortage",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Error",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06
+  },
+  "scenarios": [
+    {
+      "name": "异构成本不能按单项分数贪心",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "PowerW": 110,
+            "Score": 17
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 6,
+            "PowerW": 130,
+            "Score": 19
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 7,
+            "PowerW": 170,
+            "Score": 26
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "必须负载、空请求、错误和禁用",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 30,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "PowerW": 0,
+            "Score": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "Error": true,
+            "SelectedMask": 0,
+            "BudgetShortage": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": false,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "Error": false,
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "预算请求组合_必选False",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 530,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 540,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 550,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 560,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 570,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 580,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 590,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 610,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 620,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 630,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 640,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 650,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 660,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 670,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 680,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 690,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 710,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 720,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 730,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 740,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 750,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 760,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 770,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 780,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 790,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 800,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 810,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 820,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 830,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 840,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 850,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 860,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 870,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 880,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 890,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 900,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 910,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 920,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 930,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 940,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 950,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 960,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 970,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 980,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 990,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1000,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1010,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1020,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 6,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 130,
+            "Score": 19,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1030,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 6,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 130,
+            "Score": 19,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1040,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1050,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1060,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1070,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1080,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1090,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1100,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 6,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 130,
+            "Score": 19,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1110,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 6,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 130,
+            "Score": 19,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1120,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1130,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1140,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1150,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1160,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1170,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1180,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 6,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 130,
+            "Score": 19,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1190,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 7,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 170,
+            "Score": 26,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1200,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1210,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1220,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1230,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1240,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 4,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 60,
+            "Score": 9,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1250,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1260,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 6,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 130,
+            "Score": 19,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1270,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 7,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 170,
+            "Score": 26,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1280,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1290,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1300,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1310,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1320,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1330,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1340,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1350,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1360,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1370,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1380,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1390,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1400,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1410,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1420,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1430,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "预算请求组合_必选True",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 0,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 40,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 59,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 60,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 69,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 530,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 540,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 550,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 70,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 560,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 570,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 580,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 590,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 610,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 620,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 630,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 99,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 640,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 650,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 660,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 670,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 680,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 690,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 710,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 720,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 730,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 740,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 750,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 760,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 770,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 780,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 790,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 109,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 800,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 810,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 820,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 830,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 840,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 850,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 860,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 870,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 110,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 880,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 890,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 900,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 910,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 920,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 930,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 940,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 950,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 129,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 960,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 970,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 980,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 990,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1000,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1010,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1020,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1030,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 130,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1040,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1050,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1060,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1070,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1080,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1090,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1100,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1110,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 169,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1120,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1130,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1140,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1150,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1160,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1170,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1180,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 7,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 170,
+            "Score": 26,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1190,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 170,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 7,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 170,
+            "Score": 26,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1200,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1210,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 1,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 40,
+            "Score": 7,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1220,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1230,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 3,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 110,
+            "Score": 17,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1240,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1250,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 5,
+            "SensorOn": true,
+            "HeaterOn": false,
+            "RadioOn": true,
+            "PowerW": 100,
+            "Score": 16,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1260,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 7,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 170,
+            "Score": 26,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1270,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 200,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 7,
+            "SensorOn": true,
+            "HeaterOn": true,
+            "RadioOn": true,
+            "PowerW": 170,
+            "Score": 26,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1280,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1290,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1300,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1310,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1320,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1330,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1340,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1350,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1360,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1370,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1380,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1390,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1400,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": false,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1410,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": false,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1420,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 1430,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "禁用优先于非法预算",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": false,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 65535,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# Marine buoy budget-constrained auxiliary loads\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\n1. Implement FB_BuoyPowerBudget for a battery-powered marine monitoring buoy. Three loads are sensor unit SensorOn, instrument anti-freeze heater HeaterOn and radio RadioOn, represented by mask bits 1,2,4. Their fixed powers are respectively 40,70,60 W and utility scores 7,10,9. These are benchmark settings. NeedSensor, NeedHeater and NeedRadio are current requests.\n\n2. Enable=FALSE has priority and sets all outputs to zero/FALSE. Otherwise BudgetW is valid in 0..200 W. An invalid budget sets Error=TRUE and all other outputs to zero/FALSE. Legal operation sets Error=FALSE.\n\n3. MandatorySensor=TRUE requires the sensor unit even if NeedSensor=FALSE. Other unrequested loads may not be selected. With MandatorySensor=FALSE, the sensor unit is eligible only when requested; all requested loads may be shed to meet the budget.\n\n4. If MandatorySensor=TRUE but BudgetW<40, set BudgetShortage=TRUE, turn off all loads and set SelectedMask=PowerW=Score=0. Never exceed budget to force the mandatory load on. All other legal situations have BudgetShortage=FALSE.\n\n5. Enumerate all subsets of eligible loads whose total power is <=BudgetW and that satisfy the mandatory-sensor constraint. First maximize total Score, then minimize total PowerW, then select the numerically smallest SelectedMask. The empty subset is allowed; with no requests and no mandatory load select it.\n\n6. The three Boolean outputs must match SelectedMask; PowerW and Score are sums for that subset. Recompute independently each scan; all outputs initially equal zero/FALSE. Greedy selection by individual score or score/power ratio must not replace the global optimum. Battery state of charge, sea conditions and physical temperature are outside scope.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Enable` | `BOOL` | Enable budget optimization. |\n| Input | `BudgetW` | `UINT` | Available power, 0..200 W. |\n| Input | `NeedSensor` | `BOOL` | Sensor-unit request. |\n| Input | `NeedHeater` | `BOOL` | Instrument-heater request. |\n| Input | `NeedRadio` | `BOOL` | Radio request. |\n| Input | `MandatorySensor` | `BOOL` | Require the sensor unit. |\n| Output | `SelectedMask` | `USINT` | Selected subset mask, bits 1,2,4. |\n| Output | `SensorOn` | `BOOL` | Sensor-unit setpoint. |\n| Output | `HeaterOn` | `BOOL` | Instrument-heater setpoint. |\n| Output | `RadioOn` | `BOOL` | Radio setpoint. |\n| Output | `PowerW` | `UINT` | Total selected power, W. |\n| Output | `Score` | `USINT` | Total selected utility. |\n| Output | `BudgetShortage` | `BOOL` | The mandatory sensor cannot be powered. |\n| Output | `Error` | `BOOL` | Illegal budget. |",
+  "ltl": {
+    "id": "CUSTOM_12",
+    "title": "海洋监测浮标的辅助负载功率预算",
+    "definitions": "V := 0<=BudgetW<=200；B := MandatorySensor AND BudgetW<40。\n允许集合A由NeedSensor OR MandatorySensor、NeedHeater、NeedRadio分别决定比特1、2、4。\n对m=0..7，p(m)=40*[m&1!=0]+70*[m&2!=0]+60*[m&4!=0]；s(m)=7*[m&1!=0]+10*[m&2!=0]+9*[m&4!=0]。\nfeasible(m) := (m无A以外的比特) AND p(m)<=BudgetW AND (!MandatorySensor OR m&1!=0)。\n合法且非B时可行集合非空（至少空集或传感单元），M=按(-s(m),p(m),m)字典序最小的可行掩码。\ndisabled := !Enable；invalid := Enable AND !V；shortage := Enable AND V AND B；normal := Enable AND V AND !B。\n前三种分支M=0、功率/分数0、三个负载关闭；Error仅invalid为TRUE，BudgetShortage仅shortage为TRUE。\nmaskMapOK表示SensorOn、HeaterOn、RadioOn与SelectedMask比特1/2/4逐一等价。\noptimalChoiceOK := SelectedMask=M AND PowerW=p(M) AND Score=s(M)。有限集合定义可完整展开8个选择条件，不按单项分数或性价比贪心。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(Error <-> invalid)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(BudgetShortage <-> shortage)"
+      },
+      {
+        "id": "P03",
+        "formula": "G((disabled | invalid | shortage) -> (SelectedMask=0 & PowerW=0 & Score=0 & !SensorOn & !HeaterOn & !RadioOn))"
+      },
+      {
+        "id": "P04",
+        "formula": "G(normal -> optimalChoiceOK)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(maskMapOK)"
+      },
+      {
+        "id": "P06",
+        "formula": "G((Enable & V) -> PowerW<=BudgetW)"
+      },
+      {
+        "id": "P07",
+        "formula": "G((normal & MandatorySensor) -> SensorOn)"
+      },
+      {
+        "id": "P08",
+        "formula": "G((normal & !NeedHeater) -> !HeaterOn)"
+      },
+      {
+        "id": "P09",
+        "formula": "G((normal & !NeedRadio) -> !RadioOn)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

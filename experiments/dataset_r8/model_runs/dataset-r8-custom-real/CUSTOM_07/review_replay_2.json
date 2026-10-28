@@ -1,0 +1,250 @@
+{
+  "status": "pass",
+  "task_id": "CUSTOM_07",
+  "source_sha256": "bc718d398bb4775987695ae77e57c708e23ad170e29f5494da69030ce4699caa",
+  "dataset_sha256": "9dd0b5853252e551f8928e70b0f55e2af69a1c6489954551c489071da5d44a32",
+  "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+  "cases": [
+    {
+      "name": "normal_increase_decrease",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 40.0,
+            "FeedActual": 30.0,
+            "ExtractionCapacity": 20.0
+          },
+          "expected": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 40.0,
+            "Error": false
+          },
+          "actual": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 40.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 80.0,
+            "FeedActual": 30.0,
+            "ExtractionCapacity": 20.0
+          },
+          "expected": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 80.0,
+            "Error": false
+          },
+          "actual": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 80.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 30.0,
+            "FeedActual": 30.0,
+            "ExtractionCapacity": 20.0
+          },
+          "expected": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 30.0,
+            "Error": false
+          },
+          "actual": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 30.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "invalid_numeric",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": -1.0,
+            "FeedActual": 50.0,
+            "ExtractionCapacity": 50.0
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": true
+          },
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50.0,
+            "FeedActual": 101.0,
+            "ExtractionCapacity": 50.0
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": true
+          },
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50.0,
+            "FeedActual": 50.0,
+            "ExtractionCapacity": 100.1
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": true
+          },
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50.0,
+            "FeedActual": 50.0,
+            "ExtractionCapacity": 50.0
+          },
+          "expected": {
+            "FeedSP": 50.0,
+            "ExtractionSP": 50.0,
+            "Error": false
+          },
+          "actual": {
+            "FeedSP": 50.0,
+            "ExtractionSP": 50.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "trip_disable_priority",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": -5.0,
+            "FeedActual": 200.0,
+            "ExtractionCapacity": -10.0
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": false
+          },
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": -5.0,
+            "FeedActual": 200.0,
+            "ExtractionCapacity": -10.0
+          },
+          "expected": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": false
+          },
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50.0,
+            "FeedActual": 20.0,
+            "ExtractionCapacity": 80.0
+          },
+          "expected": {
+            "FeedSP": 50.0,
+            "ExtractionSP": 50.0,
+            "Error": false
+          },
+          "actual": {
+            "FeedSP": 50.0,
+            "ExtractionSP": 50.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 3,
+    "scans": 10,
+    "assertions": 30,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\24da0e5e8dc4bdeb8a69ac28\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

@@ -1,0 +1,2720 @@
+{
+  "id": "PUBLIC_02",
+  "title": "Dual-Word Edge Detection",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "value",
+      "type": "DWORD"
+    },
+    {
+      "direction": "Output",
+      "name": "hasChanged",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "hasRisingEdges",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "risingBits",
+      "type": "DWORD"
+    },
+    {
+      "direction": "Output",
+      "name": "noOfRisingBits",
+      "type": "USINT"
+    },
+    {
+      "direction": "Output",
+      "name": "hasFallingEdges",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "fallingBits",
+      "type": "DWORD"
+    },
+    {
+      "direction": "Output",
+      "name": "noOfFallingBits",
+      "type": "USINT"
+    }
+  ],
+  "adapter_format": "profile_trace",
+  "scenarios": [
+    {
+      "name": "normal_low_bits_rising",
+      "family": "normal",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 1
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 1,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 3
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 7
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 4,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 15
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 8,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "value": 31
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 16,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_0_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 1
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 1,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 1
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 1,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_1_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 2
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 2
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 2,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_2_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 4
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 4,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 4
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 4,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_3_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 8
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 8,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 8
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 8,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_4_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 16
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 16,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 16
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 16,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_5_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 32
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 32,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 32
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 32,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_6_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 64
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 64,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 64
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 64,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_7_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 128
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 128,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 128
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 128,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_8_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 256
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 256,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 256
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 256,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_9_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 512
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 512,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 512
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 512,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_10_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 1024
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 1024,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 1024
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 1024,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_11_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 2048
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2048,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 2048
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 2048,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_12_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 4096
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 4096,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 4096
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 4096,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_13_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 8192
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 8192,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 8192
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 8192,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_14_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 16384
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 16384,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 16384
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 16384,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_15_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 32768
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 32768,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 32768
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 32768,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_16_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 65536
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 65536,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 65536
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 65536,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_17_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 131072
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 131072,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 131072
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 131072,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_18_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 262144
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 262144,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 262144
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 262144,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_19_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 524288
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 524288,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 524288
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 524288,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_20_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 1048576
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 1048576,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 1048576
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 1048576,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_21_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 2097152
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2097152,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 2097152
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 2097152,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_22_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 4194304
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 4194304,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 4194304
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 4194304,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_23_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 8388608
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 8388608,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 8388608
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 8388608,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_24_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 16777216
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 16777216,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 16777216
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 16777216,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_25_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 33554432
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 33554432,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 33554432
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 33554432,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_26_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 67108864
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 67108864,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 67108864
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 67108864,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_27_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 134217728
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 134217728,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 134217728
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 134217728,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_28_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 268435456
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 268435456,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 268435456
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 268435456,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_29_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 536870912
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 536870912,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 536870912
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 536870912,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_30_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 1073741824
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 1073741824,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 1073741824
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 1073741824,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_bit_31_rise_hold_fall",
+      "family": "bit_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 2147483648
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2147483648,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 2147483648
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 2147483648,
+            "noOfFallingBits": 1
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_all_bits",
+      "family": "word_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 4294967295
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 4294967295,
+            "noOfRisingBits": 32,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 4294967295
+          },
+          "expected": {
+            "hasChanged": false,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 4294967295,
+            "noOfFallingBits": 32
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_alternating",
+      "family": "word_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 2863311530
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2863311530,
+            "noOfRisingBits": 16,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 1431655765
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 1431655765,
+            "noOfRisingBits": 16,
+            "hasFallingEdges": true,
+            "fallingBits": 2863311530,
+            "noOfFallingBits": 16
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 2863311530
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2863311530,
+            "noOfRisingBits": 16,
+            "hasFallingEdges": true,
+            "fallingBits": 1431655765,
+            "noOfFallingBits": 16
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 2863311530,
+            "noOfFallingBits": 16
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_sign_boundary",
+      "family": "word_boundary",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "value": 2147483647
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2147483647,
+            "noOfRisingBits": 31,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "value": 2147483648
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2147483648,
+            "noOfRisingBits": 1,
+            "hasFallingEdges": true,
+            "fallingBits": 2147483647,
+            "noOfFallingBits": 31
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "value": 4294967295
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": true,
+            "risingBits": 2147483647,
+            "noOfRisingBits": 31,
+            "hasFallingEdges": false,
+            "fallingBits": 0,
+            "noOfFallingBits": 0
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "value": 0
+          },
+          "expected": {
+            "hasChanged": true,
+            "hasRisingEdges": false,
+            "risingBits": 0,
+            "noOfRisingBits": 0,
+            "hasFallingEdges": true,
+            "fallingBits": 4294967295,
+            "noOfFallingBits": 32
+          }
+        }
+      ]
+    }
+  ],
+  "origin": "Existing requirement-derived tests; exported without reading candidate ST.",
+  "execution_status": "not_run_in_this_delivery",
+  "profile": "edges",
+  "block": "EdgeDetection",
+  "requirements": "# Dual-Word Edge Detection\n\n- **Difficulty:** Easy (easy)\n\n## Requirements\n\nWrite a function block FB that checks for rising and falling edges in each bit of a dual-word (DWord) input value every cycle. The function block should be able to detect and report changes, rising edges, and falling edges in the input value.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `value` | `DWORD` | The input value to be checked for changes and edge triggering |\n| Output | `hasChanged` | `BOOL` | True indicates that the input value has changed |\n| Output | `hasRisingEdges` | `BOOL` | True indicates that rising edges have occurred in the input value |\n| Output | `risingBits` | `DWORD` | The bit stream of rising edges, where each bit indicates whether the corresponding input bit has experienced a rising edge (1 for a rising edge, 0 for no rising edge) |\n| Output | `noOfRisingBits` | `USINT` | The number of rising edges in the input value |\n| Output | `hasFallingEdges` | `BOOL` | True indicates that falling edges have occurred in the input value |\n| Output | `fallingBits` | `DWORD` | The bit stream of falling edges, where each bit indicates whether the corresponding input bit has experienced a falling edge (1 for a falling edge, 0 for no falling edge) |\n| Output | `noOfFallingBits` | `USINT` | The number of falling edges in the input value |",
+  "ltl": {
+    "id": "PUBLIC_02",
+    "title": "Q02 DWORD边沿检测",
+    "definitions_and_rules_markdown": "## Q02 DWORD边沿检测\n\n跳过第一次调用的历史初始化差异。从第二次调用起，独立保存`prevValue`：`rising=value & ~prevValue & 0xFFFFFFFF`，`falling=prevValue & ~value & 0xFFFFFFFF`；popcount为32位中1的个数。\n\n```text\nG(historyReady -> risingBitsOK)\nG(historyReady -> fallingBitsOK)\nG(historyReady -> risingCountOK)\nG(historyReady -> fallingCountOK)\nG(historyReady -> changedFlagOK)\nG(historyReady -> risingFlagOK)\nG(historyReady -> fallingFlagOK)\n```\n\n命题分别定义为`risingBits=rising`、`fallingBits=falling`、`noOfRisingBits=popcount(rising)`、`noOfFallingBits=popcount(falling)`、`hasChanged=(value!=prevValue)`、`hasRisingEdges=(rising!=0)`、`hasFallingEdges=(falling!=0)`。\n\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(historyReady -> risingBitsOK)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(historyReady -> fallingBitsOK)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(historyReady -> risingCountOK)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(historyReady -> fallingCountOK)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(historyReady -> changedFlagOK)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(historyReady -> risingFlagOK)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(historyReady -> fallingFlagOK)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

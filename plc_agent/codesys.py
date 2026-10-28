@@ -44,6 +44,7 @@ def validate_config(config,require_template=True):
     exe=Path(config.get('executable',''))
     if not exe.is_file() or exe.suffix.lower()!='.exe':raise ValueError('Select the installed CODESYS.exe')
     if not isinstance(config.get('profile'),str) or not config['profile'].strip():raise ValueError('An exact installed CODESYS profile name is required')
+    if any(c in config['profile'] for c in ('"','\r','\n')):raise ValueError('Invalid CODESYS profile value')
     for name in ('additional_folder','template_project'):
         if name in config and (not isinstance(config[name],str) or '\x00' in config[name]):raise ValueError('Invalid configured path')
     if config.get('additional_folder') and not Path(config['additional_folder']).is_dir():raise ValueError('The configured additional folder does not exist')
@@ -117,6 +118,11 @@ def _invoke(payload,directory,cfg,cancel_event):
     worker=Path(__file__).with_name('codesys_worker.py')
     args=[cfg['executable'],'--profile='+cfg['profile'],'--noUI','--runscript='+str(worker)]
     if cfg.get('additional_folder'):args.append('--additionalfolder='+cfg['additional_folder'])
+    if os.name=='nt':
+        # Nathan's vendor-tested CLI parses the raw command line. Quote option
+        # values, rather than letting list2cmdline quote the entire option.
+        args='"'+cfg['executable']+'" --noUI --profile="'+cfg['profile']+'" --runscript="'+str(worker)+'"'
+        if cfg.get('additional_folder'):args+=' --additionalfolder="'+cfg['additional_folder']+'"'
     env={k:v for k,v in os.environ.items() if not k.startswith('PLC_AGENT_')}
     env['PLC_WORKBENCH_REQUEST']=str(directory/'request.json')
     started=time.monotonic()

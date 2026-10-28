@@ -1,0 +1,184 @@
+{
+  "id": "PUBLIC_05",
+  "title": "Weld Gap Alarm and Startup Inhibition",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "Gap_Exceeded",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "Weld_E_Stop_NC",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "DebounceTime",
+      "type": "TIME"
+    },
+    {
+      "direction": "Output",
+      "name": "Operator_Alert",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Weld_Soft_Start_Active",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "bank_trace",
+  "scenarios": [
+    {
+      "name": "startup_no_predebounce_and_estop",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false,
+            "Weld_Soft_Start_Active": true
+          }
+        },
+        {
+          "time_ms": 4999,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false,
+            "Weld_Soft_Start_Active": true
+          }
+        },
+        {
+          "time_ms": 5000,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          }
+        },
+        {
+          "time_ms": 5101,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": true,
+            "Weld_Soft_Start_Active": false
+          }
+        },
+        {
+          "time_ms": 5110,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": false,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          }
+        },
+        {
+          "time_ms": 5120,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          }
+        },
+        {
+          "time_ms": 5219,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          }
+        },
+        {
+          "time_ms": 5220,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": true
+          }
+        },
+        {
+          "time_ms": 5230,
+          "inputs": {
+            "Gap_Exceeded": false,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          }
+        }
+      ],
+      "invariants": []
+    }
+  ],
+  "origin": "Existing requirement-derived tests; exported without reading candidate ST.",
+  "execution_status": "not_run_in_this_delivery",
+  "block": "Q05",
+  "requirements": "# Weld Gap Alarm and Startup Inhibition\n\n- **Difficulty:** Easy (easy)\n\n## Requirements\n\nControl a weld-gap alarm with power-up monitoring inhibition, input debouncing during normal monitoring and emergency-stop priority.\n\n1. Gap_Exceeded indicates that the scanner has detected a weld gap exceeding the permitted 1.5 mm value.\n2. Begin with a 5-second initialization inhibition period after power-up. During this period, Operator_Alert is FALSE, Weld_Soft_Start_Active is TRUE, and gap-signal debounce time does not accumulate.\n3. Resume gap monitoring after initialization. Allow the alarm only after Gap_Exceeded has remained TRUE for DebounceTime. When the signal becomes FALSE, switch off the alarm and clear debounce timing.\n4. When Weld_E_Stop_NC is FALSE, the emergency stop takes priority over initialization and normal monitoring. Operator_Alert must immediately become FALSE and any incomplete debounce timing must be cleared.\n5. Weld_Soft_Start_Active indicates only the power-up inhibition period; it does not represent a continuous speed ramp.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Gap_Exceeded` | `BOOL` | Scanner indication that the gap exceeds 1.5 mm. |\n| Input | `Weld_E_Stop_NC` | `BOOL` | TRUE means the emergency stop is inactive; FALSE means it is active. |\n| Input | `DebounceTime` | `TIME` | Gap-signal debounce duration during normal monitoring; must be positive. |\n| Output | `Operator_Alert` | `BOOL` | Audible and visual alarm command. |\n| Output | `Weld_Soft_Start_Active` | `BOOL` | Monitoring-inhibition status during the 5-second power-up initialization. |",
+  "ltl": {
+    "id": "PUBLIC_05",
+    "title": "Q05 焊缝报警与启动抑制",
+    "definitions_and_rules_markdown": "## Q05 焊缝报警与启动抑制\n\n`initializing`为上电后不足5000ms。独立消抖仅在初始化结束且Weld_E_Stop_NC、Gap_Exceeded均真时累计；初始化内或条件失效立即清零。`gapReady`表示消抖达到DebounceTime。\n\n```text\nG(initializing -> !Operator_Alert)\nG(initializing -> Weld_Soft_Start_Active)\nG(!initializing -> !Weld_Soft_Start_Active)\nG(!Weld_E_Stop_NC -> !Operator_Alert)\nG(!Gap_Exceeded -> !Operator_Alert)\nG(!initializing & Weld_E_Stop_NC & gapReady -> Operator_Alert)\nG(Operator_Alert -> !initializing & Weld_E_Stop_NC & gapReady)\n```\n\nWeld_Soft_Start_Active只表示启动抑制，不解释为连续调速斜坡；急停不产生额外的报警。\n\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initializing -> !Operator_Alert)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(initializing -> Weld_Soft_Start_Active)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!initializing -> !Weld_Soft_Start_Active)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(!Weld_E_Stop_NC -> !Operator_Alert)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(!Gap_Exceeded -> !Operator_Alert)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(!initializing & Weld_E_Stop_NC & gapReady -> Operator_Alert)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(Operator_Alert -> !initializing & Weld_E_Stop_NC & gapReady)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

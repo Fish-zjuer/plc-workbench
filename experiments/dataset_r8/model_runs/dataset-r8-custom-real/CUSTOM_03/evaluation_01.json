@@ -1,0 +1,2775 @@
+{
+  "status": "fail",
+  "task_id": "CUSTOM_03",
+  "source_sha256": "31405c05f69b1fe2a53d41fdde8f86f2708030c4a748d48127d819dcab306b0c",
+  "dataset_sha256": "2c3835aabc643826fb80ea0cb89dd03ca45536edd016f6195b96c1602bf7f913",
+  "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+  "cases": [
+    {
+      "name": "首次新帧必须确认",
+      "status": "fail",
+      "first_failure": {
+        "scan": 0,
+        "output": "CommFault",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": [
+            {
+              "output": "CommFault",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RemoteWritePermit",
+              "expected": false,
+              "actual": 1.0
+            }
+          ]
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "AgeMs": 0
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "重复帧触发精确超时",
+      "status": "fail",
+      "first_failure": {
+        "scan": 0,
+        "output": "CommFault",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": [
+            {
+              "output": "CommFault",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RemoteWritePermit",
+              "expected": false,
+              "actual": 1.0
+            }
+          ]
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "AgeMs": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 100,
+            "RemoteWritePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 200,
+            "RemoteWritePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 200.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 300,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 300.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "新帧与确认必须同轮",
+      "status": "fail",
+      "first_failure": {
+        "scan": 0,
+        "output": "CommFault",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": [
+            {
+              "output": "CommFault",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RemoteWritePermit",
+              "expected": false,
+              "actual": 1.0
+            }
+          ]
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "AgeMs": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 100,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 200,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 200.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 300,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 300.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 2,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 2,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 3,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "非法间隔保持状态",
+      "status": "fail",
+      "first_failure": {
+        "scan": 0,
+        "output": "CommFault",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": [
+            {
+              "output": "CommFault",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RemoteWritePermit",
+              "expected": false,
+              "actual": 1.0
+            }
+          ]
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "AgeMs": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 100,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 200,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 200.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 300,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 300.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 2,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 2,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 3,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 3,
+            "Ack": true,
+            "DtMs": 0,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Error": true,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "AgeMs": 0
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "序号回绕_重复序号_精确超时_复位优先",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 4294967295,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 100,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 200,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 200.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 300,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 300.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 400,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 400.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 0,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 2,
+            "Ack": false,
+            "DtMs": 1,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 3,
+            "Ack": true,
+            "DtMs": 1,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "年龄饱和_新帧恢复",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "FrameValid": false,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 9,
+            "Ack": true,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 1000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 1000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 2000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 2000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 3000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 3000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 4000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 4000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 5000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 5000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 6000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 6000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 7000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 7000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 8000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 8000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 9000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 9000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 10000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 10000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 11000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 11000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 12000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 12000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 13000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 13000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 14000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 14000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 15000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 15000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 16000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 16000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 17000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 17000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 18000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 18000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 19000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 19000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 20000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 20000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 21000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 21000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 22000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 22000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 23000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 23000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 24000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 24000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 25000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 25000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 26000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 26000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 27000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 27000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 28000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 28000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 29000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 29000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 30000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 30000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 31000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 31000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 32000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 32000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 33000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 33000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 34000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 34000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 35000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 35000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 36000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 36000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 37000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 37000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 38000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 38000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 39000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 39000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 40000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 40000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 41000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 41000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 42000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 42000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 43000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 43000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 44000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 44000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 45000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 45000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 46000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 46000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 47000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 47000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 48000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 48000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 49000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 49000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 50000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 50000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 51000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 51000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 530,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 52000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 52000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 540,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 53000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 53000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 550,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 54000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 54000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 560,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 55000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 55000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 570,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 56000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 56000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 580,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 57000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 57000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 590,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 58000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 58000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 59000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 59000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 610,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 60000,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 60000.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 620,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 60000,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 60000.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 630,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 60000,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 60000.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 640,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 10,
+            "Ack": true,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 6,
+    "scans": 100,
+    "assertions": 450,
+    "failed": 4
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\aa56ec263f018dcc97299341\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

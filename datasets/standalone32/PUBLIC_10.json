@@ -1,0 +1,199 @@
+{
+  "id": "PUBLIC_10",
+  "title": "Temperature Logic Control",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "TemperatureSensorInput",
+      "type": "REAL"
+    },
+    {
+      "direction": "Input",
+      "name": "SetTemperature",
+      "type": "REAL"
+    },
+    {
+      "direction": "Output",
+      "name": "CurrentTemperature",
+      "type": "REAL"
+    },
+    {
+      "direction": "Output",
+      "name": "SetTempDisplay",
+      "type": "REAL"
+    },
+    {
+      "direction": "Output",
+      "name": "HeaterStatus",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "OverheatProtection",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "HeaterOutput",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "bank_trace",
+  "scenarios": [
+    {
+      "name": "heating_and_cooldown",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": true,
+            "HeaterStatus": true
+          }
+        },
+        {
+          "time_ms": 4999,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": true
+          }
+        },
+        {
+          "time_ms": 5001,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": false,
+            "OverheatProtection": true
+          }
+        },
+        {
+          "time_ms": 7999,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": false,
+            "OverheatProtection": true
+          }
+        },
+        {
+          "time_ms": 8010,
+          "inputs": {
+            "TemperatureSensorInput": 20,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": true,
+            "OverheatProtection": false
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "sensor_or_no_demand_-1",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "TemperatureSensorInput": -1,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": false,
+            "HeaterStatus": false,
+            "CurrentTemperature": -1,
+            "SetTempDisplay": 30
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "sensor_or_no_demand_101",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "TemperatureSensorInput": 101,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": false,
+            "HeaterStatus": false,
+            "CurrentTemperature": 101,
+            "SetTempDisplay": 30
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "sensor_or_no_demand_45",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "TemperatureSensorInput": 45,
+            "SetTemperature": 30
+          },
+          "expected": {
+            "HeaterOutput": false,
+            "HeaterStatus": false,
+            "CurrentTemperature": 45,
+            "SetTempDisplay": 30
+          }
+        }
+      ],
+      "invariants": []
+    }
+  ],
+  "origin": "Existing requirement-derived tests; exported without reading candidate ST.",
+  "execution_status": "not_run_in_this_delivery",
+  "block": "Q10",
+  "requirements": "# Temperature Logic Control\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\nWrite a function block FB to implement a temperature control logic. The program should include the following functions:\n1. Read the value of the temperature sensor through an analog input module.\n2. Compare the read temperature value TemperatureSensorInput with the set temperature value SetTemperature.\n3. If the actual temperature is lower than the set temperature, start the heater HeaterOutput.\n4. If the actual temperature is higher than the set temperature, turn off the heater HeaterOutput.\n5. If the heater works continuously for more than a certain period (for convenience, using 5s), it should trigger an overheating protection, automatically turn off the heater, and must wait for a certain period (for convenience, using 3s) before the overheating protection can be lifted.\n6. Provide status indication, displaying the current temperature, set temperature, heater status, and whether overheating protection is triggered.\n7. Provide temperature sensor fault judgment, if the read temperature value TemperatureSensorInput is less than 0 or greater than 100, it is considered a sensor fault, and the heater should be turned off.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `TemperatureSensorInput` | `REAL` | The input value of the temperature sensor, i.e., the actual temperature |\n| Input | `SetTemperature` | `REAL` | The set temperature value |\n| Output | `CurrentTemperature` | `REAL` | Display of the current temperature |\n| Output | `SetTempDisplay` | `REAL` | Display of the set temperature |\n| Output | `HeaterStatus` | `BOOL` | Display of the heater status |\n| Output | `OverheatProtection` | `BOOL` | Display of the overheating protection status |\n| Output | `HeaterOutput` | `BOOL` | The control output of the heater |",
+  "ltl": {
+    "id": "PUBLIC_10",
+    "title": "Q10 温控与过热保护",
+    "definitions_and_rules_markdown": "## Q10 温控与过热保护\n\n`sensorFault`为温度<0或>100；`demand`为当前温度<设定；`overrun`为连续加热超过5000ms；独立保护时钟从实际进入保护的时刻开始，`cooling`为保护尚未等待满3000ms。`displayOK`为当前/设定温度显示等于对应输入，HeaterStatus与加热输出一致。\n\n```text\nG(sensorFault -> !HeaterOutput)\nG(temperatureAboveSetpoint -> !HeaterOutput)\nG(overrun -> !HeaterOutput & OverheatProtection)\nG(cooling -> !HeaterOutput & OverheatProtection)\nG(validSensor & demand & protectionReleased -> HeaterOutput)\nG(displayOK)\n```\n\n输入恰等于设定值时的滞留/关闭策略未明确，不强加要求。冷却等待不能从保护前的上一调用时间起算，以免缩短实际等待。\n\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(sensorFault -> !HeaterOutput)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(temperatureAboveSetpoint -> !HeaterOutput)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(overrun -> !HeaterOutput & OverheatProtection)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(cooling -> !HeaterOutput & OverheatProtection)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(validSensor & demand & protectionReleased -> HeaterOutput)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(displayOK)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

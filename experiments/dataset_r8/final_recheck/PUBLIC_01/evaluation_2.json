@@ -1,0 +1,473 @@
+{
+  "status": "pass",
+  "task_id": "PUBLIC_01",
+  "source_sha256": "83d8ad9ccd754a0371f32fbbd372023135fd002a626adfebbd9a97e966dfe7da",
+  "dataset_sha256": "eb94817e188932ebe202d454615b664e514463df098c98c4f54b84e3f9eda28b",
+  "execution_fingerprint": "d1c1eeb85e0e199edd0a73ce2c1b8340f464594e88aeaff09c0fa52781ee3b92",
+  "cases": [
+    {
+      "name": "full_cycle_and_waits",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          },
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "bottleSensor": true,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {},
+          "actual": {
+            "Pump_Motor": 1.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": true,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          },
+          "actual": {
+            "Pump_Motor": 1.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": true,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {},
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 1.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": true,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          },
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 1.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": true,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {},
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 1.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": true,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          },
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 1.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": true,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {},
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 1.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": true,
+            "Completion_Light": false
+          },
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 1.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": true,
+            "finishedButton": false
+          },
+          "expected": {},
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": true
+          },
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": true
+          },
+          "expected": {},
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          },
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "bottleSensor": true,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {},
+          "actual": {
+            "Pump_Motor": 1.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": true,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          },
+          "actual": {
+            "Pump_Motor": 1.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "wrong_station_confirmations_do_not_skip",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {},
+          "actual": {
+            "Pump_Motor": 0.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "bottleSensor": true,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {},
+          "actual": {
+            "Pump_Motor": 1.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": true,
+            "cappingConfirmButton": true,
+            "packingConfirmButton": true,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": true,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          },
+          "actual": {
+            "Pump_Motor": 1.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": true,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          },
+          "actual": {
+            "Pump_Motor": 1.0,
+            "Filling_Valve": 0.0,
+            "Capping_Machine": 0.0,
+            "Packing_Machine": 0.0,
+            "Completion_Light": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 2,
+    "scans": 19,
+    "assertions": 50,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\dataset_builds\\831d780506d707b432952033\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

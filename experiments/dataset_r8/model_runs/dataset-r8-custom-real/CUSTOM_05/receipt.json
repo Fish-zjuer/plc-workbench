@@ -1,0 +1,287 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_05",
+  "status": "review_disagreement",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "6fe04b21ae0d0c2e0747fe8bc68f6e3c497e3c8b58e1471580160fb382060fbd",
+  "source_sha256": "d5ea2a1d880aba8c5d2d8d079da33651f604ce3706a3f8b9c41957503d4d6465",
+  "attempts": [
+    {
+      "summary": "Implemented FB_InspectionCapture with latched origin/spacing, distance-interval triggering, missed-point accounting, latched error handling, and exact LTL-specified behavior for init, reset, enable transitions, and invalid positions.",
+      "status": "written",
+      "source_sha256": "d5ea2a1d880aba8c5d2d8d079da33651f604ce3706a3f8b9c41957503d4d6465"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 2,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_05",
+    "source_sha256": "d5ea2a1d880aba8c5d2d8d079da33651f604ce3706a3f8b9c41957503d4d6465",
+    "dataset_sha256": "6fe04b21ae0d0c2e0747fe8bc68f6e3c497e3c8b58e1471580160fb382060fbd",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 5,
+      "scans": 33,
+      "assertions": 99,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\7bd2d2c11ef0db9a55b8c368\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_disagreement",
+      "summary": "发现一处与第5条可能不符的明确缺陷：代码仅在 Enable=TRUE 的非初始化分支检查 DistanceMm 是否无效或是否低于 lastDistance；当 Enable=FALSE 且非初始化/Reset 时直接保持，不锁存新的无效位置或距离回退。若第5条的 Error 锁存不限定 Enable，则 Error 应置 TRUE。其余核心逻辑（初始化不触发、忙时丢弃不补发、d>0 时单次请求、计数更新）与题面一致。以下场景为复核建议。",
+      "questions": [
+        "第5条的无效位置/距离回退锁存 Error 是否应覆盖 Enable=FALSE 的扫描？若是，则当前实现存在缺陷。"
+      ],
+      "proposals": [
+        {
+          "name": "disabled_invalid_position",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Enable": true,
+                "Reset": false,
+                "DistanceMm": 0.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": false
+              },
+              "expected": {
+                "CapturePulse": false,
+                "CaptureCount": 0,
+                "MissedCount": 0,
+                "Error": false
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "Enable": false,
+                "Reset": false,
+                "DistanceMm": -1.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": false
+              },
+              "expected": {
+                "CapturePulse": false,
+                "CaptureCount": 0,
+                "MissedCount": 0,
+                "Error": true
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "Enable": false,
+                "Reset": false,
+                "DistanceMm": 0.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": false
+              },
+              "expected": {
+                "CapturePulse": false,
+                "CaptureCount": 0,
+                "MissedCount": 0,
+                "Error": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "disabled_decrease",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Enable": true,
+                "Reset": false,
+                "DistanceMm": 10.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": false
+              },
+              "expected": {
+                "CapturePulse": false,
+                "CaptureCount": 0,
+                "MissedCount": 0,
+                "Error": false
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "Enable": true,
+                "Reset": false,
+                "DistanceMm": 20.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": false
+              },
+              "expected": {
+                "CapturePulse": true,
+                "CaptureCount": 1,
+                "MissedCount": 0,
+                "Error": false
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "Enable": false,
+                "Reset": false,
+                "DistanceMm": 15.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": false
+              },
+              "expected": {
+                "CapturePulse": false,
+                "CaptureCount": 1,
+                "MissedCount": 0,
+                "Error": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "busy_no_replay",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Enable": true,
+                "Reset": false,
+                "DistanceMm": 0.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": false
+              },
+              "expected": {
+                "CapturePulse": false,
+                "CaptureCount": 0,
+                "MissedCount": 0,
+                "Error": false
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "Enable": true,
+                "Reset": false,
+                "DistanceMm": 35.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": true
+              },
+              "expected": {
+                "CapturePulse": false,
+                "CaptureCount": 0,
+                "MissedCount": 3,
+                "Error": false
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "Enable": true,
+                "Reset": false,
+                "DistanceMm": 35.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": false
+              },
+              "expected": {
+                "CapturePulse": false,
+                "CaptureCount": 0,
+                "MissedCount": 3,
+                "Error": false
+              }
+            },
+            {
+              "time_ms": 3,
+              "inputs": {
+                "Enable": true,
+                "Reset": false,
+                "DistanceMm": 40.0,
+                "SpacingMm": 10.0,
+                "CameraBusy": false
+              },
+              "expected": {
+                "CapturePulse": true,
+                "CaptureCount": 1,
+                "MissedCount": 3,
+                "Error": false
+              }
+            }
+          ]
+        }
+      ],
+      "expected_authority": "advisory_model_claim_only",
+      "first_failure": {
+        "name": "disabled_invalid_position",
+        "first_failure": {
+          "scan": 1,
+          "output": "Error",
+          "expected": true,
+          "actual": 0.0
+        },
+        "rows": [
+          {
+            "time_ms": 0,
+            "inputs": {
+              "Enable": true,
+              "Reset": false,
+              "DistanceMm": 0.0,
+              "SpacingMm": 10.0,
+              "CameraBusy": false
+            },
+            "expected": {
+              "CapturePulse": false,
+              "CaptureCount": 0,
+              "MissedCount": 0,
+              "Error": false
+            },
+            "actual": {
+              "CapturePulse": 0.0,
+              "CaptureCount": 0.0,
+              "MissedCount": 0.0,
+              "Error": 0.0
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 1,
+            "inputs": {
+              "Enable": false,
+              "Reset": false,
+              "DistanceMm": -1.0,
+              "SpacingMm": 10.0,
+              "CameraBusy": false
+            },
+            "expected": {
+              "CapturePulse": false,
+              "CaptureCount": 0,
+              "MissedCount": 0,
+              "Error": true
+            },
+            "actual": {
+              "CapturePulse": 0.0,
+              "CaptureCount": 0.0,
+              "MissedCount": 0.0,
+              "Error": 0.0
+            },
+            "violations": [
+              {
+                "output": "Error",
+                "expected": true,
+                "actual": 0.0
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

@@ -63,12 +63,14 @@ from plc_agent.toolbox import Toolbox
 from plc_agent.tui import Workbench
 from plc_agent.formal_verify import verify
 from plc_agent.codesys import doctor as codesys_doctor
+from plc_agent import dataset
 async def main():
  cfg=ModelConfig.load();assert cfg.api_key=="" and cfg.base_url==""
  project=Project.create("分享包自检");session=Session.create(project)
  data=Path("README.md")
  assert attach(project,data)[0]["status"]=="ready"
  assert len(questions())==20
+ assert len(dataset.catalog()['tasks'])==32
  tools=Toolbox(session)
  assert tools.call("write_file",{"path":"blocked.st","content":"forbidden"})["status"]=="blocked_by_plan_mode"
  spec=json.loads(Path('experiments/formal_r7/real_model/interlocked_start/contract.json').read_text(encoding='utf-8'))
@@ -82,7 +84,7 @@ async def main():
    await pilot.pause(.05)
    if not app.busy:break
   assert not app.busy and session.data["plan"] and not (project.workspace/"candidate.st").exists()
- print(json.dumps({"ui_mounted":True,"upload":True,"plan_only":True,"questions":20,"model_calls":0,'formal_status':proof['status'],'proved_properties':5,'codesys':'setup_required'}))
+ print(json.dumps({"ui_mounted":True,"upload":True,"plan_only":True,"questions":20,'dataset_tasks':32,"model_calls":0,'formal_status':proof['status'],'proved_properties':5,'codesys':'setup_required'}))
 asyncio.run(main())
 ''',encoding='utf-8')
     smoke_env={**env,'PYTHONPATH':str(project)}
@@ -93,10 +95,15 @@ asyncio.run(main())
     replay=run([python,'-B','-m','plc_agent.check_bank','--ids','03,08,18','--output',temporary/'bank_check.json'],project,replay_env,timeout=180)
     rows=[json.loads(line) for line in replay.splitlines() if line.startswith('{')]
     assert len(rows)==3 and all(row['status']=='pass' for row in rows)
+    run([python,'-B','-m','plc_agent','dataset','check','--mode','execute','--ids','CUSTOM_01',
+         '--output',temporary/'dataset-check'],project,replay_env,timeout=90)
+    dataset_check=json.loads((temporary/'dataset-check/results.json').read_text(encoding='utf-8'))
+    assert dataset_check['results'][0]['status']=='pass'
     result={'archive':str(archive),'archive_sha256':hashlib.sha256(archive.read_bytes()).hexdigest(),
             'status':'pass','zip_crc':True,'manifest_files_checked':len(manifest['files']),
             'fresh_project_local_venv':True,'windows_powershell_startup_checked':True,'model_key_present':False,
             'tui_and_upload_and_plan':smoke,'offline_candidate_replay':rows,'model_calls':0,
+            'custom_dataset_replay':dataset_check,
             'compiler_note':'Used host R4 backend only for relocation replay. No compiler or private backend selection is inside the ZIP.',
             'qa_directory':str(temporary)}
     archive.with_suffix('.validation.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

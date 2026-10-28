@@ -1,0 +1,4756 @@
+{
+  "status": "pass",
+  "task_id": "PUBLIC_09",
+  "source_sha256": "9e3e1eec3833037cbe55170f15c14c336571fcba8312909ce1fb8b6529c84f54",
+  "dataset_sha256": "2ee92aa3d2cce07d9cb3134a74704f29e0deec730b38cc9cc94b113a41c388fc",
+  "execution_fingerprint": "d1c1eeb85e0e199edd0a73ce2c1b8340f464594e88aeaff09c0fa52781ee3b92",
+  "cases": [
+    {
+      "name": "normal_cyclic_window_three",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 1.0
+          },
+          "actual": {
+            "average": 1.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 1.5
+          },
+          "actual": {
+            "average": 1.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 2.0
+          },
+          "actual": {
+            "average": 2.0,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 4.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 3.0
+          },
+          "actual": {
+            "average": 3.0,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 4.0
+          },
+          "actual": {
+            "average": 4.0,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 1,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          },
+          "actual": {
+            "average": -2.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -1.25
+          },
+          "actual": {
+            "average": -1.25,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 1.25
+          },
+          "actual": {
+            "average": 1.25,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 2.5
+          },
+          "actual": {
+            "average": 2.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 3.75
+          },
+          "actual": {
+            "average": 3.75,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 1,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 20.5
+          },
+          "actual": {
+            "average": 20.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 20.5
+          },
+          "actual": {
+            "average": 20.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -4.25
+          },
+          "actual": {
+            "average": -4.25,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_2",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 2,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          },
+          "actual": {
+            "average": -2.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -1.875
+          },
+          "actual": {
+            "average": -1.875,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.625
+          },
+          "actual": {
+            "average": -0.625,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.625
+          },
+          "actual": {
+            "average": 0.625,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 1.875
+          },
+          "actual": {
+            "average": 1.875,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 3.125
+          },
+          "actual": {
+            "average": 3.125,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_2",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 2,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          },
+          "actual": {
+            "average": 15.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          },
+          "actual": {
+            "average": 15.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 8.125
+          },
+          "actual": {
+            "average": 8.125,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_3",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          },
+          "actual": {
+            "average": -2.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.875
+          },
+          "actual": {
+            "average": -1.875,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -1.25
+          },
+          "actual": {
+            "average": -1.25,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 1.25
+          },
+          "actual": {
+            "average": 1.25,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 2.5
+          },
+          "actual": {
+            "average": 2.5,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.8333333333333334
+          },
+          "actual": {
+            "average": 0.8333333333333334,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.8333333333333334
+          },
+          "actual": {
+            "average": -0.8333333333333334,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_3",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          },
+          "actual": {
+            "average": 15.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          },
+          "actual": {
+            "average": 15.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 8.916666666666666
+          },
+          "actual": {
+            "average": 8.916666666666666,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_10",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 10,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          },
+          "actual": {
+            "average": -2.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.875
+          },
+          "actual": {
+            "average": -1.875,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.25
+          },
+          "actual": {
+            "average": -1.25,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.625
+          },
+          "actual": {
+            "average": -0.625,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.625
+          },
+          "actual": {
+            "average": 0.625,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.3125
+          },
+          "actual": {
+            "average": -0.3125,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.4166666666666667
+          },
+          "actual": {
+            "average": -0.4166666666666667,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.375
+          },
+          "actual": {
+            "average": -0.375,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.375
+          },
+          "actual": {
+            "average": 0.375,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.75
+          },
+          "actual": {
+            "average": 0.75,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.25
+          },
+          "actual": {
+            "average": 0.25,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.25
+          },
+          "actual": {
+            "average": -0.25,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_10",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 10,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          },
+          "actual": {
+            "average": 15.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          },
+          "actual": {
+            "average": 15.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 8.916666666666666
+          },
+          "actual": {
+            "average": 8.916666666666666,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          },
+          "actual": {
+            "average": -2.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.875
+          },
+          "actual": {
+            "average": -1.875,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.25
+          },
+          "actual": {
+            "average": -1.25,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.625
+          },
+          "actual": {
+            "average": -0.625,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.625
+          },
+          "actual": {
+            "average": 0.625,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.3125
+          },
+          "actual": {
+            "average": -0.3125,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.4166666666666667
+          },
+          "actual": {
+            "average": -0.4166666666666667,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.375
+          },
+          "actual": {
+            "average": -0.375,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.22727272727272727
+          },
+          "actual": {
+            "average": -0.22727272727272727,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.28846153846153844
+          },
+          "actual": {
+            "average": 0.28846153846153844,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.16666666666666666
+          },
+          "actual": {
+            "average": -0.16666666666666666,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.234375
+          },
+          "actual": {
+            "average": -0.234375,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.22058823529411764
+          },
+          "actual": {
+            "average": -0.22058823529411764,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.1388888888888889
+          },
+          "actual": {
+            "average": -0.1388888888888889,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.1875
+          },
+          "actual": {
+            "average": 0.1875,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.11363636363636363
+          },
+          "actual": {
+            "average": -0.11363636363636363,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.16304347826086957
+          },
+          "actual": {
+            "average": -0.16304347826086957,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.15625
+          },
+          "actual": {
+            "average": -0.15625,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.1
+          },
+          "actual": {
+            "average": -0.1,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.1388888888888889
+          },
+          "actual": {
+            "average": 0.1388888888888889,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 2900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.08620689655172414
+          },
+          "actual": {
+            "average": -0.08620689655172414,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.125
+          },
+          "actual": {
+            "average": -0.125,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.12096774193548387
+          },
+          "actual": {
+            "average": -0.12096774193548387,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.078125
+          },
+          "actual": {
+            "average": -0.078125,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.11029411764705882
+          },
+          "actual": {
+            "average": 0.11029411764705882,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.06944444444444445
+          },
+          "actual": {
+            "average": -0.06944444444444445,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.10135135135135136
+          },
+          "actual": {
+            "average": -0.10135135135135136,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.09868421052631579
+          },
+          "actual": {
+            "average": -0.09868421052631579,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 3900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0641025641025641
+          },
+          "actual": {
+            "average": -0.0641025641025641,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.09146341463414634
+          },
+          "actual": {
+            "average": 0.09146341463414634,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.05813953488372093
+          },
+          "actual": {
+            "average": -0.05813953488372093,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.08522727272727272
+          },
+          "actual": {
+            "average": -0.08522727272727272,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.08333333333333333
+          },
+          "actual": {
+            "average": -0.08333333333333333,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.05434782608695652
+          },
+          "actual": {
+            "average": -0.05434782608695652,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.078125
+          },
+          "actual": {
+            "average": 0.078125,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.05
+          },
+          "actual": {
+            "average": -0.05,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.07352941176470588
+          },
+          "actual": {
+            "average": -0.07352941176470588,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.07211538461538461
+          },
+          "actual": {
+            "average": -0.07211538461538461,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.04716981132075472
+          },
+          "actual": {
+            "average": -0.04716981132075472,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.06818181818181818
+          },
+          "actual": {
+            "average": 0.06818181818181818,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.043859649122807015
+          },
+          "actual": {
+            "average": -0.043859649122807015,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.06465517241379311
+          },
+          "actual": {
+            "average": -0.06465517241379311,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0635593220338983
+          },
+          "actual": {
+            "average": -0.0635593220338983,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.041666666666666664
+          },
+          "actual": {
+            "average": -0.041666666666666664,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.06048387096774194
+          },
+          "actual": {
+            "average": 0.06048387096774194,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0390625
+          },
+          "actual": {
+            "average": -0.0390625,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.057692307692307696
+          },
+          "actual": {
+            "average": -0.057692307692307696,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.056818181818181816
+          },
+          "actual": {
+            "average": -0.056818181818181816,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.03731343283582089
+          },
+          "actual": {
+            "average": -0.03731343283582089,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 6900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.05434782608695652
+          },
+          "actual": {
+            "average": 0.05434782608695652,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.035211267605633804
+          },
+          "actual": {
+            "average": -0.035211267605633804,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.052083333333333336
+          },
+          "actual": {
+            "average": -0.052083333333333336,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.05136986301369863
+          },
+          "actual": {
+            "average": -0.05136986301369863,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.033783783783783786
+          },
+          "actual": {
+            "average": -0.033783783783783786,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.049342105263157895
+          },
+          "actual": {
+            "average": 0.049342105263157895,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.03205128205128205
+          },
+          "actual": {
+            "average": -0.03205128205128205,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 7900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.04746835443037975
+          },
+          "actual": {
+            "average": -0.04746835443037975,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.046875
+          },
+          "actual": {
+            "average": -0.046875,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.030864197530864196
+          },
+          "actual": {
+            "average": -0.030864197530864196,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.045180722891566265
+          },
+          "actual": {
+            "average": 0.045180722891566265,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.029411764705882353
+          },
+          "actual": {
+            "average": -0.029411764705882353,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0436046511627907
+          },
+          "actual": {
+            "average": -0.0436046511627907,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.04310344827586207
+          },
+          "actual": {
+            "average": -0.04310344827586207,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.028409090909090908
+          },
+          "actual": {
+            "average": -0.028409090909090908,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 8900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.041666666666666664
+          },
+          "actual": {
+            "average": 0.041666666666666664,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.02717391304347826
+          },
+          "actual": {
+            "average": -0.02717391304347826,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.04032258064516129
+          },
+          "actual": {
+            "average": -0.04032258064516129,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0398936170212766
+          },
+          "actual": {
+            "average": -0.0398936170212766,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.02631578947368421
+          },
+          "actual": {
+            "average": -0.02631578947368421,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.03865979381443299
+          },
+          "actual": {
+            "average": 0.03865979381443299,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 9900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.025252525252525252
+          },
+          "actual": {
+            "average": -0.025252525252525252,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.0375
+          },
+          "actual": {
+            "average": -0.0375,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.0125
+          },
+          "actual": {
+            "average": -0.0125,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0125
+          },
+          "actual": {
+            "average": 0.0125,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0375
+          },
+          "actual": {
+            "average": 0.0375,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0625
+          },
+          "actual": {
+            "average": 0.0625,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 1.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          },
+          "actual": {
+            "average": 10.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          },
+          "actual": {
+            "average": 15.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          },
+          "actual": {
+            "average": 15.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 8.916666666666666
+          },
+          "actual": {
+            "average": 8.916666666666666,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_invalid_window_-1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": -1,
+            "reset": false
+          },
+          "expected": {
+            "error": true,
+            "status": 33280
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 1.0,
+            "status": 33280.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_invalid_window_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": 0,
+            "reset": false
+          },
+          "expected": {
+            "error": true,
+            "status": 33280
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 1.0,
+            "status": 33280.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_invalid_window_101",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": 101,
+            "reset": false
+          },
+          "expected": {
+            "error": true,
+            "status": 33280
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 1.0,
+            "status": 33280.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_invalid_window_32767",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": 32767,
+            "reset": false
+          },
+          "expected": {
+            "error": true,
+            "status": 33280
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 1.0,
+            "status": 33280.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_reset_after_samples",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 9.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 9.0
+          },
+          "actual": {
+            "average": 9.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 6.0
+          },
+          "actual": {
+            "average": 6.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          },
+          "actual": {
+            "average": 0.0,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          },
+          "actual": {
+            "average": -2.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 100.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          },
+          "actual": {
+            "average": -2.5,
+            "windowSizeReached": 0.0,
+            "error": 0.0,
+            "status": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 16,
+    "scans": 202,
+    "assertions": 787,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\dataset_builds\\0f4c5d6a80fed04b6da31001\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

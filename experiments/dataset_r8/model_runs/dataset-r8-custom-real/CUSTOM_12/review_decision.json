@@ -1,0 +1,86 @@
+{
+  "status": "review_pass",
+  "summary": "未发现明确缺陷。代码的使能/非法预算/强制传感器缺电优先级、子集枚举、Score→PowerW→Mask 平局规则以及输出与 SelectedMask 一致性均与题面要求一致。以下场景仅作为待复核建议。",
+  "questions": [],
+  "proposals": [
+    {
+      "name": "global_score_not_ratio",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 100,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": false,
+            "MandatorySensor": false
+          },
+          "expected": {
+            "SelectedMask": 2,
+            "SensorOn": false,
+            "HeaterOn": true,
+            "RadioOn": false,
+            "PowerW": 70,
+            "Score": 10,
+            "BudgetShortage": false,
+            "Error": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "mandatory_shortage",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 39,
+            "NeedSensor": false,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": true,
+            "Error": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "invalid_budget",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "BudgetW": 201,
+            "NeedSensor": true,
+            "NeedHeater": true,
+            "NeedRadio": true,
+            "MandatorySensor": true
+          },
+          "expected": {
+            "SelectedMask": 0,
+            "SensorOn": false,
+            "HeaterOn": false,
+            "RadioOn": false,
+            "PowerW": 0,
+            "Score": 0,
+            "BudgetShortage": false,
+            "Error": true
+          }
+        }
+      ]
+    }
+  ],
+  "expected_authority": "advisory_model_claim_only"
+}

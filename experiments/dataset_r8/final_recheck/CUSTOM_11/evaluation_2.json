@@ -1,0 +1,945 @@
+{
+  "status": "pass",
+  "task_id": "CUSTOM_11",
+  "source_sha256": "f3346d3baefc65bd79f8defd22cd1b3dfe03dff3d208ca7a982dce57bcae3905",
+  "dataset_sha256": "3e444aa17f298adee4e6e1ba65c6c3cbf34cf2e9fa31948787255cfef5d96be2",
+  "execution_fingerprint": "d1c1eeb85e0e199edd0a73ce2c1b8340f464594e88aeaff09c0fa52781ee3b92",
+  "cases": [
+    {
+      "name": "一致对、阈值和离群通道",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10000,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10000.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10200,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10100,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10100.0,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LoadA": 1000,
+            "LoadB": 5000,
+            "LoadC": 9000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 0.0,
+            "VotedKg": 0.0,
+            "LoadFault": 1.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "无效通道与并列优先",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": -10,
+            "LoadB": 9000,
+            "LoadC": 9100,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 9050,
+            "LoadFault": false,
+            "ReleasePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 6.0,
+            "VotedKg": 9050.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10100,
+            "LoadC": 10200,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10050,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10050.0,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LoadA": 9000,
+            "LoadB": 10000,
+            "LoadC": 9100,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 5,
+            "VotedKg": 9050,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 5.0,
+            "VotedKg": 9050.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "LoadA": 9000,
+            "LoadB": 10000,
+            "LoadC": 9100,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 5,
+            "VotedKg": 9050,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 5.0,
+            "VotedKg": 9050.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "半公斤融合与一致性窗口边界",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 9999,
+            "LoadB": 10000,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9999.5,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 9999.5,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10001,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "VotedKg": 10000.5,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10000.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LoadA": 9000,
+            "LoadB": 9200,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9100,
+            "LoadFault": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 9100.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "LoadA": 9000,
+            "LoadB": 9201,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 0.0,
+            "VotedKg": 0.0,
+            "LoadFault": 1.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "投票边界_半公斤_并列_坏通道隔离",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 9999,
+            "LoadB": 10000,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9999.5,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 9999.5,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LoadA": 9999,
+            "LoadB": 10000,
+            "LoadC": 16000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9999.5,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 9999.5,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LoadA": 9999,
+            "LoadB": 10000,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9999.5,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 9999.5,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10001,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10000.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10001,
+            "LoadC": 16000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10000.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10001,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10000.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10200,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10100.0,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10100.0,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10200,
+            "LoadC": 16000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10100.0,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10100.0,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10200,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10100.0,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 10100.0,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10201,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 0.0,
+            "VotedKg": 0.0,
+            "LoadFault": 1.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10201,
+            "LoadC": 16000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 0.0,
+            "VotedKg": 0.0,
+            "LoadFault": 1.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10201,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 0.0,
+            "VotedKg": 0.0,
+            "LoadFault": 1.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "LoadA": 1000,
+            "LoadB": 1100,
+            "LoadC": 1200,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 1050.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 1050.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "LoadA": 1000,
+            "LoadB": 1100,
+            "LoadC": 1200,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 1050.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 1050.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "LoadA": 1000,
+            "LoadB": 1100,
+            "LoadC": 1200,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 1050.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 3.0,
+            "VotedKg": 1050.0,
+            "LoadFault": 0.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "LoadA": -2147483648,
+            "LoadB": 10000,
+            "LoadC": 10001,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 6.0,
+            "VotedKg": 10000.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "LoadA": -2147483648,
+            "LoadB": 10000,
+            "LoadC": 10001,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 6.0,
+            "VotedKg": 10000.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "LoadA": -2147483648,
+            "LoadB": 10000,
+            "LoadC": 10001,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 6.0,
+            "VotedKg": 10000.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "LoadA": 2147483647,
+            "LoadB": 20000,
+            "LoadC": 19999,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 19999.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 6.0,
+            "VotedKg": 19999.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "LoadA": 2147483647,
+            "LoadB": 20000,
+            "LoadC": 19999,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 19999.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 6.0,
+            "VotedKg": 19999.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "LoadA": 2147483647,
+            "LoadB": 20000,
+            "LoadC": 19999,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 19999.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 6.0,
+            "VotedKg": 19999.5,
+            "LoadFault": 0.0,
+            "Overload": 1.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "LoadA": 0,
+            "LoadB": 1000,
+            "LoadC": 2000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 0.0,
+            "VotedKg": 0.0,
+            "LoadFault": 1.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "LoadA": 0,
+            "LoadB": 1000,
+            "LoadC": 2000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 0.0,
+            "VotedKg": 0.0,
+            "LoadFault": 1.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "LoadA": 0,
+            "LoadB": 1000,
+            "LoadC": 2000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "PairMask": 0.0,
+            "VotedKg": 0.0,
+            "LoadFault": 1.0,
+            "Overload": 0.0,
+            "ReleasePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 4,
+    "scans": 35,
+    "assertions": 163,
+    "failed": 0
+  },
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "C:\\Users\\29927\\Desktop\\工作区\\_cache\\plc-probe\\backends\\f691151504a2056ae903\\dataset_builds\\79175c9e41b44a8f942c9994\\build.json",
+  "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+}

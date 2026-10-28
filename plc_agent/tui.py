@@ -376,9 +376,13 @@ class Workbench(App):
             from .backend_r4 import info
             from plc_probe.config import toolchain_dir,cache_dir
             backend=info()
+            from .validation import ValidationConfig,home_for
+            validation=ValidationConfig.load(home_for(self.session))
             self.query_one('#chat',RichLog).write(Text(json.dumps({'label':backend['label'] if backend else 'Preserved STruC++ release',
                 'variant_api':backend.get('variant_api') if backend else None,'home':str(toolchain_dir()),'cache':str(cache_dir()),
-                'scope':'本地有限检查；PV1为本地引用接口，未验证厂商ABI或实体PLC。'},ensure_ascii=False,indent=2)))
+                'validation_mode':validation.mode,'target_profile':validation.profile if validation.mode=='codesys' else None,
+                'required_gates':['静态与接口检查','CODESYS目标编译','有限离线行为检查'] if validation.mode=='codesys' else ['有限离线检查'],
+                'scope':'未运行实体PLC或形式化验证；R4的PV1接口不等于已配置的CODESYS库。'},ensure_ascii=False,indent=2)))
         elif command == "/pin":
             if rest.strip():
                 if len(rest)>4000:
@@ -413,6 +417,8 @@ class Workbench(App):
             self.start_job("solve", rest)
         elif command == '/task':
             self.start_job('task',rest)
+        elif command == '/dataset':
+            self.start_job('dataset',rest)
         else:
             self.notify("未知命令，使用 /help 查看", severity="warning")
         self.refresh_state()
@@ -521,6 +527,16 @@ class Workbench(App):
                                        lambda k,p:self.call_from_thread(self.receive,k,p)).run(parts[0].zfill(2),parts[1] if len(parts)==2 else None,already_leased=True)
                     self.engine.checkpoint()
                 self.engine.emit('notice',text='PLC流程：'+result['status'])
+            elif kind == 'dataset':
+                from .dataset_cli import perform as dataset_perform
+                parts=value.split()
+                if not parts or len(parts)>2:raise ValueError('Use /dataset list | show/run PUBLIC_01 or CUSTOM_01')
+                with self.session.lease():
+                    self.engine.sync_from_disk();self.engine.scoped_provider.reset();self.engine.provider.cancel_event.clear()
+                    result=dataset_perform(self.session,self.config,*parts,provider=self.engine.scoped_provider,
+                        notify=lambda text:self.call_from_thread(self.receive,'notice',{'text':text}))
+                    self.engine.checkpoint()
+                self.engine.emit('notice',text=json.dumps(result,ensure_ascii=False,indent=2)[:24000])
             elif kind == 'task':
                 from .task_cli import perform
                 parts=[p.strip('"') for p in shlex.split(value,posix=False)]

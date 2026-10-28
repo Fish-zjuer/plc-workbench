@@ -1,0 +1,746 @@
+{
+  "id": "CUSTOM_11",
+  "title": "车辆地磅三路称重一致性投票",
+  "block": "FB_WeighbridgeVote",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "LoadA",
+      "type": "DINT"
+    },
+    {
+      "direction": "Input",
+      "name": "LoadB",
+      "type": "DINT"
+    },
+    {
+      "direction": "Input",
+      "name": "LoadC",
+      "type": "DINT"
+    },
+    {
+      "direction": "Input",
+      "name": "ReleaseReq",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "BarrierReady",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "PairMask",
+      "type": "USINT"
+    },
+    {
+      "direction": "Output",
+      "name": "VotedKg",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "LoadFault",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Overload",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "ReleasePermit",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06
+  },
+  "scenarios": [
+    {
+      "name": "一致对、阈值和离群通道",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10000,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10200,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10100,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LoadA": 1000,
+            "LoadB": 5000,
+            "LoadC": 9000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "无效通道与并列优先",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": -10,
+            "LoadB": 9000,
+            "LoadC": 9100,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 9050,
+            "LoadFault": false,
+            "ReleasePermit": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10100,
+            "LoadC": 10200,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10050,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LoadA": 9000,
+            "LoadB": 10000,
+            "LoadC": 9100,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 5,
+            "VotedKg": 9050,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "LoadA": 9000,
+            "LoadB": 10000,
+            "LoadC": 9100,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 5,
+            "VotedKg": 9050,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "半公斤融合与一致性窗口边界",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 9999,
+            "LoadB": 10000,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9999.5,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10001,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "VotedKg": 10000.5,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LoadA": 9000,
+            "LoadB": 9200,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9100,
+            "LoadFault": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "LoadA": 9000,
+            "LoadB": 9201,
+            "LoadC": 15000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "投票边界_半公斤_并列_坏通道隔离",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LoadA": 9999,
+            "LoadB": 10000,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9999.5,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LoadA": 9999,
+            "LoadB": 10000,
+            "LoadC": 16000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9999.5,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LoadA": 9999,
+            "LoadB": 10000,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 9999.5,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10001,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10001,
+            "LoadC": 16000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10001,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10200,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10100.0,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10200,
+            "LoadC": 16000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10100.0,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10200,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 10100.0,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10201,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10201,
+            "LoadC": 16000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "LoadA": 10000,
+            "LoadB": 10201,
+            "LoadC": 16000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "LoadA": 1000,
+            "LoadB": 1100,
+            "LoadC": 1200,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 1050.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "LoadA": 1000,
+            "LoadB": 1100,
+            "LoadC": 1200,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 1050.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "LoadA": 1000,
+            "LoadB": 1100,
+            "LoadC": 1200,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 3,
+            "VotedKg": 1050.0,
+            "LoadFault": false,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "LoadA": -2147483648,
+            "LoadB": 10000,
+            "LoadC": 10001,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "LoadA": -2147483648,
+            "LoadB": 10000,
+            "LoadC": 10001,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "LoadA": -2147483648,
+            "LoadB": 10000,
+            "LoadC": 10001,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 10000.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "LoadA": 2147483647,
+            "LoadB": 20000,
+            "LoadC": 19999,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 19999.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "LoadA": 2147483647,
+            "LoadB": 20000,
+            "LoadC": 19999,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 19999.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "LoadA": 2147483647,
+            "LoadB": 20000,
+            "LoadC": 19999,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 6,
+            "VotedKg": 19999.5,
+            "LoadFault": false,
+            "Overload": true,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "LoadA": 0,
+            "LoadB": 1000,
+            "LoadC": 2000,
+            "ReleaseReq": true,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "LoadA": 0,
+            "LoadB": 1000,
+            "LoadC": 2000,
+            "ReleaseReq": false,
+            "BarrierReady": true
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "LoadA": 0,
+            "LoadB": 1000,
+            "LoadC": 2000,
+            "ReleaseReq": true,
+            "BarrierReady": false
+          },
+          "expected": {
+            "PairMask": 0,
+            "VotedKg": 0,
+            "LoadFault": true,
+            "Overload": false,
+            "ReleasePermit": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# Vehicle weighbridge redundant-channel voting\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\n1. Implement FB_WeighbridgeVote. LoadA, LoadB and LoadC are DINT measurements of the same whole-vehicle mass from three independent channels, not three support forces to be summed. Each channel is valid in 0..20000 kg. ReleaseReq and BarrierReady are BOOL. Validate ranges before computing differences with sufficiently wide arithmetic.\n\n2. Consider pairs (A,B), (A,C) and (B,C). A pair is consistent when both channels are valid and its absolute difference is <=200 kg. Select the consistent pair with minimum difference; break ties in order AB, AC, BC. Even with three valid channels, do not simply average all three. PairMask is 3 for AB, 5 for AC and 6 for BC.\n\n3. VotedKg is the LREAL arithmetic mean of the chosen two measurements and may contain 0.5 kg. With no consistent pair, set PairMask=0, VotedKg=0, LoadFault=TRUE, Overload=FALSE and ReleasePermit=FALSE.\n\n4. With a consistent pair, set LoadFault=FALSE and Overload exactly when VotedKg>10000. ReleasePermit equals ReleaseReq AND BarrierReady AND NOT Overload. Request or barrier readiness only affects permission and must not change the voting result.\n\n5. Recompute independently on every scan with no retained voting state. Initially PairMask=0, VotedKg=0 and all flags FALSE; apply the rules on the first call. The range, capacity threshold and consistency window are synthetic benchmark settings, not metrology certification limits. Absolute numeric tolerance is 1e-6.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `LoadA` | `DINT` | Independent whole-vehicle mass A, 0..20000 kg. |\n| Input | `LoadB` | `DINT` | Independent whole-vehicle mass B, 0..20000 kg. |\n| Input | `LoadC` | `DINT` | Independent whole-vehicle mass C, 0..20000 kg. |\n| Input | `ReleaseReq` | `BOOL` | Release request. |\n| Input | `BarrierReady` | `BOOL` | Barrier-control readiness condition. |\n| Output | `PairMask` | `USINT` | 0 no pair, 3 AB, 5 AC, 6 BC. |\n| Output | `VotedKg` | `LREAL` | Fused whole-vehicle mass, kg. |\n| Output | `LoadFault` | `BOOL` | No valid consistent measurement pair. |\n| Output | `Overload` | `BOOL` | Fused mass strictly above 10000 kg. |\n| Output | `ReleasePermit` | `BOOL` | Ordinary benchmark release condition. |",
+  "ltl": {
+    "id": "CUSTOM_11",
+    "title": "车辆地磅三路称重一致性投票",
+    "definitions": "对AB、AC、BC分别计算：组成该对的两路都在0..20000kg且绝对差<=200kg，才是候选一致对；某一路坏值不能否决另外两路好值。\n候选按(差值,次序)最小选择，次序AB<AC<BC，掩码分别3、5、6。V表示存在候选；M为选中掩码，无候选时M=0。\nW为选中两路的LREAL平均，允许0.5kg；无候选时W=0。O := V AND W>10000。\nvoteMatch := PairMask=M AND VotedKg=W；三路为独立整车总重，不做三路相加或直接平均三路。\nReleaseReq、BarrierReady关闭仅影响许可，不影响融合。初始调用前所有输出0/FALSE；每次调用后按本轮计算。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(voteMatch)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(LoadFault <-> !V)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(Overload <-> O)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(ReleasePermit <-> (V & ReleaseReq & BarrierReady & !O))"
+      },
+      {
+        "id": "P05",
+        "formula": "G(!V -> (PairMask=0 & VotedKg=0 & LoadFault & !Overload & !ReleasePermit))"
+      },
+      {
+        "id": "P06",
+        "formula": "G(V -> (PairMask=3 | PairMask=5 | PairMask=6))"
+      },
+      {
+        "id": "P07",
+        "formula": "G(!(LoadFault & Overload))"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

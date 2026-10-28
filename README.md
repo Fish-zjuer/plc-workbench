@@ -1,8 +1,8 @@
-# PLC Workbench · 形式化与 CODESYS 接入开发版 R7
+# PLC Workbench · 32题整合开发版 R8
 
-[下载 R7 开发版](https://github.com/Fish-zjuer/plc-workbench/releases/tag/v0.7.0-dev) · [R7 功能分支](https://github.com/Fish-zjuer/plc-workbench/tree/agent-codesys-formal)
+[R8 整合说明与用法](docs/INTEGRATION_R8.md) · [32题实测](experiments/dataset_r8/report.md) · [Nathan 的优化](docs/AGENT_OPTIMIZATION_R5.md)
 
-R7 在通用任务闭环中接入 Z3：直接从 ST 搜索反例、原生重放复核、驱动弱模型修复并尝试归纳证明。新增官方 CODESYS 编译/仿真适配及配置入口；本机缺安装，厂商端尚未实测。TUI 任务面板可分别查看和运行两种检查。
+R8 合并 Nathan 的 CODESYS 编译与诊断流水线和 R7 的通用任务、独立审查及 Z3，新增公共20题＋自建12题的实际测试入口。TUI 使用 `/dataset list`、`/dataset show CUSTOM_01`、`/dataset run CUSTOM_01`；执行前需 `/act`。本机缺 CODESYS 安装，厂商端与本地有限测试分别记录。
 
 **先读：[当前设计](docs/AGENT_DESIGN_CURRENT.md) · [CODESYS 与形式化使用说明](docs/CODESYS_FORMAL.md) · [R7 实测](experiments/formal_r7/report.md) · [R5 合并接口](docs/BACKEND_ADAPTERS.md)。** 证明有明确语法和性质范围，有限测试、形式化、厂商编译分别保存。下文 R4 ZIP 和 20 题结果是历史版本。
 

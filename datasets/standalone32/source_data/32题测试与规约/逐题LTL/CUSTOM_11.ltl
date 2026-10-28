@@ -1,0 +1,28 @@
+# CUSTOM_11
+# Requirement-level LTL; not native PLCVerif or Z3 syntax.
+# # 统一的观察约定
+# 
+# 本文件是需求层 LTL 草稿，使用明确数学定义的观察器原子命题，不是 PLCVerif/Z3 的原生输入语法；没有声称完成形式化证明。
+# 一次观测 O_t 同时包含本轮调用前的输入 inputs_t 和本轮调用后的输出 outputs_t。
+# pre.y 表示本轮调用前保存的输出/状态；从第二次调用起通常等于上一轮 post.y。首次调用的 pre 状态按题目规定初始化。
+# G p 表示每次观测都满足 p；X p 表示下一轮观测满足 p；F p 表示最终某轮满足 p；U 表示直到。
+# 当前输入触发本轮输出的规则不加 X。涉及上一轮的状态以 pre 或独立观察器表示，不能直接用下一轮输入替代。
+# initial 专指第一次调用前的初始化检查，与正常 O_t 观测分开。初始输出允许在第一次调用后依输入改变。
+# R1(p) := p | X(p)，仅用于题面/既有公共测试允许当拍或下一拍响应的工序输出，不能用于放宽急停、互锁等同拍要求。
+# rise(x) := x_t & !x_(t-1)，首拍历史仅在题目明确时取 FALSE；未明确的首扫历史不评分。
+# 数学表达式先求值为布尔原子命题，再由 LTL 组合。有限数组、掩码上的量词需按实际实例逐项展开；它们不是未定义的模型自报变量。
+# 所有实数输入限定有限值；数值公式是精确数学约束，实际测试按文件中的数值容差比较。测试通过不等于普遍成立。
+# 
+# 对AB、AC、BC分别计算：组成该对的两路都在0..20000kg且绝对差<=200kg，才是候选一致对；某一路坏值不能否决另外两路好值。
+# 候选按(差值,次序)最小选择，次序AB<AC<BC，掩码分别3、5、6。V表示存在候选；M为选中掩码，无候选时M=0。
+# W为选中两路的LREAL平均，允许0.5kg；无候选时W=0。O := V AND W>10000。
+# voteMatch := PairMask=M AND VotedKg=W；三路为独立整车总重，不做三路相加或直接平均三路。
+# ReleaseReq、BarrierReady关闭仅影响许可，不影响融合。初始调用前所有输出0/FALSE；每次调用后按本轮计算。
+
+P01: G(voteMatch)
+P02: G(LoadFault <-> !V)
+P03: G(Overload <-> O)
+P04: G(ReleasePermit <-> (V & ReleaseReq & BarrierReady & !O))
+P05: G(!V -> (PairMask=0 & VotedKg=0 & LoadFault & !Overload & !ReleasePermit))
+P06: G(V -> (PairMask=3 | PairMask=5 | PairMask=6))
+P07: G(!(LoadFault & Overload))

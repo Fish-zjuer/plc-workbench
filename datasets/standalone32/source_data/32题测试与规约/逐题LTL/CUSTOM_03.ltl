@@ -1,0 +1,33 @@
+# CUSTOM_03
+# Requirement-level LTL; not native PLCVerif or Z3 syntax.
+# # 统一的观察约定
+# 
+# 本文件是需求层 LTL 草稿，使用明确数学定义的观察器原子命题，不是 PLCVerif/Z3 的原生输入语法；没有声称完成形式化证明。
+# 一次观测 O_t 同时包含本轮调用前的输入 inputs_t 和本轮调用后的输出 outputs_t。
+# pre.y 表示本轮调用前保存的输出/状态；从第二次调用起通常等于上一轮 post.y。首次调用的 pre 状态按题目规定初始化。
+# G p 表示每次观测都满足 p；X p 表示下一轮观测满足 p；F p 表示最终某轮满足 p；U 表示直到。
+# 当前输入触发本轮输出的规则不加 X。涉及上一轮的状态以 pre 或独立观察器表示，不能直接用下一轮输入替代。
+# initial 专指第一次调用前的初始化检查，与正常 O_t 观测分开。初始输出允许在第一次调用后依输入改变。
+# R1(p) := p | X(p)，仅用于题面/既有公共测试允许当拍或下一拍响应的工序输出，不能用于放宽急停、互锁等同拍要求。
+# rise(x) := x_t & !x_(t-1)，首拍历史仅在题目明确时取 FALSE；未明确的首扫历史不评分。
+# 数学表达式先求值为布尔原子命题，再由 LTL 组合。有限数组、掩码上的量词需按实际实例逐项展开；它们不是未定义的模型自报变量。
+# 所有实数输入限定有限值；数值公式是精确数学约束，实际测试按文件中的数值容差比较。测试通过不等于普遍成立。
+# 
+# 独立观察器保存known、seq、age、fault，初始分别FALSE、0、0、TRUE；它不是候选ST的内部变量。
+# validTiming := 1<=DtMs<=1000 AND 1<=TimeoutMs<=60000。每轮按下列完整转移生成观察器期望：
+# Reset最高优先：known=FALSE、seq=0、age=0、fault=TRUE，fresh=FALSE，err=FALSE，忽略其余输入。
+# 否则若参数非法：known/seq/age保持，fault=TRUE，fresh=FALSE，err=TRUE。
+# 否则fresh := FrameValid AND (!pre.known OR FrameSeq!=pre.seq)；fresh时known=TRUE、seq=FrameSeq、age=0；
+# 无fresh时known/seq保持，age=min(60000,pre.age+DtMs)。fault从pre.fault开始，age>=TimeoutMs时置位，fresh AND Ack时清除。
+# 序号只比较不相等，4294967295到0也是新帧，不是防重放认证。
+# monitorMatch := Fresh=fresh AND AgeMs=age AND CommFault=fault AND Error=err。
+# permit := !Reset AND !err AND !fault AND age<TimeoutMs；ageHeld := AgeMs=pre.age。
+# historyHeld := known=pre.known AND seq=pre.seq，为观察器转移定义；不要求读取ST私有历史。
+
+P01: G(monitorMatch)
+P02: G(RemoteWritePermit <-> permit)
+P03: G(Reset -> (!Fresh & AgeMs=0 & CommFault & !RemoteWritePermit & !Error))
+P04: G((!Reset & !validTiming) -> (Error & CommFault & !Fresh & !RemoteWritePermit & ageHeld))
+P05: G((!Reset & validTiming & !fresh) -> (AgeMs=min(60000,pre.age+DtMs)))
+P06: G((!Reset & validTiming & fresh & Ack) -> (!CommFault & RemoteWritePermit))
+P07: G((!Reset & validTiming & pre.fault & !(fresh & Ack)) -> CommFault)

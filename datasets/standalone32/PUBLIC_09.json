@@ -1,0 +1,3400 @@
+{
+  "id": "PUBLIC_09",
+  "title": "Calculate Moving Average",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "cyclicExecution",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "trigger",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "value",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "windowSize",
+      "type": "INT"
+    },
+    {
+      "direction": "Input",
+      "name": "reset",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "average",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "windowSizeReached",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "error",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "status",
+      "type": "WORD"
+    }
+  ],
+  "adapter_format": "profile_trace",
+  "scenarios": [
+    {
+      "name": "normal_cyclic_window_three",
+      "family": "normal",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 1.0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 1.5
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 2.0
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 4.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 3.0
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 4.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_1",
+      "family": "window_wrap",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 1,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -1.25
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 1.25
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 2.5
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 3.75
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_1",
+      "family": "trigger_hold",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 1,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 20.5
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 20.5
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 1,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -4.25
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_2",
+      "family": "window_wrap",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 2,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -1.875
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.625
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.625
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 1.875
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 3.125
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_2",
+      "family": "trigger_hold",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 2,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 2,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 8.125
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_3",
+      "family": "window_wrap",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.875
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -1.25
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 1.25
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 2.5
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.8333333333333334
+          }
+        },
+        {
+          "time_ms": 800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.8333333333333334
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_3",
+      "family": "trigger_hold",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 8.916666666666666
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_10",
+      "family": "window_wrap",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 10,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.875
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.25
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.625
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.625
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.3125
+          }
+        },
+        {
+          "time_ms": 900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.4166666666666667
+          }
+        },
+        {
+          "time_ms": 1000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.375
+          }
+        },
+        {
+          "time_ms": 1100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 1200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.375
+          }
+        },
+        {
+          "time_ms": 1300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.75
+          }
+        },
+        {
+          "time_ms": 1400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.25
+          }
+        },
+        {
+          "time_ms": 1500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.25
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_10",
+      "family": "trigger_hold",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 10,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 10,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 8.916666666666666
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_cyclic_window_100",
+      "family": "window_wrap",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.875
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -1.25
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.625
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.625
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.3125
+          }
+        },
+        {
+          "time_ms": 900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.4166666666666667
+          }
+        },
+        {
+          "time_ms": 1000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.375
+          }
+        },
+        {
+          "time_ms": 1100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.22727272727272727
+          }
+        },
+        {
+          "time_ms": 1200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 1300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.28846153846153844
+          }
+        },
+        {
+          "time_ms": 1400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 1500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.16666666666666666
+          }
+        },
+        {
+          "time_ms": 1600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.234375
+          }
+        },
+        {
+          "time_ms": 1700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.22058823529411764
+          }
+        },
+        {
+          "time_ms": 1800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.1388888888888889
+          }
+        },
+        {
+          "time_ms": 1900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 2000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.1875
+          }
+        },
+        {
+          "time_ms": 2100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 2200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.11363636363636363
+          }
+        },
+        {
+          "time_ms": 2300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.16304347826086957
+          }
+        },
+        {
+          "time_ms": 2400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.15625
+          }
+        },
+        {
+          "time_ms": 2500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.1
+          }
+        },
+        {
+          "time_ms": 2600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 2700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.1388888888888889
+          }
+        },
+        {
+          "time_ms": 2800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 2900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.08620689655172414
+          }
+        },
+        {
+          "time_ms": 3000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.125
+          }
+        },
+        {
+          "time_ms": 3100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.12096774193548387
+          }
+        },
+        {
+          "time_ms": 3200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.078125
+          }
+        },
+        {
+          "time_ms": 3300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 3400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.11029411764705882
+          }
+        },
+        {
+          "time_ms": 3500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 3600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.06944444444444445
+          }
+        },
+        {
+          "time_ms": 3700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.10135135135135136
+          }
+        },
+        {
+          "time_ms": 3800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.09868421052631579
+          }
+        },
+        {
+          "time_ms": 3900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0641025641025641
+          }
+        },
+        {
+          "time_ms": 4000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 4100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.09146341463414634
+          }
+        },
+        {
+          "time_ms": 4200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 4300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.05813953488372093
+          }
+        },
+        {
+          "time_ms": 4400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.08522727272727272
+          }
+        },
+        {
+          "time_ms": 4500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.08333333333333333
+          }
+        },
+        {
+          "time_ms": 4600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.05434782608695652
+          }
+        },
+        {
+          "time_ms": 4700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 4800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.078125
+          }
+        },
+        {
+          "time_ms": 4900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 5000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.05
+          }
+        },
+        {
+          "time_ms": 5100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.07352941176470588
+          }
+        },
+        {
+          "time_ms": 5200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.07211538461538461
+          }
+        },
+        {
+          "time_ms": 5300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.04716981132075472
+          }
+        },
+        {
+          "time_ms": 5400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 5500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.06818181818181818
+          }
+        },
+        {
+          "time_ms": 5600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 5700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.043859649122807015
+          }
+        },
+        {
+          "time_ms": 5800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.06465517241379311
+          }
+        },
+        {
+          "time_ms": 5900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0635593220338983
+          }
+        },
+        {
+          "time_ms": 6000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.041666666666666664
+          }
+        },
+        {
+          "time_ms": 6100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 6200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.06048387096774194
+          }
+        },
+        {
+          "time_ms": 6300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 6400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0390625
+          }
+        },
+        {
+          "time_ms": 6500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.057692307692307696
+          }
+        },
+        {
+          "time_ms": 6600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.056818181818181816
+          }
+        },
+        {
+          "time_ms": 6700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.03731343283582089
+          }
+        },
+        {
+          "time_ms": 6800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 6900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.05434782608695652
+          }
+        },
+        {
+          "time_ms": 7000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 7100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.035211267605633804
+          }
+        },
+        {
+          "time_ms": 7200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.052083333333333336
+          }
+        },
+        {
+          "time_ms": 7300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.05136986301369863
+          }
+        },
+        {
+          "time_ms": 7400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.033783783783783786
+          }
+        },
+        {
+          "time_ms": 7500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 7600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.049342105263157895
+          }
+        },
+        {
+          "time_ms": 7700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 7800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.03205128205128205
+          }
+        },
+        {
+          "time_ms": 7900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.04746835443037975
+          }
+        },
+        {
+          "time_ms": 8000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.046875
+          }
+        },
+        {
+          "time_ms": 8100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.030864197530864196
+          }
+        },
+        {
+          "time_ms": 8200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 8300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.045180722891566265
+          }
+        },
+        {
+          "time_ms": 8400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 8500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.029411764705882353
+          }
+        },
+        {
+          "time_ms": 8600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0436046511627907
+          }
+        },
+        {
+          "time_ms": 8700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.04310344827586207
+          }
+        },
+        {
+          "time_ms": 8800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.028409090909090908
+          }
+        },
+        {
+          "time_ms": 8900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 9000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.041666666666666664
+          }
+        },
+        {
+          "time_ms": 9100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 9200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.02717391304347826
+          }
+        },
+        {
+          "time_ms": 9300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.04032258064516129
+          }
+        },
+        {
+          "time_ms": 9400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.0398936170212766
+          }
+        },
+        {
+          "time_ms": 9500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.02631578947368421
+          }
+        },
+        {
+          "time_ms": 9600,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 9700,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.03865979381443299
+          }
+        },
+        {
+          "time_ms": 9800,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        },
+        {
+          "time_ms": 9900,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -0.025252525252525252
+          }
+        },
+        {
+          "time_ms": 10000,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": -1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.0375
+          }
+        },
+        {
+          "time_ms": 10100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": -0.0125
+          }
+        },
+        {
+          "time_ms": 10200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 1.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0125
+          }
+        },
+        {
+          "time_ms": 10300,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": 2.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0375
+          }
+        },
+        {
+          "time_ms": 10400,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0625
+          }
+        },
+        {
+          "time_ms": 10500,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": true,
+            "value": -3.75,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": true,
+            "error": false,
+            "status": 0,
+            "average": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_manual_window_100",
+      "family": "trigger_hold",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 100,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 10.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 99.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -99.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 1.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 10.5
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 20.5,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 2.0,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 15.5
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -4.25,
+            "windowSize": 100,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 8.916666666666666
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_invalid_window_-1",
+      "family": "invalid_configuration",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": -1,
+            "reset": false
+          },
+          "expected": {
+            "error": true,
+            "status": 33280
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_invalid_window_0",
+      "family": "invalid_configuration",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": 0,
+            "reset": false
+          },
+          "expected": {
+            "error": true,
+            "status": 33280
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_invalid_window_101",
+      "family": "invalid_configuration",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": 101,
+            "reset": false
+          },
+          "expected": {
+            "error": true,
+            "status": 33280
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_invalid_window_32767",
+      "family": "invalid_configuration",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 5.0,
+            "windowSize": 32767,
+            "reset": false
+          },
+          "expected": {
+            "error": true,
+            "status": 33280
+          }
+        }
+      ]
+    },
+    {
+      "name": "focused_reset_after_samples",
+      "family": "reset",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 9.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 9.0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "cyclicExecution": true,
+            "trigger": false,
+            "value": 3.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": 6.0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": false,
+            "value": 0.0,
+            "windowSize": 3,
+            "reset": true
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": -2.5,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "cyclicExecution": false,
+            "trigger": true,
+            "value": 100.0,
+            "windowSize": 3,
+            "reset": false
+          },
+          "expected": {
+            "windowSizeReached": false,
+            "error": false,
+            "status": 0,
+            "average": -2.5
+          }
+        }
+      ]
+    }
+  ],
+  "origin": "Existing requirement-derived tests; exported without reading candidate ST.",
+  "execution_status": "not_run_in_this_delivery",
+  "profile": "moving_average",
+  "block": "MovingAverage",
+  "requirements": "# Calculate Moving Average\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\nWrite a function block FB that calculates and updates a moving arithmetic mean. The moving arithmetic mean is a method of averaging over consecutive data points, where each new data point replaces the oldest data point, and then the average is recalculated.\n\n1. When cyclicExecution is TRUE, a new data value is automatically read and the moving average average is updated every scan cycle.\n2. Provide an external trigger signal trigger, which reads a new data value and updates the moving average upon each rising edge.\n3. Provide a reset function reset, which resets the moving average calculation when the reset signal is TRUE. If the window size is less than 1 or greater than 100, output an error status and status code.\n\nThe status parameter indicates the execution status of the program:\n- 16#0000: Execution successful\n- 16#8200: Window length setting error, please set a value between 1 and 100.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `cyclicExecution` | `BOOL` | When TRUE, periodic reading is performed, and trigger has no effect |\n| Input | `trigger` | `BOOL` | External trigger signal, reads value upon each rising edge |\n| Input | `value` | `LREAL` | Newly read data value |\n| Input | `windowSize` | `INT` | The window size for the moving average, which must be between 1 and 100 |\n| Input | `reset` | `BOOL` | Reset signal, resets the moving average calculation when TRUE |\n| Output | `average` | `LREAL` | The moving average |\n| Output | `windowSizeReached` | `BOOL` | FALSE: Maximum window width not yet reached TRUE: Maximum window width has been reached |\n| Output | `error` | `BOOL` | FALSE: No error occurred TRUE: An error occurred during the execution of FB |\n| Output | `status` | `WORD` | Status code |",
+  "ltl": {
+    "id": "PUBLIC_09",
+    "title": "Q09 移动平均",
+    "definitions_and_rules_markdown": "## Q09 移动平均\n\n`validWindow`为1..100；`sample`为cyclicExecution或rise(trigger)；实际接口名为value、windowSize。独立历史H在reset时清空，在合法采样时将value加入末尾、仅保留最近windowSize个样本；`meanOK`为average=sum(H)/len(H)，使用独立重算而非复用候选环形数组。无样本时average值不打分。\n\n```text\nG(!validWindow -> windowError8200)\nG(validWindow -> normalStatus)\nG(validWindow & reset -> historyEmpty)\nG(validWindow & !reset & sample -> newHistoryOK)\nG(validWindow & !reset & !sample -> historyHeld)\nG(validWindow & nonemptyHistory -> meanOK)\n```\n\n当前有限测试在实例内固定窗口，避开reset与采样同拍；若要评价动态窗口与重置优先级，应先补充独立需求，不能凭某份实现选择规则。\n\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(!validWindow -> windowError8200)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(validWindow -> normalStatus)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(validWindow & reset -> historyEmpty)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(validWindow & !reset & sample -> newHistoryOK)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(validWindow & !reset & !sample -> historyHeld)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(validWindow & nonemptyHistory -> meanOK)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

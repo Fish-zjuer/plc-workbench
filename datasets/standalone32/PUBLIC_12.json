@@ -1,0 +1,1008 @@
+{
+  "id": "PUBLIC_12",
+  "title": "Slab Thickness Alarm and Fault History",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "THICKNESS_FAULT",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "THICKNESS_SIGNAL_VALID",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "CUTTING_RUN",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "FaultTimestamp",
+      "type": "DINT"
+    },
+    {
+      "direction": "Input",
+      "name": "CycleTime",
+      "type": "TIME"
+    },
+    {
+      "direction": "Output",
+      "name": "THICKNESS_ALARM",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Slab_Fault_Counter",
+      "type": "UINT"
+    },
+    {
+      "direction": "Output",
+      "name": "Slab_Runtime_Accumulator",
+      "type": "LTIME"
+    },
+    {
+      "direction": "Output",
+      "name": "Slab_Fault_History",
+      "type": "ARRAY[0..4] OF DINT"
+    }
+  ],
+  "adapter_format": "bank_trace",
+  "scenarios": [
+    {
+      "name": "hold_validity_and_runtime",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": false,
+            "Slab_Fault_Counter": 0,
+            "Slab_Runtime_Accumulator": 10
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "THICKNESS_FAULT": true,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 10,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true,
+            "Slab_Fault_Counter": 1,
+            "Slab_Fault_History[0]": 10
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": true
+          }
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": false
+          }
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "THICKNESS_FAULT": true,
+            "THICKNESS_SIGNAL_VALID": false,
+            "CUTTING_RUN": true,
+            "FaultTimestamp": 0,
+            "CycleTime": 10
+          },
+          "expected": {
+            "THICKNESS_ALARM": false,
+            "Slab_Fault_Counter": 1
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "history_retains_newest_five",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 0,
+            "CycleTime": 0
+          },
+          "expected": {
+            "Slab_Fault_Counter": 0
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "THICKNESS_FAULT": true,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 100,
+            "CycleTime": 20
+          },
+          "expected": {
+            "Slab_Fault_Counter": 1,
+            "Slab_Fault_History[0]": 100
+          }
+        },
+        {
+          "time_ms": 21,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "THICKNESS_FAULT": true,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 200,
+            "CycleTime": 19
+          },
+          "expected": {
+            "Slab_Fault_Counter": 2,
+            "Slab_Fault_History[0]": 200,
+            "Slab_Fault_History[1]": 100
+          }
+        },
+        {
+          "time_ms": 41,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "THICKNESS_FAULT": true,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 300,
+            "CycleTime": 19
+          },
+          "expected": {
+            "Slab_Fault_Counter": 3,
+            "Slab_Fault_History[0]": 300,
+            "Slab_Fault_History[1]": 200,
+            "Slab_Fault_History[2]": 100
+          }
+        },
+        {
+          "time_ms": 61,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "THICKNESS_FAULT": true,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 400,
+            "CycleTime": 19
+          },
+          "expected": {
+            "Slab_Fault_Counter": 4,
+            "Slab_Fault_History[0]": 400,
+            "Slab_Fault_History[1]": 300,
+            "Slab_Fault_History[2]": 200,
+            "Slab_Fault_History[3]": 100
+          }
+        },
+        {
+          "time_ms": 81,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "THICKNESS_FAULT": true,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 500,
+            "CycleTime": 19
+          },
+          "expected": {
+            "Slab_Fault_Counter": 5,
+            "Slab_Fault_History[0]": 500,
+            "Slab_Fault_History[1]": 400,
+            "Slab_Fault_History[2]": 300,
+            "Slab_Fault_History[3]": 200,
+            "Slab_Fault_History[4]": 100
+          }
+        },
+        {
+          "time_ms": 101,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "THICKNESS_FAULT": true,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 600,
+            "CycleTime": 19
+          },
+          "expected": {
+            "Slab_Fault_Counter": 6,
+            "Slab_Fault_History[0]": 600,
+            "Slab_Fault_History[1]": 500,
+            "Slab_Fault_History[2]": 400,
+            "Slab_Fault_History[3]": 300,
+            "Slab_Fault_History[4]": 200
+          }
+        },
+        {
+          "time_ms": 121,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "THICKNESS_FAULT": true,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 700,
+            "CycleTime": 19
+          },
+          "expected": {
+            "Slab_Fault_Counter": 7,
+            "Slab_Fault_History[0]": 700,
+            "Slab_Fault_History[1]": 600,
+            "Slab_Fault_History[2]": 500,
+            "Slab_Fault_History[3]": 400,
+            "Slab_Fault_History[4]": 300
+          }
+        },
+        {
+          "time_ms": 141,
+          "inputs": {
+            "THICKNESS_FAULT": false,
+            "THICKNESS_SIGNAL_VALID": true,
+            "CUTTING_RUN": false,
+            "FaultTimestamp": 0,
+            "CycleTime": 1
+          },
+          "expected": {}
+        }
+      ],
+      "invariants": []
+    }
+  ],
+  "origin": "Existing requirement-derived tests; exported without reading candidate ST.",
+  "execution_status": "not_run_in_this_delivery",
+  "block": "Q12",
+  "requirements": "# Slab Thickness Alarm and Fault History\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\nMonitor slab-thickness faults on a stone-cutting line, including minimum alarm holding, fault counting, normal-cutting runtime accumulation and a history of the five most recent faults.\n\n1. When THICKNESS_SIGNAL_VALID is TRUE, THICKNESS_FAULT indicates that thickness deviation exceeds tolerance. Activate THICKNESS_ALARM immediately when the fault becomes TRUE, and hold each triggered alarm for at least 500 ms. Keep the alarm active while the fault persists.\n2. On each FALSE-to-TRUE transition of a valid fault signal, increment Slab_Fault_Counter and store the current FaultTimestamp in element 0 of Slab_Fault_History. Shift older entries toward higher indices, retaining only the five most recent entries.\n3. Accumulate Slab_Runtime_Accumulator using CycleTime only while CUTTING_RUN is TRUE, the thickness signal is valid and no thickness fault is present. Otherwise preserve the accumulated value.\n4. At power-up or whenever THICKNESS_SIGNAL_VALID is FALSE, switch off the alarm and clear its holding state. Do not add fault records or accumulate normal runtime while the signal is invalid.\n5. At power-up, initialize the fault count, accumulated runtime and all five history entries to zero. Statistics and history are for observation and maintenance only; they must not alter the cutting equipment's operating permissive, and external callers must not modify history entries.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `THICKNESS_FAULT` | `BOOL` | Thickness deviation exceeds the permitted tolerance. |\n| Input | `THICKNESS_SIGNAL_VALID` | `BOOL` | Thickness-signal validity; FALSE means the signal is lost or unavailable. |\n| Input | `CUTTING_RUN` | `BOOL` | Actual cutting-equipment running status. |\n| Input | `FaultTimestamp` | `DINT` | Current timestamp in seconds, used as the fault-record identifier. |\n| Input | `CycleTime` | `TIME` | Actual elapsed interval represented by this invocation; must be positive. |\n| Output | `THICKNESS_ALARM` | `BOOL` | Thickness alarm with a minimum 500 ms hold duration. |\n| Output | `Slab_Fault_Counter` | `UINT` | Number of valid thickness-fault occurrences. |\n| Output | `Slab_Runtime_Accumulator` | `LTIME` | Accumulated normal-cutting runtime. |\n| Output | `Slab_Fault_History` | `ARRAY[0..4] OF DINT` | Five most recent fault timestamps; index 0 is newest; read-only to callers. |",
+  "ltl": {
+    "id": "PUBLIC_12",
+    "title": "Q12 板厚报警、计数与历史",
+    "definitions_and_rules_markdown": "## Q12 板厚报警、计数与历史\n\nv3采样约定：固定场景及补充保持场景的CycleTime均等于实际调用间隔。触发拍elapsed=0，后续拍累加；10ms触发、每10ms扫描时，500ms仍需保持，510ms可释放。\n\n`validFault=THICKNESS_SIGNAL_VALID & THICKNESS_FAULT`。独立有效故障上升沿观察器维护计数、最近5个时间戳和最近报警触发时刻；有效性失效清除保持状态，不清除既有统计。`holdRequired`为最近有效触发后不足500ms；`runtimeOK`只在CUTTING_RUN且信号有效且无当前故障时加CycleTime，其余保持。\n\n```text\nG(initial -> slabInitialOK)\nG(!THICKNESS_SIGNAL_VALID -> !THICKNESS_ALARM)\nG(validFault -> THICKNESS_ALARM)\nG(THICKNESS_SIGNAL_VALID & holdRequired -> THICKNESS_ALARM)\nG(validFaultRise -> countIncremented & newestHistoryShiftOK)\nG(!validFaultRise -> faultCountHeld & historyHeld)\nG(runtimeOK)\n```\n\nnewestHistoryShiftOK为post[0]=FaultTimestamp，post[i]=pre[i-1]（i=1..4）；不要求改变外部设备运行许可。初始化计数、累计及历史全0；正常首拍可随后累加CycleTime。\n\n\n协议说明：计时保持只要求最短500ms，不能把所有合法实现强制为恰好500ms释放。现有固定用例的510ms关闭断言是所选定时器契约，独立于题面最低要求；首拍CycleTime=0同样是迭代分支约定。\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> slabInitialOK)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!THICKNESS_SIGNAL_VALID -> !THICKNESS_ALARM)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(validFault -> THICKNESS_ALARM)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(THICKNESS_SIGNAL_VALID & holdRequired -> THICKNESS_ALARM)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(validFaultRise -> countIncremented & newestHistoryShiftOK)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(!validFaultRise -> faultCountHeld & historyHeld)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(runtimeOK)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

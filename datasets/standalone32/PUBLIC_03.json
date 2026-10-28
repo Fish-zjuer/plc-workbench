@@ -1,0 +1,1823 @@
+{
+  "id": "PUBLIC_03",
+  "title": "Alarm Handling",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "Value",
+      "type": "REAL"
+    },
+    {
+      "direction": "Input",
+      "name": "hiLevel",
+      "type": "REAL"
+    },
+    {
+      "direction": "Input",
+      "name": "loLevel",
+      "type": "REAL"
+    },
+    {
+      "direction": "Input",
+      "name": "hystWindow",
+      "type": "REAL"
+    },
+    {
+      "direction": "Output",
+      "name": "hiAlarm",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "loAlarm",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "error",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "status",
+      "type": "WORD"
+    }
+  ],
+  "adapter_format": "bank_trace",
+  "scenarios": [
+    {
+      "name": "hysteresis_strict_boundaries",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Value": 5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Value": 10,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Value": 9,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Value": 8,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Value": 7.5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Value": -1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Value": 0,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Value": 1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Value": 2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Value": 2.5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Value": 5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Value": 10,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Value": 13,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Value": -3,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "Value": 15,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "Value": 15,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "Value": 4,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "Value": 1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "Value": 8,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "Value": 9,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "Value": 9,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "Value": -1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "Value": 12,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "Value": 9,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "Value": -2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "Value": 6,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "Value": 6,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "Value": 7,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "Value": 12,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "Value": -5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "Value": 8,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "Value": -4,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "Value": 1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "Value": 5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "Value": 1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "Value": 0,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "Value": -2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "Value": -5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "Value": 0,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "Value": 8,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "Value": 7,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "Value": 9,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "Value": 5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "Value": 10,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "Value": 7,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "Value": 15,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "Value": 3,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "Value": 12,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 530,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 540,
+          "inputs": {
+            "Value": 2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 550,
+          "inputs": {
+            "Value": -4,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 560,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 570,
+          "inputs": {
+            "Value": -2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 580,
+          "inputs": {
+            "Value": 7,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 590,
+          "inputs": {
+            "Value": 4,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "Value": 3,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 610,
+          "inputs": {
+            "Value": -2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 620,
+          "inputs": {
+            "Value": -1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 630,
+          "inputs": {
+            "Value": 5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 640,
+          "inputs": {
+            "Value": 10,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 650,
+          "inputs": {
+            "Value": 5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 660,
+          "inputs": {
+            "Value": 15,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 670,
+          "inputs": {
+            "Value": 13,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 680,
+          "inputs": {
+            "Value": 9,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 690,
+          "inputs": {
+            "Value": 8,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 700,
+          "inputs": {
+            "Value": 2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 710,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 720,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 730,
+          "inputs": {
+            "Value": 15,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 740,
+          "inputs": {
+            "Value": 5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 750,
+          "inputs": {
+            "Value": -2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 760,
+          "inputs": {
+            "Value": 12,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 770,
+          "inputs": {
+            "Value": 4,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 780,
+          "inputs": {
+            "Value": -3,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 790,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 800,
+          "inputs": {
+            "Value": -1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 810,
+          "inputs": {
+            "Value": 1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 820,
+          "inputs": {
+            "Value": -4,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 830,
+          "inputs": {
+            "Value": -1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 840,
+          "inputs": {
+            "Value": 0,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 850,
+          "inputs": {
+            "Value": 9,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 860,
+          "inputs": {
+            "Value": 9,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 870,
+          "inputs": {
+            "Value": 0,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 880,
+          "inputs": {
+            "Value": -3,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 890,
+          "inputs": {
+            "Value": 8,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 900,
+          "inputs": {
+            "Value": -4,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 910,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 920,
+          "inputs": {
+            "Value": 10,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 930,
+          "inputs": {
+            "Value": 8,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 940,
+          "inputs": {
+            "Value": 10,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 950,
+          "inputs": {
+            "Value": 6,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 960,
+          "inputs": {
+            "Value": -4,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 970,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 980,
+          "inputs": {
+            "Value": 0,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 990,
+          "inputs": {
+            "Value": 14,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1000,
+          "inputs": {
+            "Value": 6,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1010,
+          "inputs": {
+            "Value": 5,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1020,
+          "inputs": {
+            "Value": 10,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1030,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1040,
+          "inputs": {
+            "Value": -2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1050,
+          "inputs": {
+            "Value": 6,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1060,
+          "inputs": {
+            "Value": 10,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1070,
+          "inputs": {
+            "Value": 7,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1080,
+          "inputs": {
+            "Value": -4,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1090,
+          "inputs": {
+            "Value": -2,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1100,
+          "inputs": {
+            "Value": 11,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": true,
+            "loAlarm": false,
+            "error": false,
+            "status": 0
+          }
+        },
+        {
+          "time_ms": 1110,
+          "inputs": {
+            "Value": -1,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 2
+          },
+          "expected": {
+            "hiAlarm": false,
+            "loAlarm": true,
+            "error": false,
+            "status": 0
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "invalid_limits_priority",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Value": 0,
+            "hiLevel": 0,
+            "loLevel": 0,
+            "hystWindow": 10
+          },
+          "expected": {
+            "error": true,
+            "status": 32769
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "invalid_hysteresis",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Value": 0,
+            "hiLevel": 10,
+            "loLevel": 0,
+            "hystWindow": 10
+          },
+          "expected": {
+            "error": true,
+            "status": 32770
+          }
+        }
+      ],
+      "invariants": []
+    }
+  ],
+  "origin": "Existing requirement-derived tests; exported without reading candidate ST.",
+  "execution_status": "not_run_in_this_delivery",
+  "block": "Q03",
+  "requirements": "# Alarm Handling\n\n- **Difficulty:** Easy (easy)\n\n## Requirements\n\nIn industrial automation systems, monitoring the status of equipment is crucial. When equipment parameters exceed the normal range, the system needs to issue an alarm. To avoid frequent triggering of alarms due to minor fluctuations in parameters, an alarm management system with hysteresis function needs to be implemented.\nWhen Value is greater than hiLevel, trigger high alarm hiAlarm.\nWhen Value is less than hiLevel-hystWindow, exit high alarm hiAlarm.\nWhen Value is less than loLevel, trigger low alarm loAlarm.\nWhen Value is greater than loLevel+hystWindow, exit low alarm loAlarm.\nIf loLevel is greater than or equal to hiLevel, output error error=true, status=16#8001, and exit the program\nIf the hysteresis window value hystWindow is greater than or equal to the deviation range between hiLevel and loLevel, output error error=true, status=16#8002\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Value` | `REAL` | Input value |\n| Input | `hiLevel` | `REAL` | High limit alarm value |\n| Input | `loLevel` | `REAL` | Low limit alarm value |\n| Input | `hystWindow` | `REAL` | Hysteresis window |\n| Output | `hiAlarm` | `BOOL` | High limit alarm |\n| Output | `loAlarm` | `BOOL` | Low limit alarm |\n| Output | `error` | `BOOL` | FALSE: No error occurred;<br>TRUE: Error occurred during execution of FB |\n| Output | `status` | `WORD` | Status code |",
+  "ltl": {
+    "id": "PUBLIC_03",
+    "title": "Q03 滞环报警",
+    "definitions_and_rules_markdown": "## Q03 滞环报警\n\n`invalidLimits`为loLevel>=hiLevel；`invalidWindow`为hystWindow>=hiLevel-loLevel且非invalidLimits；`valid`为两者均否。`highSet/Reset`分别为Value>hiLevel、Value<hiLevel-hystWindow；低报警相反，严格比较；边界相等保持上一报警状态。无效配置时的报警输出是否清零，题面没有统一规定，不作为规约必须项。\n\n```text\nG(invalidLimits -> error8001)\nG(invalidWindow -> error8002)\nG(valid -> normalStatus)\nG(valid & highSet -> hiAlarm)\nG(valid & highReset -> !hiAlarm)\nG(valid & highBand -> highAlarmHeld)\nG(valid & lowSet -> loAlarm)\nG(valid & lowReset -> !loAlarm)\nG(valid & lowBand -> lowAlarmHeld)\n```\n\n`error8001/8002`包含error=TRUE及相应status；normalStatus表示error=FALSE、status=0。highBand/lowBand为既不触发也不复位的区间；Held表示post报警等于pre报警。负滞环的额外处置不打分。\n\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(invalidLimits -> error8001)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(invalidWindow -> error8002)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(valid -> normalStatus)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(valid & highSet -> hiAlarm)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(valid & highReset -> !hiAlarm)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(valid & highBand -> highAlarmHeld)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(valid & lowSet -> loAlarm)"
+      },
+      {
+        "id": "P08",
+        "formula": "G(valid & lowReset -> !loAlarm)"
+      },
+      {
+        "id": "P09",
+        "formula": "G(valid & lowBand -> lowAlarmHeld)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

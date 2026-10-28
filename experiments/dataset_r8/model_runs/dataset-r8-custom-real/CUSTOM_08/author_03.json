@@ -1,0 +1,18 @@
+{
+  "text": "{\n  \"summary\": \"Renamed the local variable `Ref` (reserved word in STruC++ 0.7) and other potentially conflicting locals to safe identifiers, keeping identical logic: range-validate all three INTs (0..100, ReferenceSpeed10>0) before any arithmetic, promote to DINT for ABS(Left-Right)<=1 and ABS(Left+Right-13*Reference)<=2, and recompute all three outputs from scratch each scan so exactly one of SyncOK/SyncBad/Invalid is TRUE.\",\n  \"code\": \"FUNCTION_BLOCK FB_CraneSpeedCheck\\nVAR_INPUT\\n    LeftSpeed10      : INT;\\n    RightSpeed10     : INT;\\n    ReferenceSpeed10 : INT;\\nEND_VAR\\n\\nVAR_OUTPUT\\n    SyncOK  : BOOL;\\n    SyncBad : BOOL;\\n    Invalid : BOOL;\\nEND_VAR\\n\\nVAR\\n    Valid     : BOOL;\\n    LVal      : DINT;\\n    RVal      : DINT;\\n    RefVal    : DINT;\\n    DiffLR    : DINT;\\n    DiffSum   : DINT;\\n    SumLR     : DINT;\\n    TargetVal : DINT;\\nEND_VAR\\n\\n// Default: all outputs FALSE; exactly one TRUE is set below each scan\\nSyncOK  := FALSE;\\nSyncBad := FALSE;\\nInvalid := FALSE;\\n\\n// Range validation before any subtraction or multiplication\\nValid := (LeftSpeed10 >= 0) AND (LeftSpeed10 <= 100)\\n         AND (RightSpeed10 >= 0) AND (RightSpeed10 <= 100)\\n         AND (ReferenceSpeed10 > 0) AND (ReferenceSpeed10 <= 100);\\n\\nIF NOT Valid THEN\\n    Invalid := TRUE;\\nELSE\\n    // Promote to DINT for safe arithmetic\\n    LVal      := INT_TO_DINT(LeftSpeed10);\\n    RVal      := INT_TO_DINT(RightSpeed10);\\n    RefVal    := INT_TO_DINT(ReferenceSpeed10);\\n\\n    DiffLR    := LVal - RVal;\\n    SumLR     := LVal + RVal;\\n    TargetVal := INT_TO_DINT(13) * RefVal;\\n    DiffSum   := SumLR - TargetVal;\\n\\n    IF DiffLR < 0 THEN\\n        DiffLR := -DiffLR;\\n    END_IF;\\n    IF DiffSum < 0 THEN\\n        DiffSum := -DiffSum;\\n    END_IF;\\n\\n    IF (DiffLR <= INT_TO_DINT(1)) AND (DiffSum <= INT_TO_DINT(2)) THEN\\n        SyncOK := TRUE;\\n    ELSE\\n        SyncBad := TRUE;\\n    END_IF;\\nEND_IF;\\n\\nEND_FUNCTION_BLOCK\"\n}",
+  "calls": [],
+  "usage": {
+    "prompt_tokens": 2471,
+    "completion_tokens": 791,
+    "total_tokens": 3262,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 172
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 1447
+  },
+  "reasoning_content": "The issue: `Ref` is a reserved keyword in STruC++. Rename it. Also DiffLR etc fine. Let me rename Ref to RefVal, and ensure no other reserved words. `R` might be fine but let's rename to avoid risk. Actually `R` is TRIG input name... `R` should be fine but rename to avoid issues: use RL, RR, RefD, DiffLR, DiffSum, SumLR, Target.\n\nLet me write clean ST.\n\nNote: also the requirement says \"reference speed zero\" — reference must be >0. V: 0<=L<=100 AND 0<=R<=100 AND 0<Ref<=100.\n\nOutputs formula: SyncOK <-> V & R. Note that SyncOK is TRUE only when valid, correct.\n\nWrite code with renamed vars."
+}

@@ -1,0 +1,232 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_02",
+  "status": "reviewed_finite_pass",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "b5de70afac5760a55f77bd014f4ff0637c3095a2c955636b460c1bc776589b6d",
+  "source_sha256": "f1ec284819a247656ac042fceb531b4292217df4ced32b3b69625fa5f62b8f5a",
+  "attempts": [
+    {
+      "summary": "实现 HMI 授权门禁：按会话、角色和页面计算查看/写入权限；单扫描写请求仅在 WriteAllowed 且 WriteValue 位于 [0,100] 时提交 ParamValue，否则保持原值并给出 Accepted/Denied 当前扫描结果。",
+      "status": "written",
+      "source_sha256": "f1ec284819a247656ac042fceb531b4292217df4ced32b3b69625fa5f62b8f5a"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 2,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_02",
+    "source_sha256": "f1ec284819a247656ac042fceb531b4292217df4ced32b3b69625fa5f62b8f5a",
+    "dataset_sha256": "b5de70afac5760a55f77bd014f4ff0637c3095a2c955636b460c1bc776589b6d",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 10,
+      "scans": 303,
+      "assertions": 1492,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\980deba00f5ab4a971f6382c\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "未发现与需求明确不一致的缺陷；当前实现符合会话/角色页面权限、页面4写权限、范围校验、未请求时清零结果标志以及提交值保留等要求。以下为建议复核的完整输入trace场景。",
+      "questions": [],
+      "proposals": [
+        {
+          "name": "admin_write_then_session_invalid",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "SessionValid": true,
+                "Role": 3,
+                "Page": 3,
+                "WriteReq": false,
+                "WriteValue": 0.0
+              },
+              "expected": {
+                "ViewAllowed": true,
+                "WriteAllowed": false,
+                "Accepted": false,
+                "Denied": false,
+                "ParamValue": 0.0
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "SessionValid": true,
+                "Role": 3,
+                "Page": 4,
+                "WriteReq": true,
+                "WriteValue": 50.0
+              },
+              "expected": {
+                "ViewAllowed": true,
+                "WriteAllowed": true,
+                "Accepted": true,
+                "Denied": false,
+                "ParamValue": 50.0
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "SessionValid": false,
+                "Role": 3,
+                "Page": 4,
+                "WriteReq": true,
+                "WriteValue": 60.0
+              },
+              "expected": {
+                "ViewAllowed": false,
+                "WriteAllowed": false,
+                "Accepted": false,
+                "Denied": true,
+                "ParamValue": 50.0
+              }
+            }
+          ]
+        },
+        {
+          "name": "operator_accept_and_out_of_range_deny",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "SessionValid": true,
+                "Role": 2,
+                "Page": 2,
+                "WriteReq": false,
+                "WriteValue": 0.0
+              },
+              "expected": {
+                "ViewAllowed": true,
+                "WriteAllowed": false,
+                "Accepted": false,
+                "Denied": false,
+                "ParamValue": 0.0
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "SessionValid": true,
+                "Role": 2,
+                "Page": 4,
+                "WriteReq": true,
+                "WriteValue": 100.0
+              },
+              "expected": {
+                "ViewAllowed": true,
+                "WriteAllowed": true,
+                "Accepted": true,
+                "Denied": false,
+                "ParamValue": 100.0
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "SessionValid": true,
+                "Role": 2,
+                "Page": 4,
+                "WriteReq": true,
+                "WriteValue": 100.5
+              },
+              "expected": {
+                "ViewAllowed": true,
+                "WriteAllowed": true,
+                "Accepted": false,
+                "Denied": true,
+                "ParamValue": 100.0
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "SessionValid": true,
+                "Role": 2,
+                "Page": 4,
+                "WriteReq": false,
+                "WriteValue": 0.0
+              },
+              "expected": {
+                "ViewAllowed": true,
+                "WriteAllowed": true,
+                "Accepted": false,
+                "Denied": false,
+                "ParamValue": 100.0
+              }
+            }
+          ]
+        },
+        {
+          "name": "user_denied_then_admin_accepted_then_invalid_role",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "SessionValid": true,
+                "Role": 1,
+                "Page": 4,
+                "WriteReq": true,
+                "WriteValue": 10.0
+              },
+              "expected": {
+                "ViewAllowed": false,
+                "WriteAllowed": false,
+                "Accepted": false,
+                "Denied": true,
+                "ParamValue": 0.0
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "SessionValid": true,
+                "Role": 3,
+                "Page": 4,
+                "WriteReq": true,
+                "WriteValue": 10.0
+              },
+              "expected": {
+                "ViewAllowed": true,
+                "WriteAllowed": true,
+                "Accepted": true,
+                "Denied": false,
+                "ParamValue": 10.0
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "SessionValid": true,
+                "Role": 4,
+                "Page": 4,
+                "WriteReq": true,
+                "WriteValue": 20.0
+              },
+              "expected": {
+                "ViewAllowed": false,
+                "WriteAllowed": false,
+                "Accepted": false,
+                "Denied": true,
+                "ParamValue": 10.0
+              }
+            }
+          ]
+        }
+      ],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

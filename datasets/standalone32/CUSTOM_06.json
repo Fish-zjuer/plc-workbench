@@ -1,0 +1,590 @@
+{
+  "id": "CUSTOM_06",
+  "title": "压缩空气母管压力的用气前馈调节",
+  "block": "FB_CompressorPressure",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "Enable",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "Reset",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "PressureKpa",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "AirUseFlow",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "Kp",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "Ki",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "DtSec",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "CapacityPct",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "Integral",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "Saturated",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Error",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06
+  },
+  "scenarios": [
+    {
+      "name": "前馈与积分首轮",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.4,
+            "CapacityPct": 24.4,
+            "Saturated": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "持续高饱和不继续积分",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.4,
+            "CapacityPct": 24.4,
+            "Saturated": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100,
+            "Saturated": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "反向误差允许积分",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.4,
+            "CapacityPct": 24.4,
+            "Saturated": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100,
+            "Saturated": true
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 600,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": -2,
+            "CapacityPct": 78,
+            "Saturated": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "禁用及非法间隔保持",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.4,
+            "CapacityPct": 24.4,
+            "Saturated": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100,
+            "Saturated": true
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 600,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": -2,
+            "CapacityPct": 78,
+            "Saturated": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": false,
+            "Reset": false,
+            "PressureKpa": 600,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": -2,
+            "CapacityPct": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 600,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 0
+          },
+          "expected": {
+            "Integral": -2,
+            "CapacityPct": 0,
+            "Error": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "抗饱和双向_严格边界_禁用及复位优先",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "PressureKpa": -1,
+            "AirUseFlow": 0,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 0,
+            "AirUseFlow": 90,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100,
+            "Saturated": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 1000,
+            "AirUseFlow": 0,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0,
+            "Saturated": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 500,
+            "AirUseFlow": 50,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.0,
+            "CapacityPct": 100,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 500,
+            "AirUseFlow": 50.001,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.0,
+            "CapacityPct": 100,
+            "Saturated": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": false,
+            "Reset": false,
+            "PressureKpa": -1,
+            "AirUseFlow": 50.001,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.0,
+            "CapacityPct": 0,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": false,
+            "Reset": true,
+            "PressureKpa": -1,
+            "AirUseFlow": 50.001,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 500,
+            "AirUseFlow": 0,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.0,
+            "CapacityPct": 0,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# Compressed-air pressure feedforward PI\n\n- **Difficulty:** Hard (hard)\n\n## Requirements\n\n1. Implement FB_CompressorPressure using LREAL. PressureKpa must be 0..1000 kPa, AirUseFlow 0..90 Nm3/min, Kp 0..1 percent/kPa, Ki 0..0.1 percent/(kPa*s), and DtSec 0.001..1 seconds. All real inputs are finite.\n\n2. The pressure target is 500 kPa. Let e=500-PressureKpa and feedforward FF=2*AirUseFlow, where 2 has units percent/(Nm3/min). CapacityPct is the compressor capacity setpoint in 0..100 percent; it does not report whether actual pressure has reached the target.\n\n3. Initially Integral=0 and CapacityPct=0. Reset has highest priority: clear Integral and CapacityPct, set Saturated=FALSE and Error=FALSE, and ignore other inputs. When Enable=FALSE, preserve Integral, output zero CapacityPct and clear both flags.\n\n4. On a legal enabled call, compute Ic=previous_Integral+Ki*e*DtSec and Uc=FF+Kp*e+Ic. Reject this integration step when (Uc>100 AND e>0) OR (Uc<0 AND e<0), preserving previous_Integral; otherwise accept Ic. Recompute U=FF+Kp*e+Integral using the final integral, then set CapacityPct=LIMIT(0,U,100).\n\n5. Saturated is TRUE only when U is strictly below 0 or above 100; equality at either boundary is not saturation. Illegal inputs during enabled operation set Error=TRUE, CapacityPct=0 and Saturated=FALSE while preserving Integral. A legal enabled call clears Error. The absolute integral remains below or equal to 1e9 over the benchmark run. Use absolute numeric tolerance 1e-6.\n\n6. Only evaluate the setpoint computation and anti-windup state behavior. A storage-vessel plant model, compressor start/stop sequencing and surge protection are outside scope.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Enable` | `BOOL` | Enable controller computation. |\n| Input | `Reset` | `BOOL` | Clear the integral; highest priority. |\n| Input | `PressureKpa` | `LREAL` | Header pressure, 0..1000 kPa. |\n| Input | `AirUseFlow` | `LREAL` | Air consumption, 0..90 Nm3/min. |\n| Input | `Kp` | `LREAL` | Proportional gain, 0..1 percent/kPa. |\n| Input | `Ki` | `LREAL` | Integral gain, 0..0.1 percent/(kPa*s). |\n| Input | `DtSec` | `LREAL` | Actual invocation interval, 0.001..1 s. |\n| Output | `CapacityPct` | `LREAL` | Compressor capacity setpoint, 0..100 percent. |\n| Output | `Integral` | `LREAL` | Integral state, externally read-only. |\n| Output | `Saturated` | `BOOL` | Final unclamped output is strictly outside 0..100. |\n| Output | `Error` | `BOOL` | Illegal enabled-operation input. |",
+  "ltl": {
+    "id": "CUSTOM_06",
+    "title": "压缩空气母管压力的用气前馈调节",
+    "definitions": "独立观察器积分I初始0。valid := PressureKpa∈[0,1000] AND AirUseFlow∈[0,90] AND Kp∈[0,1] AND Ki∈[0,0.1] AND DtSec∈[0.001,1]，均有限。\nReset最高优先：I=0，u=0，sat=FALSE，err=FALSE。\n否则!Enable：I保持，u=0，sat=FALSE，err=FALSE。\n否则!valid：I保持，u=0，sat=FALSE，err=TRUE。\n合法使能：e=500-PressureKpa，FF=2*AirUseFlow，Ic=pre.I+Ki*e*DtSec，Uc=FF+Kp*e+Ic；\nreject := (Uc>100 AND e>0) OR (Uc<0 AND e<0)，I=(reject?pre.I:Ic)，U=FF+Kp*e+I，u=clamp(U,0,100)，sat=(U<0 OR U>100)，err=FALSE。\npressureMatch := Integral=I AND CapacityPct=u AND Saturated=sat AND Error=err。|I|<=1e9为运行域假设；不模拟压力物理演化。\n饱和判断使用最终U，不能用被拒绝积分的Uc代替。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(pressureMatch)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(Reset -> (Integral=0 & CapacityPct=0 & !Saturated & !Error))"
+      },
+      {
+        "id": "P03",
+        "formula": "G((!Reset & !Enable) -> (Integral=pre.I & CapacityPct=0 & !Saturated & !Error))"
+      },
+      {
+        "id": "P04",
+        "formula": "G((!Reset & Enable & !valid) -> (Integral=pre.I & CapacityPct=0 & !Saturated & Error))"
+      },
+      {
+        "id": "P05",
+        "formula": "G((!Reset & Enable & valid & reject) -> (Integral=pre.I))"
+      },
+      {
+        "id": "P06",
+        "formula": "G((!Reset & Enable & valid) -> (Saturated <-> (U<0 | U>100)))"
+      },
+      {
+        "id": "P07",
+        "formula": "G(0<=CapacityPct & CapacityPct<=100)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

@@ -1,0 +1,203 @@
+{
+  "status": "review_pass",
+  "summary": "未发现与题面明确要求相冲突的缺陷；方向优先、当前层优先、FullLoad 仅屏蔽厅召唤、空闲平局取低层及每次调用重算输出等逻辑均符合需求。",
+  "questions": [],
+  "proposals": [
+    {
+      "name": "up_fallback_full_load_mask",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              true,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              true,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 5,
+            "NextDirection": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "down_priority_below",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 4,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 1
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 4,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ],
+            "HallReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": -1
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle_tie_and_current_priority",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              true,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          }
+        }
+      ]
+    }
+  ],
+  "expected_authority": "advisory_model_claim_only"
+}

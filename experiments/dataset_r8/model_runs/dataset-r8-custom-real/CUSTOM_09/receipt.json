@@ -1,0 +1,46 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_09",
+  "status": "reviewed_finite_pass",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "0c98acbcf8a462f648e91f61f2576d4bcef09a75b6ffab7979cd105fe2776057",
+  "source_sha256": "4d77a38e301198696eead9008961a48eb0a94ecc220fd65c7e82aed612c65832",
+  "attempts": [
+    {
+      "summary": "Implements the qualification state machine with maintenance priority, single transition per call using pre-scan State, and output mapping from the updated State.",
+      "status": "written",
+      "source_sha256": "4d77a38e301198696eead9008961a48eb0a94ecc220fd65c7e82aed612c65832"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 2,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_09",
+    "source_sha256": "4d77a38e301198696eead9008961a48eb0a94ecc220fd65c7e82aed612c65832",
+    "dataset_sha256": "0c98acbcf8a462f648e91f61f2576d4bcef09a75b6ffab7979cd105fe2776057",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 25,
+      "scans": 48,
+      "assertions": 192,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\6aa2888b6992330549a849a5\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "No explicit mismatch found between the requirements and FB_SpectrometerQualification: initial outputs, maintenance priority, single pre-scan transition, forced 2→0 maintenance exit, CalibReq/MaintLamp derivation, and MeasurePermit gating all match the stated requirements.",
+      "questions": [],
+      "proposals": [],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

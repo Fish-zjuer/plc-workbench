@@ -1,0 +1,1813 @@
+{
+  "model": "deepseek-flash",
+  "scope": "Fresh 12 custom tasks plus adaptive repair of two saved public candidates. Supplied expected tables never included in initial author/reviewer prompts. Repair receives actual counterexamples. Failed/incomplete review requests are retained in counts.",
+  "results": [
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_01",
+      "status": "reviewed_finite_pass",
+      "model_calls": 3,
+      "source_sha256": "a78c7fa8344d5943fbce3f8b98d2cebda2000856a48579f9b1c6ee0cd7f9b046",
+      "code_proposals": 2,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现与题面明确要求相冲突的缺陷；方向优先、当前层优先、FullLoad 仅屏蔽厅召唤、空闲平局取低层及每次调用重算输出等逻辑均符合需求。",
+          "questions": [],
+          "proposals": [
+            {
+              "name": "up_fallback_full_load_mask",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "CurrentFloor": 3,
+                    "Direction": 1,
+                    "FullLoad": true,
+                    "CabReq": [
+                      false,
+                      true,
+                      false,
+                      false,
+                      false,
+                      false
+                    ],
+                    "HallReq": [
+                      false,
+                      false,
+                      false,
+                      false,
+                      true,
+                      false
+                    ]
+                  },
+                  "expected": {
+                    "HasTarget": true,
+                    "TargetFloor": 2,
+                    "NextDirection": -1
+                  }
+                },
+                {
+                  "time_ms": 100,
+                  "inputs": {
+                    "Enable": true,
+                    "CurrentFloor": 3,
+                    "Direction": 1,
+                    "FullLoad": false,
+                    "CabReq": [
+                      false,
+                      true,
+                      false,
+                      false,
+                      false,
+                      false
+                    ],
+                    "HallReq": [
+                      false,
+                      false,
+                      false,
+                      false,
+                      true,
+                      false
+                    ]
+                  },
+                  "expected": {
+                    "HasTarget": true,
+                    "TargetFloor": 5,
+                    "NextDirection": 1
+                  }
+                }
+              ]
+            },
+            {
+              "name": "down_priority_below",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "CurrentFloor": 4,
+                    "Direction": -1,
+                    "FullLoad": false,
+                    "CabReq": [
+                      false,
+                      false,
+                      false,
+                      false,
+                      false,
+                      true
+                    ],
+                    "HallReq": [
+                      false,
+                      false,
+                      false,
+                      false,
+                      false,
+                      false
+                    ]
+                  },
+                  "expected": {
+                    "HasTarget": true,
+                    "TargetFloor": 6,
+                    "NextDirection": 1
+                  }
+                },
+                {
+                  "time_ms": 50,
+                  "inputs": {
+                    "Enable": true,
+                    "CurrentFloor": 4,
+                    "Direction": -1,
+                    "FullLoad": false,
+                    "CabReq": [
+                      false,
+                      false,
+                      false,
+                      false,
+                      false,
+                      true
+                    ],
+                    "HallReq": [
+                      true,
+                      false,
+                      false,
+                      false,
+                      false,
+                      false
+                    ]
+                  },
+                  "expected": {
+                    "HasTarget": true,
+                    "TargetFloor": 1,
+                    "NextDirection": -1
+                  }
+                }
+              ]
+            },
+            {
+              "name": "idle_tie_and_current_priority",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "CurrentFloor": 3,
+                    "Direction": 0,
+                    "FullLoad": false,
+                    "CabReq": [
+                      false,
+                      true,
+                      false,
+                      false,
+                      false,
+                      false
+                    ],
+                    "HallReq": [
+                      false,
+                      false,
+                      false,
+                      true,
+                      false,
+                      false
+                    ]
+                  },
+                  "expected": {
+                    "HasTarget": true,
+                    "TargetFloor": 2,
+                    "NextDirection": -1
+                  }
+                },
+                {
+                  "time_ms": 10,
+                  "inputs": {
+                    "Enable": true,
+                    "CurrentFloor": 3,
+                    "Direction": 0,
+                    "FullLoad": false,
+                    "CabReq": [
+                      false,
+                      true,
+                      true,
+                      false,
+                      false,
+                      false
+                    ],
+                    "HallReq": [
+                      false,
+                      false,
+                      false,
+                      true,
+                      false,
+                      false
+                    ]
+                  },
+                  "expected": {
+                    "HasTarget": true,
+                    "TargetFloor": 3,
+                    "NextDirection": 0
+                  }
+                }
+              ]
+            }
+          ],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_02",
+      "status": "reviewed_finite_pass",
+      "model_calls": 2,
+      "source_sha256": "f1ec284819a247656ac042fceb531b4292217df4ced32b3b69625fa5f62b8f5a",
+      "code_proposals": 1,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现与需求明确不一致的缺陷；当前实现符合会话/角色页面权限、页面4写权限、范围校验、未请求时清零结果标志以及提交值保留等要求。以下为建议复核的完整输入trace场景。",
+          "questions": [],
+          "proposals": [
+            {
+              "name": "admin_write_then_session_invalid",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "SessionValid": true,
+                    "Role": 3,
+                    "Page": 3,
+                    "WriteReq": false,
+                    "WriteValue": 0.0
+                  },
+                  "expected": {
+                    "ViewAllowed": true,
+                    "WriteAllowed": false,
+                    "Accepted": false,
+                    "Denied": false,
+                    "ParamValue": 0.0
+                  }
+                },
+                {
+                  "time_ms": 10,
+                  "inputs": {
+                    "SessionValid": true,
+                    "Role": 3,
+                    "Page": 4,
+                    "WriteReq": true,
+                    "WriteValue": 50.0
+                  },
+                  "expected": {
+                    "ViewAllowed": true,
+                    "WriteAllowed": true,
+                    "Accepted": true,
+                    "Denied": false,
+                    "ParamValue": 50.0
+                  }
+                },
+                {
+                  "time_ms": 20,
+                  "inputs": {
+                    "SessionValid": false,
+                    "Role": 3,
+                    "Page": 4,
+                    "WriteReq": true,
+                    "WriteValue": 60.0
+                  },
+                  "expected": {
+                    "ViewAllowed": false,
+                    "WriteAllowed": false,
+                    "Accepted": false,
+                    "Denied": true,
+                    "ParamValue": 50.0
+                  }
+                }
+              ]
+            },
+            {
+              "name": "operator_accept_and_out_of_range_deny",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "SessionValid": true,
+                    "Role": 2,
+                    "Page": 2,
+                    "WriteReq": false,
+                    "WriteValue": 0.0
+                  },
+                  "expected": {
+                    "ViewAllowed": true,
+                    "WriteAllowed": false,
+                    "Accepted": false,
+                    "Denied": false,
+                    "ParamValue": 0.0
+                  }
+                },
+                {
+                  "time_ms": 10,
+                  "inputs": {
+                    "SessionValid": true,
+                    "Role": 2,
+                    "Page": 4,
+                    "WriteReq": true,
+                    "WriteValue": 100.0
+                  },
+                  "expected": {
+                    "ViewAllowed": true,
+                    "WriteAllowed": true,
+                    "Accepted": true,
+                    "Denied": false,
+                    "ParamValue": 100.0
+                  }
+                },
+                {
+                  "time_ms": 20,
+                  "inputs": {
+                    "SessionValid": true,
+                    "Role": 2,
+                    "Page": 4,
+                    "WriteReq": true,
+                    "WriteValue": 100.5
+                  },
+                  "expected": {
+                    "ViewAllowed": true,
+                    "WriteAllowed": true,
+                    "Accepted": false,
+                    "Denied": true,
+                    "ParamValue": 100.0
+                  }
+                },
+                {
+                  "time_ms": 30,
+                  "inputs": {
+                    "SessionValid": true,
+                    "Role": 2,
+                    "Page": 4,
+                    "WriteReq": false,
+                    "WriteValue": 0.0
+                  },
+                  "expected": {
+                    "ViewAllowed": true,
+                    "WriteAllowed": true,
+                    "Accepted": false,
+                    "Denied": false,
+                    "ParamValue": 100.0
+                  }
+                }
+              ]
+            },
+            {
+              "name": "user_denied_then_admin_accepted_then_invalid_role",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "SessionValid": true,
+                    "Role": 1,
+                    "Page": 4,
+                    "WriteReq": true,
+                    "WriteValue": 10.0
+                  },
+                  "expected": {
+                    "ViewAllowed": false,
+                    "WriteAllowed": false,
+                    "Accepted": false,
+                    "Denied": true,
+                    "ParamValue": 0.0
+                  }
+                },
+                {
+                  "time_ms": 10,
+                  "inputs": {
+                    "SessionValid": true,
+                    "Role": 3,
+                    "Page": 4,
+                    "WriteReq": true,
+                    "WriteValue": 10.0
+                  },
+                  "expected": {
+                    "ViewAllowed": true,
+                    "WriteAllowed": true,
+                    "Accepted": true,
+                    "Denied": false,
+                    "ParamValue": 10.0
+                  }
+                },
+                {
+                  "time_ms": 20,
+                  "inputs": {
+                    "SessionValid": true,
+                    "Role": 4,
+                    "Page": 4,
+                    "WriteReq": true,
+                    "WriteValue": 20.0
+                  },
+                  "expected": {
+                    "ViewAllowed": false,
+                    "WriteAllowed": false,
+                    "Accepted": false,
+                    "Denied": true,
+                    "ParamValue": 10.0
+                  }
+                }
+              ]
+            }
+          ],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_03",
+      "status": "reviewed_finite_pass",
+      "model_calls": 3,
+      "source_sha256": "60edf2e57db498ee1586538d20eda2a7611e8c4aa2cc5ad4f46a258a321e34f3",
+      "code_proposals": 2,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现题面可推出且与实现明确冲突的缺陷。复位优先级、 freshness、年龄饱和、故障锁存/清除、非法参数处理与接口描述一致；无额外问题需要提出。",
+          "questions": [],
+          "proposals": [],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_04",
+      "status": "reviewed_finite_pass",
+      "model_calls": 2,
+      "source_sha256": "d7de542805813a30c9a1983999f536e96104af11feb04adc49d8a26a2816bb68",
+      "code_proposals": 1,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现明确缺陷；实现与需求条款一致。以下 trace 为待复核建议，不是测试真值。",
+          "questions": [],
+          "proposals": [
+            {
+              "name": "init_ignore_then_update",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Reset": true,
+                    "InitialD": 76.0,
+                    "Receiving": false,
+                    "EncoderDelta": 1000000,
+                    "SpeedMpm": 0.0
+                  },
+                  "expected": {
+                    "StoredLength": 0.0,
+                    "Diameter": 76.0,
+                    "MotorRPM": 0.0,
+                    "LimitHit": false,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 100,
+                  "inputs": {
+                    "Reset": false,
+                    "InitialD": 0.0,
+                    "Receiving": true,
+                    "EncoderDelta": 1024,
+                    "SpeedMpm": 15.0
+                  },
+                  "expected": {
+                    "StoredLength": 157.07963267948966,
+                    "Diameter": 76.177424477,
+                    "MotorRPM": 3133.89979088,
+                    "LimitHit": false,
+                    "Error": false
+                  }
+                }
+              ]
+            },
+            {
+              "name": "exact_lower_boundary",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Reset": true,
+                    "InitialD": 76.0,
+                    "Receiving": false,
+                    "EncoderDelta": 0,
+                    "SpeedMpm": 0.0
+                  },
+                  "expected": {
+                    "StoredLength": 0.0,
+                    "Diameter": 76.0,
+                    "MotorRPM": 0.0,
+                    "LimitHit": false,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 50,
+                  "inputs": {
+                    "Reset": false,
+                    "InitialD": 0.0,
+                    "Receiving": true,
+                    "EncoderDelta": 0,
+                    "SpeedMpm": 0.0
+                  },
+                  "expected": {
+                    "StoredLength": 0.0,
+                    "Diameter": 76.0,
+                    "MotorRPM": 0.0,
+                    "LimitHit": false,
+                    "Error": false
+                  }
+                }
+              ]
+            },
+            {
+              "name": "invalid_preserves_then_clear",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Reset": true,
+                    "InitialD": 100.0,
+                    "Receiving": true,
+                    "EncoderDelta": 0,
+                    "SpeedMpm": 0.0
+                  },
+                  "expected": {
+                    "StoredLength": 24574.23586808016,
+                    "Diameter": 100.0,
+                    "MotorRPM": 0.0,
+                    "LimitHit": false,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 10,
+                  "inputs": {
+                    "Reset": false,
+                    "InitialD": 0.0,
+                    "Receiving": true,
+                    "EncoderDelta": 0,
+                    "SpeedMpm": 20.0
+                  },
+                  "expected": {
+                    "StoredLength": 24574.23586808016,
+                    "Diameter": 100.0,
+                    "MotorRPM": 0.0,
+                    "LimitHit": false,
+                    "Error": true
+                  }
+                },
+                {
+                  "time_ms": 20,
+                  "inputs": {
+                    "Reset": false,
+                    "InitialD": 0.0,
+                    "Receiving": true,
+                    "EncoderDelta": 0,
+                    "SpeedMpm": 0.0
+                  },
+                  "expected": {
+                    "StoredLength": 24574.23586808016,
+                    "Diameter": 100.0,
+                    "MotorRPM": 0.0,
+                    "LimitHit": false,
+                    "Error": false
+                  }
+                }
+              ]
+            }
+          ],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_05",
+      "status": "review_disagreement",
+      "model_calls": 2,
+      "source_sha256": "d5ea2a1d880aba8c5d2d8d079da33651f604ce3706a3f8b9c41957503d4d6465",
+      "code_proposals": 1,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_disagreement",
+          "summary": "发现一处与第5条可能不符的明确缺陷：代码仅在 Enable=TRUE 的非初始化分支检查 DistanceMm 是否无效或是否低于 lastDistance；当 Enable=FALSE 且非初始化/Reset 时直接保持，不锁存新的无效位置或距离回退。若第5条的 Error 锁存不限定 Enable，则 Error 应置 TRUE。其余核心逻辑（初始化不触发、忙时丢弃不补发、d>0 时单次请求、计数更新）与题面一致。以下场景为复核建议。",
+          "questions": [
+            "第5条的无效位置/距离回退锁存 Error 是否应覆盖 Enable=FALSE 的扫描？若是，则当前实现存在缺陷。"
+          ],
+          "proposals": [
+            {
+              "name": "disabled_invalid_position",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "Reset": false,
+                    "DistanceMm": 0.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": false
+                  },
+                  "expected": {
+                    "CapturePulse": false,
+                    "CaptureCount": 0,
+                    "MissedCount": 0,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 1,
+                  "inputs": {
+                    "Enable": false,
+                    "Reset": false,
+                    "DistanceMm": -1.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": false
+                  },
+                  "expected": {
+                    "CapturePulse": false,
+                    "CaptureCount": 0,
+                    "MissedCount": 0,
+                    "Error": true
+                  }
+                },
+                {
+                  "time_ms": 2,
+                  "inputs": {
+                    "Enable": false,
+                    "Reset": false,
+                    "DistanceMm": 0.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": false
+                  },
+                  "expected": {
+                    "CapturePulse": false,
+                    "CaptureCount": 0,
+                    "MissedCount": 0,
+                    "Error": true
+                  }
+                }
+              ]
+            },
+            {
+              "name": "disabled_decrease",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "Reset": false,
+                    "DistanceMm": 10.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": false
+                  },
+                  "expected": {
+                    "CapturePulse": false,
+                    "CaptureCount": 0,
+                    "MissedCount": 0,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 1,
+                  "inputs": {
+                    "Enable": true,
+                    "Reset": false,
+                    "DistanceMm": 20.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": false
+                  },
+                  "expected": {
+                    "CapturePulse": true,
+                    "CaptureCount": 1,
+                    "MissedCount": 0,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 2,
+                  "inputs": {
+                    "Enable": false,
+                    "Reset": false,
+                    "DistanceMm": 15.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": false
+                  },
+                  "expected": {
+                    "CapturePulse": false,
+                    "CaptureCount": 1,
+                    "MissedCount": 0,
+                    "Error": true
+                  }
+                }
+              ]
+            },
+            {
+              "name": "busy_no_replay",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "Reset": false,
+                    "DistanceMm": 0.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": false
+                  },
+                  "expected": {
+                    "CapturePulse": false,
+                    "CaptureCount": 0,
+                    "MissedCount": 0,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 1,
+                  "inputs": {
+                    "Enable": true,
+                    "Reset": false,
+                    "DistanceMm": 35.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": true
+                  },
+                  "expected": {
+                    "CapturePulse": false,
+                    "CaptureCount": 0,
+                    "MissedCount": 3,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 2,
+                  "inputs": {
+                    "Enable": true,
+                    "Reset": false,
+                    "DistanceMm": 35.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": false
+                  },
+                  "expected": {
+                    "CapturePulse": false,
+                    "CaptureCount": 0,
+                    "MissedCount": 3,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 3,
+                  "inputs": {
+                    "Enable": true,
+                    "Reset": false,
+                    "DistanceMm": 40.0,
+                    "SpacingMm": 10.0,
+                    "CameraBusy": false
+                  },
+                  "expected": {
+                    "CapturePulse": true,
+                    "CaptureCount": 1,
+                    "MissedCount": 3,
+                    "Error": false
+                  }
+                }
+              ]
+            }
+          ],
+          "expected_authority": "advisory_model_claim_only",
+          "first_failure": {
+            "name": "disabled_invalid_position",
+            "first_failure": {
+              "scan": 1,
+              "output": "Error",
+              "expected": true,
+              "actual": 0.0
+            },
+            "rows": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "Enable": true,
+                  "Reset": false,
+                  "DistanceMm": 0.0,
+                  "SpacingMm": 10.0,
+                  "CameraBusy": false
+                },
+                "expected": {
+                  "CapturePulse": false,
+                  "CaptureCount": 0,
+                  "MissedCount": 0,
+                  "Error": false
+                },
+                "actual": {
+                  "CapturePulse": 0.0,
+                  "CaptureCount": 0.0,
+                  "MissedCount": 0.0,
+                  "Error": 0.0
+                },
+                "violations": []
+              },
+              {
+                "time_ms": 1,
+                "inputs": {
+                  "Enable": false,
+                  "Reset": false,
+                  "DistanceMm": -1.0,
+                  "SpacingMm": 10.0,
+                  "CameraBusy": false
+                },
+                "expected": {
+                  "CapturePulse": false,
+                  "CaptureCount": 0,
+                  "MissedCount": 0,
+                  "Error": true
+                },
+                "actual": {
+                  "CapturePulse": 0.0,
+                  "CaptureCount": 0.0,
+                  "MissedCount": 0.0,
+                  "Error": 0.0
+                },
+                "violations": [
+                  {
+                    "output": "Error",
+                    "expected": true,
+                    "actual": 0.0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_06",
+      "status": "reviewed_finite_pass",
+      "model_calls": 2,
+      "source_sha256": "b6b793da99400e7108f9255861d89b1f0f6cf29beeb62b6cadb29ae56c1778b5",
+      "code_proposals": 1,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现明确缺陷：代码逻辑与题面要求一致。",
+          "questions": [],
+          "proposals": [],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_07",
+      "status": "reviewed_finite_pass",
+      "model_calls": 2,
+      "source_sha256": "bc718d398bb4775987695ae77e57c708e23ad170e29f5494da69030ce4699caa",
+      "code_proposals": 1,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现明确缺陷：代码实现的计算公式、Trip/Enable 优先级、非法数值清零并置错、合法计算清错以及无状态首扫直接计算均与题面要求一致。",
+          "questions": [],
+          "proposals": [
+            {
+              "name": "normal_increase_decrease",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "Trip": false,
+                    "FeedDemand": 40.0,
+                    "FeedActual": 30.0,
+                    "ExtractionCapacity": 20.0
+                  },
+                  "expected": {
+                    "FeedSP": 20.0,
+                    "ExtractionSP": 40.0,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 10,
+                  "inputs": {
+                    "Enable": true,
+                    "Trip": false,
+                    "FeedDemand": 80.0,
+                    "FeedActual": 30.0,
+                    "ExtractionCapacity": 20.0
+                  },
+                  "expected": {
+                    "FeedSP": 20.0,
+                    "ExtractionSP": 80.0,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 20,
+                  "inputs": {
+                    "Enable": true,
+                    "Trip": false,
+                    "FeedDemand": 30.0,
+                    "FeedActual": 30.0,
+                    "ExtractionCapacity": 20.0
+                  },
+                  "expected": {
+                    "FeedSP": 20.0,
+                    "ExtractionSP": 30.0,
+                    "Error": false
+                  }
+                }
+              ]
+            },
+            {
+              "name": "invalid_numeric",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "Trip": false,
+                    "FeedDemand": -1.0,
+                    "FeedActual": 50.0,
+                    "ExtractionCapacity": 50.0
+                  },
+                  "expected": {
+                    "FeedSP": 0.0,
+                    "ExtractionSP": 0.0,
+                    "Error": true
+                  }
+                },
+                {
+                  "time_ms": 10,
+                  "inputs": {
+                    "Enable": true,
+                    "Trip": false,
+                    "FeedDemand": 50.0,
+                    "FeedActual": 101.0,
+                    "ExtractionCapacity": 50.0
+                  },
+                  "expected": {
+                    "FeedSP": 0.0,
+                    "ExtractionSP": 0.0,
+                    "Error": true
+                  }
+                },
+                {
+                  "time_ms": 20,
+                  "inputs": {
+                    "Enable": true,
+                    "Trip": false,
+                    "FeedDemand": 50.0,
+                    "FeedActual": 50.0,
+                    "ExtractionCapacity": 100.1
+                  },
+                  "expected": {
+                    "FeedSP": 0.0,
+                    "ExtractionSP": 0.0,
+                    "Error": true
+                  }
+                },
+                {
+                  "time_ms": 30,
+                  "inputs": {
+                    "Enable": true,
+                    "Trip": false,
+                    "FeedDemand": 50.0,
+                    "FeedActual": 50.0,
+                    "ExtractionCapacity": 50.0
+                  },
+                  "expected": {
+                    "FeedSP": 50.0,
+                    "ExtractionSP": 50.0,
+                    "Error": false
+                  }
+                }
+              ]
+            },
+            {
+              "name": "trip_disable_priority",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "Trip": true,
+                    "FeedDemand": -5.0,
+                    "FeedActual": 200.0,
+                    "ExtractionCapacity": -10.0
+                  },
+                  "expected": {
+                    "FeedSP": 0.0,
+                    "ExtractionSP": 0.0,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 10,
+                  "inputs": {
+                    "Enable": false,
+                    "Trip": false,
+                    "FeedDemand": -5.0,
+                    "FeedActual": 200.0,
+                    "ExtractionCapacity": -10.0
+                  },
+                  "expected": {
+                    "FeedSP": 0.0,
+                    "ExtractionSP": 0.0,
+                    "Error": false
+                  }
+                },
+                {
+                  "time_ms": 20,
+                  "inputs": {
+                    "Enable": true,
+                    "Trip": false,
+                    "FeedDemand": 50.0,
+                    "FeedActual": 20.0,
+                    "ExtractionCapacity": 80.0
+                  },
+                  "expected": {
+                    "FeedSP": 50.0,
+                    "ExtractionSP": 50.0,
+                    "Error": false
+                  }
+                }
+              ]
+            }
+          ],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_08",
+      "status": "reviewed_finite_pass",
+      "model_calls": 4,
+      "source_sha256": "02103511d6e8b10adb0da896c62dbd3493ed3ee420728631112d063d6ab43942",
+      "code_proposals": 3,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现明确缺陷；代码在有效输入下实现 ABS(LeftSpeed10-RightSpeed10)<=1 和 ABS(LeftSpeed10+RightSpeed10-13*ReferenceSpeed10)<=2，并在无效输入时仅置 Invalid。",
+          "questions": [],
+          "proposals": [],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_09",
+      "status": "reviewed_finite_pass",
+      "model_calls": 2,
+      "source_sha256": "4d77a38e301198696eead9008961a48eb0a94ecc220fd65c7e82aed612c65832",
+      "code_proposals": 1,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "No explicit mismatch found between the requirements and FB_SpectrometerQualification: initial outputs, maintenance priority, single pre-scan transition, forced 2→0 maintenance exit, CalibReq/MaintLamp derivation, and MeasurePermit gating all match the stated requirements.",
+          "questions": [],
+          "proposals": [],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_10",
+      "status": "reviewed_finite_pass",
+      "model_calls": 2,
+      "source_sha256": "ba50913ff79f90cf02ea26d2df251ce1e3f6e08efdc5c484f1b858ea319af406",
+      "code_proposals": 1,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现题面与代码之间的明确缺陷；实现满足取消最高优先级、按钮边沿注册、Busy 时不丢失请求、同扫描派发以及 RequestLamp 始终等于 Pending 等要求。",
+          "questions": [],
+          "proposals": [],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_11",
+      "status": "reviewed_finite_pass",
+      "model_calls": 2,
+      "source_sha256": "f3346d3baefc65bd79f8defd22cd1b3dfe03dff3d208ca7a982dce57bcae3905",
+      "code_proposals": 1,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现与题面冲突的明确缺陷；代码每次扫描重新计算，先校验量程再计算差值，配对选择与并列顺序、无配对分支、过载阈值及释放许可逻辑均符合需求。以下场景仅作为关键边界复核建议。",
+          "questions": [],
+          "proposals": [
+            {
+              "name": "ab_ac_bc_tie_select_ac",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "LoadA": 10000,
+                    "LoadB": 10100,
+                    "LoadC": 10050,
+                    "ReleaseReq": true,
+                    "BarrierReady": true
+                  },
+                  "expected": {
+                    "PairMask": 5,
+                    "VotedKg": 10025.0,
+                    "LoadFault": false,
+                    "Overload": true,
+                    "ReleasePermit": false
+                  }
+                }
+              ]
+            },
+            {
+              "name": "boundary_200_and_overload_threshold",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "LoadA": 10000,
+                    "LoadB": 10000,
+                    "LoadC": 10201,
+                    "ReleaseReq": true,
+                    "BarrierReady": true
+                  },
+                  "expected": {
+                    "PairMask": 3,
+                    "VotedKg": 10000.0,
+                    "LoadFault": false,
+                    "Overload": false,
+                    "ReleasePermit": true
+                  }
+                }
+              ]
+            },
+            {
+              "name": "no_consistent_pair_then_recover",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "LoadA": 20000,
+                    "LoadB": 0,
+                    "LoadC": 10000,
+                    "ReleaseReq": true,
+                    "BarrierReady": true
+                  },
+                  "expected": {
+                    "PairMask": 0,
+                    "VotedKg": 0.0,
+                    "LoadFault": true,
+                    "Overload": false,
+                    "ReleasePermit": false
+                  }
+                },
+                {
+                  "time_ms": 1,
+                  "inputs": {
+                    "LoadA": 5000,
+                    "LoadB": 5100,
+                    "LoadC": 5050,
+                    "ReleaseReq": false,
+                    "BarrierReady": true
+                  },
+                  "expected": {
+                    "PairMask": 5,
+                    "VotedKg": 5025.0,
+                    "LoadFault": false,
+                    "Overload": false,
+                    "ReleasePermit": false
+                  }
+                }
+              ]
+            }
+          ],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-custom-real",
+      "task_id": "CUSTOM_12",
+      "status": "reviewed_finite_pass",
+      "model_calls": 2,
+      "source_sha256": "956cf072bc3e2d9bac79c3608656cb540f20a1516b82b68602bae358f0eede7a",
+      "code_proposals": 1,
+      "source_origin": "new weak-model generation",
+      "reviews": [
+        {
+          "status": "review_pass",
+          "summary": "未发现明确缺陷。代码的使能/非法预算/强制传感器缺电优先级、子集枚举、Score→PowerW→Mask 平局规则以及输出与 SelectedMask 一致性均与题面要求一致。以下场景仅作为待复核建议。",
+          "questions": [],
+          "proposals": [
+            {
+              "name": "global_score_not_ratio",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "BudgetW": 100,
+                    "NeedSensor": true,
+                    "NeedHeater": true,
+                    "NeedRadio": false,
+                    "MandatorySensor": false
+                  },
+                  "expected": {
+                    "SelectedMask": 2,
+                    "SensorOn": false,
+                    "HeaterOn": true,
+                    "RadioOn": false,
+                    "PowerW": 70,
+                    "Score": 10,
+                    "BudgetShortage": false,
+                    "Error": false
+                  }
+                }
+              ]
+            },
+            {
+              "name": "mandatory_shortage",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "BudgetW": 39,
+                    "NeedSensor": false,
+                    "NeedHeater": true,
+                    "NeedRadio": true,
+                    "MandatorySensor": true
+                  },
+                  "expected": {
+                    "SelectedMask": 0,
+                    "SensorOn": false,
+                    "HeaterOn": false,
+                    "RadioOn": false,
+                    "PowerW": 0,
+                    "Score": 0,
+                    "BudgetShortage": true,
+                    "Error": false
+                  }
+                }
+              ]
+            },
+            {
+              "name": "invalid_budget",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "Enable": true,
+                    "BudgetW": 201,
+                    "NeedSensor": true,
+                    "NeedHeater": true,
+                    "NeedRadio": true,
+                    "MandatorySensor": true
+                  },
+                  "expected": {
+                    "SelectedMask": 0,
+                    "SensorOn": false,
+                    "HeaterOn": false,
+                    "RadioOn": false,
+                    "PowerW": 0,
+                    "Score": 0,
+                    "BudgetShortage": false,
+                    "Error": true
+                  }
+                }
+              ]
+            }
+          ],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-public-repair",
+      "task_id": "PUBLIC_15",
+      "status": "review_disagreement",
+      "model_calls": 2,
+      "source_sha256": "e87d28186d4e33f5683b5d6814f45899fafd6c43317add90af6c0867ab64690a",
+      "code_proposals": 1,
+      "source_origin": "saved weak-model candidate",
+      "reviews": [
+        {
+          "status": "review_disagreement",
+          "summary": "急停与自动阈值主流程基本符合题面；主要风险是自动空闲/结束后未刷新全部输出，切换模式可能保持手动阀输出；且 mixMotorComplete 用上升沿检测，若完成信号为电平并保持 TRUE，后续自动周期可能卡在搅拌阶段。以下 trace 为复核建议，不是测试真值。",
+          "questions": [
+            "mixMotorComplete 是电平保持信号还是仅脉冲信号？代码按上升沿检测，若保持 TRUE，新周期进入搅拌阶段会漏判。",
+            "自动流程结束并打开 D 后，D 是否应保持到下次 autoStart 或急停，还是流程结束即关闭？",
+            "从手动切到自动但尚未按 autoStart 时，原手动阀/电机输出是否应立即清零？"
+          ],
+          "proposals": [
+            {
+              "name": "auto_idle_keeps_manual_valve",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": false,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 0,
+                    "mixMotorComplete": false
+                  },
+                  "expected": {
+                    "valveARun": false,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": false
+                  }
+                },
+                {
+                  "time_ms": 100,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": false,
+                    "valveAStart": true,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 0,
+                    "mixMotorComplete": false
+                  },
+                  "expected": {
+                    "valveARun": true,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": false
+                  }
+                },
+                {
+                  "time_ms": 200,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": false,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 0,
+                    "mixMotorComplete": false
+                  },
+                  "expected": {
+                    "valveARun": true,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": false
+                  }
+                },
+                {
+                  "time_ms": 300,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 0,
+                    "mixMotorComplete": false
+                  },
+                  "expected": {
+                    "valveARun": false,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": false
+                  }
+                }
+              ]
+            },
+            {
+              "name": "mix_complete_stuck_high_repeat_cycle",
+              "trace": [
+                {
+                  "time_ms": 0,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 0,
+                    "mixMotorComplete": false
+                  },
+                  "expected": {
+                    "valveARun": false,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": false
+                  }
+                },
+                {
+                  "time_ms": 100,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": true,
+                    "processMode": false,
+                    "levelSensor": 0,
+                    "mixMotorComplete": false
+                  },
+                  "expected": {
+                    "valveARun": true,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": false
+                  }
+                },
+                {
+                  "time_ms": 200,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 50,
+                    "mixMotorComplete": false
+                  },
+                  "expected": {
+                    "valveARun": false,
+                    "valveBRun": true,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": false
+                  }
+                },
+                {
+                  "time_ms": 300,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 80,
+                    "mixMotorComplete": false
+                  },
+                  "expected": {
+                    "valveARun": false,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": true
+                  }
+                },
+                {
+                  "time_ms": 400,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 80,
+                    "mixMotorComplete": true
+                  },
+                  "expected": {
+                    "valveARun": false,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": true,
+                    "mixMotorRun": false
+                  }
+                },
+                {
+                  "time_ms": 500,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": true,
+                    "processMode": false,
+                    "levelSensor": 0,
+                    "mixMotorComplete": true
+                  },
+                  "expected": {
+                    "valveARun": true,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": false
+                  }
+                },
+                {
+                  "time_ms": 600,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 50,
+                    "mixMotorComplete": true
+                  },
+                  "expected": {
+                    "valveARun": false,
+                    "valveBRun": true,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": false
+                  }
+                },
+                {
+                  "time_ms": 700,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 80,
+                    "mixMotorComplete": true
+                  },
+                  "expected": {
+                    "valveARun": false,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": false,
+                    "mixMotorRun": true
+                  }
+                },
+                {
+                  "time_ms": 800,
+                  "inputs": {
+                    "estop": true,
+                    "opeMode": true,
+                    "valveAStart": false,
+                    "valveBStart": false,
+                    "valveCStart": false,
+                    "valveDStart": false,
+                    "mixMotorStart": false,
+                    "autoStart": false,
+                    "processMode": false,
+                    "levelSensor": 80,
+                    "mixMotorComplete": true
+                  },
+                  "expected": {
+                    "valveARun": false,
+                    "valveBRun": false,
+                    "valveCRun": false,
+                    "valveDRun": true,
+                    "mixMotorRun": false
+                  }
+                }
+              ]
+            }
+          ],
+          "expected_authority": "advisory_model_claim_only",
+          "first_failure": {
+            "name": "auto_idle_keeps_manual_valve",
+            "first_failure": {
+              "scan": 3,
+              "output": "valveARun",
+              "expected": false,
+              "actual": 1.0
+            },
+            "rows": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "estop": true,
+                  "opeMode": false,
+                  "valveAStart": false,
+                  "valveBStart": false,
+                  "valveCStart": false,
+                  "valveDStart": false,
+                  "mixMotorStart": false,
+                  "autoStart": false,
+                  "processMode": false,
+                  "levelSensor": 0,
+                  "mixMotorComplete": false
+                },
+                "expected": {
+                  "valveARun": false,
+                  "valveBRun": false,
+                  "valveCRun": false,
+                  "valveDRun": false,
+                  "mixMotorRun": false
+                },
+                "actual": {
+                  "valveARun": 0.0,
+                  "valveBRun": 0.0,
+                  "valveCRun": 0.0,
+                  "valveDRun": 0.0,
+                  "mixMotorRun": 0.0
+                },
+                "violations": []
+              },
+              {
+                "time_ms": 100,
+                "inputs": {
+                  "estop": true,
+                  "opeMode": false,
+                  "valveAStart": true,
+                  "valveBStart": false,
+                  "valveCStart": false,
+                  "valveDStart": false,
+                  "mixMotorStart": false,
+                  "autoStart": false,
+                  "processMode": false,
+                  "levelSensor": 0,
+                  "mixMotorComplete": false
+                },
+                "expected": {
+                  "valveARun": true,
+                  "valveBRun": false,
+                  "valveCRun": false,
+                  "valveDRun": false,
+                  "mixMotorRun": false
+                },
+                "actual": {
+                  "valveARun": 1.0,
+                  "valveBRun": 0.0,
+                  "valveCRun": 0.0,
+                  "valveDRun": 0.0,
+                  "mixMotorRun": 0.0
+                },
+                "violations": []
+              },
+              {
+                "time_ms": 200,
+                "inputs": {
+                  "estop": true,
+                  "opeMode": false,
+                  "valveAStart": false,
+                  "valveBStart": false,
+                  "valveCStart": false,
+                  "valveDStart": false,
+                  "mixMotorStart": false,
+                  "autoStart": false,
+                  "processMode": false,
+                  "levelSensor": 0,
+                  "mixMotorComplete": false
+                },
+                "expected": {
+                  "valveARun": true,
+                  "valveBRun": false,
+                  "valveCRun": false,
+                  "valveDRun": false,
+                  "mixMotorRun": false
+                },
+                "actual": {
+                  "valveARun": 1.0,
+                  "valveBRun": 0.0,
+                  "valveCRun": 0.0,
+                  "valveDRun": 0.0,
+                  "mixMotorRun": 0.0
+                },
+                "violations": []
+              },
+              {
+                "time_ms": 300,
+                "inputs": {
+                  "estop": true,
+                  "opeMode": true,
+                  "valveAStart": false,
+                  "valveBStart": false,
+                  "valveCStart": false,
+                  "valveDStart": false,
+                  "mixMotorStart": false,
+                  "autoStart": false,
+                  "processMode": false,
+                  "levelSensor": 0,
+                  "mixMotorComplete": false
+                },
+                "expected": {
+                  "valveARun": false,
+                  "valveBRun": false,
+                  "valveCRun": false,
+                  "valveDRun": false,
+                  "mixMotorRun": false
+                },
+                "actual": {
+                  "valveARun": 1.0,
+                  "valveBRun": 0.0,
+                  "valveCRun": 0.0,
+                  "valveDRun": 0.0,
+                  "mixMotorRun": 0.0
+                },
+                "violations": [
+                  {
+                    "output": "valveARun",
+                    "expected": false,
+                    "actual": 1.0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "category": "dataset-r8-public-repair",
+      "task_id": "PUBLIC_19",
+      "status": "agent_error",
+      "model_calls": 2,
+      "source_sha256": "c17021caabb1d77f8e082870455faf41819dfb5133cf6bd7f652c2111edb668d",
+      "code_proposals": 1,
+      "source_origin": "saved weak-model candidate",
+      "reviews": []
+    },
+    {
+      "category": "dataset-r8-review-short",
+      "task_id": "PUBLIC_19",
+      "status": "review_questions",
+      "model_calls": 1,
+      "source_sha256": "c17021caabb1d77f8e082870455faf41819dfb5133cf6bd7f652c2111edb668d",
+      "code_proposals": 0,
+      "source_origin": "saved weak-model candidate",
+      "reviews": [
+        {
+          "status": "review_questions",
+          "summary": "对照需求与代码，模式互斥、手动点动、单步流程、单周期流程、连续循环及急停清零逻辑均与题面一致；未发现仅由题面可明确判定的逻辑缺陷。限位同一扫描内仍输出一个扫描、急停释放后是否需重新启动等属于题面未规定的扫描/复位语义，不列为明确缺陷。",
+          "questions": [
+            "当动作限位在当前扫描变为 TRUE 时，是否要求同一扫描立即将该动作输出置 FALSE？题面未规定扫描时序，当前实现会先置输出 TRUE 再迁移状态。",
+            "急停释放后，若手动按钮仍保持或 Start 仍保持，是否允许立即恢复动作或必须重新产生上升沿/重新按启动？题面未规定复位策略。"
+          ],
+          "proposals": [],
+          "expected_authority": "advisory_model_claim_only"
+        }
+      ]
+    }
+  ]
+}

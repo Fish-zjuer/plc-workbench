@@ -1,0 +1,758 @@
+{
+  "schema": "plc-ltl-requirements-v1",
+  "observation": "# 统一的观察约定\n\n本文件是需求层 LTL 草稿，使用明确数学定义的观察器原子命题，不是 PLCVerif/Z3 的原生输入语法；没有声称完成形式化证明。\n一次观测 O_t 同时包含本轮调用前的输入 inputs_t 和本轮调用后的输出 outputs_t。\npre.y 表示本轮调用前保存的输出/状态；从第二次调用起通常等于上一轮 post.y。首次调用的 pre 状态按题目规定初始化。\nG p 表示每次观测都满足 p；X p 表示下一轮观测满足 p；F p 表示最终某轮满足 p；U 表示直到。\n当前输入触发本轮输出的规则不加 X。涉及上一轮的状态以 pre 或独立观察器表示，不能直接用下一轮输入替代。\ninitial 专指第一次调用前的初始化检查，与正常 O_t 观测分开。初始输出允许在第一次调用后依输入改变。\nR1(p) := p | X(p)，仅用于题面/既有公共测试允许当拍或下一拍响应的工序输出，不能用于放宽急停、互锁等同拍要求。\nrise(x) := x_t & !x_(t-1)，首拍历史仅在题目明确时取 FALSE；未明确的首扫历史不评分。\n数学表达式先求值为布尔原子命题，再由 LTL 组合。有限数组、掩码上的量词需按实际实例逐项展开；它们不是未定义的模型自报变量。\n所有实数输入限定有限值；数值公式是精确数学约束，实际测试按文件中的数值容差比较。测试通过不等于普遍成立。\n",
+  "tasks": [
+    {
+      "id": "PUBLIC_01",
+      "title": "Q01 灌装线",
+      "definitions_and_rules_markdown": "## Q01 灌装线\n\n观察器按输入维护独立阶段：idle→clean→fill→cap→pack→done→idle。idle仅由bottleSensor启动；clean/fill/cap/pack分别由对应ConfirmButton推进；done仅由finishedButton复位。阶段错误的确认按钮不推进。阶段输出依次为Pump_Motor、Filling_Valve、Capping_Machine、Packing_Machine、Completion_Light。`stageOutputOK`表示对应阶段输出有效且其他阶段输出关闭，这是当前有限测试采用的顺序工序解释。\n\n```text\nG(idleBefore & bottleSensor -> R1(cleanOutputOK))\nG(cleanBefore & cleaningConfirmButton -> R1(fillOutputOK))\nG(fillBefore & fillingConfirmButton -> R1(capOutputOK))\nG(capBefore & cappingConfirmButton -> R1(packOutputOK))\nG(packBefore & packingConfirmButton -> R1(doneOutputOK))\nG(doneBefore & finishedButton -> R1(idleOutputOK))\nG(waitingForCurrentConfirmation -> currentStageHeld)\nG(wrongStageConfirmationOnly -> observerStageUnchanged)\n```\n\n按钮用单拍脉冲或阶段内有效电平测试，不对“到站前始终按住确认”的未定义策略打分。阶段和输出的对应表构成上述原子命题的完整定义。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(idleBefore & bottleSensor -> R1(cleanOutputOK))"
+        },
+        {
+          "id": "P02",
+          "formula": "G(cleanBefore & cleaningConfirmButton -> R1(fillOutputOK))"
+        },
+        {
+          "id": "P03",
+          "formula": "G(fillBefore & fillingConfirmButton -> R1(capOutputOK))"
+        },
+        {
+          "id": "P04",
+          "formula": "G(capBefore & cappingConfirmButton -> R1(packOutputOK))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(packBefore & packingConfirmButton -> R1(doneOutputOK))"
+        },
+        {
+          "id": "P06",
+          "formula": "G(doneBefore & finishedButton -> R1(idleOutputOK))"
+        },
+        {
+          "id": "P07",
+          "formula": "G(waitingForCurrentConfirmation -> currentStageHeld)"
+        },
+        {
+          "id": "P08",
+          "formula": "G(wrongStageConfirmationOnly -> observerStageUnchanged)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_02",
+      "title": "Q02 DWORD边沿检测",
+      "definitions_and_rules_markdown": "## Q02 DWORD边沿检测\n\n跳过第一次调用的历史初始化差异。从第二次调用起，独立保存`prevValue`：`rising=value & ~prevValue & 0xFFFFFFFF`，`falling=prevValue & ~value & 0xFFFFFFFF`；popcount为32位中1的个数。\n\n```text\nG(historyReady -> risingBitsOK)\nG(historyReady -> fallingBitsOK)\nG(historyReady -> risingCountOK)\nG(historyReady -> fallingCountOK)\nG(historyReady -> changedFlagOK)\nG(historyReady -> risingFlagOK)\nG(historyReady -> fallingFlagOK)\n```\n\n命题分别定义为`risingBits=rising`、`fallingBits=falling`、`noOfRisingBits=popcount(rising)`、`noOfFallingBits=popcount(falling)`、`hasChanged=(value!=prevValue)`、`hasRisingEdges=(rising!=0)`、`hasFallingEdges=(falling!=0)`。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(historyReady -> risingBitsOK)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(historyReady -> fallingBitsOK)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(historyReady -> risingCountOK)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(historyReady -> fallingCountOK)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(historyReady -> changedFlagOK)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(historyReady -> risingFlagOK)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(historyReady -> fallingFlagOK)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_03",
+      "title": "Q03 滞环报警",
+      "definitions_and_rules_markdown": "## Q03 滞环报警\n\n`invalidLimits`为loLevel>=hiLevel；`invalidWindow`为hystWindow>=hiLevel-loLevel且非invalidLimits；`valid`为两者均否。`highSet/Reset`分别为Value>hiLevel、Value<hiLevel-hystWindow；低报警相反，严格比较；边界相等保持上一报警状态。无效配置时的报警输出是否清零，题面没有统一规定，不作为规约必须项。\n\n```text\nG(invalidLimits -> error8001)\nG(invalidWindow -> error8002)\nG(valid -> normalStatus)\nG(valid & highSet -> hiAlarm)\nG(valid & highReset -> !hiAlarm)\nG(valid & highBand -> highAlarmHeld)\nG(valid & lowSet -> loAlarm)\nG(valid & lowReset -> !loAlarm)\nG(valid & lowBand -> lowAlarmHeld)\n```\n\n`error8001/8002`包含error=TRUE及相应status；normalStatus表示error=FALSE、status=0。highBand/lowBand为既不触发也不复位的区间；Held表示post报警等于pre报警。负滞环的额外处置不打分。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(invalidLimits -> error8001)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(invalidWindow -> error8002)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(valid -> normalStatus)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(valid & highSet -> hiAlarm)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(valid & highReset -> !hiAlarm)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(valid & highBand -> highAlarmHeld)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(valid & lowSet -> loAlarm)"
+        },
+        {
+          "id": "P08",
+          "formula": "G(valid & lowReset -> !loAlarm)"
+        },
+        {
+          "id": "P09",
+          "formula": "G(valid & lowBand -> lowAlarmHeld)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_04",
+      "title": "Q04 黏度泵、消抖及维护",
+      "definitions_and_rules_markdown": "## Q04 黏度泵、消抖及维护\n\nv3采样约定：CycleTime等于距离上一实际调用的间隔，首拍为0ms；固定扫描不再跳过中间时间却只累计一拍。\n\n`permissive=VISCOSITY_OK & PASTE_E_STOP_NC`；`debounced`由独立连续有效时钟计算，首次有效时elapsed=0，elapsed>=DebounceTime时有效。当前有限测试采用急停恢复后重新确认的解释。`runtimeOK`表示本拍运行时post累计=pre累计+CycleTime，停机时保持；时间统一换算到相同单位。`maintenanceOK`表示PUMP_MAINT_DUE与累计>=500小时等价。\n\n```text\nG(initial -> pumpInitialOK)\nG(!PASTE_E_STOP_NC -> !VFD_RUN)\nG(!VISCOSITY_OK -> !VFD_RUN)\nG(VFD_RUN -> debounced)\nG(permissive & debounced -> VFD_RUN)\nG(runtimeOK)\nG(maintenanceOK)\n```\n\npumpInitialOK为运行关闭、累计0、维护FALSE。维护到期不加入运行许可。已完成消抖后发生急停的恢复策略在题面中有解释空间；若采用不同契约，应作为协议变更而非直接修改历史分数。\n\n\n协议待确认项：原题规定CycleTime为正，迭代分支首拍使用0表示尚无调用间隔；本导出保留原判据并显式标记，不修改原题。500小时=1,800,000,000ms，超出通用task_spec的1e9时间戳上限，应使用专用时间适配器。\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(initial -> pumpInitialOK)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(!PASTE_E_STOP_NC -> !VFD_RUN)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(!VISCOSITY_OK -> !VFD_RUN)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(VFD_RUN -> debounced)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(permissive & debounced -> VFD_RUN)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(runtimeOK)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(maintenanceOK)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_05",
+      "title": "Q05 焊缝报警与启动抑制",
+      "definitions_and_rules_markdown": "## Q05 焊缝报警与启动抑制\n\n`initializing`为上电后不足5000ms。独立消抖仅在初始化结束且Weld_E_Stop_NC、Gap_Exceeded均真时累计；初始化内或条件失效立即清零。`gapReady`表示消抖达到DebounceTime。\n\n```text\nG(initializing -> !Operator_Alert)\nG(initializing -> Weld_Soft_Start_Active)\nG(!initializing -> !Weld_Soft_Start_Active)\nG(!Weld_E_Stop_NC -> !Operator_Alert)\nG(!Gap_Exceeded -> !Operator_Alert)\nG(!initializing & Weld_E_Stop_NC & gapReady -> Operator_Alert)\nG(Operator_Alert -> !initializing & Weld_E_Stop_NC & gapReady)\n```\n\nWeld_Soft_Start_Active只表示启动抑制，不解释为连续调速斜坡；急停不产生额外的报警。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(initializing -> !Operator_Alert)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(initializing -> Weld_Soft_Start_Active)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(!initializing -> !Weld_Soft_Start_Active)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(!Weld_E_Stop_NC -> !Operator_Alert)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(!Gap_Exceeded -> !Operator_Alert)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(!initializing & Weld_E_Stop_NC & gapReady -> Operator_Alert)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(Operator_Alert -> !initializing & Weld_E_Stop_NC & gapReady)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_06",
+      "title": "Q06 曝气风机",
+      "definitions_and_rules_markdown": "## Q06 曝气风机\n\n`eligible=DO_LOW & AERATION_E_STOP_NC`；`delayReady`为自本轮连续eligible首次调用起elapsed>=5000ms。任何eligible失效都会清除观察器时钟。`startCountOK`表示运行输出每次FALSE→TRUE时计数加1，其余保持；有限测试不外推溢出策略。\n\n```text\nG(initial -> blowerInitialOK)\nG(!eligible -> !BLOWER_RUN)\nG(BLOWER_RUN -> eligible & delayReady)\nG(eligible & delayReady -> BLOWER_RUN)\nG(startCountOK)\n```\n\nblowerInitialOK为运行FALSE、计数0。开始计时的首拍elapsed=0，不把某次调用前的未知时间算进等待。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(initial -> blowerInitialOK)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(!eligible -> !BLOWER_RUN)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(BLOWER_RUN -> eligible & delayReady)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(eligible & delayReady -> BLOWER_RUN)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(startCountOK)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_07",
+      "title": "Q07 五泵切换",
+      "definitions_and_rules_markdown": "## Q07 五泵切换\n\n独立运行使能锁存器`enabled`在stop时关闭，在start且非stop时开启，其余保持；停止优先是当前测试口径。`manualSelectionOK`为每个RunComd=enabled & selection。`topThreeOK`为启用自动模式恰好3泵运行，且任一运行泵的priority不低于任一备用泵。`configPreserved`表示priority和selection均未被FB改写。\n\n```text\nG(stop -> allPumpsOff)\nG(!enabled -> allPumpsOff)\nG(!mode & enabled -> manualSelectionOK)\nG(mode & enabled -> topThreeOK)\nG(configPreserved)\n```\n\n优先级较大者优先；边界相同优先级允许任意满足topThreeOK的选择，不把未规定的索引优先当必需条件。当前结构体适配采用调用方持有数据的显式copy-in/copy-out，未证明厂商ABI兼容。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(stop -> allPumpsOff)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(!enabled -> allPumpsOff)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(!mode & enabled -> manualSelectionOK)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(mode & enabled -> topThreeOK)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(configPreserved)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_08",
+      "title": "Q08 模拟量批处理",
+      "definitions_and_rules_markdown": "## Q08 模拟量批处理\n\n调用方保证0<=count<=两个数组长度的较小值。第k个元素配对各自lowerBound+k。FB只能写被处理通道的retVal/outputValue；原始值、配置、未处理通道保持。禁用通道不执行转换。\n\n```text\nG(rawArrayPreserved)\nG(channelConfigPreserved)\nG(unprocessedChannelsPreserved)\nG(enabledInvalidMode -> channelError8001)\nG(enabledInvalidLimits -> channelError8002)\nG(enabledValidMode0 -> linearScalingOK)\nG(enabledValidMode1 -> standardTemperatureOK)\nG(enabledValidMode2 -> climaticTemperatureOK)\n```\n\n对所有处理通道逐项展开：单极性缩放loLIM+raw*(hiLIM-loLIM)/27648；双极性为loLIM+(raw+27648)*(hiLIM-loLIM)/55296；温度分别raw/10、raw/100。模式不在0/1/2时报8001，hiLIM<=loLIM时报8002。两种错误同时发生时的优先级、禁用时输出值和超量程钳位未由题面完整规定，应单列假设，不能无条件作为模型缺陷。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(rawArrayPreserved)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(channelConfigPreserved)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(unprocessedChannelsPreserved)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(enabledInvalidMode -> channelError8001)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(enabledInvalidLimits -> channelError8002)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(enabledValidMode0 -> linearScalingOK)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(enabledValidMode1 -> standardTemperatureOK)"
+        },
+        {
+          "id": "P08",
+          "formula": "G(enabledValidMode2 -> climaticTemperatureOK)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_09",
+      "title": "Q09 移动平均",
+      "definitions_and_rules_markdown": "## Q09 移动平均\n\n`validWindow`为1..100；`sample`为cyclicExecution或rise(trigger)；实际接口名为value、windowSize。独立历史H在reset时清空，在合法采样时将value加入末尾、仅保留最近windowSize个样本；`meanOK`为average=sum(H)/len(H)，使用独立重算而非复用候选环形数组。无样本时average值不打分。\n\n```text\nG(!validWindow -> windowError8200)\nG(validWindow -> normalStatus)\nG(validWindow & reset -> historyEmpty)\nG(validWindow & !reset & sample -> newHistoryOK)\nG(validWindow & !reset & !sample -> historyHeld)\nG(validWindow & nonemptyHistory -> meanOK)\n```\n\n当前有限测试在实例内固定窗口，避开reset与采样同拍；若要评价动态窗口与重置优先级，应先补充独立需求，不能凭某份实现选择规则。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(!validWindow -> windowError8200)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(validWindow -> normalStatus)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(validWindow & reset -> historyEmpty)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(validWindow & !reset & sample -> newHistoryOK)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(validWindow & !reset & !sample -> historyHeld)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(validWindow & nonemptyHistory -> meanOK)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_10",
+      "title": "Q10 温控与过热保护",
+      "definitions_and_rules_markdown": "## Q10 温控与过热保护\n\n`sensorFault`为温度<0或>100；`demand`为当前温度<设定；`overrun`为连续加热超过5000ms；独立保护时钟从实际进入保护的时刻开始，`cooling`为保护尚未等待满3000ms。`displayOK`为当前/设定温度显示等于对应输入，HeaterStatus与加热输出一致。\n\n```text\nG(sensorFault -> !HeaterOutput)\nG(temperatureAboveSetpoint -> !HeaterOutput)\nG(overrun -> !HeaterOutput & OverheatProtection)\nG(cooling -> !HeaterOutput & OverheatProtection)\nG(validSensor & demand & protectionReleased -> HeaterOutput)\nG(displayOK)\n```\n\n输入恰等于设定值时的滞留/关闭策略未明确，不强加要求。冷却等待不能从保护前的上一调用时间起算，以免缩短实际等待。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(sensorFault -> !HeaterOutput)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(temperatureAboveSetpoint -> !HeaterOutput)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(overrun -> !HeaterOutput & OverheatProtection)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(cooling -> !HeaterOutput & OverheatProtection)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(validSensor & demand & protectionReleased -> HeaterOutput)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(displayOK)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_11",
+      "title": "Q11 三工位线",
+      "definitions_and_rules_markdown": "## Q11 三工位线\n\n独立工序观察器A→moveB→B→moveC→C→done。A处ButtonA启动至B，B到达停止、ButtonB启动至C，C到达停止、ButtonC点灯，SensorC消失熄灯。自动响应采用当前有限测试的最多一个附加扫描约定。\n\n```text\nG(!(MotorForward & MotorReverse))\nG(manualForwardOnly -> MotorForward & !MotorReverse)\nG(manualReverseOnly -> MotorReverse & !MotorForward)\nG(atA & ButtonA -> R1(moveBOutputOK))\nG(movingB & SensorB -> R1(motorStopped))\nG(atB & ButtonB -> R1(moveCOutputOK))\nG(movingC & SensorC -> R1(motorStopped))\nG(atC & ButtonC -> R1(CompletionLight))\nG(done & !SensorC -> R1(!CompletionLight))\n```\n\n单工位按钮不能跳过前序工位；模式切换后是否恢复半成品状态未指定，当前测试不裁定。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(!(MotorForward & MotorReverse))"
+        },
+        {
+          "id": "P02",
+          "formula": "G(manualForwardOnly -> MotorForward & !MotorReverse)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(manualReverseOnly -> MotorReverse & !MotorForward)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(atA & ButtonA -> R1(moveBOutputOK))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(movingB & SensorB -> R1(motorStopped))"
+        },
+        {
+          "id": "P06",
+          "formula": "G(atB & ButtonB -> R1(moveCOutputOK))"
+        },
+        {
+          "id": "P07",
+          "formula": "G(movingC & SensorC -> R1(motorStopped))"
+        },
+        {
+          "id": "P08",
+          "formula": "G(atC & ButtonC -> R1(CompletionLight))"
+        },
+        {
+          "id": "P09",
+          "formula": "G(done & !SensorC -> R1(!CompletionLight))"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_12",
+      "title": "Q12 板厚报警、计数与历史",
+      "definitions_and_rules_markdown": "## Q12 板厚报警、计数与历史\n\nv3采样约定：固定场景及补充保持场景的CycleTime均等于实际调用间隔。触发拍elapsed=0，后续拍累加；10ms触发、每10ms扫描时，500ms仍需保持，510ms可释放。\n\n`validFault=THICKNESS_SIGNAL_VALID & THICKNESS_FAULT`。独立有效故障上升沿观察器维护计数、最近5个时间戳和最近报警触发时刻；有效性失效清除保持状态，不清除既有统计。`holdRequired`为最近有效触发后不足500ms；`runtimeOK`只在CUTTING_RUN且信号有效且无当前故障时加CycleTime，其余保持。\n\n```text\nG(initial -> slabInitialOK)\nG(!THICKNESS_SIGNAL_VALID -> !THICKNESS_ALARM)\nG(validFault -> THICKNESS_ALARM)\nG(THICKNESS_SIGNAL_VALID & holdRequired -> THICKNESS_ALARM)\nG(validFaultRise -> countIncremented & newestHistoryShiftOK)\nG(!validFaultRise -> faultCountHeld & historyHeld)\nG(runtimeOK)\n```\n\nnewestHistoryShiftOK为post[0]=FaultTimestamp，post[i]=pre[i-1]（i=1..4）；不要求改变外部设备运行许可。初始化计数、累计及历史全0；正常首拍可随后累加CycleTime。\n\n\n协议说明：计时保持只要求最短500ms，不能把所有合法实现强制为恰好500ms释放。现有固定用例的510ms关闭断言是所选定时器契约，独立于题面最低要求；首拍CycleTime=0同样是迭代分支约定。\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(initial -> slabInitialOK)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(!THICKNESS_SIGNAL_VALID -> !THICKNESS_ALARM)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(validFault -> THICKNESS_ALARM)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(THICKNESS_SIGNAL_VALID & holdRequired -> THICKNESS_ALARM)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(validFaultRise -> countIncremented & newestHistoryShiftOK)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(!validFaultRise -> faultCountHeld & historyHeld)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(runtimeOK)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_13",
+      "title": "Q13 HVAC",
+      "definitions_and_rules_markdown": "## Q13 HVAC\n\n`eligible=OCCUPANCY_DETECTED & HVAC_MODE_SELECTOR!=3`；独立延时满30000ms为fanReady，条件失效立即复位。`adjustmentOK`由下表精确求值：Night恒4；其他模式occupied为0；unoccupied的Auto为saving?3:2，Comfort为1，Economy为4。\n\n```text\nG(initial -> hvacInitialOK)\nG(!eligible -> !SUPPLY_FAN_RUN)\nG(SUPPLY_FAN_RUN -> eligible & fanReady)\nG(eligible & fanReady -> SUPPLY_FAN_RUN)\nG(normalCalculation -> adjustmentOK)\nG(adjustmentWithinFourDegrees)\n```\n\n模式输入限定0..3；节能选择只影响Auto。初始OFF/0指调用前初始化，正常计算随后依当前输入更新。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(initial -> hvacInitialOK)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(!eligible -> !SUPPLY_FAN_RUN)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(SUPPLY_FAN_RUN -> eligible & fanReady)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(eligible & fanReady -> SUPPLY_FAN_RUN)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(normalCalculation -> adjustmentOK)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(adjustmentWithinFourDegrees)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_14",
+      "title": "Q14 IPv4",
+      "definitions_and_rules_markdown": "## Q14 IPv4\n\n独立解析器检查恰好4个非空纯十进制数字段，每段0..255，以3个点分隔。有效值`N=a*2^24+b*2^16+c*2^8+d`；前导零仍按十进制解释，不另加15字符上限。\n\n```text\nG(validIPv4 -> parsedNetworkOrderOK)\nG(!validIPv4 -> ipValueZero)\n```\n\nparsedNetworkOrderOK为ipValue=N，ipValueZero为ipValue=0。覆盖合法0.0.0.0输出0以及合法输入后接非法输入时不能遗留旧值。接口容量和本地执行桥接限制下仅评价有限ASCII输入；当前场景不穷举全部字符串。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(validIPv4 -> parsedNetworkOrderOK)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(!validIPv4 -> ipValueZero)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_15",
+      "title": "Q15 配比",
+      "definitions_and_rules_markdown": "## Q15 配比\n\n独立阶段A→B→（processMode?C:mix）→mix→D，阈值分别50、80、100。所有阀门和电机组成allOff。手动每个按钮上升沿单独翻转对应输出，不因按钮保持连续翻转。\n\n```text\nG(!estop -> allOff)\nG(estop & manualMode & oneManualRise -> matchingOutputToggled)\nG(estop & manualMode & noManualRise -> manualOutputsHeld)\nG(autoIdle & autoStart -> R1(valveAActive))\nG(autoA & levelAtLeast50 -> R1(valveBActive))\nG(autoB & levelAtLeast80 & processMode -> R1(valveCActive))\nG(autoB & levelAtLeast80 & !processMode -> R1(mixerActive))\nG(autoC & levelAtLeast100 -> R1(mixerActive))\nG(autoMix & mixMotorComplete -> R1(valveDActive))\n```\n\n各Active命题包含关闭前一工序输出。输出动作最多一个附加扫描是当前冻结检查的操作口径；题面未量化延迟，报告应把时序口径不符与更明确的安全/数值错误分开解释。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(!estop -> allOff)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(estop & manualMode & oneManualRise -> matchingOutputToggled)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(estop & manualMode & noManualRise -> manualOutputsHeld)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(autoIdle & autoStart -> R1(valveAActive))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(autoA & levelAtLeast50 -> R1(valveBActive))"
+        },
+        {
+          "id": "P06",
+          "formula": "G(autoB & levelAtLeast80 & processMode -> R1(valveCActive))"
+        },
+        {
+          "id": "P07",
+          "formula": "G(autoB & levelAtLeast80 & !processMode -> R1(mixerActive))"
+        },
+        {
+          "id": "P08",
+          "formula": "G(autoC & levelAtLeast100 -> R1(mixerActive))"
+        },
+        {
+          "id": "P09",
+          "formula": "G(autoMix & mixMotorComplete -> R1(valveDActive))"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_16",
+      "title": "Q16 柔性路线",
+      "definitions_and_rules_markdown": "## Q16 柔性路线\n\n调用方保证processLength为1..8，最后一个有效序号为5，其他为2..4。独立cursor从首项开始，仅在目标站完成后前移。`directionOK`为目标站在当前位置右侧时只右行、左侧时只左行、相同位置不移动；目标sensor到达后停止。\n\n```text\nG(!(conveyorLeft & conveyorRight))\nG(routeStart -> R1(firstTargetSelected))\nG(transporting & !targetReached -> directionOK)\nG(targetReached -> R1(conveyorStopped))\nG(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)\nG(waitingProcessing & targetComplete -> R1(nextTargetSelected))\nG(finalStationReached -> R1(conveyorStopped))\n```\n\nfirstTargetSelected、nextTargetSelected比较独立cursor及根据输出方向/后续停站观测的路线，不读取候选内部状态。题面未规定非法路线处理；不把调用方违约输入算作失败。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(!(conveyorLeft & conveyorRight))"
+        },
+        {
+          "id": "P02",
+          "formula": "G(routeStart -> R1(firstTargetSelected))"
+        },
+        {
+          "id": "P03",
+          "formula": "G(transporting & !targetReached -> directionOK)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(targetReached -> R1(conveyorStopped))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(waitingProcessing & targetComplete -> R1(nextTargetSelected))"
+        },
+        {
+          "id": "P07",
+          "formula": "G(finalStationReached -> R1(conveyorStopped))"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_17",
+      "title": "Q17 配方管理",
+      "definitions_and_rules_markdown": "## Q17 配方管理\n\n请求使用隔开的单拍脉冲，每拍至多一种操作；recipeID为非零标识，0仅代表空槽。独立保存调用前数据库D。exists为有匹配ID，free为有空槽，j为最小空槽索引。相等比较含所有配方字段。\n\n```text\nG(query & !exists -> error8001)\nG(query & exists -> queryResultMatches)\nG(add & exists -> error8002 & databaseHeld)\nG(add & !exists & !free -> error8003 & databaseHeld)\nG(add & !exists & free -> addedAtFirstFree & otherEntriesHeld)\nG(delete & !exists -> error8004 & databaseHeld)\nG(delete & exists -> matchingIDCleared & otherEntriesHeld)\nG(modify & !exists -> error8005 & databaseHeld)\nG(modify & exists -> matchingEntryReplaced & otherEntriesHeld)\nG(nonzeroIDsUnique)\n```\n\nqueryResultMatches为recipeQueryResult=D[匹配索引]；addedAtFirstFree为postD[j]=recipeIn；matchingIDCleared只要求相应recipeID=0，不要求擦除其他无效字段；matchingEntryReplaced为完整替换recipeIn。失败查询的输出保留策略、并发请求优先级和ID0的额外错误码未规定，当前规约不裁定。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(query & !exists -> error8001)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(query & exists -> queryResultMatches)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(add & exists -> error8002 & databaseHeld)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(add & !exists & !free -> error8003 & databaseHeld)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(add & !exists & free -> addedAtFirstFree & otherEntriesHeld)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(delete & !exists -> error8004 & databaseHeld)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(delete & exists -> matchingIDCleared & otherEntriesHeld)"
+        },
+        {
+          "id": "P08",
+          "formula": "G(modify & !exists -> error8005 & databaseHeld)"
+        },
+        {
+          "id": "P09",
+          "formula": "G(modify & exists -> matchingEntryReplaced & otherEntriesHeld)"
+        },
+        {
+          "id": "P10",
+          "formula": "G(nonzeroIDsUnique)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_18",
+      "title": "Q18 VARIANT FIFO",
+      "definitions_and_rules_markdown": "## Q18 VARIANT FIFO\n\n容量C由关联数组的实际长度确定，item与buffer元素同型，实例期间buffer关联不变；enqueue与dequeue不能同拍请求。独立数学队列Q初始化为空，保存入队时的值副本，输入观察器检测上升沿。`queueAfterAppend/PopOK`为按FIFO更新Q并正确读写item；物理环形索引是实现细节，不要求固定head/tail布局。\n\n```text\nG(initial -> queueEmpty)\nG(reset -> queueEmpty & elementCountZero & statusZero)\nG(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)\nG(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)\nG(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)\nG(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)\nG(!reset & idleRequest -> queueHeld & statusZero)\nG(countMatchesQueue)\nG(countWithinCapacity)\n```\n\nreset优先，不要求清零物理存储；countMatchesQueue为elementCount=len(Q)，范围0..C。当前CODESYS目标缺少已验证VARIANT适配器，四组统一记platform_blocked，保留在20题分母；R4泛型引用测试不能代替厂商VARIANT编译证据。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(initial -> queueEmpty)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(!reset & idleRequest -> queueHeld & statusZero)"
+        },
+        {
+          "id": "P08",
+          "formula": "G(countMatchesQueue)"
+        },
+        {
+          "id": "P09",
+          "formula": "G(countWithinCapacity)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_19",
+      "title": "Q19 机械臂",
+      "definitions_and_rules_markdown": "## Q19 机械臂\n\nEmergencyStop=FALSE表示急停。调用方保证四个模式互斥。独立动作序列为Down→Grip→Up→Right→Down→Release→Up→Left。动作到位反馈分别用对应LimitSwitch，夹紧/松开采用GripLimitSwitch/ReleaseLimitSwitch；运动初始位为左上。\n\n```text\nG(!EmergencyStop -> allArmCommandsOff)\nG(manualMode & EmergencyStop -> manualCommandMapOK)\nG(actionActive & actionLimitReached -> R1(actionCommandOff))\nG(singleStepActionDone & noNewStart -> noNextAction)\nG(singleStepReady & startRise -> R1(exactNextAction))\nA19 -> G(singleCycleStarted -> F(cycleDone))\nG(singleCycleDone & noNewStart -> allArmCommandsOff)\nG(continuousRunning & cycleDone & EmergencyStop -> R1(firstAction))\n```\n\nmanualCommandMapOK对每个动作分别表示command=button & !对应limit；不存在相互矛盾的手动请求时按此求值。exactNextAction由独立序号决定。环境假设A19展开为`G(EmergencyStop) & G(actionActive -> F(actionLimitReached)) & G(singleCycleSelected)`，即整个该项实验不急停、模式固定，启动的动作最终得到正确反馈；不对永远缺少到位信号的环境要求最终完成。暂停、模式切换后的自动恢复策略未明确，不额外规定。\n\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(!EmergencyStop -> allArmCommandsOff)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(manualMode & EmergencyStop -> manualCommandMapOK)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(actionActive & actionLimitReached -> R1(actionCommandOff))"
+        },
+        {
+          "id": "P04",
+          "formula": "G(singleStepActionDone & noNewStart -> noNextAction)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(singleStepReady & startRise -> R1(exactNextAction))"
+        },
+        {
+          "id": "P06",
+          "formula": "A19 -> G(singleCycleStarted -> F(cycleDone))"
+        },
+        {
+          "id": "P07",
+          "formula": "G(singleCycleDone & noNewStart -> allArmCommandsOff)"
+        },
+        {
+          "id": "P08",
+          "formula": "G(continuousRunning & cycleDone & EmergencyStop -> R1(firstAction))"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "PUBLIC_20",
+      "title": "Q20 五工位线（v2）",
+      "definitions_and_rules_markdown": "## Q20 五工位线（v2）\n\n独立工序观察器按Feed→Wash→Weight→Firing→Output推进。各完成信号在对应停站阶段有效；传感器按工艺顺序出现。qualified为100<=weight<=200。`temperatureAndDepartureOK`为firingTemp=500+0.5*(weight-100)、MotorForward=TRUE、kick=FALSE。v2中的R1实际由逐扫描响应窗口检查，而非只删除原先的同拍断言。\n\n```text\nG(!(MotorForward & MotorReverse))\nG(manualForwardOnly -> MotorForward & !MotorReverse)\nG(manualReverseOnly -> MotorReverse & !MotorForward)\nG(autoIdle & SensorFeed -> R1(MotorForward))\nG(movingToWash & SensorWash -> R1(motorStopped))\nG(waitingWash & washComplete -> R1(MotorForward))\nG(movingToWeight & SensorWeight -> R1(motorStopped))\nG(waitingWeight & weightComplete & qualified -> R1(temperatureAndDepartureOK))\nG(waitingWeight & weightComplete & !qualified -> R1(kick))\nG(movingToFiring & SensorFiring -> R1(motorStopped))\nG(waitingFiring & firingComplete -> R1(MotorForward))\nG(movingToOutput & SensorOutput -> R1(motorStopped & CompletionLight))\nG(finishedProduct & !SensorOutput -> R1(!CompletionLight))\n```\n\nmotorStopped为两个方向输出均FALSE。单拍kick、保持至产品离开或其他持续形式，只要在响应窗口内正确发出且不违反明确需求，不凭未规定的持续时间判错。\n本次仅导出规则与用例，未重放候选或执行上述故障负对照。\n",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(!(MotorForward & MotorReverse))"
+        },
+        {
+          "id": "P02",
+          "formula": "G(manualForwardOnly -> MotorForward & !MotorReverse)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(manualReverseOnly -> MotorReverse & !MotorForward)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(autoIdle & SensorFeed -> R1(MotorForward))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(movingToWash & SensorWash -> R1(motorStopped))"
+        },
+        {
+          "id": "P06",
+          "formula": "G(waitingWash & washComplete -> R1(MotorForward))"
+        },
+        {
+          "id": "P07",
+          "formula": "G(movingToWeight & SensorWeight -> R1(motorStopped))"
+        },
+        {
+          "id": "P08",
+          "formula": "G(waitingWeight & weightComplete & qualified -> R1(temperatureAndDepartureOK))"
+        },
+        {
+          "id": "P09",
+          "formula": "G(waitingWeight & weightComplete & !qualified -> R1(kick))"
+        },
+        {
+          "id": "P10",
+          "formula": "G(movingToFiring & SensorFiring -> R1(motorStopped))"
+        },
+        {
+          "id": "P11",
+          "formula": "G(waitingFiring & firingComplete -> R1(MotorForward))"
+        },
+        {
+          "id": "P12",
+          "formula": "G(movingToOutput & SensorOutput -> R1(motorStopped & CompletionLight))"
+        },
+        {
+          "id": "P13",
+          "formula": "G(finishedProduct & !SensorOutput -> R1(!CompletionLight))"
+        }
+      ],
+      "status": "specification_not_proved"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "status": "compile_error",
+  "phase": "st_to_cpp",
+  "returncode": 1,
+  "stdout": "Compiling candidate.st...\n",
+  "stderr": "\nCompilation failed:\n\ncandidate.st:18:5: error: Expected `END_VAR`, found `REF`.\n  18 |     Ref      : DINT;\n     |     ^\n     | note: Variable declarations look like `name : TYPE := initialValue;` inside a VAR / VAR_INPUT / VAR_OUTPUT block.\n\ncandidate.st:18:20: error: Expected `Colon`, found `;`.\n  18 |     Ref      : DINT;\n     |                    ^\n     | note: Variable declarations look like `name : TYPE := initialValue;` inside a VAR / VAR_INPUT / VAR_OUTPUT block.\n\ncandidate.st:19:5: error: Unexpected identifier `DIFFLR` after `;` while parsing a statement.\n  19 |     DiffLR   : DINT;\n     |     ^\n     | note: Statements start with an assignment (`:=`), a function call, or a block keyword (IF / CASE / FOR / WHILE / REPEAT / RETURN / EXIT).  Did you forget `:=` after the identifier?\n\ncandidate.st:19:5: error: Expected `END_FUNCTION_BLOCK`, found identifier `DIFFLR`.\n  19 |     DiffLR   : DINT;\n     |     ^\n\n",
+  "primary_diagnostics": [
+    {
+      "file": "candidate.st",
+      "line": 18,
+      "column": 5,
+      "severity": "error",
+      "message": "Expected `END_VAR`, found `REF`."
+    },
+    {
+      "file": "candidate.st",
+      "line": 18,
+      "column": 20,
+      "severity": "error",
+      "message": "Expected `Colon`, found `;`."
+    },
+    {
+      "file": "candidate.st",
+      "line": 19,
+      "column": 5,
+      "severity": "error",
+      "message": "Unexpected identifier `DIFFLR` after `;` while parsing a statement."
+    },
+    {
+      "file": "candidate.st",
+      "line": 19,
+      "column": 5,
+      "severity": "error",
+      "message": "Expected `END_FUNCTION_BLOCK`, found identifier `DIFFLR`."
+    }
+  ],
+  "full_stderr_path": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\7caaf42382b1eef92fa00806\\st_to_cpp.stderr.log"
+}

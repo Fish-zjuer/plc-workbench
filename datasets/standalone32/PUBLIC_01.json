@@ -1,0 +1,410 @@
+{
+  "id": "PUBLIC_01",
+  "title": "Automated Filling Line Control",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "bottleSensor",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "cleaningConfirmButton",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "fillingConfirmButton",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "cappingConfirmButton",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "packingConfirmButton",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "finishedButton",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Pump_Motor",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Filling_Valve",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Capping_Machine",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Packing_Machine",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Completion_Light",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "bank_trace",
+  "scenarios": [
+    {
+      "name": "full_cycle_and_waits",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "bottleSensor": true,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": true,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": true,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": true,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": true,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": true,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          }
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": true,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": true,
+            "Completion_Light": false
+          }
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": true,
+            "finishedButton": false
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": true
+          }
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": true
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": false,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          }
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "bottleSensor": true,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": true,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          }
+        }
+      ],
+      "invariants": []
+    },
+    {
+      "name": "wrong_station_confirmations_do_not_skip",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "bottleSensor": true,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {}
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": true,
+            "cappingConfirmButton": true,
+            "packingConfirmButton": true,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": true,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "bottleSensor": false,
+            "cleaningConfirmButton": false,
+            "fillingConfirmButton": false,
+            "cappingConfirmButton": false,
+            "packingConfirmButton": false,
+            "finishedButton": false
+          },
+          "expected": {
+            "Pump_Motor": true,
+            "Filling_Valve": false,
+            "Capping_Machine": false,
+            "Packing_Machine": false,
+            "Completion_Light": false
+          }
+        }
+      ],
+      "invariants": []
+    }
+  ],
+  "origin": "Existing requirement-derived tests; exported without reading candidate ST.",
+  "execution_status": "not_run_in_this_delivery",
+  "block": "Q01",
+  "requirements": "# Automated Filling Line Control\n\n- **Difficulty:** Easy (easy)\n\n## Requirements\n\nAn automated filling line responsible for cleaning, filling, capping, and packaging bottles. Each step of the production line is controlled by PLC and triggered by signals from sensors and operators.\nControl requirements:\nWhen the sensor bottleSensor detects a bottle, it triggers the start of the cleaning pump and continues to work.\nAfter cleaning is completed, the operator operates the button cleaningConfirmButton to trigger the cleaning completion signal, automatically starting the filling valve for filling.\nAfter filling is completed, the operator operates the button fillingConfirmButton to trigger the filling completion signal, automatically starting the capping machine for capping.\nAfter capping is completed, the operator operates the button cappingConfirmButton to trigger the capping completion signal, starting the packing machine for packaging.\nAfter packaging is completed, the operator operates the button packingConfirmButton to trigger the packaging completion signal, lighting up the packaging completion indicator light.\nAfter the operator picks up the packaged bottle, they press the confirmation button finishedButton to reset the indicator light and prepare for the next bottle's production cycle.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `bottleSensor` | `BOOL` | The bottle reaches the sensor, triggering a signal when a bottle is detected |\n| Input | `cleaningConfirmButton` | `BOOL` | Operator confirmation button, used to confirm the completion of the cleaning process |\n| Input | `fillingConfirmButton` | `BOOL` | Operator confirmation button, used to confirm the completion of the filling process |\n| Input | `cappingConfirmButton` | `BOOL` | Operator confirmation button, used to confirm the completion of the capping process |\n| Input | `packingConfirmButton` | `BOOL` | Operator confirmation button, used to confirm the completion of the packaging process |\n| Input | `finishedButton` | `BOOL` | Operator confirmation button, used to confirm that the bottle has been picked up |\n| Output | `Pump_Motor` | `BOOL` | Control output for the operation of the cleaning pump motor |\n| Output | `Filling_Valve` | `BOOL` | Control output for the operation of the filling valve |\n| Output | `Capping_Machine` | `BOOL` | Control output for the operation of the capping machine |\n| Output | `Packing_Machine` | `BOOL` | Control output for the operation of the packing machine |\n| Output | `Completion_Light` | `BOOL` | Indicator light for packaging completion |",
+  "ltl": {
+    "id": "PUBLIC_01",
+    "title": "Q01 灌装线",
+    "definitions_and_rules_markdown": "## Q01 灌装线\n\n观察器按输入维护独立阶段：idle→clean→fill→cap→pack→done→idle。idle仅由bottleSensor启动；clean/fill/cap/pack分别由对应ConfirmButton推进；done仅由finishedButton复位。阶段错误的确认按钮不推进。阶段输出依次为Pump_Motor、Filling_Valve、Capping_Machine、Packing_Machine、Completion_Light。`stageOutputOK`表示对应阶段输出有效且其他阶段输出关闭，这是当前有限测试采用的顺序工序解释。\n\n```text\nG(idleBefore & bottleSensor -> R1(cleanOutputOK))\nG(cleanBefore & cleaningConfirmButton -> R1(fillOutputOK))\nG(fillBefore & fillingConfirmButton -> R1(capOutputOK))\nG(capBefore & cappingConfirmButton -> R1(packOutputOK))\nG(packBefore & packingConfirmButton -> R1(doneOutputOK))\nG(doneBefore & finishedButton -> R1(idleOutputOK))\nG(waitingForCurrentConfirmation -> currentStageHeld)\nG(wrongStageConfirmationOnly -> observerStageUnchanged)\n```\n\n按钮用单拍脉冲或阶段内有效电平测试，不对“到站前始终按住确认”的未定义策略打分。阶段和输出的对应表构成上述原子命题的完整定义。\n\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(idleBefore & bottleSensor -> R1(cleanOutputOK))"
+      },
+      {
+        "id": "P02",
+        "formula": "G(cleanBefore & cleaningConfirmButton -> R1(fillOutputOK))"
+      },
+      {
+        "id": "P03",
+        "formula": "G(fillBefore & fillingConfirmButton -> R1(capOutputOK))"
+      },
+      {
+        "id": "P04",
+        "formula": "G(capBefore & cappingConfirmButton -> R1(packOutputOK))"
+      },
+      {
+        "id": "P05",
+        "formula": "G(packBefore & packingConfirmButton -> R1(doneOutputOK))"
+      },
+      {
+        "id": "P06",
+        "formula": "G(doneBefore & finishedButton -> R1(idleOutputOK))"
+      },
+      {
+        "id": "P07",
+        "formula": "G(waitingForCurrentConfirmation -> currentStageHeld)"
+      },
+      {
+        "id": "P08",
+        "formula": "G(wrongStageConfirmationOnly -> observerStageUnchanged)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

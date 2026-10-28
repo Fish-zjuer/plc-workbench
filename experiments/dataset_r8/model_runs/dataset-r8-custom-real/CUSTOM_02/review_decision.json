@@ -1,0 +1,193 @@
+{
+  "status": "review_pass",
+  "summary": "未发现与需求明确不一致的缺陷；当前实现符合会话/角色页面权限、页面4写权限、范围校验、未请求时清零结果标志以及提交值保留等要求。以下为建议复核的完整输入trace场景。",
+  "questions": [],
+  "proposals": [
+    {
+      "name": "admin_write_then_session_invalid",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 3,
+            "WriteReq": false,
+            "WriteValue": 0.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": false,
+            "ParamValue": 0.0
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 50.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 50.0
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": false,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 60.0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 50.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "operator_accept_and_out_of_range_deny",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 2,
+            "WriteReq": false,
+            "WriteValue": 0.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": false,
+            "ParamValue": 0.0
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 100.0
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 100.5
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 100.0
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 2,
+            "Page": 4,
+            "WriteReq": false,
+            "WriteValue": 0.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": false,
+            "Denied": false,
+            "ParamValue": 100.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "user_denied_then_admin_accepted_then_invalid_role",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 1,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 10.0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 0.0
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 3,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 10.0
+          },
+          "expected": {
+            "ViewAllowed": true,
+            "WriteAllowed": true,
+            "Accepted": true,
+            "Denied": false,
+            "ParamValue": 10.0
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "SessionValid": true,
+            "Role": 4,
+            "Page": 4,
+            "WriteReq": true,
+            "WriteValue": 20.0
+          },
+          "expected": {
+            "ViewAllowed": false,
+            "WriteAllowed": false,
+            "Accepted": false,
+            "Denied": true,
+            "ParamValue": 10.0
+          }
+        }
+      ]
+    }
+  ],
+  "expected_authority": "advisory_model_claim_only"
+}

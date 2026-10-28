@@ -28,6 +28,9 @@ def select_session(project_id=None, session_id=None, new_title=None, model=""):
 
 
 def main():
+    if sys.argv[1:2]==['dataset']:
+        from .dataset_cli import main as dataset_main
+        return dataset_main(sys.argv[2:])
     if sys.argv[1:2]==['codesys']:
         from .codesys_cli import main as codesys_main
         return codesys_main(sys.argv[2:])

@@ -34,6 +34,9 @@ def definitions(tool):
             'mode':{'type':'string','enum':['off','best_effort','required']},'bound':{'type':'integer','minimum':2,'maximum':64},
             'timeout_seconds':{'type':'integer','minimum':1,'maximum':60}}}}}
     return [
+        tool('plc_dataset_list','List the frozen supplied 32-task dataset without exposing expected tables.',{}),
+        tool('plc_dataset_show','Read requirements/interface for one supplied task; expected tests remain host-owned.',{'task_id':{'type':'string','pattern':'^(PUBLIC|CUSTOM)_[0-9]{2}$'}},('task_id',)),
+        tool('plc_dataset_run','Run bounded author/repair and isolated review on one frozen supplied task. Requires execution mode. Finite tests are distinct from LTL proof.',{'task_id':{'type':'string','pattern':'^(PUBLIC|CUSTOM)_[0-9]{2}$'}},('task_id',)),
         tool("plc_task_schema","Read the generic task contract format before planning a non-bank PLC task. No code execution.",{}),
         tool("plc_task_plan","Validate and save a general PLC task plan, including explicit interfaces, requirements, scenarios and assumptions. Allowed in plan mode. This does not approve the contract or execute code.",
              {"spec":spec,"requirements_paths":{"type":"array","maxItems":8,"items":{"type":"string","maxLength":400}}},("spec",)),
@@ -56,6 +59,7 @@ def definitions(tool):
     ]
 
 READ_ONLY={"plc_task_schema","plc_task_plan","plc_task_show","plc_task_status","plc_task_evidence",'plc_codesys_doctor'}
+READ_ONLY.update(('plc_dataset_list','plc_dataset_show'))
 
 def compact_receipt(receipt):
     value={k:v for k,v in receipt.items() if k not in ('reviews','proposal_rejections')}
@@ -67,6 +71,11 @@ def compact_receipt(receipt):
     return value
 
 def dispatch(toolbox,name,args):
+    if name.startswith('plc_dataset_'):
+        from .dataset_cli import perform
+        return perform(toolbox.session,toolbox.workflow_config or __import__('plc_agent.config',fromlist=['ModelConfig']).ModelConfig.load(),
+            name.removeprefix('plc_dataset_'),args.get('task_id'),provider=toolbox.workflow_provider,
+            notify=lambda text:toolbox.session.event('notice',text=text))
     store=TaskStore(toolbox.session)
     if name=='plc_codesys_doctor':
         from .codesys import doctor

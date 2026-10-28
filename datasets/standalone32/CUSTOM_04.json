@@ -1,0 +1,492 @@
+{
+  "id": "CUSTOM_04",
+  "title": "收放卷卷径估算与转速补偿",
+  "block": "FB_RollGeometry",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "Reset",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "InitialD",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Input",
+      "name": "Receiving",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "EncoderDelta",
+      "type": "DINT"
+    },
+    {
+      "direction": "Input",
+      "name": "SpeedMpm",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "StoredLength",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "Diameter",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "MotorRPM",
+      "type": "LREAL"
+    },
+    {
+      "direction": "Output",
+      "name": "LimitHit",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Error",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06,
+    "StoredLength": 0.001,
+    "Diameter": 0.001,
+    "MotorRPM": 0.01
+  },
+  "scenarios": [
+    {
+      "name": "芯径初始化",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "一圈测量辊的收卷与转速",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "等量放卷与空卷限幅",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "非法脉冲保留估计",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": false
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": true
+          },
+          "phase": "setup"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": -1,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "Error": true,
+            "MotorRPM": 0,
+            "Diameter": 76,
+            "StoredLength": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "长度上下限_非法保持_初始化忽略脉冲",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 140,
+            "Receiving": true,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 80424.7719318987,
+            "Diameter": 140,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": true,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 80424.7719318987,
+            "Diameter": 140.0,
+            "MotorRPM": 1705.2315331274501,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": -1,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 0,
+            "SpeedMpm": 15.001
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 0,
+            "SpeedMpm": 0
+          },
+          "expected": {
+            "StoredLength": 0.0,
+            "Diameter": 76,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# Winding diameter observer and speed compensation\n\n- **Difficulty:** Hard (hard)\n\n## Requirements\n\n1. Implement FB_RollGeometry using LREAL and PI=3.141592653589793. Fixed values are CoreD=76 mm, MaxD=140 mm and Thickness=0.135 mm. EncoderDelta is a DINT pulse increment in 0..1000000. A 50 mm diameter measuring roller produces 1024 pulses per revolution.\n\n2. On the first legal call or when Reset=TRUE, initialize StoredLength=PI*(InitialD^2-CoreD^2)/(4*Thickness), Diameter=InitialD, MotorRPM=0 and LimitHit=FALSE. Ignore the pulse increment on this call. InitialD must be in [76,140] and is used only for initialization.\n\n3. On other legal calls, deltaL=EncoderDelta*PI*50/1024. Add deltaL when Receiving=TRUE, otherwise subtract it. Clamp StoredLength to [0,Lmax], where Lmax=PI*(MaxD^2-CoreD^2)/(4*Thickness). Set LimitHit only when the unclamped value is strictly outside this interval; reaching a boundary exactly is not a limit hit.\n\n4. Compute Diameter=SQRT(CoreD^2+4*Thickness*StoredLength/PI) from the updated length. Then compute MotorRPM=SpeedMpm*1000*50/(PI*Diameter) and clamp it to [-6000,6000]. SpeedMpm is signed line speed in [-15,15] m/min. Receiving determines material addition or removal independently of the speed sign.\n\n5. Illegal SpeedMpm or EncoderDelta, or illegal InitialD when initializing, sets Error=TRUE, MotorRPM=0 and LimitHit=FALSE while preserving the length and diameter. Before successful initialization, hold StoredLength=0 and Diameter=76. A subsequent legal call may initialize. Legal calls clear Error. All real inputs are finite.\n\n6. Assume constant thickness, tightly packed winding and no slip or elastic extension. Reset establishes a new geometric estimate; it does not represent material consumption. Absolute comparison tolerances are 0.001 mm for length and diameter, and 0.01 RPM for motor speed.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Reset` | `BOOL` | Reinitialize the geometric estimate. |\n| Input | `InitialD` | `LREAL` | Initial diameter, 76..140 mm; used only at initialization. |\n| Input | `Receiving` | `BOOL` | TRUE adds wound material; FALSE removes it. |\n| Input | `EncoderDelta` | `DINT` | Pulse increment in this call, 0..1000000. |\n| Input | `SpeedMpm` | `LREAL` | Signed line speed, -15..15 m/min. |\n| Output | `StoredLength` | `LREAL` | Material length outside the core, mm. |\n| Output | `Diameter` | `LREAL` | Estimated diameter, mm; 76 before initialization. |\n| Output | `MotorRPM` | `LREAL` | Motor speed setpoint, RPM. |\n| Output | `LimitHit` | `BOOL` | The material-length update was strictly clipped. |\n| Output | `Error` | `BOOL` | Illegal input. |",
+  "ltl": {
+    "id": "CUSTOM_04",
+    "title": "收放卷卷径估算与转速补偿",
+    "definitions": "PI=3.141592653589793，CoreD=76，MaxD=140，h=0.135，Lmax=PI*(140^2-76^2)/(4*h)。\n独立观察器初始initialized=FALSE、length=0、diameter=76。init := !pre.initialized OR Reset。\nvalid := -15<=SpeedMpm<=15 AND 0<=EncoderDelta<=1000000 AND (!init OR 76<=InitialD<=140)，输入均有限。\nvalid AND init时length=PI*(InitialD^2-76^2)/(4*h)，diameter=InitialD，rpm=0，hit=FALSE，initialized=TRUE；忽略脉冲。\nvalid AND !init时raw=pre.length+(Receiving?1:-1)*EncoderDelta*PI*50/1024，length=clamp(raw,0,Lmax)，\ndiameter=sqrt(76^2+4*h*length/PI)，rpm=clamp(SpeedMpm*1000*50/(PI*diameter),-6000,6000)，hit=(raw<0 OR raw>Lmax)。\n!valid时length/diameter/initialized保持，rpm=0，hit=FALSE；不是无条件Reset优先于输入校验。\ngeometryMatch表示StoredLength/ Diameter/MotorRPM/LimitHit分别等于上述独立期望。\n长度和直径测试绝对容差0.001mm，RPM为0.01；LTL数学定义精确，测试容差不改变限幅严格边界。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(Error <-> !valid)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(geometryMatch)"
+      },
+      {
+        "id": "P03",
+        "formula": "G((!valid) -> (MotorRPM=0 & !LimitHit & StoredLength=pre.length & Diameter=pre.diameter))"
+      },
+      {
+        "id": "P04",
+        "formula": "G((valid & init) -> (Diameter=InitialD & MotorRPM=0 & !LimitHit))"
+      },
+      {
+        "id": "P05",
+        "formula": "G((valid & !init) -> (LimitHit <-> (raw<0 | raw>Lmax)))"
+      },
+      {
+        "id": "P06",
+        "formula": "G(0<=StoredLength & StoredLength<=Lmax & 76<=Diameter & Diameter<=140)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(-6000<=MotorRPM & MotorRPM<=6000)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

@@ -1,0 +1,247 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_01",
+  "status": "reviewed_finite_pass",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "b4d29ae9312016fd597992e072f768043ff0be68890ae847d9880574daf8d900",
+  "source_sha256": "a78c7fa8344d5943fbce3f8b98d2cebda2000856a48579f9b1c6ee0cd7f9b046",
+  "attempts": [
+    {
+      "summary": "Implements FB_ElevatorTarget: computes eligible requests with FullLoad hall masking, prioritizes current-floor requests, selects direction-biased nearest targets with fallback, and breaks tie toward lower floor for idle direction. Outputs are recomputed each call without modifying request arrays.",
+      "status": "written",
+      "source_sha256": "642dbca961ef5697e1eb45363b7d03ab626ed1bc20d1429dc7959ed4de8d9aa8"
+    },
+    {
+      "summary": "Fix the STruC++ compile error by removing unsupported DOWNTO loops. The descending scans for lower floors are implemented with ascending loop indices and a reversed floor index j. All original request-eligibility, current-floor priority, direction-biased nearest selection, idle tie-breaking, and output recomputation behavior is preserved. Request arrays remain read-only.",
+      "status": "written",
+      "source_sha256": "a78c7fa8344d5943fbce3f8b98d2cebda2000856a48579f9b1c6ee0cd7f9b046"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 3,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_01",
+    "source_sha256": "a78c7fa8344d5943fbce3f8b98d2cebda2000856a48579f9b1c6ee0cd7f9b046",
+    "dataset_sha256": "b4d29ae9312016fd597992e072f768043ff0be68890ae847d9880574daf8d900",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 7,
+      "scans": 186,
+      "assertions": 2784,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\4dda316cb46c238b4a52772c\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "未发现与题面明确要求相冲突的缺陷；方向优先、当前层优先、FullLoad 仅屏蔽厅召唤、空闲平局取低层及每次调用重算输出等逻辑均符合需求。",
+      "questions": [],
+      "proposals": [
+        {
+          "name": "up_fallback_full_load_mask",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Enable": true,
+                "CurrentFloor": 3,
+                "Direction": 1,
+                "FullLoad": true,
+                "CabReq": [
+                  false,
+                  true,
+                  false,
+                  false,
+                  false,
+                  false
+                ],
+                "HallReq": [
+                  false,
+                  false,
+                  false,
+                  false,
+                  true,
+                  false
+                ]
+              },
+              "expected": {
+                "HasTarget": true,
+                "TargetFloor": 2,
+                "NextDirection": -1
+              }
+            },
+            {
+              "time_ms": 100,
+              "inputs": {
+                "Enable": true,
+                "CurrentFloor": 3,
+                "Direction": 1,
+                "FullLoad": false,
+                "CabReq": [
+                  false,
+                  true,
+                  false,
+                  false,
+                  false,
+                  false
+                ],
+                "HallReq": [
+                  false,
+                  false,
+                  false,
+                  false,
+                  true,
+                  false
+                ]
+              },
+              "expected": {
+                "HasTarget": true,
+                "TargetFloor": 5,
+                "NextDirection": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "down_priority_below",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Enable": true,
+                "CurrentFloor": 4,
+                "Direction": -1,
+                "FullLoad": false,
+                "CabReq": [
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  true
+                ],
+                "HallReq": [
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false
+                ]
+              },
+              "expected": {
+                "HasTarget": true,
+                "TargetFloor": 6,
+                "NextDirection": 1
+              }
+            },
+            {
+              "time_ms": 50,
+              "inputs": {
+                "Enable": true,
+                "CurrentFloor": 4,
+                "Direction": -1,
+                "FullLoad": false,
+                "CabReq": [
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  true
+                ],
+                "HallReq": [
+                  true,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false
+                ]
+              },
+              "expected": {
+                "HasTarget": true,
+                "TargetFloor": 1,
+                "NextDirection": -1
+              }
+            }
+          ]
+        },
+        {
+          "name": "idle_tie_and_current_priority",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Enable": true,
+                "CurrentFloor": 3,
+                "Direction": 0,
+                "FullLoad": false,
+                "CabReq": [
+                  false,
+                  true,
+                  false,
+                  false,
+                  false,
+                  false
+                ],
+                "HallReq": [
+                  false,
+                  false,
+                  false,
+                  true,
+                  false,
+                  false
+                ]
+              },
+              "expected": {
+                "HasTarget": true,
+                "TargetFloor": 2,
+                "NextDirection": -1
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Enable": true,
+                "CurrentFloor": 3,
+                "Direction": 0,
+                "FullLoad": false,
+                "CabReq": [
+                  false,
+                  true,
+                  true,
+                  false,
+                  false,
+                  false
+                ],
+                "HallReq": [
+                  false,
+                  false,
+                  false,
+                  true,
+                  false,
+                  false
+                ]
+              },
+              "expected": {
+                "HasTarget": true,
+                "TargetFloor": 3,
+                "NextDirection": 0
+              }
+            }
+          ]
+        }
+      ],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

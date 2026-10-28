@@ -1,0 +1,248 @@
+{
+  "status": "review_disagreement",
+  "summary": "发现一处与第5条可能不符的明确缺陷：代码仅在 Enable=TRUE 的非初始化分支检查 DistanceMm 是否无效或是否低于 lastDistance；当 Enable=FALSE 且非初始化/Reset 时直接保持，不锁存新的无效位置或距离回退。若第5条的 Error 锁存不限定 Enable，则 Error 应置 TRUE。其余核心逻辑（初始化不触发、忙时丢弃不补发、d>0 时单次请求、计数更新）与题面一致。以下场景为复核建议。",
+  "questions": [
+    "第5条的无效位置/距离回退锁存 Error 是否应覆盖 Enable=FALSE 的扫描？若是，则当前实现存在缺陷。"
+  ],
+  "proposals": [
+    {
+      "name": "disabled_invalid_position",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 0.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "Enable": false,
+            "Reset": false,
+            "DistanceMm": -1.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0,
+            "Error": true
+          }
+        },
+        {
+          "time_ms": 2,
+          "inputs": {
+            "Enable": false,
+            "Reset": false,
+            "DistanceMm": 0.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0,
+            "Error": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "disabled_decrease",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 10.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 20.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 2,
+          "inputs": {
+            "Enable": false,
+            "Reset": false,
+            "DistanceMm": 15.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 1,
+            "MissedCount": 0,
+            "Error": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "busy_no_replay",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 0.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 35.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": true
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 3,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 2,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 35.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 3,
+            "Error": false
+          }
+        },
+        {
+          "time_ms": 3,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 40.0,
+            "SpacingMm": 10.0,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 3,
+            "Error": false
+          }
+        }
+      ]
+    }
+  ],
+  "expected_authority": "advisory_model_claim_only",
+  "first_failure": {
+    "name": "disabled_invalid_position",
+    "first_failure": {
+      "scan": 1,
+      "output": "Error",
+      "expected": true,
+      "actual": 0.0
+    },
+    "rows": [
+      {
+        "time_ms": 0,
+        "inputs": {
+          "Enable": true,
+          "Reset": false,
+          "DistanceMm": 0.0,
+          "SpacingMm": 10.0,
+          "CameraBusy": false
+        },
+        "expected": {
+          "CapturePulse": false,
+          "CaptureCount": 0,
+          "MissedCount": 0,
+          "Error": false
+        },
+        "actual": {
+          "CapturePulse": 0.0,
+          "CaptureCount": 0.0,
+          "MissedCount": 0.0,
+          "Error": 0.0
+        },
+        "violations": []
+      },
+      {
+        "time_ms": 1,
+        "inputs": {
+          "Enable": false,
+          "Reset": false,
+          "DistanceMm": -1.0,
+          "SpacingMm": 10.0,
+          "CameraBusy": false
+        },
+        "expected": {
+          "CapturePulse": false,
+          "CaptureCount": 0,
+          "MissedCount": 0,
+          "Error": true
+        },
+        "actual": {
+          "CapturePulse": 0.0,
+          "CaptureCount": 0.0,
+          "MissedCount": 0.0,
+          "Error": 0.0
+        },
+        "violations": [
+          {
+            "output": "Error",
+            "expected": true,
+            "actual": 0.0
+          }
+        ]
+      }
+    ]
+  }
+}

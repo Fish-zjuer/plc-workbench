@@ -108,6 +108,13 @@ class Engine:
         from .backend_r4 import info
         backend=info()
         if backend:state['backend']={k:backend[k] for k in ('label','fingerprint','variant_api')}
+        from .validation import ValidationConfig,home_for
+        validation=ValidationConfig.load(home_for(self.session))
+        state['completion_policy']={'validation_mode':validation.mode,
+            'required_gates':['static','codesys','behavior'] if validation.mode=='codesys' else ['offline_behavior'],
+            'target_profile':validation.profile if validation.mode=='codesys' else None}
+        if validation.mode=='codesys':
+            state['completion_policy']['rule']='Use plc_solve_bank/plc_bank_test for the real target gate. Offline-only compile/probe tools cannot establish CODESYS completion.'
         if self.session.data.get('planned_question_id'):
             state['planned_question_id']=self.session.data['planned_question_id']
         if self.session.data.get('planned_task'):
@@ -246,7 +253,10 @@ class Engine:
                         if not text.strip():
                             raise ProviderError("模型返回空回答，未完成任务")
                         if workflow_result:
-                            if workflow_result.get('schema')=='plc-task-receipt-v1':
+                            if workflow_result.get('schema')=='plc-dataset-receipt-v1':
+                                verification,verified=dataset_summary(self.session,workflow_result)
+                                text+='\n\n程序验证记录：'+verification
+                            elif workflow_result.get('schema')=='plc-task-receipt-v1':
                                 verification,verified=general_task_summary(self.session,workflow_result)
                                 text+='\n\n程序验证记录：'+verification
                             else:
@@ -286,8 +296,17 @@ class Engine:
                                 self.notify("tool_start", {"name": call["name"], "arguments": call["arguments"]})
                                 result = ({'status':'cancelled','message':'用户停止；工具未执行'} if self.cancel_event.is_set()
                                           else self.toolbox.call(call["name"], call["arguments"]))
-                                if call['name'] in ('plc_solve_bank','plc_task_run'):
+                                if call['name'] in ('plc_solve_bank','plc_task_run','plc_dataset_run'):
                                     workflow_result=result
+                                elif call['name']=='plc_bank_test' and result.get('validation_mode')=='codesys':
+                                    from .backend_r4 import info
+                                    from .extended_eval import evaluation_fingerprint
+                                    backend=info()
+                                    workflow_result={'status':'verified' if result.get('status')=='pass' else result.get('status','validation_failed'),
+                                        'source':call['arguments']['source'],'source_sha256':result.get('source_sha256'),
+                                        'backend_fingerprint':backend['fingerprint'] if backend else None,
+                                        'evaluation_fingerprint':evaluation_fingerprint(),'validation_mode':'codesys',
+                                        'validation_fingerprint':result.get('validation_fingerprint'),'final_evaluation':result}
                         self.emit("tool", name=call["name"], arguments=call["arguments"], result=result)
                         result_text = json.dumps(result, ensure_ascii=False, allow_nan=False)
                         if len(result_text) > 24000:
@@ -301,14 +320,17 @@ class Engine:
                         self.checkpoint()
                     if self.cancel_event.is_set():raise Cancelled('已停止')
                     if workflow_result and self.scoped_provider.calls>=self.config.max_steps:
-                        if workflow_result.get('schema')=='plc-task-receipt-v1':
+                        if workflow_result.get('schema')=='plc-dataset-receipt-v1':
+                            text,verified=dataset_summary(self.session,workflow_result)
+                        elif workflow_result.get('schema')=='plc-task-receipt-v1':
                             text,verified=general_task_summary(self.session,workflow_result)
                             text+='\n模型调用预算已用完，直接使用执行记录报告结果。'
                         else:
                             verified=workflow_result.get('status')=='verified' and source_hash_for_receipt(self.toolbox,workflow_result)
                             text=('专用PLC流程已完成，当前源码通过本轮有限检查。' if verified else
                                   '模型调用预算已用完；专用PLC流程尚未验证通过，当前文件与证据已保存。')
-                            text+='\n流程状态：'+workflow_result.get('status','unknown')+'；这不是CODESYS或形式化证明。'
+                            scope=('已要求CODESYS编译与有限离线行为检查均通过；未执行目标运行时或形式化验证。' if workflow_result.get('validation_mode')=='codesys' else '仅离线检查，未执行CODESYS或形式化验证。')
+                            text+='\n流程状态：'+workflow_result.get('status','unknown')+'；'+scope
                         if workflow_result.get('candidate_warnings'):text+='\n实现缺失：'+workflow_result['candidate_warnings'][0]['message']
                         self.messages.append({'role':'assistant','content':text});self.emit('assistant',text=text)
                         self.session.data['status']='idle' if verified else 'workflow_blocked'
@@ -336,6 +358,18 @@ class Engine:
                 self.checkpoint()
 
 
+def dataset_summary(session,receipt):
+    from . import dataset
+    try:
+        path=Path(receipt['source']).resolve();evaluation=receipt.get('final_evaluation') or {}
+        valid=(path.is_relative_to(session.project.workspace) and hashlib.sha256(path.read_bytes()).hexdigest()==receipt['source_sha256']
+            and dataset.load(receipt['task_id'])['dataset_sha256']==receipt['dataset_sha256']
+            and evaluation.get('execution_fingerprint')==dataset.fingerprint())
+    except (OSError,ValueError,KeyError):valid=False
+    status=receipt['status'] if valid else 'stale_evidence'
+    passed=valid and status=='reviewed_finite_pass'
+    return ('数据集任务 '+receipt['task_id']+'：'+status+'。供应测试的有限执行与独立审查分别留档；CODESYS和完整LTL证明未执行。'),passed
+
 def general_task_summary(session,receipt):
     from .task_store import TaskStore
     try:current=TaskStore(session).latest(receipt['task_id'])
@@ -357,6 +391,14 @@ def source_hash_for_receipt(toolbox, receipt):
         backend=info()
         if receipt.get('backend_fingerprint')!=(backend['fingerprint'] if backend else None):return False
         if receipt.get('evaluation_fingerprint')!=evaluation_fingerprint():return False
+        from .validation import ValidationConfig,home_for,validation_fingerprint
+        home=home_for(toolbox.session);validation=ValidationConfig.load(home)
+        if validation.mode=='codesys' or receipt.get('validation_mode')=='codesys':
+            if validation.mode!=receipt.get('validation_mode'):return False
+            if receipt.get('validation_fingerprint')!=validation_fingerprint(validation,home):return False
+            stages=receipt.get('final_evaluation',{}).get('stages',{})
+            if any(stages.get(name,{}).get('status')!='pass' for name in ('static','codesys','behavior')):return False
+            if any(stages[name].get('source_sha256')!=receipt.get('source_sha256') for name in ('codesys','behavior')):return False
         path=toolbox.resolve(receipt['source'])
         return path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest()==receipt.get('source_sha256')
     except (OSError,ValueError,KeyError):

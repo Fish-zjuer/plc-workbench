@@ -1,0 +1,315 @@
+{
+  "schema": "plc-task-v1",
+  "title": "在线光谱仪维护后的重新标定许可",
+  "block": "FB_SpectrometerQualification",
+  "target": "offline",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "# Spectrometer recalibration after maintenance\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\n1. Implement FB_SpectrometerQualification for measurement eligibility after maintenance of an online spectrometer. State 0 means waiting for calibration, 1 ready and 2 maintenance. Initially State=0, CalibReq=TRUE, MaintLamp=FALSE and MeasurePermit=FALSE.\n\n2. Maintenance=TRUE has priority and moves every state to 2. With Maintenance=FALSE, a pre-scan State of 2 must first move to 0, even if CalibDone=TRUE on the same call. A pre-scan State of 0 moves to 1 only when CalibDone=TRUE, otherwise remains 0. State 1 remains ready while not in maintenance.\n\n3. Perform at most one transition per call, using the pre-scan state. CalibReq is TRUE exactly when the updated State is 0; MaintLamp exactly when it is 2. MeasurePermit equals the current MeasureReq AND updated State=1.\n\n4. CalibDone is a completion level supplied by an external calibration module. No fresh edge is required; the specific constraint is that the maintenance-exit scan cannot skip state 0. Spectral fitting, calibration computation and physical measurement are outside scope.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Maintenance` | `BOOL` | Maintenance mode. |\n| Input | `CalibDone` | `BOOL` | External calibration-complete level. |\n| Input | `MeasureReq` | `BOOL` | Measurement request. |\n| Output | `State` | `USINT` | 0 waiting for calibration, 1 ready, 2 maintenance. |\n| Output | `CalibReq` | `BOOL` | Request the upstream calibration module. |\n| Output | `MaintLamp` | `BOOL` | Maintenance indication. |\n| Output | `MeasurePermit` | `BOOL` | Ordinary measurement eligibility. |"
+    }
+  ],
+  "inputs": {
+    "Maintenance": "BOOL",
+    "CalibDone": "BOOL",
+    "MeasureReq": "BOOL"
+  },
+  "outputs": {
+    "State": "USINT",
+    "CalibReq": "BOOL",
+    "MaintLamp": "BOOL",
+    "MeasurePermit": "BOOL"
+  },
+  "scenarios": [
+    {
+      "name": "supplied_formal_fixture",
+      "covers": [
+        "R1"
+      ],
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expect": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expect": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expect": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expect": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expect": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expect": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expect": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          }
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expect": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "id": "P02_maintenance",
+      "requirement": "R1",
+      "when": {
+        "inputs.Maintenance": true
+      },
+      "then": {
+        "outputs.State": 2
+      }
+    },
+    {
+      "id": "P03_exit_maintenance",
+      "requirement": "R1",
+      "when": {
+        "inputs.Maintenance": false,
+        "previous.outputs.State": 2
+      },
+      "then": {
+        "outputs.State": 0
+      }
+    },
+    {
+      "id": "P04_calibrated",
+      "requirement": "R1",
+      "when": {
+        "inputs.Maintenance": false,
+        "previous.outputs.State": 0,
+        "inputs.CalibDone": true
+      },
+      "then": {
+        "outputs.State": 1
+      }
+    },
+    {
+      "id": "P05_wait_calibration",
+      "requirement": "R1",
+      "when": {
+        "inputs.Maintenance": false,
+        "previous.outputs.State": 0,
+        "inputs.CalibDone": false
+      },
+      "then": {
+        "outputs.State": 0
+      }
+    },
+    {
+      "id": "P06_qualified_stays",
+      "requirement": "R1",
+      "when": {
+        "inputs.Maintenance": false,
+        "previous.outputs.State": 1
+      },
+      "then": {
+        "outputs.State": 1
+      }
+    },
+    {
+      "id": "P07_calib_0",
+      "requirement": "R1",
+      "when": {
+        "outputs.State": 0
+      },
+      "then": {
+        "outputs.CalibReq": true
+      }
+    },
+    {
+      "id": "P08_lamp_0",
+      "requirement": "R1",
+      "when": {
+        "outputs.State": 0
+      },
+      "then": {
+        "outputs.MaintLamp": false
+      }
+    },
+    {
+      "id": "P09_permit_0",
+      "requirement": "R1",
+      "when": {
+        "outputs.State": 0,
+        "inputs.MeasureReq": true
+      },
+      "then": {
+        "outputs.MeasurePermit": false
+      }
+    },
+    {
+      "id": "P07_calib_1",
+      "requirement": "R1",
+      "when": {
+        "outputs.State": 1
+      },
+      "then": {
+        "outputs.CalibReq": false
+      }
+    },
+    {
+      "id": "P08_lamp_1",
+      "requirement": "R1",
+      "when": {
+        "outputs.State": 1
+      },
+      "then": {
+        "outputs.MaintLamp": false
+      }
+    },
+    {
+      "id": "P09_permit_1",
+      "requirement": "R1",
+      "when": {
+        "outputs.State": 1,
+        "inputs.MeasureReq": true
+      },
+      "then": {
+        "outputs.MeasurePermit": true
+      }
+    },
+    {
+      "id": "P07_calib_2",
+      "requirement": "R1",
+      "when": {
+        "outputs.State": 2
+      },
+      "then": {
+        "outputs.CalibReq": false
+      }
+    },
+    {
+      "id": "P08_lamp_2",
+      "requirement": "R1",
+      "when": {
+        "outputs.State": 2
+      },
+      "then": {
+        "outputs.MaintLamp": true
+      }
+    },
+    {
+      "id": "P09_permit_2",
+      "requirement": "R1",
+      "when": {
+        "outputs.State": 2,
+        "inputs.MeasureReq": true
+      },
+      "then": {
+        "outputs.MeasurePermit": false
+      }
+    },
+    {
+      "id": "P09_no_request",
+      "requirement": "R1",
+      "when": {
+        "inputs.MeasureReq": false
+      },
+      "then": {
+        "outputs.MeasurePermit": false
+      }
+    }
+  ],
+  "formal": {
+    "mode": "required",
+    "bound": 20
+  },
+  "executor": "offline",
+  "inouts": {},
+  "assumptions": [],
+  "questions": [],
+  "tolerance": 1e-06
+}

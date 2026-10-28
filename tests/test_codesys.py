@@ -72,8 +72,11 @@ class CodesysTests(unittest.TestCase):
         with patch.object(codesys.subprocess,'Popen',side_effect=constructor) as launch:
             result=codesys.invoke({'action':'probe','source_sha256':None},self.root/'run',self.cfg)
             args=launch.call_args.args[0]
-            self.assertIn('--profile='+self.cfg['profile'],args);self.assertIn('--noUI',args)
-            self.assertTrue(any(a.startswith('--runscript=') for a in args))
+            if isinstance(args,str):
+                self.assertIn('--profile="'+self.cfg['profile']+'"',args);self.assertIn('--runscript="',args)
+            else:
+                self.assertIn('--profile='+self.cfg['profile'],args);self.assertTrue(any(a.startswith('--runscript=') for a in args))
+            self.assertIn('--noUI',args)
             self.assertEqual(result['status'],'probed')
         for key,value in [('nonce','wrong'),('source_sha256','wrong'),('vendor','fake'),('vendor_version','')]:
             with self.subTest(key=key),patch.object(codesys.subprocess,'Popen',side_effect=self.transport(lambda r:r.update({key:value}))):

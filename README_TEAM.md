@@ -1,10 +1,10 @@
-# PLC Workbench · 形式化与 CODESYS 接入开发版 R7
+# PLC Workbench · 32题整合开发版 R8
 
-[下载 R7 开发版](https://github.com/Fish-zjuer/plc-workbench/releases/tag/v0.7.0-dev) · [R7 功能分支](https://github.com/Fish-zjuer/plc-workbench/tree/agent-codesys-formal)
+合并 Nathan 的 CODESYS 编译/诊断链和 R7 的通用任务、独立审查与 Z3，新增可实际运行的公共20题和自建12题。
 
-R7 新增 Z3 反例搜索、原生重放、归纳证明，以及官方 CODESYS 编译/仿真适配。上传需求，确认任务约定后执行；任务面板可单独运行“形式化检查”和“CODESYS编译”。Z3 已实测，CODESYS 因本机缺安装尚未厂商实测。配置与范围见 [接入说明](docs/CODESYS_FORMAL.md)。
+[使用与整合说明](docs/INTEGRATION_R8.md) · [32题实测](experiments/dataset_r8/report.md) · [下载 R8](https://github.com/Fish-zjuer/plc-workbench/releases/tag/v0.8.0-dev)
 
-**新增功能与限制见 [当前设计](docs/AGENT_DESIGN_CURRENT.md)，实测见 [R7 报告](experiments/formal_r7/report.md)。** 通用桥接支持标量接口；数组、结构体、引用等继续使用已适配的题库流程或扩展后端。目标平台编译仍需实际 CODESYS 等适配器。下文 R4 实验数字是保留的历史结果。
+本轮32份候选通过348组提供的场景，各重放两次；原公共候选复用18份，2份修复，自建12题从空生成。独立审查仍有需求争议，不能称全部审查通过。本机缺CODESYS，厂商测量未执行。
 
 2026-10-28｜用于组内交流、试用和继续开发。它是我们负责的agent与工具部分，尚不是完整期末作业提交。
 

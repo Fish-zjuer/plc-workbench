@@ -1,0 +1,51 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_03",
+  "status": "reviewed_finite_pass",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "2c3835aabc643826fb80ea0cb89dd03ca45536edd016f6195b96c1602bf7f913",
+  "source_sha256": "60edf2e57db498ee1586538d20eda2a7611e8c4aa2cc5ad4f46a258a321e34f3",
+  "attempts": [
+    {
+      "summary": "Implements FB_GateTelemetry with reset priority, strict timing-parameter validation, sequence-inequality freshness, saturating age accumulation, latched comm fault cleared only by fresh+Ack, and derived remote-write permit. Sequence history and age are preserved on illegal parameters.",
+      "status": "written",
+      "source_sha256": "31405c05f69b1fe2a53d41fdde8f86f2708030c4a748d48127d819dcab306b0c"
+    },
+    {
+      "summary": "Fixed power-up fault state by initializing internal fault to TRUE, so the first fresh frame without Ack leaves CommFault latched. All other logic (reset priority, illegal-parameter preservation, saturating age, fresh+Ack clear, derived permit) already conforms and is preserved.",
+      "status": "written",
+      "source_sha256": "60edf2e57db498ee1586538d20eda2a7611e8c4aa2cc5ad4f46a258a321e34f3"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 3,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_03",
+    "source_sha256": "60edf2e57db498ee1586538d20eda2a7611e8c4aa2cc5ad4f46a258a321e34f3",
+    "dataset_sha256": "2c3835aabc643826fb80ea0cb89dd03ca45536edd016f6195b96c1602bf7f913",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 6,
+      "scans": 100,
+      "assertions": 450,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\cdcfe078fcd290beada8cc20\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "未发现题面可推出且与实现明确冲突的缺陷。复位优先级、 freshness、年龄饱和、故障锁存/清除、非法参数处理与接口描述一致；无额外问题需要提出。",
+      "questions": [],
+      "proposals": [],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

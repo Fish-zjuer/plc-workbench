@@ -1,0 +1,56 @@
+{
+  "schema": "plc-dataset-receipt-v1",
+  "task_id": "CUSTOM_08",
+  "status": "reviewed_finite_pass",
+  "source_origin": "new weak-model generation",
+  "dataset_sha256": "dd330f6d4782eaf7273089d136c0ac72c94c7b9e3abd963d85040720c93d0f46",
+  "source_sha256": "02103511d6e8b10adb0da896c62dbd3493ed3ee420728631112d063d6ab43942",
+  "attempts": [
+    {
+      "summary": "FB_CraneSpeedCheck validates the three INT inputs against 0..100 with ReferenceSpeed10>0 before any arithmetic, promotes to DINT for the difference and 13*reference computations, and independently recomputes all three outputs each scan so exactly one of SyncOK/SyncBad/Invalid is TRUE.",
+      "status": "written",
+      "source_sha256": "1290a359f2e143e3097b1bff7e568f5718e3764cac129b5e3e273f33804e4ba6"
+    },
+    {
+      "summary": "Replaced the unsupported DINT#(...) cast literals with standard INT_TO_DINT conversions, keeping range validation before any arithmetic and independent recomputation of the three outputs each scan.",
+      "status": "written",
+      "source_sha256": "3bd7e599bd9b873d7f9c63ab70800645750185f932bed179b7f38eaaa0c84f32"
+    },
+    {
+      "summary": "Renamed the local variable `Ref` (reserved word in STruC++ 0.7) and other potentially conflicting locals to safe identifiers, keeping identical logic: range-validate all three INTs (0..100, ReferenceSpeed10>0) before any arithmetic, promote to DINT for ABS(Left-Right)<=1 and ABS(Left+Right-13*Reference)<=2, and recompute all three outputs from scratch each scan so exactly one of SyncOK/SyncBad/Invalid is TRUE.",
+      "status": "written",
+      "source_sha256": "02103511d6e8b10adb0da896c62dbd3493ed3ee420728631112d063d6ab43942"
+    }
+  ],
+  "model": "deepseek-flash",
+  "model_calls": 4,
+  "final_evaluation": {
+    "status": "pass",
+    "task_id": "CUSTOM_08",
+    "source_sha256": "02103511d6e8b10adb0da896c62dbd3493ed3ee420728631112d063d6ab43942",
+    "dataset_sha256": "dd330f6d4782eaf7273089d136c0ac72c94c7b9e3abd963d85040720c93d0f46",
+    "execution_fingerprint": "c079bd24575cce47dd56c1f758f88b92c0babd6c4695c470218925afcbce8a28",
+    "summary": {
+      "scenarios": 8,
+      "scans": 17,
+      "assertions": 51,
+      "failed": 0
+    },
+    "target_compile": "not_executed",
+    "ltl_status": "requirements_only_not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\dataset_builds\\82312708a129ff5885fa570f\\build.json",
+    "scope": "Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "未发现明确缺陷；代码在有效输入下实现 ABS(LeftSpeed10-RightSpeed10)<=1 和 ABS(LeftSpeed10+RightSpeed10-13*ReferenceSpeed10)<=2，并在无效输入时仅置 Invalid。",
+      "questions": [],
+      "proposals": [],
+      "expected_authority": "advisory_model_claim_only"
+    }
+  ],
+  "target_compile": "not_executed",
+  "ltl_status": "requirements_only_not_executed",
+  "scope": "Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle."
+}

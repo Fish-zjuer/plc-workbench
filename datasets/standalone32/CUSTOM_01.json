@@ -1,0 +1,5897 @@
+{
+  "id": "CUSTOM_01",
+  "title": "电梯方向保持与满载屏蔽目标调度",
+  "block": "FB_ElevatorTarget",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "Enable",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "CurrentFloor",
+      "type": "INT"
+    },
+    {
+      "direction": "Input",
+      "name": "Direction",
+      "type": "INT"
+    },
+    {
+      "direction": "Input",
+      "name": "FullLoad",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "CabReq",
+      "type": "ARRAY[1..6] OF BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "HallReq",
+      "type": "ARRAY[1..6] OF BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "HasTarget",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "TargetFloor",
+      "type": "INT"
+    },
+    {
+      "direction": "Output",
+      "name": "NextDirection",
+      "type": "INT"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06
+  },
+  "scenarios": [
+    {
+      "name": "方向保持优先于全局最近",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "前方无请求则反向",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 5,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "满载外呼保留并在卸载后恢复选择",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "TargetFloor": 4,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "空闲同距与当前层优先",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              true,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "TargetFloor": 2
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              true,
+              true,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "楼层1_方向和满载组合",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 530,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 540,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 550,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 560,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 570,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 580,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 590,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 1,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "楼层3_方向和满载组合",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 530,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 4,
+            "NextDirection": 1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 540,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 550,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 560,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 570,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 580,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 590,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 3,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 3,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "楼层6_方向和满载组合",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "Enable": false,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 4,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": -1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 4,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 0,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 530,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 4,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 540,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": false,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 550,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 560,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": false,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 570,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 1,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 580,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              false,
+              true,
+              false,
+              false,
+              false,
+              false
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              true,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 2,
+            "NextDirection": -1
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 590,
+          "inputs": {
+            "Enable": true,
+            "CurrentFloor": 6,
+            "Direction": 1,
+            "FullLoad": true,
+            "CabReq": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "HallReq": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ]
+          },
+          "expected": {
+            "HasTarget": true,
+            "TargetFloor": 6,
+            "NextDirection": 0
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# Direction-biased elevator target selection\n\n- **Difficulty:** Hard (hard)\n\n## Requirements\n\n1. Implement FB_ElevatorTarget to select the next stopping floor of a six-floor elevator. Each call is one target-selection decision. The caller supplies CurrentFloor in 1..6 and Direction in {-1,0,1}, meaning down, idle and up.\n\n2. CabReq and HallReq are read-only ARRAY[1..6] OF BOOL inputs. A floor i is eligible when CabReq[i] OR (HallReq[i] AND NOT FullLoad). The caller owns request registration and clearing. Never modify either request array.\n\n3. If Enable is FALSE or no eligible request exists, set HasTarget=FALSE, TargetFloor=CurrentFloor and NextDirection=0. Otherwise, an eligible request at CurrentFloor takes priority: select it with HasTarget=TRUE and NextDirection=0.\n\n4. For Direction=1, select the nearest eligible floor above CurrentFloor; if none exists above, select the nearest below. For Direction=-1, apply the mirrored rule. For Direction=0, select the nearest eligible floor on either side and break equal-distance ties toward the lower floor.\n\n5. Set HasTarget=TRUE for a selected request. NextDirection is the sign of TargetFloor-CurrentFloor. Recompute outputs from the current inputs on every call, including the first call. Keep no internal request queue and issue no motor commands. FullLoad masks hall requests only; it must not erase them.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `Enable` | `BOOL` | Enable target selection. |\n| Input | `CurrentFloor` | `INT` | Current floor, 1..6. |\n| Input | `Direction` | `INT` | Previous travel direction: -1 down, 0 idle, 1 up. |\n| Input | `FullLoad` | `BOOL` | Mask hall requests when TRUE. |\n| Input | `CabReq` | `ARRAY[1..6] OF BOOL` | Read-only cabin requests; index 1 corresponds to floor 1. |\n| Input | `HallReq` | `ARRAY[1..6] OF BOOL` | Read-only hall requests; index 1 corresponds to floor 1. |\n| Output | `HasTarget` | `BOOL` | An eligible target exists. |\n| Output | `TargetFloor` | `INT` | Selected floor, or CurrentFloor if no target. |\n| Output | `NextDirection` | `INT` | Sign of the target-floor displacement. |",
+  "ltl": {
+    "id": "CUSTOM_01",
+    "title": "电梯方向保持与满载屏蔽目标调度",
+    "definitions": "输入域：CurrentFloor∈1..6，Direction∈{-1,0,1}；数组下界为1、长度6。\nE={i | CabReq[i] OR (HallReq[i] AND NOT FullLoad)}；输入数组只读。\n令f=CurrentFloor。独立数学选择器T：Enable为FALSE或E为空时T=f；否则f∈E时T=f；\nDirection=1且存在i>f时T=min{i∈E:i>f}；Direction=-1且存在i<f时T=max{i∈E:i<f}；\n其他情况T为E中使(abs(i-f),i)按字典序最小的楼层。对应方向无请求时转向另一侧最近请求。\nselectedOK := TargetFloor=T AND NextDirection=sign(T-f)。requestArraysPreserved表示调用前后两输入数组完全相同。\n本题不保存请求队列，不要求最终完成运输；HasTarget不是电机命令。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(HasTarget <-> (Enable & nonempty(E)))"
+      },
+      {
+        "id": "P02",
+        "formula": "G(selectedOK)"
+      },
+      {
+        "id": "P03",
+        "formula": "G((!Enable | empty(E)) -> (!HasTarget & TargetFloor=CurrentFloor & NextDirection=0))"
+      },
+      {
+        "id": "P04",
+        "formula": "G((Enable & CurrentFloor_in_E) -> (HasTarget & TargetFloor=CurrentFloor & NextDirection=0))"
+      },
+      {
+        "id": "P05",
+        "formula": "G(HasTarget -> targetInE)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(requestArraysPreserved)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

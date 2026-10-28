@@ -1,0 +1,362 @@
+{
+  "id": "CUSTOM_08",
+  "title": "桥式起重机双侧传动测速一致性校验",
+  "block": "FB_CraneSpeedCheck",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "LeftSpeed10",
+      "type": "INT"
+    },
+    {
+      "direction": "Input",
+      "name": "RightSpeed10",
+      "type": "INT"
+    },
+    {
+      "direction": "Input",
+      "name": "ReferenceSpeed10",
+      "type": "INT"
+    },
+    {
+      "direction": "Output",
+      "name": "SyncOK",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "SyncBad",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "Invalid",
+      "type": "BOOL"
+    }
+  ],
+  "adapter_format": "complete_input_trace",
+  "time_note": "time_ms labels order only; DtMs/DtSec, where declared, are the algorithm inputs.",
+  "tolerance": {
+    "default_absolute": 1e-06
+  },
+  "scenarios": [
+    {
+      "name": "13-A：同步/传动比容差与有效性",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LeftSpeed10": 39,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LeftSpeed10": 41,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "LeftSpeed10": 41,
+            "RightSpeed10": 39,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "LeftSpeed10": 38,
+            "RightSpeed10": 38,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "LeftSpeed10": 37,
+            "RightSpeed10": 38,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 0
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "LeftSpeed10": 101,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": -1,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test"
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "LeftSpeed10": -32768,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Existing manually reviewable example, expanded to complete scan inputs."
+    },
+    {
+      "name": "同步边界_40_40_6",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "同步边界_39_40_6",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 39,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "同步边界_41_39_6",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 41,
+            "RightSpeed10": 39,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "同步边界_38_38_6",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 38,
+            "RightSpeed10": 38,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "同步边界_40_40_0",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 0
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "同步边界_-32768_32767_100",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": -32768,
+            "RightSpeed10": 32767,
+            "ReferenceSpeed10": 100
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    },
+    {
+      "name": "同步边界_100_100_100",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 100,
+            "RightSpeed10": 100,
+            "ReferenceSpeed10": 100
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test"
+        }
+      ],
+      "basis": "Supplemental requirement-based reference arithmetic/state calculation; not an ST execution result."
+    }
+  ],
+  "execution_status": "not_run_in_this_delivery",
+  "requirements": "# Crane dual-drive speed consistency\n\n- **Difficulty:** Medium (medium)\n\n## Requirements\n\n1. Implement FB_CraneSpeedCheck to diagnose dual-drive speed consistency on a bridge crane. LeftSpeed10, RightSpeed10 and ReferenceSpeed10 are INT values in 0.1 RPM units, sampled by an upstream module in the same observation window. Only same-direction low-speed commissioning is in scope.\n\n2. Inputs are valid when all three values are in 0..100 and ReferenceSpeed10>0. Otherwise set Invalid=TRUE and both other outputs FALSE. Validate ranges before subtraction and multiplication; do not perform unchecked INT arithmetic on extreme input values. Promoting to DINT is allowed.\n\n3. The benchmark specifies equal left/right speeds and a target speed on each side equal to 6.5 times the reference reduction shaft speed. For valid inputs, SyncOK is TRUE exactly when ABS(LeftSpeed10-RightSpeed10)<=1 AND ABS(LeftSpeed10+RightSpeed10-13*ReferenceSpeed10)<=2. Otherwise set SyncBad=TRUE.\n\n4. Recompute outputs independently every scan. Initially all three outputs are FALSE; after each call exactly one is TRUE. Both constraints must be checked; averaging the two sides must not replace the synchronization check. Ratios, ranges and tolerances are synthetic benchmark values, not crane nameplate data. Do not command crane motion.\n\n## Interface Definition\n\n| Direction | Variable/Field | Data Type | Description |\n| --- | --- | --- | --- |\n| Input | `LeftSpeed10` | `INT` | Left-side speed in 0.1 RPM units. |\n| Input | `RightSpeed10` | `INT` | Right-side speed in 0.1 RPM units. |\n| Input | `ReferenceSpeed10` | `INT` | Reference reduction-shaft speed in 0.1 RPM units. |\n| Output | `SyncOK` | `BOOL` | Both synchronization and gearing constraints hold. |\n| Output | `SyncBad` | `BOOL` | Inputs valid but at least one constraint fails. |\n| Output | `Invalid` | `BOOL` | Any channel out of range or reference speed zero. |",
+  "ltl": {
+    "id": "CUSTOM_08",
+    "title": "桥式起重机双侧传动测速一致性校验",
+    "definitions": "V := 0<=LeftSpeed10<=100 AND 0<=RightSpeed10<=100 AND 0<ReferenceSpeed10<=100。\nR := abs(LeftSpeed10-RightSpeed10)<=1 AND abs(LeftSpeed10+RightSpeed10-13*ReferenceSpeed10)<=2，只在V真时求值。\n差值、乘法采用足够宽的整数。极值输入先检查量程，不能在INT中先计算再校验。\n初始调用前三个输出均FALSE；第一次调用后的输出按当前输入计算。",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(SyncOK <-> (V & R))"
+      },
+      {
+        "id": "P02",
+        "formula": "G(SyncBad <-> (V & !R))"
+      },
+      {
+        "id": "P03",
+        "formula": "G(Invalid <-> !V)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(!(SyncOK & SyncBad) & !(SyncOK & Invalid) & !(SyncBad & Invalid))"
+      },
+      {
+        "id": "P05",
+        "formula": "G(SyncOK | SyncBad | Invalid)"
+      }
+    ],
+    "status": "specification_not_proved"
+  },
+  "specification_status": "supplied_requirements_not_solver_native",
+  "evidence_origin": "user-supplied standalone32 archives, fixed before generation"
+}

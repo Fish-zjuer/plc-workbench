@@ -8,7 +8,7 @@ from .config import ROOT
 
 def evaluation_fingerprint():
     names=('plc_agent/bank_contracts.py','plc_agent/bank_runner.py','plc_probe/contracts.py','plc_probe/scenarios.py',
-           'plc_agent/struct_checks.py','plc_agent/reference_checks.py','plc_agent/duration_checks.py','plc_agent/extended_eval.py')
+           'plc_agent/struct_checks.py','plc_agent/reference_checks.py','plc_agent/duration_checks.py','plc_agent/extended_eval.py','plc_agent/q20_contract.py')
     signature=tuple((name,(ROOT/name).stat().st_size,(ROOT/name).stat().st_mtime_ns) for name in names)
     return _fingerprint(signature)
 
