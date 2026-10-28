@@ -1,0 +1,1937 @@
+{
+  "schema": "plc-task-receipt-v1",
+  "task_id": "cdb2f788f8ce",
+  "run_id": "035b43418789",
+  "status": "offline_pass_target_pending",
+  "source": "code/cdb2f788f8ce.st",
+  "source_sha256": "8d1af4243ed60dd1d2d1aed0bb416a5a76465e98b23d38798bf787c9505b97ad",
+  "workspace_source_sha256": "8d1af4243ed60dd1d2d1aed0bb416a5a76465e98b23d38798bf787c9505b97ad",
+  "contract_sha256": "e854c513f8eea599d4c0ce121e097ccd49e2b08bc610995062108edcbacd5345",
+  "target": "portable",
+  "executor": "offline",
+  "target_compile": "not_executed",
+  "requirements_sha256": "602e35a92eec4bc0a2ec6ae113f07bfc6933322fb69fe8dee416e5a67217e2a2",
+  "regression_sha256": "fbd8b55e7175eb727983a1502a9f559399234b5d1d3240ad45e935cf8f022e4d",
+  "regression_scenarios": 3,
+  "formal_verification": {
+    "schema": "plc-formal-v1",
+    "source_sha256": "8d1af4243ed60dd1d2d1aed0bb416a5a76465e98b23d38798bf787c9505b97ad",
+    "contract_sha256": "e854c513f8eea599d4c0ce121e097ccd49e2b08bc610995062108edcbacd5345",
+    "evidence_path": "<local_project>\\tasks\\cdb2f788f8ce\\runs\\035b43418789\\formal_01",
+    "evidence_sha256": "0b5f4280115cc86cb5f32a11c67d6f8adbc5fbe0a4bc0a6b0b409ecc3dff89ce",
+    "status": "proved",
+    "backend": "Z3",
+    "bound_scans": 32,
+    "properties": [
+      {
+        "id": "P_STOP",
+        "requirement": "R2",
+        "status": "proved",
+        "checked_scans": 32,
+        "induction_depth": 1
+      },
+      {
+        "id": "P_INTERLOCK",
+        "requirement": "R2",
+        "status": "proved",
+        "checked_scans": 32,
+        "induction_depth": 1
+      },
+      {
+        "id": "P_HOLD",
+        "requirement": "R1",
+        "status": "proved",
+        "checked_scans": 32,
+        "induction_depth": 1
+      },
+      {
+        "id": "P_HELD_START",
+        "requirement": "R3",
+        "status": "proved",
+        "checked_scans": 32,
+        "induction_depth": 1
+      },
+      {
+        "id": "P_EDGE",
+        "requirement": "R1",
+        "status": "proved",
+        "checked_scans": 32,
+        "induction_depth": 1
+      }
+    ],
+    "scope": "Only the listed properties of the parsed ST transition model. Not all natural-language requirements or hardware correctness.",
+    "semantics": {
+      "types": "BOOL and 8/16/32-bit integers/bitstrings",
+      "state": "FB outputs and VAR persist between scans; declared initial values",
+      "arithmetic": "same-type assignment additions/subtractions modulo declared width; arithmetic in comparisons refused",
+      "excluded": "REAL/LREAL, TIME/LTIME, timers, other FB/function calls, arrays, references, loops, I/O and interrupts"
+    },
+    "assumptions": [
+      "Single sequential FB invocation per scan; all inputs assigned before invocation.",
+      "No concurrent writes, retained warm-start state, physical I/O or hardware faults modeled."
+    ],
+    "solver_version": "5.3.2",
+    "formal_fingerprint": "84f8514ad8740a25a47789db5d4de9acb57bfb974a8bde4a14d44f16757a3dc1",
+    "elapsed_seconds": 3.297,
+    "proved_property_ids": [
+      "P_STOP",
+      "P_INTERLOCK",
+      "P_HOLD",
+      "P_HELD_START",
+      "P_EDGE"
+    ]
+  },
+  "formal_attempts": [
+    {
+      "schema": "plc-formal-v1",
+      "source_sha256": "87028f66049da323860f29cbfa505eb426aca4be7c6350b89d8a8a6fe0ca461e",
+      "contract_sha256": "e854c513f8eea599d4c0ce121e097ccd49e2b08bc610995062108edcbacd5345",
+      "evidence_path": "<local_project>\\tasks\\cdb2f788f8ce\\runs\\035b43418789\\formal_00",
+      "evidence_sha256": "3e2cba704ff9961a62121574f0530767e1c868baacc2412861abd53e50548fbb",
+      "status": "counterexample_confirmed",
+      "backend": "Z3",
+      "bound_scans": 32,
+      "properties": [
+        {
+          "id": "P_STOP",
+          "requirement": "R2",
+          "status": "counterexample",
+          "first_failing_scan": 23,
+          "counterexample": {
+            "name": "formal_P_STOP",
+            "covers": [
+              "R2"
+            ],
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "start": true,
+                  "stop": false,
+                  "permit": true
+                }
+              },
+              {
+                "time_ms": 1,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": true
+                }
+              },
+              {
+                "time_ms": 2,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": true
+                }
+              },
+              {
+                "time_ms": 3,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": true
+                }
+              },
+              {
+                "time_ms": 4,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": true
+                }
+              },
+              {
+                "time_ms": 5,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": true
+                }
+              },
+              {
+                "time_ms": 6,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": true
+                }
+              },
+              {
+                "time_ms": 7,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 8,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 9,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 10,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 11,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 12,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 13,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 14,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 15,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 16,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 17,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 18,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 19,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 20,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 21,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 22,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 23,
+                "inputs": {
+                  "start": false,
+                  "stop": true,
+                  "permit": false
+                }
+              }
+            ]
+          },
+          "symbolic_rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 3,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 4,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 5,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 6,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 7,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 8,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 9,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 11,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 12,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 13,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 14,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 15,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 16,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 17,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 18,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 19,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 21,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 22,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 23,
+              "inputs": {
+                "start": false,
+                "stop": true,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "P_INTERLOCK",
+          "requirement": "R2",
+          "status": "counterexample",
+          "first_failing_scan": 23,
+          "counterexample": {
+            "name": "formal_P_INTERLOCK",
+            "covers": [
+              "R2"
+            ],
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 1,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 2,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 3,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 4,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 5,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 6,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 7,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 8,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 9,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 10,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 11,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 12,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 13,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 14,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 15,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 16,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 17,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 18,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 19,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 20,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 21,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 22,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 23,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              }
+            ]
+          },
+          "symbolic_rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 3,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 4,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 5,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 6,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 7,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 8,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 9,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 11,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 12,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 13,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 14,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 15,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 16,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 17,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 18,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 19,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 21,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 22,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 23,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "P_HOLD",
+          "requirement": "R1",
+          "status": "proved",
+          "checked_scans": 32,
+          "induction_depth": 1
+        },
+        {
+          "id": "P_HELD_START",
+          "requirement": "R3",
+          "status": "counterexample",
+          "first_failing_scan": 23,
+          "counterexample": {
+            "name": "formal_P_HELD_START",
+            "covers": [
+              "R3"
+            ],
+            "trace": [
+              {
+                "time_ms": 0,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 1,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 2,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 3,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 4,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 5,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 6,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 7,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 8,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 9,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 10,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 11,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 12,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 13,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 14,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 15,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 16,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 17,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 18,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 19,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 20,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 21,
+                "inputs": {
+                  "start": false,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 22,
+                "inputs": {
+                  "start": true,
+                  "stop": false,
+                  "permit": false
+                }
+              },
+              {
+                "time_ms": 23,
+                "inputs": {
+                  "start": true,
+                  "stop": false,
+                  "permit": false
+                }
+              }
+            ]
+          },
+          "symbolic_rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 3,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 4,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 5,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 6,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 7,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 8,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 9,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 11,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 12,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 13,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 14,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 15,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 16,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 17,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 18,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 19,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 21,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 22,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 23,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": false
+              },
+              "symbolic_actual": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "P_EDGE",
+          "requirement": "R1",
+          "status": "proved",
+          "checked_scans": 32,
+          "induction_depth": 1
+        }
+      ],
+      "scope": "Only the listed properties of the parsed ST transition model. Not all natural-language requirements or hardware correctness.",
+      "semantics": {
+        "types": "BOOL and 8/16/32-bit integers/bitstrings",
+        "state": "FB outputs and VAR persist between scans; declared initial values",
+        "arithmetic": "same-type assignment additions/subtractions modulo declared width; arithmetic in comparisons refused",
+        "excluded": "REAL/LREAL, TIME/LTIME, timers, other FB/function calls, arrays, references, loops, I/O and interrupts"
+      },
+      "assumptions": [
+        "Single sequential FB invocation per scan; all inputs assigned before invocation.",
+        "No concurrent writes, retained warm-start state, physical I/O or hardware faults modeled."
+      ],
+      "solver_version": "5.3.2",
+      "formal_fingerprint": "84f8514ad8740a25a47789db5d4de9acb57bfb974a8bde4a14d44f16757a3dc1",
+      "elapsed_seconds": 3.453,
+      "proved_property_ids": [
+        "P_HOLD",
+        "P_EDGE"
+      ],
+      "counterexample_status": "confirmed",
+      "execution_fingerprint": "1fd8d903f041514d04308b81ec4216c3251d6c50a52f2c1c5ffb69ca0c19913c"
+    },
+    {
+      "schema": "plc-formal-v1",
+      "source_sha256": "8d1af4243ed60dd1d2d1aed0bb416a5a76465e98b23d38798bf787c9505b97ad",
+      "contract_sha256": "e854c513f8eea599d4c0ce121e097ccd49e2b08bc610995062108edcbacd5345",
+      "evidence_path": "<local_project>\\tasks\\cdb2f788f8ce\\runs\\035b43418789\\formal_01",
+      "evidence_sha256": "0b5f4280115cc86cb5f32a11c67d6f8adbc5fbe0a4bc0a6b0b409ecc3dff89ce",
+      "status": "proved",
+      "backend": "Z3",
+      "bound_scans": 32,
+      "properties": [
+        {
+          "id": "P_STOP",
+          "requirement": "R2",
+          "status": "proved",
+          "checked_scans": 32,
+          "induction_depth": 1
+        },
+        {
+          "id": "P_INTERLOCK",
+          "requirement": "R2",
+          "status": "proved",
+          "checked_scans": 32,
+          "induction_depth": 1
+        },
+        {
+          "id": "P_HOLD",
+          "requirement": "R1",
+          "status": "proved",
+          "checked_scans": 32,
+          "induction_depth": 1
+        },
+        {
+          "id": "P_HELD_START",
+          "requirement": "R3",
+          "status": "proved",
+          "checked_scans": 32,
+          "induction_depth": 1
+        },
+        {
+          "id": "P_EDGE",
+          "requirement": "R1",
+          "status": "proved",
+          "checked_scans": 32,
+          "induction_depth": 1
+        }
+      ],
+      "scope": "Only the listed properties of the parsed ST transition model. Not all natural-language requirements or hardware correctness.",
+      "semantics": {
+        "types": "BOOL and 8/16/32-bit integers/bitstrings",
+        "state": "FB outputs and VAR persist between scans; declared initial values",
+        "arithmetic": "same-type assignment additions/subtractions modulo declared width; arithmetic in comparisons refused",
+        "excluded": "REAL/LREAL, TIME/LTIME, timers, other FB/function calls, arrays, references, loops, I/O and interrupts"
+      },
+      "assumptions": [
+        "Single sequential FB invocation per scan; all inputs assigned before invocation.",
+        "No concurrent writes, retained warm-start state, physical I/O or hardware faults modeled."
+      ],
+      "solver_version": "5.3.2",
+      "formal_fingerprint": "84f8514ad8740a25a47789db5d4de9acb57bfb974a8bde4a14d44f16757a3dc1",
+      "elapsed_seconds": 3.297,
+      "proved_property_ids": [
+        "P_STOP",
+        "P_INTERLOCK",
+        "P_HOLD",
+        "P_HELD_START",
+        "P_EDGE"
+      ]
+    }
+  ],
+  "hardware_execution": "not_executed",
+  "attempts": [
+    {
+      "summary": "Removed the injected WB_FaultScan watchdog that forced running:=TRUE at scan 24, which caused P_STOP/P_INTERLOCK violations. Core logic preserved: rising-edge start latch, stop/permit dominance, prevStart updated every scan (R3).",
+      "source_sha256": "8d1af4243ed60dd1d2d1aed0bb416a5a76465e98b23d38798bf787c9505b97ad",
+      "status": "pass"
+    }
+  ],
+  "proposal_rejections": [],
+  "final_evaluation": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 5,
+      "scans": 87,
+      "assertions": 99,
+      "failed": 0,
+      "property_activations": {
+        "P_STOP": 2,
+        "P_INTERLOCK": 68,
+        "P_HOLD": 7,
+        "P_HELD_START": 4,
+        "P_EDGE": 3
+      }
+    },
+    "source_sha256": "8d1af4243ed60dd1d2d1aed0bb416a5a76465e98b23d38798bf787c9505b97ad",
+    "contract_sha256": "e854c513f8eea599d4c0ce121e097ccd49e2b08bc610995062108edcbacd5345",
+    "execution_fingerprint": "1fd8d903f041514d04308b81ec4216c3251d6c50a52f2c1c5ffb69ca0c19913c",
+    "behavior_tested": true,
+    "target_compile": "not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_0iia44sh\\build.json",
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "The implementation matches R1-R3: previous-start edge memory is updated before blocking logic on every scan, stop/permit blocking dominates simultaneous start edges, and held start cannot restart after unblocking. No semantic discrepancy found.",
+      "questions": [],
+      "unresolved_questions": [],
+      "adjudications": [],
+      "reused_with_user_decisions": false,
+      "findings": [
+        {
+          "name": "startup_rising_edge_latches",
+          "basis": "R1: running latches TRUE only on a rising edge of start while permit is TRUE and stop is FALSE; previous start is FALSE at startup.",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "stop_dominates_simultaneous_start_edge",
+          "basis": "R2: stop TRUE immediately clears running and dominates a simultaneous start rising edge.",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "permit_false_blocks_and_held_start_no_restart",
+          "basis": "R3: start edge memory updates during blocked scans, so restoring permit while start remains held does not restart; R2: permit FALSE clears running.",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "stop_blocked_held_start_no_restart",
+          "basis": "R2: stop TRUE clears running; R3: edge memory updates during blocked scans, so releasing stop while start remains held does not restart.",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        }
+      ],
+      "proposals": [
+        {
+          "name": "startup_rising_edge_latches",
+          "covers": [
+            "R1"
+          ],
+          "basis": "R1: running latches TRUE only on a rising edge of start while permit is TRUE and stop is FALSE; previous start is FALSE at startup.",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "stop_dominates_simultaneous_start_edge",
+          "covers": [
+            "R1",
+            "R2"
+          ],
+          "basis": "R2: stop TRUE immediately clears running and dominates a simultaneous start rising edge.",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "start": true,
+                "stop": true,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "permit_false_blocks_and_held_start_no_restart",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R3: start edge memory updates during blocked scans, so restoring permit while start remains held does not restart; R2: permit FALSE clears running.",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": false
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 3,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "stop_blocked_held_start_no_restart",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2: stop TRUE clears running; R3: edge memory updates during blocked scans, so releasing stop while start remains held does not restart.",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 1,
+              "inputs": {
+                "start": true,
+                "stop": true,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 2,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 3,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 4,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        }
+      ],
+      "regression_cases": [],
+      "contract_result": {
+        "status": "pass",
+        "summary": {
+          "scenarios": 4,
+          "scans": 14,
+          "assertions": 9,
+          "failed": 0,
+          "property_activations": {
+            "P_STOP": 2,
+            "P_INTERLOCK": 1,
+            "P_HOLD": 1,
+            "P_HELD_START": 2,
+            "P_EDGE": 3
+          }
+        },
+        "source_sha256": "8d1af4243ed60dd1d2d1aed0bb416a5a76465e98b23d38798bf787c9505b97ad",
+        "execution_fingerprint": "1fd8d903f041514d04308b81ec4216c3251d6c50a52f2c1c5ffb69ca0c19913c",
+        "behavior_tested": true,
+        "target_compile": "not_executed"
+      },
+      "replayed_processes": 2,
+      "source_sha256": "8d1af4243ed60dd1d2d1aed0bb416a5a76465e98b23d38798bf787c9505b97ad",
+      "contract_sha256": "e854c513f8eea599d4c0ce121e097ccd49e2b08bc610995062108edcbacd5345",
+      "model": "deepseek-flash",
+      "context_isolated": true
+    }
+  ],
+  "capabilities": {
+    "status": "ready_for_offline_checks",
+    "target": "portable",
+    "executor": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "target_compile": "not_executed",
+    "blockers": [],
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim.",
+    "scope": "Local finite checks only; target-platform compile/execution is a separate evidence stage."
+  },
+  "execution_fingerprint": "1fd8d903f041514d04308b81ec4216c3251d6c50a52f2c1c5ffb69ca0c19913c",
+  "scope": "Finite checks against a user-confirmed contract, plus isolated review. No full correctness proof.",
+  "delivery": {
+    "status": "exported",
+    "task_id": "cdb2f788f8ce",
+    "result_status": "offline_pass_target_pending",
+    "path": "<local_project>\\workspace\\deliverables\\cdb2f788f8ce_035b43418789.zip",
+    "sha256": "b1ff4133d2694992005ffba9843557574c4487560c86f74ea77916fd8237182d",
+    "files": 320
+  }
+}

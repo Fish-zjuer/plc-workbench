@@ -1,0 +1,23 @@
+; benchmark generated from python API
+(set-info :status unknown)
+(declare-fun P_EDGE_base_0_$valid () Bool)
+(declare-fun P_EDGE_base_0_STARTEDGE () Bool)
+(declare-fun P_EDGE_base_0_PREVSTART () Bool)
+(declare-fun P_EDGE_base_0_RUNNING () Bool)
+(declare-fun P_EDGE_input_0_START () Bool)
+(declare-fun P_EDGE_input_0_PERMIT () Bool)
+(declare-fun P_EDGE_input_0_STOP () Bool)
+(declare-fun P_EDGE_base_0_$prev_START () Bool)
+(assert
+ (let (($x251 (not P_EDGE_base_0_$valid)))
+ (and (= P_EDGE_base_0_RUNNING false) (= P_EDGE_base_0_PREVSTART false) (= P_EDGE_base_0_STARTEDGE false) $x251)))
+(assert
+ (let (($x948 (not P_EDGE_base_0_PREVSTART)))
+(let (($x1964 (and P_EDGE_input_0_START $x948)))
+(let (($x1884 (or P_EDGE_input_0_STOP (not P_EDGE_input_0_PERMIT))))
+(let (($x1986 (ite $x1884 false (ite $x1964 true P_EDGE_base_0_RUNNING))))
+(let (($x1888 (and (= P_EDGE_base_0_$prev_START false) (= P_EDGE_input_0_START true) (= P_EDGE_input_0_STOP false) (= P_EDGE_input_0_PERMIT true))))
+(let (($x1290 (and P_EDGE_base_0_$valid $x1888)))
+(let (($x587 (=> $x1290 (and (= $x1986 true)))))
+(not $x587)))))))))
+(check-sat)

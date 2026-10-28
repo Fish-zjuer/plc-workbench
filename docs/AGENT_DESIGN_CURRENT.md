@@ -1,6 +1,6 @@
 # 当前 Agent 到底怎样工作
 
-本轮称为 R6（通用 PLC 任务），与其他位置开发的 R5 区分。在本地 Git 分支 agent-general-tasks 上开发。R4 课程题库流程保留，R5 的 CODESYS 适配可以通过后端接口合并。
+本轮为 R7，在 R6 通用任务流程上加入 Z3 形式化验证和 CODESYS 适配代码，分支 agent-codesys-formal。Z3 已实测；本机缺 CODESYS 安装，厂商端尚未实测。外部 R5 后续仍通过后端接口合并。详见 [接入与使用说明](CODESYS_FORMAL.md)。
 
 它的工作单位是“一份 PLC 需求和对应程序”，输出是完整 ST、扫描检查、反例、修订记录及交付 ZIP。上传附件、聊天、计划模式和压缩上下文是交互基础；编程闭环由程序调度，不靠模型自己宣布完成。
 
@@ -18,7 +18,12 @@ flowchart TD
     G --> E[真实编译并逐扫描执行]
     E -->|失败| F[返回同版本反例]
     F --> W
-    E -->|固定检查通过| R[隔离上下文的独立审查]
+    E -->|固定检查通过| V{形式化策略}
+    V -->|off| R[隔离上下文的独立审查]
+    V -->|启用| S[从实际ST构造状态转移约束]
+    S -->|已重放确认的反例| K
+    S -->|满足策略| R
+    S -->|required且未证明| X
     R --> D[新进程重放两次]
     D -->|违反冻结不变量| K[加入持久回归场景]
     K --> W
@@ -67,7 +72,7 @@ contract.json 包括：
 }
 ~~~
 
-这是有限轨迹上的约定检查，**不是形式化证明**。当前没有接入 SMT、模型检查器或完整 PLC 硬件模型。
+默认只在有限轨迹检查这些规则。R7 可通过 formal.mode=required 或 best_effort 将同一已确认规则交给 Z3：先搜索可达反例，再尝试归纳；结果区分 proved、bounded_only、unsupported、timeout。证明覆盖严格 ST 子集中的指定性质，完整 PLC 硬件没有建模。
 
 约定和原始需求快照保存在项目 tasks 目录，在模型可写 workspace 之外。确认后作者只能改实现；不能为了通过而改掉预期。若需改需求，应创建新任务约定并重新确认，历史结果保留。
 
@@ -123,6 +128,8 @@ contract.json 包括：
 /act
 /task run 任务ID
 /task status 任务ID
+/task verify 任务ID
+/task compile 任务ID
 /task export 任务ID
 /task reject 任务ID Q1 "超出约定输入域，具体依据……"
 ~~~
@@ -138,6 +145,9 @@ examples/tasks/ 内有三个可导入示例。公共题库仍用 /solve 05。压
 | plc_agent/task_workflow.py | 作者→执行→修复→独立审查的有界调度 |
 | plc_agent/task_runner.py | 标量驱动、实际 ST→C++→原生程序、扫描与判据 |
 | plc_agent/task_backend.py | R5 后端适配接口 |
+| plc_agent/formal_st.py / formal_verify.py | 严格 ST 状态转移模型、Z3 搜索和归纳 |
+| plc_agent/task_formal.py | 原生反例复核、证明运行入口 |
+| plc_agent/codesys.py / codesys_worker.py | 官方 IDE 调用、工程导入、仿真输出读取；待厂商实测 |
 | plc_agent/task_tools.py | 聊天可调用任务工具；不暴露确认或裁决 |
 | plc_agent/task_cli.py / task_ui.py / tui.py | 命令、任务面板和 TUI |
 | plc_agent/engine.py / context_memory.py | 通用对话、服务、摘要和检索 |

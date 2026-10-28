@@ -46,6 +46,12 @@ class TaskUITests(unittest.IsolatedAsyncioTestCase):
             async with app.run_test(size=(130,42)) as pilot:
                 await pilot.click('#tasks');await pilot.pause()
                 self.assertIsInstance(app.screen,TaskInspector)
+                await pilot.resize_terminal(80,25);await pilot.pause()
+                for ident in ('task-verify','task-compile','task-close'):
+                    button=app.screen.query_one('#'+ident,Button)
+                    self.assertLessEqual(button.region.right,80)
+                    self.assertLessEqual(button.region.bottom,25)
+                await pilot.resize_terminal(130,42);await pilot.pause()
                 self.assertTrue(app.screen.query_one('#task-confirm',Button).disabled)
                 app.screen.query_one('#task-consent',Checkbox).value=True
                 await pilot.pause()

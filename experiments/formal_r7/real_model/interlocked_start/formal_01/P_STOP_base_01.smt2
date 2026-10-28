@@ -1,0 +1,21 @@
+; benchmark generated from python API
+(set-info :status unknown)
+(declare-fun P_STOP_base_0_$valid () Bool)
+(declare-fun P_STOP_base_0_STARTEDGE () Bool)
+(declare-fun P_STOP_base_0_PREVSTART () Bool)
+(declare-fun P_STOP_base_0_RUNNING () Bool)
+(declare-fun P_STOP_input_0_START () Bool)
+(declare-fun P_STOP_input_0_PERMIT () Bool)
+(declare-fun P_STOP_input_0_STOP () Bool)
+(assert
+ (let (($x15 (not P_STOP_base_0_$valid)))
+ (and (= P_STOP_base_0_RUNNING false) (= P_STOP_base_0_PREVSTART false) (= P_STOP_base_0_STARTEDGE false) $x15)))
+(assert
+ (let (($x35 (not P_STOP_base_0_PREVSTART)))
+(let (($x40 (and P_STOP_input_0_START $x35)))
+(let (($x47 (or P_STOP_input_0_STOP (not P_STOP_input_0_PERMIT))))
+(let (($x48 (ite $x47 false (ite $x40 true P_STOP_base_0_RUNNING))))
+(let (($x45 (and (= P_STOP_input_0_STOP true))))
+(let (($x53 (=> $x45 (and (= $x48 false)))))
+(not $x53))))))))
+(check-sat)

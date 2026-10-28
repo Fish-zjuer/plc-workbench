@@ -140,7 +140,7 @@ class Toolbox:
             return {"status": "tool_error", "message": str(exc)[:1500]}
 
     def _call(self, name, args):
-        if name.startswith('plc_task_'):
+        if name.startswith(('plc_task_','plc_codesys_')):
             from .task_tools import dispatch
             return dispatch(self,name,args)
         if name=='read_history':

@@ -1,0 +1,383 @@
+{
+  "schema": "plc-task-receipt-v1",
+  "task_id": "cd56aeea4e1d",
+  "run_id": "f081ef383d4a",
+  "status": "offline_pass_target_pending",
+  "source": "code/cd56aeea4e1d.st",
+  "source_sha256": "1373493928c199135a60f3c39e7e3ccb8bb2ac97ae6a48e25245d5b5b28d6fad",
+  "workspace_source_sha256": "1373493928c199135a60f3c39e7e3ccb8bb2ac97ae6a48e25245d5b5b28d6fad",
+  "contract_sha256": "0fc7179bd8ca759dd225cfc9e9fb1b885de1bd4741d3133e58622e1ed2d64a0e",
+  "target": "portable",
+  "executor": "offline",
+  "target_compile": "not_executed",
+  "requirements_sha256": "602e35a92eec4bc0a2ec6ae113f07bfc6933322fb69fe8dee416e5a67217e2a2",
+  "regression_sha256": "12f216005e6fb13354028eae813136743522655f89d31f801dcafbbc65465817",
+  "regression_scenarios": 0,
+  "formal_verification": {
+    "schema": "plc-formal-v1",
+    "source_sha256": "1373493928c199135a60f3c39e7e3ccb8bb2ac97ae6a48e25245d5b5b28d6fad",
+    "contract_sha256": "0fc7179bd8ca759dd225cfc9e9fb1b885de1bd4741d3133e58622e1ed2d64a0e",
+    "evidence_path": "<local_project>\\tasks\\cd56aeea4e1d\\runs\\f081ef383d4a\\formal_00",
+    "evidence_sha256": "eee0ad58dfc4e2a15afe098ac8bd49a2322c4c7c5206b37bc141c5ce883f9f40",
+    "status": "proved",
+    "backend": "Z3",
+    "bound_scans": 20,
+    "properties": [
+      {
+        "id": "P_FAULT",
+        "requirement": "R1",
+        "status": "proved",
+        "checked_scans": 20,
+        "induction_depth": 1
+      }
+    ],
+    "scope": "Only the listed properties of the parsed ST transition model. Not all natural-language requirements or hardware correctness.",
+    "semantics": {
+      "types": "BOOL and 8/16/32-bit integers/bitstrings",
+      "state": "FB outputs and VAR persist between scans; declared initial values",
+      "arithmetic": "same-type assignment additions/subtractions modulo declared width; arithmetic in comparisons refused",
+      "excluded": "REAL/LREAL, TIME/LTIME, timers, other FB/function calls, arrays, references, loops, I/O and interrupts"
+    },
+    "assumptions": [
+      "Single sequential FB invocation per scan; all inputs assigned before invocation.",
+      "No concurrent writes, retained warm-start state, physical I/O or hardware faults modeled."
+    ],
+    "solver_version": "5.3.2",
+    "formal_fingerprint": "84f8514ad8740a25a47789db5d4de9acb57bfb974a8bde4a14d44f16757a3dc1",
+    "elapsed_seconds": 0.312,
+    "proved_property_ids": [
+      "P_FAULT"
+    ]
+  },
+  "formal_attempts": [
+    {
+      "schema": "plc-formal-v1",
+      "source_sha256": "1373493928c199135a60f3c39e7e3ccb8bb2ac97ae6a48e25245d5b5b28d6fad",
+      "contract_sha256": "0fc7179bd8ca759dd225cfc9e9fb1b885de1bd4741d3133e58622e1ed2d64a0e",
+      "evidence_path": "<local_project>\\tasks\\cd56aeea4e1d\\runs\\f081ef383d4a\\formal_00",
+      "evidence_sha256": "eee0ad58dfc4e2a15afe098ac8bd49a2322c4c7c5206b37bc141c5ce883f9f40",
+      "status": "proved",
+      "backend": "Z3",
+      "bound_scans": 20,
+      "properties": [
+        {
+          "id": "P_FAULT",
+          "requirement": "R1",
+          "status": "proved",
+          "checked_scans": 20,
+          "induction_depth": 1
+        }
+      ],
+      "scope": "Only the listed properties of the parsed ST transition model. Not all natural-language requirements or hardware correctness.",
+      "semantics": {
+        "types": "BOOL and 8/16/32-bit integers/bitstrings",
+        "state": "FB outputs and VAR persist between scans; declared initial values",
+        "arithmetic": "same-type assignment additions/subtractions modulo declared width; arithmetic in comparisons refused",
+        "excluded": "REAL/LREAL, TIME/LTIME, timers, other FB/function calls, arrays, references, loops, I/O and interrupts"
+      },
+      "assumptions": [
+        "Single sequential FB invocation per scan; all inputs assigned before invocation.",
+        "No concurrent writes, retained warm-start state, physical I/O or hardware faults modeled."
+      ],
+      "solver_version": "5.3.2",
+      "formal_fingerprint": "84f8514ad8740a25a47789db5d4de9acb57bfb974a8bde4a14d44f16757a3dc1",
+      "elapsed_seconds": 0.312,
+      "proved_property_ids": [
+        "P_FAULT"
+      ]
+    }
+  ],
+  "hardware_execution": "not_executed",
+  "attempts": [],
+  "proposal_rejections": [],
+  "final_evaluation": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 2,
+      "scans": 14,
+      "assertions": 20,
+      "failed": 0,
+      "property_activations": {
+        "P_FAULT": 6
+      }
+    },
+    "source_sha256": "1373493928c199135a60f3c39e7e3ccb8bb2ac97ae6a48e25245d5b5b28d6fad",
+    "contract_sha256": "0fc7179bd8ca759dd225cfc9e9fb1b885de1bd4741d3133e58622e1ed2d64a0e",
+    "execution_fingerprint": "33f77bc774f0c1ef0f4f688d9d5fb6f62e6cf6a6dca826e6c0a2d56507688b0a",
+    "behavior_tested": true,
+    "target_compile": "not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_cx4eop1t\\build.json",
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "Code matches the specified semantics: fault sets and holds alarm with priority over a simultaneous acknowledge rising edge; acknowledge history updates every scan; a held acknowledge after fault disappears does not clear alarm without release and re-press. No new boundary, priority, state-retention, reset, or timing issues identified within the stated input domains.",
+      "questions": [],
+      "unresolved_questions": [],
+      "adjudications": [],
+      "reused_with_user_decisions": false,
+      "findings": [
+        {
+          "name": "initial_false_and_retain_without_edge",
+          "basis": "alarm is initially FALSE; without a rising acknowledge edge alarm retains its state when fault is FALSE",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "fault_sets_and_dominates_simultaneous_ack",
+          "basis": "fault TRUE sets and holds alarm TRUE, dominating any simultaneous acknowledge edge; acknowledge history updates even while fault active",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "rising_ack_clears_after_fault",
+          "basis": "When fault is FALSE, a rising edge of acknowledge clears alarm; without such an edge, alarm retains its state",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "held_ack_does_not_clear_after_fault_removed",
+          "basis": "Acknowledge edge history updates on every scan, even while fault is active; a held acknowledge must not clear alarm after fault disappears; release and press again",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        }
+      ],
+      "proposals": [
+        {
+          "name": "initial_false_and_retain_without_edge",
+          "covers": [
+            "R1",
+            "R2"
+          ],
+          "basis": "alarm is initially FALSE; without a rising acknowledge edge alarm retains its state when fault is FALSE",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "fault_sets_and_dominates_simultaneous_ack",
+          "covers": [
+            "R1",
+            "R3"
+          ],
+          "basis": "fault TRUE sets and holds alarm TRUE, dominating any simultaneous acknowledge edge; acknowledge history updates even while fault active",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "fault": true,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "fault": true,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "rising_ack_clears_after_fault",
+          "covers": [
+            "R2"
+          ],
+          "basis": "When fault is FALSE, a rising edge of acknowledge clears alarm; without such an edge, alarm retains its state",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "fault": true,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "held_ack_does_not_clear_after_fault_removed",
+          "covers": [
+            "R3",
+            "R2"
+          ],
+          "basis": "Acknowledge edge history updates on every scan, even while fault is active; a held acknowledge must not clear alarm after fault disappears; release and press again",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "fault": true,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "fault": false,
+                "acknowledge": false
+              },
+              "expect": {
+                "alarm": true
+              }
+            },
+            {
+              "time_ms": 40,
+              "inputs": {
+                "fault": false,
+                "acknowledge": true
+              },
+              "expect": {
+                "alarm": false
+              }
+            }
+          ]
+        }
+      ],
+      "regression_cases": [],
+      "contract_result": {
+        "status": "pass",
+        "summary": {
+          "scenarios": 4,
+          "scans": 14,
+          "assertions": 4,
+          "failed": 0,
+          "property_activations": {
+            "P_FAULT": 4
+          }
+        },
+        "source_sha256": "1373493928c199135a60f3c39e7e3ccb8bb2ac97ae6a48e25245d5b5b28d6fad",
+        "execution_fingerprint": "33f77bc774f0c1ef0f4f688d9d5fb6f62e6cf6a6dca826e6c0a2d56507688b0a",
+        "behavior_tested": true,
+        "target_compile": "not_executed"
+      },
+      "replayed_processes": 2,
+      "source_sha256": "1373493928c199135a60f3c39e7e3ccb8bb2ac97ae6a48e25245d5b5b28d6fad",
+      "contract_sha256": "0fc7179bd8ca759dd225cfc9e9fb1b885de1bd4741d3133e58622e1ed2d64a0e",
+      "model": "historical-proposal-replay",
+      "context_isolated": true
+    }
+  ],
+  "capabilities": {
+    "status": "ready_for_offline_checks",
+    "target": "portable",
+    "executor": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "target_compile": "not_executed",
+    "blockers": [],
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim.",
+    "scope": "Local finite checks only; target-platform compile/execution is a separate evidence stage."
+  },
+  "execution_fingerprint": "33f77bc774f0c1ef0f4f688d9d5fb6f62e6cf6a6dca826e6c0a2d56507688b0a",
+  "scope": "Finite checks against a user-confirmed contract, plus isolated review. No full correctness proof.",
+  "delivery": {
+    "status": "exported",
+    "task_id": "cd56aeea4e1d",
+    "result_status": "offline_pass_target_pending",
+    "path": "<local_project>\\workspace\\deliverables\\cd56aeea4e1d_f081ef383d4a.zip",
+    "sha256": "5e1f20f88ccee8455f2aee7f24f773a046d27c1d1263f4c50e151eeafe5df43b",
+    "files": 34
+  }
+}

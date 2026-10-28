@@ -1,0 +1,22 @@
+; benchmark generated from python API
+(set-info :status unknown)
+(declare-fun P_INTERLOCK_base_0_$valid () Bool)
+(declare-fun P_INTERLOCK_base_0_STARTEDGE () Bool)
+(declare-fun P_INTERLOCK_base_0_PREVSTART () Bool)
+(declare-fun P_INTERLOCK_base_0_RUNNING () Bool)
+(declare-fun P_INTERLOCK_input_0_START () Bool)
+(declare-fun P_INTERLOCK_input_0_PERMIT () Bool)
+(declare-fun P_INTERLOCK_input_0_STOP () Bool)
+(assert
+ (let (($x1282 (not P_INTERLOCK_base_0_$valid)))
+ (and (= P_INTERLOCK_base_0_RUNNING false) (= P_INTERLOCK_base_0_PREVSTART false) (= P_INTERLOCK_base_0_STARTEDGE false) $x1282)))
+(assert
+ (let (($x1287 (not P_INTERLOCK_base_0_PREVSTART)))
+(let (($x226 (and P_INTERLOCK_input_0_START $x1287)))
+(let (($x417 (not P_INTERLOCK_input_0_PERMIT)))
+(let (($x495 (or P_INTERLOCK_input_0_STOP $x417)))
+(let (($x745 (ite $x495 false (ite $x226 true P_INTERLOCK_base_0_RUNNING))))
+(let (($x547 (and (= P_INTERLOCK_input_0_PERMIT false))))
+(let (($x323 (=> $x547 (and (= $x745 false)))))
+(not $x323)))))))))
+(check-sat)

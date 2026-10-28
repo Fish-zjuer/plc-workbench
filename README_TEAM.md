@@ -1,10 +1,12 @@
-# PLC Workbench · 通用任务开发版 R6
+# PLC Workbench · 形式化与 CODESYS 接入开发版 R7
 
-R6 新增题库以外的 PLC 编程闭环。上传自然语言需求，让助手建立任务；点击底部“任务”查看接口、需求、假设和全部扫描检查，确认约定后切换执行模式运行。流程包括生成 ST、真实编译测试、按反例修复、独立审查和证据导出。
+[下载 R7 开发版](https://github.com/Fish-zjuer/plc-workbench/releases/tag/v0.7.0-dev) · [R7 功能分支](https://github.com/Fish-zjuer/plc-workbench/tree/agent-codesys-formal)
 
-**新增功能与限制见 [当前设计](docs/AGENT_DESIGN_CURRENT.md)，实测见 [R6 报告](experiments/general_tasks_r6/report.md)。** 通用桥接支持标量接口；数组、结构体、引用等继续使用已适配的题库流程或扩展后端。目标平台编译仍需实际 CODESYS 等适配器。下文 R4 实验数字是保留的历史结果。
+R7 新增 Z3 反例搜索、原生重放、归纳证明，以及官方 CODESYS 编译/仿真适配。上传需求，确认任务约定后执行；任务面板可单独运行“形式化检查”和“CODESYS编译”。Z3 已实测，CODESYS 因本机缺安装尚未厂商实测。配置与范围见 [接入说明](docs/CODESYS_FORMAL.md)。
 
-2026-10-27｜用于组内交流、试用和继续开发。它是我们负责的agent与工具部分，尚不是完整期末作业提交。
+**新增功能与限制见 [当前设计](docs/AGENT_DESIGN_CURRENT.md)，实测见 [R7 报告](experiments/formal_r7/report.md)。** 通用桥接支持标量接口；数组、结构体、引用等继续使用已适配的题库流程或扩展后端。目标平台编译仍需实际 CODESYS 等适配器。下文 R4 实验数字是保留的历史结果。
+
+2026-10-28｜用于组内交流、试用和继续开发。它是我们负责的agent与工具部分，尚不是完整期末作业提交。
 
 这是一个本地终端agent：上传题面或ST代码，先制定计划，再生成代码、编译测试、依据反例修复。模型通过自己填写的`base_url / api_key / model`接入，不依赖Codex登录或某家厂商的SDK。
 

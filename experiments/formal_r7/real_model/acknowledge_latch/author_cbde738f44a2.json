@@ -1,0 +1,17 @@
+{
+  "text": "{\"summary\":\"实现报警锁存：故障为 TRUE 时强制并保持 alarm 为 TRUE，且优先于确认边沿；仅在 fault 为 FALSE 且 acknowledge 出现上升沿时清除 alarm。每个扫描周期都更新 acknowledge 的历史状态，因此故障期间按住 acknowledge 不会在故障消失后清除报警，必须松开再按下。\",\"code\":\"FUNCTION_BLOCK AcknowledgeLatch\\nVAR_INPUT\\n    fault : BOOL;\\n    acknowledge : BOOL;\\nEND_VAR\\nVAR_OUTPUT\\n    alarm : BOOL := FALSE;\\nEND_VAR\\nVAR\\n    prevAck : BOOL := FALSE;\\n    ackRising : BOOL := FALSE;\\nEND_VAR\\n\\nackRising := acknowledge AND NOT prevAck;\\nprevAck := acknowledge;\\n\\nIF fault THEN\\n    alarm := TRUE;\\nELSIF ackRising THEN\\n    alarm := FALSE;\\nEND_IF;\\n\\nEND_FUNCTION_BLOCK\",\"assumptions\":[]}",
+  "usage": {
+    "prompt_tokens": 1279,
+    "completion_tokens": 893,
+    "total_tokens": 2172,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 676
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 511
+  },
+  "model": "deepseek-flash"
+}

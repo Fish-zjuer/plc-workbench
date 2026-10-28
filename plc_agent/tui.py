@@ -178,6 +178,8 @@ HELP = """**PLC Workbench** · 上传题面和 ST，先讨论计划，再执行�
 `/task plan 合约JSON路径` 导入一般PLC任务；也可上传需求后让助手调用任务规划工具
 `/task show 任务ID` 看需求和检查；`/task accept 任务ID` 确认本版约定
 `/task run 任务ID` 实现→编译→扫描检查→独立审查→导出；`/task status 任务ID` 核对结果
+`/task verify 任务ID` 从当前ST执行Z3形式化检查；支持的性质和限制写入结果
+`/task compile 任务ID` 用已配置的CODESYS单独编译当前ST，保存厂商证据
 `/task reject 任务ID Q1 "依据"` 人工驳回审查误报；再次 run 会重新编译和重放
 `/adjudicate 轮次ID 发现ID ambiguous 依据` 裁决审查（也支持 requirement/contract/reject）
 
@@ -436,6 +438,9 @@ class Workbench(App):
         from .task_ui import TaskInspector
         try:
             store=TaskStore(self.session);spec=store.load(task['id']);view=store.show(task['id']);receipt=store.latest(task['id'])
+            view['separate_formal_check']=store.formal_status(task['id'])
+            from .task_codesys import status as codesys_status
+            view['separate_codesys_compile']=codesys_status(self.session,task['id'])
             self.push_screen(TaskInspector(spec,view,receipt),lambda action:self.start_job('task',action+' '+task['id']) if action else None)
         except (OSError,ValueError,KeyError) as exc:self.notify(str(exc),severity='error')
 

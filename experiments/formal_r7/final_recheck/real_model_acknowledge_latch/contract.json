@@ -1,0 +1,213 @@
+{
+  "schema": "plc-task-v1",
+  "title": "报警确认不能吞掉仍在持续的故障",
+  "block": "AcknowledgeLatch",
+  "target": "portable",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "alarm is initially FALSE. fault TRUE sets and holds alarm TRUE, dominating any simultaneous acknowledge edge."
+    },
+    {
+      "id": "R2",
+      "text": "When fault is FALSE, a rising edge of acknowledge clears alarm. Without such an edge, alarm retains its state."
+    },
+    {
+      "id": "R3",
+      "text": "Acknowledge edge history updates on every scan, even while fault is active. A held acknowledge must not clear alarm after fault disappears; release and press again. Previous acknowledge is initially FALSE."
+    }
+  ],
+  "inputs": {
+    "fault": "BOOL",
+    "acknowledge": "BOOL"
+  },
+  "outputs": {
+    "alarm": "BOOL"
+  },
+  "scenarios": [
+    {
+      "name": "fault_dominates_acknowledge",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "repeated_ack_while_fault_active",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          }
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          }
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "id": "P_FAULT",
+      "requirement": "R1",
+      "when": {
+        "inputs.fault": true
+      },
+      "then": {
+        "outputs.alarm": true
+      }
+    }
+  ],
+  "assumptions": [
+    "One invocation represents one software scan. No sensor failures, wiring or hardware safety function is modeled."
+  ],
+  "questions": [],
+  "formal": {
+    "mode": "required",
+    "bound": 20,
+    "timeout_seconds": 20
+  },
+  "executor": "offline",
+  "inouts": {},
+  "tolerance": 1e-06
+}

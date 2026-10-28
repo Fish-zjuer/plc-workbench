@@ -1,0 +1,17 @@
+{
+  "text": "{\"summary\":\"实现互锁启动 FB：每个扫描周期计算上升沿（start 为 TRUE 且上一周期 start 为 FALSE），并更新上一周期 start 记忆；stop 为 TRUE 或 permit 为 FALSE 时立即清除 running 并优先于启动；仅当无清除条件且检测到上升沿时置位 running，因此 permit 恢复后保持按下的 start 不会重启。\",\"code\":\"FUNCTION_BLOCK InterlockedStart\\nVAR_INPUT\\n  start : BOOL;\\n  stop : BOOL;\\n  permit : BOOL;\\nEND_VAR\\nVAR_OUTPUT\\n  running : BOOL;\\nEND_VAR\\nVAR\\n  prevStart : BOOL;\\n  startEdge : BOOL;\\nEND_VAR\\n\\nstartEdge := start AND NOT prevStart;\\nprevStart := start;\\n\\nIF stop OR NOT permit THEN\\n  running := FALSE;\\nELSIF startEdge THEN\\n  running := TRUE;\\nEND_IF;\\nEND_FUNCTION_BLOCK\",\"assumptions\":[]}",
+  "usage": {
+    "prompt_tokens": 1524,
+    "completion_tokens": 840,
+    "total_tokens": 2364,
+    "prompt_tokens_details": {
+      "cached_tokens": 768
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 617
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 756
+  },
+  "model": "deepseek-flash"
+}

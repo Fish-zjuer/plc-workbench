@@ -1,0 +1,142 @@
+{
+  "schema": "plc-formal-v1",
+  "source_sha256": "77110814c40a2cd6d9fe1e31e99f6a29db90878b5d6087c1d0bfbcbae3bef987",
+  "contract_sha256": "e48659b4ec63e19e2c128999a26ad4391d6fdb9019c15a36ad1c1d04ef831fe6",
+  "status": "proved",
+  "backend": "Z3",
+  "bound_scans": 20,
+  "properties": [
+    {
+      "id": "P_FAULT",
+      "requirement": "R1",
+      "status": "proved",
+      "checked_scans": 20,
+      "induction_depth": 1
+    }
+  ],
+  "scope": "Only the listed properties of the parsed ST transition model. Not all natural-language requirements or hardware correctness.",
+  "semantics": {
+    "types": "BOOL and 8/16/32-bit integers/bitstrings",
+    "state": "FB outputs and VAR persist between scans; declared initial values",
+    "arithmetic": "same-type assignment additions/subtractions modulo declared width; arithmetic in comparisons refused",
+    "excluded": "REAL/LREAL, TIME/LTIME, timers, other FB/function calls, arrays, references, loops, I/O and interrupts"
+  },
+  "assumptions": [
+    "Single sequential FB invocation per scan; all inputs assigned before invocation.",
+    "No concurrent writes, retained warm-start state, physical I/O or hardware faults modeled."
+  ],
+  "solver_version": "5.3.2",
+  "formal_fingerprint": "187f449fd222d8ff1075c1297d09cc9098158000810292f8d9d361f0d19f0fc6",
+  "elapsed_seconds": 0.281,
+  "queries": [
+    {
+      "file": "P_FAULT_base_01.smt2",
+      "sha256": "ab4893975fe5deaccb9df346c614942210c49ab792a6655b1e1756a4429f0d88",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_02.smt2",
+      "sha256": "2a40719fbc0b08b6f7367b6f972d690cb1da8cb28dcf93ad95d3962039dbbff3",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_03.smt2",
+      "sha256": "e676eb1e7ae6ab0adfc8b6919613a44665ec6e255e5776df69815a50b480c4f1",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_04.smt2",
+      "sha256": "859f1cc3649bdf8c6eec8c5366f761e3e2a27656eee31343c8d2fba76544214f",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_05.smt2",
+      "sha256": "2e59f3f77ebfc0fd6b28f0d35cf44830203b0bc521bf378d0b502a13f40d21a9",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_06.smt2",
+      "sha256": "3ebf71bd42ed92bcc2e81667884545f5680124d8c8c64574a4d8f1a7ead768eb",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_07.smt2",
+      "sha256": "f6599b7f1d363c4a77aa1a61601b6c24e2489842a05a43a28df3eabef364c624",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_08.smt2",
+      "sha256": "bef50c09996af75cf7db10e79dfe4d29669dec3653009495189d5d5903021651",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_09.smt2",
+      "sha256": "891825742b76cd07b24886710db0f23e805253e61e9343990eac38bae93b5ac5",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_10.smt2",
+      "sha256": "d0007efce7ec8e27c92c24c55bc94cdc5139f9375c823fb3f9691f98b27fd580",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_11.smt2",
+      "sha256": "bd8a28287df1e014f7c86fefbc78383207538037736519a9607196b186582199",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_12.smt2",
+      "sha256": "485977b68ca67ea2393ea7cdc94c0269b55a1ac10c67b55bc4276bc1c6fdd48a",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_13.smt2",
+      "sha256": "5a117965ef87160430059c44247b59c31bf66257f6e26c093c00f34bbd2f70f5",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_14.smt2",
+      "sha256": "598c11ff42e2c92acb08d3f765d8924298be31eb9d136948137332f8d19523bc",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_15.smt2",
+      "sha256": "a0cc161f2087fadc781527840526ac061e622213b850e2c39e3ff90da3627c56",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_16.smt2",
+      "sha256": "df760c93343a5153745de090745bf5df0b51864d7ece8d07035c1b7919fc58a6",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_17.smt2",
+      "sha256": "5a8f845ef8189dbda86fc240e1310df1c94634b5bc1d15b2221a794ffdd4d60c",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_18.smt2",
+      "sha256": "74cebb3424a0115c2b7852626a940f4edab4e8bf5b676b73e62243ca6eb73920",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_19.smt2",
+      "sha256": "4898f7f80d31f384bc448797847acada843cc282c60833bd78ea2218946cd1f7",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_base_20.smt2",
+      "sha256": "e8cd285939b250ebfbf022c76215aca32bba2440a30148b37b99994d27592f14",
+      "result": "unsat"
+    },
+    {
+      "file": "P_FAULT_induction_01.smt2",
+      "sha256": "bb7f7b67971f3e387ea5164a4d026231f34410a160f6aff8c56192496fdabbf1",
+      "result": "unsat"
+    }
+  ],
+  "proved_property_ids": [
+    "P_FAULT"
+  ],
+  "evidence_sha256": "bfecacb1a52953c9264ef5e1a56073269adebe5751ddebf5077823ca4a4fdf8b"
+}

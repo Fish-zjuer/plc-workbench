@@ -13,7 +13,7 @@ from .context_memory import estimate
 from .provider import Cancelled, ChatProvider, ProviderError, json_value
 from .storage import atomic_json
 from .task_runner import monitor
-from .task_backend import get_backend, capabilities as task_capabilities
+from .task_backend import get_backend,replay_identity, capabilities as task_capabilities
 from .task_spec import digest, validate_case, validate_source, SAMPLING, RANGES
 from .task_store import TaskStore
 
@@ -106,7 +106,7 @@ class TaskWorkflow:
         requirements_sha=self.store.requirements_identity(task_id)
         if code:(directory/"before.st").write_bytes(path.read_bytes())
         registry=self.store.regressions(task_id)
-        result=None;attempts=[];rejections=[];extra_cases=list(registry['cases']);review_rounds=[];outcome="repair_limit";capabilities=None;artifact=None
+        result=None;attempts=[];rejections=[];extra_cases=list(registry['cases']);review_rounds=[];formal_reports=[];outcome="repair_limit";capabilities=None;artifact=None
         self.session.data["status"]="running"
         self.session.data["plan"]=[{"step":step,"status":"pending"} for step in
             ("冻结需求及目标平台","生成或修复ST实现","编译并执行扫描检查","独立对抗审查并重放","导出源码和验证记录")]
@@ -143,6 +143,25 @@ class TaskWorkflow:
                 while True:
                     check_identity()
                     if capabilities["blockers"]:outcome="capability_blocked";break
+                    policy=spec.get('formal',{}).get('mode','off')
+                    if result and result.get('status')=='pass' and policy!='off':
+                        from .task_formal import check as formal_check,summary as formal_summary
+                        self.emit('形式化检查：直接解析当前ST，执行有界反例搜索及归纳。')
+                        fr=formal_check(path,spec,directory/f'formal_{len(attempts):02d}',backend=self.backend,
+                                        artifact=artifact,cancel_event=self.provider.cancel_event)
+                        formal_reports.append(formal_summary(fr))
+                        self.emit('形式化结果：'+fr['status']+'；性质：'+', '.join(fr.get('proved_property_ids',[])))
+                        if fr['status']=='counterexample_confirmed':
+                            for case in fr['confirmed_cases']:
+                                if digest(case) not in {digest(c) for c in extra_cases}:extra_cases.append(case)
+                            updated={'contract_sha256':frozen,'cases':extra_cases,'origins':registry['origins']+[
+                                {'run_id':run_id,'source_sha256':last_sha,'formal_counterexample':True}]}
+                            self.store.save_regressions(task_id,updated);registry=updated
+                            result={**fr['replay_result'],'source_sha256':last_sha,'execution_fingerprint':artifact.execution_fingerprint}
+                        elif fr['status'] in ('semantics_mismatch','counterexample_not_replayed','stale_source'):
+                            outcome='formal_'+fr['status'];break
+                        elif policy=='required' and fr['status']!='proved':
+                            outcome='formal_'+fr['status'];break
                     if result and result.get("status")=="pass":
                         if result.get("source_sha256")!=last_sha:raise ValueError("Passing evidence does not match current source")
                         self.session.data["plan"][2]["status"]="completed"
@@ -162,7 +181,7 @@ class TaskWorkflow:
                                 'reviewed_offline_pass' if spec['target']=='offline' else 'offline_pass_target_pending')
                             break
                         else:outcome=review["status"];break
-                    if result and result.get("status") in ("missing_dependency","timeout","tool_error","runtime_error","protocol_error","backend_changed","coverage_gap"):
+                    if result and result.get("status") in ("missing_dependency","timeout","tool_error","runtime_error","protocol_error","backend_changed","backend_busy","coverage_gap"):
                         outcome=result["status"];break
                     if len(attempts)>=max_revisions:outcome="repair_limit";break
                     self.session.data["plan"][1]["status"]="in_progress";self.session.save()
@@ -221,7 +240,8 @@ class TaskWorkflow:
                      "target_compile":result.get('target_compile','not_executed') if result else 'not_executed',
                      "requirements_sha256":requirements_sha,
                      "regression_sha256":digest(registry),"regression_scenarios":len(extra_cases),
-                     "formal_verification":"not_executed","hardware_execution":"not_executed",
+                     "formal_verification":formal_reports[-1] if formal_reports else 'not_executed',
+                     'formal_attempts':formal_reports,"hardware_execution":"not_executed",
                      "attempts":attempts,"proposal_rejections":rejections,"final_evaluation":brief(result),"reviews":review_rounds,
                      "capabilities":capabilities,
                      "execution_fingerprint":result.get("execution_fingerprint") if result else None,
@@ -288,7 +308,7 @@ class TaskWorkflow:
             atomic_json(directory/f"review_{round_no:02d}_replay_1.json",first)
             atomic_json(directory/f"review_{round_no:02d}_replay_2.json",second)
             atomic_json(directory/f"review_{round_no:02d}_contract.json",host_result)
-            if digest(first)!=digest(second):status="non_deterministic_review"
+            if replay_identity(first)!=replay_identity(second):status="non_deterministic_review"
             for i,(case,claimed,host) in enumerate(zip(cases,first["cases"],host_result["cases"])):
                 if host["status"]=="fail":
                     verdict="confirmed_by_frozen_property"

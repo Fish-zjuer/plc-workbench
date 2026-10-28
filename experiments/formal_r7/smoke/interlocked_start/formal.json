@@ -1,0 +1,255 @@
+{
+  "schema": "plc-formal-v1",
+  "source_sha256": "fb5427a1109335d4b597682fe2b7b2e1e25da273567713dbcf93297b6a33602f",
+  "contract_sha256": "cbc967c468dcf3fe6ed228b3d029fb8b691d1d24c9f99feb1febf660e4d44da6",
+  "status": "proved",
+  "backend": "Z3",
+  "bound_scans": 20,
+  "properties": [
+    {
+      "id": "P_STOP",
+      "requirement": "R2",
+      "status": "proved",
+      "checked_scans": 20,
+      "induction_depth": 1
+    },
+    {
+      "id": "P_INTERLOCK",
+      "requirement": "R2",
+      "status": "proved",
+      "checked_scans": 20,
+      "induction_depth": 1
+    }
+  ],
+  "scope": "Only the listed properties of the parsed ST transition model. Not all natural-language requirements or hardware correctness.",
+  "semantics": {
+    "types": "BOOL and 8/16/32-bit integers/bitstrings",
+    "state": "FB outputs and VAR persist between scans; declared initial values",
+    "arithmetic": "same-type assignment additions/subtractions modulo declared width; arithmetic in comparisons refused",
+    "excluded": "REAL/LREAL, TIME/LTIME, timers, other FB/function calls, arrays, references, loops, I/O and interrupts"
+  },
+  "assumptions": [
+    "Single sequential FB invocation per scan; all inputs assigned before invocation.",
+    "No concurrent writes, retained warm-start state, physical I/O or hardware faults modeled."
+  ],
+  "solver_version": "5.3.2",
+  "formal_fingerprint": "187f449fd222d8ff1075c1297d09cc9098158000810292f8d9d361f0d19f0fc6",
+  "elapsed_seconds": 0.61,
+  "queries": [
+    {
+      "file": "P_STOP_base_01.smt2",
+      "sha256": "2c17acfa762587545306cc06d34bafe440f04c5fc15c5706662537bf6560b15d",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_02.smt2",
+      "sha256": "4dcad58bb311b680b39311e9e58a4149e95e180bef81515e7d23fa2ac9753a6c",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_03.smt2",
+      "sha256": "e4ca2a18b4550fedb8a57b223b803c1d5266be5b4122dad3218abda90ff7af99",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_04.smt2",
+      "sha256": "5e457c63e4c7fb354c6dcfd5afe1a8bb5454b216ebe883b61dc91ef6a967061a",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_05.smt2",
+      "sha256": "ebb935f3f1d822702fe73529169bfdf1ae5a91a7717f77ba898a98d0d079cdae",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_06.smt2",
+      "sha256": "d6af87f382d4ab2980267e79bf1e3a56392731f4dd416b7afe001f1994fa1b59",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_07.smt2",
+      "sha256": "5bc91b0b5a4ed7e2d60c267b38fa06ed42bdd8af510b0b800ba2bd68c21b536e",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_08.smt2",
+      "sha256": "1a909d32fd5d738c600ebf03a35485c7c833d3a62d0609ffa25a2c81e0b30b53",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_09.smt2",
+      "sha256": "13747ed2ad4a90b7720a48140d6fe5ae511d064fcaf41c7a3cf6ba088b89f175",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_10.smt2",
+      "sha256": "e1fae9ef76089bac5a90666c1227c695845099f61df3d8ff047425c365b4d106",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_11.smt2",
+      "sha256": "197dd9742734c4a9cd98e4288913f81eea8712d94cf7becb91de68251011b953",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_12.smt2",
+      "sha256": "da7cfeb464792fba059bafc29539d193465f904cb6d8838e0c784d8d62641587",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_13.smt2",
+      "sha256": "5a30a9af24d8ac16aab245291b1a2fd6c1726292bce147f24696de3b3c17d439",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_14.smt2",
+      "sha256": "3fbe49f281fa69949340763127d0053e77f3d3642f3e0d1d6a829ef06b1ebb21",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_15.smt2",
+      "sha256": "d570eb8851805908a3c6cde3f6a2d570a810bdc9649093351211cdcdb1b9210e",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_16.smt2",
+      "sha256": "2262c8c6f17d81463d769b48563b8744c105fccb5775cf89188343c0fe82c535",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_17.smt2",
+      "sha256": "07dfd760e5e5b6a44c0ac4c02c689da8a93fcaf54a8c56fde22d09e52837ea05",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_18.smt2",
+      "sha256": "a4f4c996b7668a9cdef77ef7cada58e5a582d31ed1683419ad8518ab64b8007d",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_19.smt2",
+      "sha256": "1cb1c5b19451166e332ff95186d87c7568497597e1cdeea5201fa15bc9f9905a",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_base_20.smt2",
+      "sha256": "c40034bb4d45b5354bd074e39fed97b42e46b59d844197c540f3c16bc4421156",
+      "result": "unsat"
+    },
+    {
+      "file": "P_STOP_induction_01.smt2",
+      "sha256": "e9c5c50bbf36dc8bf2d2398e1a694cc4689b4c2784cf0107f044a66def1ea245",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_01.smt2",
+      "sha256": "8e323427fb0d229c1b9e98c9bc7515e48b409493c62bfb176fe4c5232b1ba32f",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_02.smt2",
+      "sha256": "5d0d5e08eb8d3cc6220dcdeeb72028ea587643e8bfcaeb02da7d36451be5b766",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_03.smt2",
+      "sha256": "4f4e709093727dc0cc339a4c43aa17a441c37591a8e1da48a7f70277e62eac7a",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_04.smt2",
+      "sha256": "60443fb5d9516e9947d20c95b20dd73a1c1352e190fab6afdf93ffe71f4e9881",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_05.smt2",
+      "sha256": "608431310900dd9b499c32b95680b1e5c316e94a1e3709781e5e80194257534c",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_06.smt2",
+      "sha256": "8240cea1726f5ebb1a33991c7d0620e46aa50a6a495a22b617174899a31fdcc0",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_07.smt2",
+      "sha256": "d7d9456947bd3879d0eb0723e6caac0be18ff1cf6d5f31f21d9de707e668b1c6",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_08.smt2",
+      "sha256": "ea79c85b5fbfac4f2088080b053222900b469fb2be4bc4019459fe78c859d64f",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_09.smt2",
+      "sha256": "b943cca6221220d84d3c5f00af712e6d6fa4a31b939b209a3cee5ca7db184981",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_10.smt2",
+      "sha256": "68014b4c2c895f9eb683bb2893b6a21bc4535d497f1532fdb5b8e416b9e32f89",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_11.smt2",
+      "sha256": "36c4c15289921f55eb2fa52345c3c42a44a6c8466897b7b2a5a6d6d5c7e743fb",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_12.smt2",
+      "sha256": "8594d2e61ec3819745c72a37af36123005269ea6a8882628f1b6d1e0624d6868",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_13.smt2",
+      "sha256": "a29eef01c37604c8da2f9d076f7a7452b87c3a09bc671d13b05f226b047d720c",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_14.smt2",
+      "sha256": "3c05b7e766cbc0afdff4e4e08075231b7d436052c07004794718c69abed4496f",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_15.smt2",
+      "sha256": "478e2b0f61e7b6a647d8acbb731c6507d05e1c79cb35bb4f14e58c2ac8d9bde4",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_16.smt2",
+      "sha256": "e46dc7d4633bc676c7a361fa7bc5710020ce377550ac7b16225d7e73ad4506ac",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_17.smt2",
+      "sha256": "d3a0de7f6e81f5cbbf52b5596671334a8a46d08e647f3320f1d84586a73feed4",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_18.smt2",
+      "sha256": "5980880d914f53be6e3dc4ba68542aed7bb5db504e02837e24c7392c0ccd5882",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_19.smt2",
+      "sha256": "60a6312148fdd150b1b50668d29499387f36bc76f36c93f303c434fc08d56a26",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_base_20.smt2",
+      "sha256": "25490c62e7259f90d5a61cd954472f0c2b286c8127bf43c53d97c0ee831d456b",
+      "result": "unsat"
+    },
+    {
+      "file": "P_INTERLOCK_induction_01.smt2",
+      "sha256": "1a655be07bac700ccbd4c696471a4f8ae0728a4e2ff3b88af9cbed1b42294d2f",
+      "result": "unsat"
+    }
+  ],
+  "proved_property_ids": [
+    "P_STOP",
+    "P_INTERLOCK"
+  ],
+  "evidence_sha256": "4fec40b44ed1a5cbc26bcca46400056b62c1dc72dfb76a1abb7ad97a782328ed"
+}

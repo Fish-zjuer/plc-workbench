@@ -2,7 +2,7 @@
 
 target 是希望验证的平台，executor 是实际执行器。未知 executor 会阻塞，不会悄悄退回本地执行。
 
-注册只能由宿主 Python 完成。模型工具不能提供 shell 命令、导入任意模块或注册后端。当前仓库没有真实 CODESYS 适配器，下面是合并边界。
+注册只能由宿主 Python 完成。模型工具不能提供 shell 命令、导入任意模块或注册后端。R7 已在 codesys.py 实现并注册官方 CLI/仿真适配器；本机尚未安装 CODESYS，厂商执行待实测。下面说明外部 R5 合并边界，实际配置见 [接入说明](CODESYS_FORMAL.md)。
 
 ~~~python
 from plc_agent.task_backend import register_backend
@@ -26,7 +26,8 @@ class CodesysBackend:
         # 返回 status/cases/summary。
         ...
 
-register_backend("codesys", CodesysBackend)
+# R7 已占用 codesys 名称；合并时替换现有实现，或另取受信任适配器名称。
+register_backend("codesys_r5", CodesysBackend)
 ~~~
 
 任务选 executor="codesys"，target="codesys"。受信任启动代码导入注册模块即可。接口不依赖 CLI/TUI 或某家模型服务。

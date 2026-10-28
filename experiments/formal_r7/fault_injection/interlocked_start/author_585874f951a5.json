@@ -1,0 +1,17 @@
+{
+  "text": "{\"summary\":\"Removed the injected WB_FaultScan watchdog that forced running:=TRUE at scan 24, which caused P_STOP/P_INTERLOCK violations. Core logic preserved: rising-edge start latch, stop/permit dominance, prevStart updated every scan (R3).\",\"code\":\"FUNCTION_BLOCK InterlockedStart\\nVAR_INPUT\\n  start : BOOL;\\n  stop : BOOL;\\n  permit : BOOL;\\nEND_VAR\\nVAR_OUTPUT\\n  running : BOOL;\\nEND_VAR\\nVAR\\n  prevStart : BOOL;\\n  startEdge : BOOL;\\nEND_VAR\\n\\n(* Edge detection uses previous scan value; block initial prevStart = FALSE *)\\nstartEdge := start AND NOT prevStart;\\nprevStart := start;\\n\\n(* Stop / interlock dominate any simultaneous start edge *)\\nIF stop OR NOT permit THEN\\n  running := FALSE;\\nELSIF startEdge THEN\\n  running := TRUE;\\nEND_IF;\\n\\nEND_FUNCTION_BLOCK\\n\",\"assumptions\":[]}",
+  "usage": {
+    "prompt_tokens": 2553,
+    "completion_tokens": 306,
+    "total_tokens": 2859,
+    "prompt_tokens_details": {
+      "cached_tokens": 1024
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 81
+    },
+    "prompt_cache_hit_tokens": 1024,
+    "prompt_cache_miss_tokens": 1529
+  },
+  "model": "deepseek-flash"
+}

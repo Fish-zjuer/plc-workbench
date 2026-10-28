@@ -66,8 +66,8 @@ class TaskStore:
 
     def read_evidence(self,task_id,filename,start_line=1,max_lines=120):
         import re
-        if not re.fullmatch(r'(receipt|evaluation_\d+|review_\d+_(replay_[12]|contract|decision))\.json',filename):
-            raise ValueError('Choose a receipt, evaluation or review evidence JSON record')
+        if not re.fullmatch(r'(receipt|evaluation_\d+|review_\d+_(replay_[12]|contract|decision))\.json|formal_\d+/(formal\.json|[A-Za-z_0-9]+\.smt2|counterexample_replay_[12]\.json)',filename):
+            raise ValueError('Choose a receipt, evaluation, review or formal evidence record')
         latest=json.loads((self.directory(task_id)/'latest.json').read_text(encoding='utf-8'))
         path=self.directory(task_id)/'runs'/identifier(latest['run_id'])/filename
         lines=path.read_text(encoding='utf-8').splitlines()
@@ -125,6 +125,18 @@ class TaskStore:
                 raise ValueError('Requirement snapshot missing or changed')
         return digest(sources)
 
+    def formal_status(self,task_id):
+        path=self.directory(task_id)/'formal_latest.json'
+        if not path.exists():return {'status':'not_executed'}
+        from .formal_verify import fingerprint,evidence_valid
+        from .task_formal import summary
+        value=json.loads(path.read_text(encoding='utf-8'));source=(self.project.workspace/value['source']).resolve()
+        valid=(source.is_relative_to(self.project.workspace) and source.is_file()
+               and hashlib.sha256(source.read_bytes()).hexdigest()==value['source_sha256']
+               and digest(self.load(task_id))==value['contract_sha256'] and fingerprint()==value.get('formal_fingerprint')
+               and self.accepted(task_id) and evidence_valid(value,self.directory(task_id)/'formal_runs'))
+        return summary(value) if valid else {**summary(value),'status':'stale_evidence','previous_status':value['status']}
+
     def accept(self,task_id):
         """Human command surface only. No model tool can invoke this operation."""
         spec=self.load(task_id)
@@ -158,6 +170,22 @@ class TaskStore:
         if not source.is_relative_to(self.project.workspace):raise ValueError("Invalid receipt source")
         if not source.exists() or hashlib.sha256(source.read_bytes()).hexdigest()!=receipt.get("source_sha256"):reasons.append("source_changed")
         if digest(self.load(task_id))!=receipt.get("contract_sha256"):reasons.append("contract_changed")
+        formal=receipt.get('formal_verification')
+        if isinstance(formal,dict):
+            from .formal_verify import fingerprint,evidence_valid
+            if (formal.get('formal_fingerprint')!=fingerprint() or formal.get('source_sha256')!=receipt['source_sha256']
+                or formal.get('contract_sha256')!=receipt['contract_sha256'] or not evidence_valid(formal,self.directory(task_id)/'runs')):
+                reasons.append('formal_evidence_changed')
+        evaluation=receipt.get('final_evaluation') or {}
+        if evaluation.get('vendor_evidence_files'):
+            from .codesys import work_root
+            vendor=Path(evaluation['vendor_evidence']).resolve()
+            try:
+                if not vendor.is_relative_to(work_root().resolve()):raise ValueError('Invalid vendor evidence root')
+                for name,sha in evaluation['vendor_evidence_files'].items():
+                    p=(vendor/name).resolve()
+                    if not p.is_relative_to(vendor) or hashlib.sha256(p.read_bytes()).hexdigest()!=sha:raise ValueError('Vendor evidence changed')
+            except (ValueError,OSError):reasons.append('vendor_evidence_changed')
         try:
             if digest(self.regressions(task_id))!=receipt.get('regression_sha256'):reasons.append('regression_cases_changed')
         except (ValueError,OSError,KeyError):reasons.append('regression_cases_changed')
@@ -187,6 +215,18 @@ class TaskStore:
         for path in sorted(run.glob("*.json")):
             if path.name.startswith(("evaluation_","review_")):
                 files["evidence/"+path.name]=path.read_bytes()
+        for path in sorted(run.glob('formal_*/*')):
+            if path.is_file() and path.suffix in ('.json','.smt2'):
+                files['evidence/'+path.relative_to(run).as_posix()]=path.read_bytes()
+        evaluation=receipt.get('final_evaluation') or {}
+        if evaluation.get('vendor_evidence_files'):
+            from .codesys import work_root
+            vendor=Path(evaluation['vendor_evidence']).resolve()
+            if not vendor.is_relative_to(work_root().resolve()):raise ValueError('Invalid vendor evidence root')
+            for name,sha in evaluation['vendor_evidence_files'].items():
+                p=(vendor/name).resolve()
+                if not p.is_relative_to(vendor) or hashlib.sha256(p.read_bytes()).hexdigest()!=sha:raise ValueError('Vendor evidence changed')
+                files['evidence/codesys/'+name]=p.read_bytes()
         # Exact requirement snapshots from the task are included; credentials and sessions are not.
         for path in sorted((directory/"sources").glob("*")):
             files["requirements/"+path.name]=path.read_bytes()
@@ -200,10 +240,13 @@ class TaskStore:
 
     @staticmethod
     def delivery_readme(receipt):
+        formal=receipt.get('formal_verification','not_executed')
+        formal_status=formal.get('status','unknown') if isinstance(formal,dict) else formal
         return (f"# PLC 任务交付\n\n任务：{receipt['task_id']}\n\n状态：{receipt['status']}\n\n"
                 f"源码 SHA256：{receipt['source_sha256']}\n\n约定 SHA256：{receipt['contract_sha256']}\n\n"
                 "candidate.st 是本次记录对应的源码快照。contract.json 给出需求、接口、扫描轨迹和检查规则。\n\n"
                 "evidence/ 保存基线执行及独立审查证据；manifest.json 给出归档文件校验值。\n\n"
                 f"执行后端：{receipt.get('executor','offline')}。目标平台编译：{receipt.get('target_compile','not_executed')}。\n"
-                "形式化验证和实体 PLC 均未执行；本地 STruC++ 结果不能代替目标厂商的编译记录。\n"
+                f"形式化检查：{formal_status}。详见 evidence/ 中的形式化报告和 SMT 查询。\n"
+                "证明仅覆盖报告中列出的性质及语义假设。实体 PLC 未执行；本地 STruC++ 结果不能代替目标厂商的编译记录。\n"
                 "若状态包含 pending、stale、blocked、disagreement 或 error，应先处理记录中的问题，不能据此声明完成。\n")

@@ -1,0 +1,17 @@
+{
+  "text": "{\"summary\":\"Code matches the specified semantics: fault sets and holds alarm with priority over a simultaneous acknowledge rising edge; acknowledge history updates every scan; a held acknowledge after fault disappears does not clear alarm without release and re-press. No new boundary, priority, state-retention, reset, or timing issues identified within the stated input domains.\",\"questions\":[],\"scenarios\":[{\"name\":\"initial_false_and_retain_without_edge\",\"covers\":[\"R1\",\"R2\"],\"basis\":\"alarm is initially FALSE; without a rising acknowledge edge alarm retains its state when fault is FALSE\",\"scope\":\"specified\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"fault\":false,\"acknowledge\":false},\"expect\":{\"alarm\":false}},{\"time_ms\":10,\"inputs\":{\"fault\":false,\"acknowledge\":false},\"expect\":{\"alarm\":false}}]},{\"name\":\"fault_sets_and_dominates_simultaneous_ack\",\"covers\":[\"R1\",\"R3\"],\"basis\":\"fault TRUE sets and holds alarm TRUE, dominating any simultaneous acknowledge edge; acknowledge history updates even while fault active\",\"scope\":\"specified\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"fault\":false,\"acknowledge\":false},\"expect\":{\"alarm\":false}},{\"time_ms\":10,\"inputs\":{\"fault\":true,\"acknowledge\":true},\"expect\":{\"alarm\":true}},{\"time_ms\":20,\"inputs\":{\"fault\":true,\"acknowledge\":false},\"expect\":{\"alarm\":true}}]},{\"name\":\"rising_ack_clears_after_fault\",\"covers\":[\"R2\"],\"basis\":\"When fault is FALSE, a rising edge of acknowledge clears alarm; without such an edge, alarm retains its state\",\"scope\":\"specified\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"fault\":false,\"acknowledge\":false},\"expect\":{\"alarm\":false}},{\"time_ms\":10,\"inputs\":{\"fault\":true,\"acknowledge\":false},\"expect\":{\"alarm\":true}},{\"time_ms\":20,\"inputs\":{\"fault\":false,\"acknowledge\":false},\"expect\":{\"alarm\":true}},{\"time_ms\":30,\"inputs\":{\"fault\":false,\"acknowledge\":true},\"expect\":{\"alarm\":false}}]},{\"name\":\"held_ack_does_not_clear_after_fault_removed\",\"covers\":[\"R3\",\"R2\"],\"basis\":\"Acknowledge edge history updates on every scan, even while fault is active; a held acknowledge must not clear alarm after fault disappears; release and press again\",\"scope\":\"specified\",\"trace\":[{\"time_ms\":0,\"inputs\":{\"fault\":false,\"acknowledge\":false},\"expect\":{\"alarm\":false}},{\"time_ms\":10,\"inputs\":{\"fault\":true,\"acknowledge\":true},\"expect\":{\"alarm\":true}},{\"time_ms\":20,\"inputs\":{\"fault\":false,\"acknowledge\":true},\"expect\":{\"alarm\":true}},{\"time_ms\":30,\"inputs\":{\"fault\":false,\"acknowledge\":false},\"expect\":{\"alarm\":true}},{\"time_ms\":40,\"inputs\":{\"fault\":false,\"acknowledge\":true},\"expect\":{\"alarm\":false}}]}]}",
+  "usage": {
+    "prompt_tokens": 684,
+    "completion_tokens": 1566,
+    "total_tokens": 2250,
+    "prompt_tokens_details": {
+      "cached_tokens": 256
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 865
+    },
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 428
+  },
+  "model": "deepseek-flash"
+}

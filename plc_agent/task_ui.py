@@ -39,6 +39,9 @@ class TaskInspector(ModalScreen[str|None]):
                 yield Button("运行任务",id="task-execute",disabled=not self.view["accepted"])
                 yield Button("导出",id="task-export",disabled="run_id" not in self.receipt)
                 yield Button("关闭",id="task-close")
+            with Horizontal():
+                yield Button('形式化检查',id='task-verify',disabled=not self.view['accepted'])
+                yield Button('CODESYS编译',id='task-compile',disabled=not self.view['accepted'])
     def on_mount(self):
         log=self.query_one("#task-detail",RichLog)
         log.write(Text("结果："+STATUS_LABELS.get(self.receipt["status"],self.receipt["status"]),style="bold cyan"))
@@ -47,6 +50,8 @@ class TaskInspector(ModalScreen[str|None]):
         log.write(Text("完整测试约定 JSON（可滚动查看）：",style="bold"))
         log.write(Text(json.dumps(self.spec,ensure_ascii=False,indent=2)))
         log.write(Text("后端能力与下一步："+json.dumps(self.view["capabilities"],ensure_ascii=False,indent=2)))
+        log.write(Text('独立形式化检查：'+json.dumps(self.view.get('separate_formal_check',{'status':'not_executed'}),ensure_ascii=False,indent=2)))
+        log.write(Text('独立CODESYS编译：'+json.dumps(self.view.get('separate_codesys_compile',{'status':'not_executed'}),ensure_ascii=False,indent=2)))
         if "run_id" in self.receipt:
             from .task_tools import compact_receipt
             log.write(Text("本次结果和证据："+json.dumps(compact_receipt(self.receipt),ensure_ascii=False,indent=2)))
@@ -57,5 +62,5 @@ class TaskInspector(ModalScreen[str|None]):
     @on(Button.Pressed)
     def choose(self,event):
         event.stop()
-        command={"task-confirm":"accept","task-execute":"run","task-export":"export"}.get(event.button.id)
+        command={"task-confirm":"accept","task-execute":"run","task-export":"export",'task-verify':'verify','task-compile':'compile'}.get(event.button.id)
         self.dismiss(command)

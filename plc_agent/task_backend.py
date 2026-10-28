@@ -6,6 +6,11 @@ An adapter owns capabilities, evaluate(source,spec,cancel,extra), replay and fin
 from .task_spec import capability_report
 from .task_runner import evaluate_task,execute_task,execution_fingerprint
 
+def replay_identity(result):
+    """Compare observed behavior, ignoring per-invocation evidence paths/nonces."""
+    from .task_spec import digest
+    return digest({k:v for k,v in result.items() if k not in ('vendor_evidence','vendor_evidence_files')})
+
 class OfflineBackend:
     name="offline"
     def capabilities(self,spec,code=""):return capability_report(spec,code)
@@ -15,7 +20,8 @@ class OfflineBackend:
         return execute_task(artifact,spec,cases,cancel_event)
     def fingerprint(self):return execution_fingerprint()
 
-_FACTORIES={"offline":OfflineBackend}
+from .codesys import CodesysBackend
+_FACTORIES={"offline":OfflineBackend,'codesys':CodesysBackend}
 
 def register_backend(name,factory):
     from .task_spec import identifier

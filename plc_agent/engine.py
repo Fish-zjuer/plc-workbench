@@ -34,6 +34,10 @@ write_file 修改现有文件前须读取最近的 SHA256；保留上传原件�
 写入 ST 文件时必须包含完整 FUNCTION_BLOCK ... END_FUNCTION_BLOCK 及所需类型定义，不能只写块体。
 修复编译错误时保留原题功能；不允许删除尚未完成的逻辑、写占位分支或恒定输出后声称完成。
 测试失败不等于工具坏了，读取实际反例，修复候选而不篡改监视器。完成后更新计划。
+用户要求形式化验证时，使用plc_task_formal，或在新任务约定中设置formal.mode为required/best_effort。
+用户要求CODESYS时，先plc_codesys_doctor；配置就绪后可plc_codesys_compile，或为新任务选择executor=codesys运行真实仿真。缺安装/配置时明确指出，不用本地结果替代厂商结果。
+Z3直接分析受支持ST子集和已确认properties；proved只覆盖列出的性质及模型假设，不代表全部自然语言需求或设备安全。
+bounded_only不是无界证明；unsupported/unknown不能报通过。反例必须实际重放确认，归纳步中的不可达状态不能当作真实缺陷。
 只报告实际执行证据；未经需求裁决的审查假设、题面歧义不等于确认缺陷。"""
 
 
@@ -339,7 +343,10 @@ def general_task_summary(session,receipt):
     passed=current.get('status') in ('reviewed_offline_pass','offline_pass_target_pending','reviewed_target_pass')
     text='通用任务 '+receipt['task_id']+'：'+current['status']+'。'
     text+='当前源码通过本轮有限检查与审查。' if passed else '仍有未解决问题，已有源码和证据保留。'
-    text+='目标平台编译：'+current.get('target_compile','not_executed')+'；未运行形式化验证或实体 PLC。'
+    formal=current.get('formal_verification','not_executed')
+    status=formal.get('status','unknown') if isinstance(formal,dict) else formal
+    text+='目标平台编译：'+current.get('target_compile','not_executed')+'；形式化：'+status+'；实体 PLC 未执行。'
+    if isinstance(formal,dict):text+='已证明的性质：'+', '.join(formal.get('proved_property_ids',[]))+'。'
     return text,passed
 
 

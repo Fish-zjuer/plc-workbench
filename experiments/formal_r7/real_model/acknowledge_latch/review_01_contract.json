@@ -1,0 +1,257 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "name": "initial_false_and_retain_without_edge",
+      "covers": [
+        "R1",
+        "R2"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "fault_sets_and_dominates_simultaneous_ack",
+      "covers": [
+        "R1",
+        "R3"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "rising_ack_clears_after_fault",
+      "covers": [
+        "R2"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "held_ack_does_not_clear_after_fault_removed",
+      "covers": [
+        "R3",
+        "R2"
+      ],
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "fault": true,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "fault": false,
+            "acknowledge": false
+          },
+          "expect": {
+            "alarm": true
+          },
+          "actual": {
+            "alarm": true
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "fault": false,
+            "acknowledge": true
+          },
+          "expect": {
+            "alarm": false
+          },
+          "actual": {
+            "alarm": false
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 4,
+    "scans": 14,
+    "assertions": 4,
+    "failed": 0,
+    "property_activations": {
+      "P_FAULT": 4
+    }
+  },
+  "source_sha256": "1373493928c199135a60f3c39e7e3ccb8bb2ac97ae6a48e25245d5b5b28d6fad",
+  "execution_fingerprint": "1fd8d903f041514d04308b81ec4216c3251d6c50a52f2c1c5ffb69ca0c19913c",
+  "behavior_tested": true,
+  "target_compile": "not_executed"
+}

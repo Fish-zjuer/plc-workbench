@@ -100,10 +100,16 @@ def validate_case(case,spec):
 def validate_spec(raw):
     spec=copy.deepcopy(raw)
     fields(spec,("schema","title","block","target","requirements","inputs","outputs","scenarios"),
-           ("inouts","properties","assumptions","questions","tolerance","executor"))
+           ("inouts","properties","assumptions","questions","tolerance","executor","formal"))
     if spec["schema"]!=SCHEMA or spec["target"] not in TARGETS:raise ValueError("Unknown schema or target")
     text(spec["title"],200);identifier(spec["block"])
     spec.setdefault('executor','offline');identifier(spec['executor'])
+    if 'formal' in spec:
+        fields(spec['formal'],('mode',),('bound','timeout_seconds'))
+        if spec['formal']['mode'] not in ('off','best_effort','required'):raise ValueError('Unknown formal verification policy')
+        depth=spec['formal'].get('bound',20);seconds=spec['formal'].get('timeout_seconds',20)
+        if type(depth) is not int or not 2<=depth<=64:raise ValueError('Formal bound must be 2..64')
+        if type(seconds) not in (int,float) or not 1<=seconds<=60:raise ValueError('Formal timeout must be 1..60 seconds')
     for key,default in (("inouts",{}),("properties",[]),("assumptions",[]),("questions",[]),("tolerance",0.000001)):
         spec.setdefault(key,default)
     tol=spec["tolerance"]
@@ -197,6 +203,8 @@ def capability_report(spec,code=""):
 def render_plan(spec):
     lines=[f"# {spec['title']}","",f"目标：{spec['target']} / 功能块：{spec['block']}","",
            "流程：完整 ST → 固定扫描检查 → 独立反例审查 → 带验证记录的交付包。","","## 接口",""]
+    policy=spec.get('formal',{})
+    lines[4:4]=[f"执行适配器：{spec['executor']}；形式化策略：{policy.get('mode','off')}；反例搜索上界：{policy.get('bound',20)} 扫描。",""]
     for section in ("inputs","outputs","inouts"):
         lines.extend(f"- {section}: {name}: {dtype}" for name,dtype in spec[section].items())
     lines+=["","## 需求及检查",""]

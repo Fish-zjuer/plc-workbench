@@ -1,0 +1,478 @@
+{
+  "schema": "plc-task-receipt-v1",
+  "task_id": "6a765be9be15",
+  "run_id": "f08bd921fb90",
+  "status": "offline_pass_target_pending",
+  "source": "code/6a765be9be15.st",
+  "source_sha256": "07dcc13be4ef9de7e52708999143e77337593cb3c2919424f242b0053206bc0c",
+  "workspace_source_sha256": "07dcc13be4ef9de7e52708999143e77337593cb3c2919424f242b0053206bc0c",
+  "contract_sha256": "933a3cdf51ca0690a168f5404e3876c679ba1cba9c66ba347e29d516b071578f",
+  "target": "portable",
+  "executor": "offline",
+  "target_compile": "not_executed",
+  "requirements_sha256": "602e35a92eec4bc0a2ec6ae113f07bfc6933322fb69fe8dee416e5a67217e2a2",
+  "regression_sha256": "808e0dacff7b669657f7c4d5aae9c2ffd3396ae5c8b264d9d1fc21aab98aaf1d",
+  "regression_scenarios": 0,
+  "formal_verification": {
+    "schema": "plc-formal-v1",
+    "source_sha256": "07dcc13be4ef9de7e52708999143e77337593cb3c2919424f242b0053206bc0c",
+    "contract_sha256": "933a3cdf51ca0690a168f5404e3876c679ba1cba9c66ba347e29d516b071578f",
+    "evidence_path": "<local_project>\\tasks\\6a765be9be15\\runs\\f08bd921fb90\\formal_00",
+    "evidence_sha256": "bc080e99bfb09a9bb230b4fe8888f73bf898b948db7196054ecb1c52d6d88923",
+    "status": "proved",
+    "backend": "Z3",
+    "bound_scans": 20,
+    "properties": [
+      {
+        "id": "P_STOP",
+        "requirement": "R2",
+        "status": "proved",
+        "checked_scans": 20,
+        "induction_depth": 1
+      },
+      {
+        "id": "P_INTERLOCK",
+        "requirement": "R2",
+        "status": "proved",
+        "checked_scans": 20,
+        "induction_depth": 1
+      },
+      {
+        "id": "P_HOLD",
+        "requirement": "R1",
+        "status": "proved",
+        "checked_scans": 20,
+        "induction_depth": 1
+      },
+      {
+        "id": "P_HELD_START",
+        "requirement": "R3",
+        "status": "proved",
+        "checked_scans": 20,
+        "induction_depth": 1
+      },
+      {
+        "id": "P_EDGE",
+        "requirement": "R1",
+        "status": "proved",
+        "checked_scans": 20,
+        "induction_depth": 1
+      }
+    ],
+    "scope": "Only the listed properties of the parsed ST transition model. Not all natural-language requirements or hardware correctness.",
+    "semantics": {
+      "types": "BOOL and 8/16/32-bit integers/bitstrings",
+      "state": "FB outputs and VAR persist between scans; declared initial values",
+      "arithmetic": "same-type assignment additions/subtractions modulo declared width; arithmetic in comparisons refused",
+      "excluded": "REAL/LREAL, TIME/LTIME, timers, other FB/function calls, arrays, references, loops, I/O and interrupts"
+    },
+    "assumptions": [
+      "Single sequential FB invocation per scan; all inputs assigned before invocation.",
+      "No concurrent writes, retained warm-start state, physical I/O or hardware faults modeled."
+    ],
+    "solver_version": "5.3.2",
+    "formal_fingerprint": "84f8514ad8740a25a47789db5d4de9acb57bfb974a8bde4a14d44f16757a3dc1",
+    "elapsed_seconds": 1.797,
+    "proved_property_ids": [
+      "P_STOP",
+      "P_INTERLOCK",
+      "P_HOLD",
+      "P_HELD_START",
+      "P_EDGE"
+    ]
+  },
+  "formal_attempts": [
+    {
+      "schema": "plc-formal-v1",
+      "source_sha256": "07dcc13be4ef9de7e52708999143e77337593cb3c2919424f242b0053206bc0c",
+      "contract_sha256": "933a3cdf51ca0690a168f5404e3876c679ba1cba9c66ba347e29d516b071578f",
+      "evidence_path": "<local_project>\\tasks\\6a765be9be15\\runs\\f08bd921fb90\\formal_00",
+      "evidence_sha256": "bc080e99bfb09a9bb230b4fe8888f73bf898b948db7196054ecb1c52d6d88923",
+      "status": "proved",
+      "backend": "Z3",
+      "bound_scans": 20,
+      "properties": [
+        {
+          "id": "P_STOP",
+          "requirement": "R2",
+          "status": "proved",
+          "checked_scans": 20,
+          "induction_depth": 1
+        },
+        {
+          "id": "P_INTERLOCK",
+          "requirement": "R2",
+          "status": "proved",
+          "checked_scans": 20,
+          "induction_depth": 1
+        },
+        {
+          "id": "P_HOLD",
+          "requirement": "R1",
+          "status": "proved",
+          "checked_scans": 20,
+          "induction_depth": 1
+        },
+        {
+          "id": "P_HELD_START",
+          "requirement": "R3",
+          "status": "proved",
+          "checked_scans": 20,
+          "induction_depth": 1
+        },
+        {
+          "id": "P_EDGE",
+          "requirement": "R1",
+          "status": "proved",
+          "checked_scans": 20,
+          "induction_depth": 1
+        }
+      ],
+      "scope": "Only the listed properties of the parsed ST transition model. Not all natural-language requirements or hardware correctness.",
+      "semantics": {
+        "types": "BOOL and 8/16/32-bit integers/bitstrings",
+        "state": "FB outputs and VAR persist between scans; declared initial values",
+        "arithmetic": "same-type assignment additions/subtractions modulo declared width; arithmetic in comparisons refused",
+        "excluded": "REAL/LREAL, TIME/LTIME, timers, other FB/function calls, arrays, references, loops, I/O and interrupts"
+      },
+      "assumptions": [
+        "Single sequential FB invocation per scan; all inputs assigned before invocation.",
+        "No concurrent writes, retained warm-start state, physical I/O or hardware faults modeled."
+      ],
+      "solver_version": "5.3.2",
+      "formal_fingerprint": "84f8514ad8740a25a47789db5d4de9acb57bfb974a8bde4a14d44f16757a3dc1",
+      "elapsed_seconds": 1.797,
+      "proved_property_ids": [
+        "P_STOP",
+        "P_INTERLOCK",
+        "P_HOLD",
+        "P_HELD_START",
+        "P_EDGE"
+      ]
+    }
+  ],
+  "hardware_execution": "not_executed",
+  "attempts": [],
+  "proposal_rejections": [],
+  "final_evaluation": {
+    "status": "pass",
+    "summary": {
+      "scenarios": 2,
+      "scans": 15,
+      "assertions": 26,
+      "failed": 0,
+      "property_activations": {
+        "P_STOP": 1,
+        "P_INTERLOCK": 3,
+        "P_HOLD": 1,
+        "P_HELD_START": 3,
+        "P_EDGE": 3
+      }
+    },
+    "source_sha256": "07dcc13be4ef9de7e52708999143e77337593cb3c2919424f242b0053206bc0c",
+    "contract_sha256": "933a3cdf51ca0690a168f5404e3876c679ba1cba9c66ba347e29d516b071578f",
+    "execution_fingerprint": "33f77bc774f0c1ef0f4f688d9d5fb6f62e6cf6a6dca826e6c0a2d56507688b0a",
+    "behavior_tested": true,
+    "target_compile": "not_executed",
+    "build_evidence": "<compiler_cache>\\backends\\f691151504a2056ae903\\task_builds\\task_37sajd34\\build.json",
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim."
+  },
+  "reviews": [
+    {
+      "status": "review_pass",
+      "summary": "实现符合 R1-R3：启动上升沿锁存受 permit/stop 约束；stop TRUE 或 permit FALSE 优先立即清除；prevStart 每扫描更新，因此阻塞期间保持的 start 不会在恢复 permit 后重新启动，必须先释放再按下。未发现状态保留、复位、优先级或计时问题。",
+      "questions": [],
+      "unresolved_questions": [],
+      "adjudications": [],
+      "reused_with_user_decisions": false,
+      "findings": [
+        {
+          "name": "R1_启动上升沿锁存后保持",
+          "basis": "R1 规定仅在 permit TRUE 且 stop FALSE 时 start 上升沿使 running 锁存 TRUE；启动时 prevStart 为 FALSE。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "R2_stop同时上升沿优先清除",
+          "basis": "R2 规定 stop TRUE 立即清除 running，并支配同时发生的 start 上升沿。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "R2_permitFALSE同时上升沿优先清除",
+          "basis": "R2 规定 permit FALSE 立即清除 running 并支配同时 start 上升沿；R3 规定恢复 permit 时若 start 仍保持则不得重启。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        },
+        {
+          "name": "R3_阻塞扫描更新边沿记忆",
+          "basis": "R3 规定 start 边沿记忆在包括被阻塞的每次扫描都更新；恢复 permit 而 start 仍保持不得重启，必须释放后重新按下。",
+          "scope": "specified",
+          "verdict": "not_reproduced",
+          "claim_failure": null,
+          "contract_failure": null
+        }
+      ],
+      "proposals": [
+        {
+          "name": "R1_启动上升沿锁存后保持",
+          "covers": [
+            "R1"
+          ],
+          "basis": "R1 规定仅在 permit TRUE 且 stop FALSE 时 start 上升沿使 running 锁存 TRUE；启动时 prevStart 为 FALSE。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        },
+        {
+          "name": "R2_stop同时上升沿优先清除",
+          "covers": [
+            "R2"
+          ],
+          "basis": "R2 规定 stop TRUE 立即清除 running，并支配同时发生的 start 上升沿。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": true,
+                "stop": true,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "R2_permitFALSE同时上升沿优先清除",
+          "covers": [
+            "R2",
+            "R3"
+          ],
+          "basis": "R2 规定 permit FALSE 立即清除 running 并支配同时 start 上升沿；R3 规定恢复 permit 时若 start 仍保持则不得重启。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": false
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "R3_阻塞扫描更新边沿记忆",
+          "covers": [
+            "R3"
+          ],
+          "basis": "R3 规定 start 边沿记忆在包括被阻塞的每次扫描都更新；恢复 permit 而 start 仍保持不得重启，必须释放后重新按下。",
+          "scope": "specified",
+          "trace": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": false
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "start": false,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": false
+              }
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "start": true,
+                "stop": false,
+                "permit": true
+              },
+              "expect": {
+                "running": true
+              }
+            }
+          ]
+        }
+      ],
+      "regression_cases": [],
+      "contract_result": {
+        "status": "pass",
+        "summary": {
+          "scenarios": 4,
+          "scans": 15,
+          "assertions": 10,
+          "failed": 0,
+          "property_activations": {
+            "P_STOP": 1,
+            "P_INTERLOCK": 2,
+            "P_HOLD": 3,
+            "P_HELD_START": 2,
+            "P_EDGE": 2
+          }
+        },
+        "source_sha256": "07dcc13be4ef9de7e52708999143e77337593cb3c2919424f242b0053206bc0c",
+        "execution_fingerprint": "33f77bc774f0c1ef0f4f688d9d5fb6f62e6cf6a6dca826e6c0a2d56507688b0a",
+        "behavior_tested": true,
+        "target_compile": "not_executed"
+      },
+      "replayed_processes": 2,
+      "source_sha256": "07dcc13be4ef9de7e52708999143e77337593cb3c2919424f242b0053206bc0c",
+      "contract_sha256": "933a3cdf51ca0690a168f5404e3876c679ba1cba9c66ba347e29d516b071578f",
+      "model": "historical-proposal-replay",
+      "context_isolated": true
+    }
+  ],
+  "capabilities": {
+    "status": "ready_for_offline_checks",
+    "target": "portable",
+    "executor": "STruC++ development fcccfbdf + PLC-R4; local reference ABI; not CODESYS",
+    "backend_fingerprint": "73cbbdb685920418f4f7ebdc75640fbe4da35ac29d34cd4cf26367cac5ea052c",
+    "target_compile": "not_executed",
+    "blockers": [],
+    "sampling": "Fresh FB per scenario; all inputs assigned each scan; outputs observed after invocation. Times and TIME/LTIME interface values are milliseconds. First eligible TON invocation has elapsed=0. No real-time/hardware claim.",
+    "scope": "Local finite checks only; target-platform compile/execution is a separate evidence stage."
+  },
+  "execution_fingerprint": "33f77bc774f0c1ef0f4f688d9d5fb6f62e6cf6a6dca826e6c0a2d56507688b0a",
+  "scope": "Finite checks against a user-confirmed contract, plus isolated review. No full correctness proof.",
+  "delivery": {
+    "status": "exported",
+    "task_id": "6a765be9be15",
+    "result_status": "offline_pass_target_pending",
+    "path": "<local_project>\\workspace\\deliverables\\6a765be9be15_f08bd921fb90.zip",
+    "sha256": "ade9dc56cf26f1d50dc7d96760490d0f1e74583c4f8ea4ce7195f63dd74109dc",
+    "files": 118
+  }
+}

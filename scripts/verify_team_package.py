@@ -61,6 +61,8 @@ from plc_agent.attachments import attach
 from plc_agent.bank_contracts import questions
 from plc_agent.toolbox import Toolbox
 from plc_agent.tui import Workbench
+from plc_agent.formal_verify import verify
+from plc_agent.codesys import doctor as codesys_doctor
 async def main():
  cfg=ModelConfig.load();assert cfg.api_key=="" and cfg.base_url==""
  project=Project.create("分享包自检");session=Session.create(project)
@@ -69,6 +71,10 @@ async def main():
  assert len(questions())==20
  tools=Toolbox(session)
  assert tools.call("write_file",{"path":"blocked.st","content":"forbidden"})["status"]=="blocked_by_plan_mode"
+ spec=json.loads(Path('experiments/formal_r7/real_model/interlocked_start/contract.json').read_text(encoding='utf-8'))
+ proof=verify(Path('experiments/formal_r7/real_model/interlocked_start/candidate_final.st'),spec,project.path/'formal_smoke',bound=8)
+ assert proof['status']=='proved' and len(proof['proved_property_ids'])==5
+ assert codesys_doctor()['status']=='setup_required'
  app=Workbench(session,cfg)
  async with app.run_test(size=(120,40)) as pilot:
   app.command("/solve 05")
@@ -76,7 +82,7 @@ async def main():
    await pilot.pause(.05)
    if not app.busy:break
   assert not app.busy and session.data["plan"] and not (project.workspace/"candidate.st").exists()
- print(json.dumps({"ui_mounted":True,"upload":True,"plan_only":True,"questions":20,"model_calls":0}))
+ print(json.dumps({"ui_mounted":True,"upload":True,"plan_only":True,"questions":20,"model_calls":0,'formal_status':proof['status'],'proved_properties':5,'codesys':'setup_required'}))
 asyncio.run(main())
 ''',encoding='utf-8')
     smoke_env={**env,'PYTHONPATH':str(project)}
