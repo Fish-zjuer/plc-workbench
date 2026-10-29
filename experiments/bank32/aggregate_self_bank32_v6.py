@@ -36,6 +36,29 @@ def load(root: Path, model: str) -> dict[str, str | None]:
     return out
 
 
+def load_usage(root: Path, model: str) -> dict:
+    """Sum token usage recorded by run_self_bank32_v6 (v6.2+ receipts)."""
+    total = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0,
+             "cost": 0.0, "calls": 0, "tasks": 0}
+    base = root / f"self_{model}"
+    if not base.is_dir():
+        return total
+    for path in sorted(base.glob("*/receipt.json")):
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        usage = value.get("experiment_token_usage") or value.get("token_usage") or {}
+        if not any(usage.get(k) for k in ("prompt_tokens", "completion_tokens", "total_tokens")):
+            continue
+        total["tasks"] += 1
+        for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
+            total[key] += usage.get(key, 0) or 0
+        total["cost"] += usage.get("cost", 0.0) or 0.0
+        total["calls"] += usage.get("calls", value.get("model_calls", 0)) or 0
+    return total
+
+
 def counts(statuses: dict[str, str | None]):
     public = sum(ok(statuses.get(t)) for t in TASKS[:20])
     public19 = sum(ok(statuses.get(t)) for t in TASKS[:20] if t not in PLATFORM_LIMITED)
@@ -72,6 +95,15 @@ def main() -> int:
                                (f"；缺失：{','.join(missing)}" if missing else ""))
         lines.append("")
         lines += bullets
+        lines.append("")
+        lines += ["**Token/调用量**（旧轮次未记录时显示 0）", "",
+                  "| 模型 | 有记录任务 | 调用 | prompt | completion | total | cost |",
+                  "|---|---:|---:|---:|---:|---:|---:|"]
+        for model in MODELS:
+            usage = load_usage(root, model)
+            lines.append(f"| self-{model} | {usage['tasks']} | {usage['calls']} | "
+                         f"{usage['prompt_tokens']} | {usage['completion_tokens']} | "
+                         f"{usage['total_tokens']} | {usage['cost']:.6f} |")
         lines.append("")
 
     if len(roots) > 1:

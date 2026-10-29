@@ -47,11 +47,13 @@ def config_for(model: str) -> ModelConfig:
         return ModelConfig(base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
                            model=model, api_key=key, context_window=128000,
                            max_output_tokens=32768, max_steps=24, timeout=180,
-                           extra_body={"enable_thinking": False})
+                           extra_body={"enable_thinking": False,
+                                       "stream_options": {"include_usage": True}})
     return ModelConfig(base_url="http://127.0.0.1:4000/v1", model=model,
                        api_key="sk-local", context_window=128000, max_output_tokens=32768,
                        max_steps=24, timeout=180,
-                       extra_body={"thinking": {"type": "disabled"}})
+                       extra_body={"thinking": {"type": "disabled"},
+                                   "stream_options": {"include_usage": True}})
 
 
 def main() -> int:
@@ -73,14 +75,22 @@ def main() -> int:
         source = directory / "candidate.st"
         # Provider/relay outages are infrastructure failures, not model results;
         # retry them a bounded number of times before recording the receipt.
+        experiment_usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0,
+                            "cost": 0.0, "calls": 0}
         for attempt in range(4):
             receipt = dataset_workflow.run(ident, source, directory, cfg, provider=provider,
                                            max_revisions=5, review=False,
                                            notify=lambda text: print(text, flush=True))
+            usage = receipt.get("token_usage") or {}
+            for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
+                experiment_usage[key] += usage.get(key, 0) or 0
+            experiment_usage["cost"] += usage.get("cost", 0.0) or 0.0
+            experiment_usage["calls"] += receipt.get("model_calls", 0) or 0
             if receipt.get("status") not in ("agent_error", "interrupted") or attempt == 3:
                 break
             print(f"{ident} {receipt.get('status')}; retry {attempt + 1}", flush=True)
             time.sleep(15 * (2 ** attempt))
+        receipt["experiment_token_usage"] = experiment_usage
         (directory / "receipt.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=2), encoding="utf-8")
         print(ident, receipt.get("status"), flush=True)
         if receipt.get("status") in ("agent_error", "interrupted"):

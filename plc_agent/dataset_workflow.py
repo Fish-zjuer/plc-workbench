@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import re
 import shutil
+import time
 from . import dataset
 from .config import ModelConfig
 from .provider import ChatProvider,ProviderError,json_value,Cancelled
@@ -53,6 +54,18 @@ def compact(result):
         scan=failed['first_failure']['scan'];value['counterexample']={'name':failed['name'],'first_failure':failed['first_failure'],'rows':failed['rows'][max(0,scan-3):scan+1]}
     return value
 
+def usage_totals(metrics):
+    """Sum provider usage records into prompt/completion/total/cost counters."""
+    total={'prompt_tokens':0,'completion_tokens':0,'total_tokens':0,'cost':0.0}
+    for metric in metrics:
+        usage=metric.get('usage') or {}
+        for key in ('prompt_tokens','completion_tokens','total_tokens'):
+            value=usage.get(key)
+            if isinstance(value,(int,float)):total[key]+=value
+        cost=usage.get('cost')
+        if isinstance(cost,(int,float)):total['cost']+=cost
+    return total
+
 def run(task_id,source,directory,config,*,seed=None,max_revisions=3,review=True,notify=print,provider=None):
     task=dataset.load(task_id);source=Path(source);directory=Path(directory);directory.mkdir(parents=True,exist_ok=True)
     source.parent.mkdir(parents=True,exist_ok=True)
@@ -61,7 +74,7 @@ def run(task_id,source,directory,config,*,seed=None,max_revisions=3,review=True,
     if source.exists():(directory/'before.st').write_bytes(source.read_bytes())
     atomic_json(directory/'task.json',task)
     provider=provider or ChatProvider(config);attempts=[];result=None;status='revision_limit';reviews=[];proposal_failure=None;supplied_result=None
-    metric_provider=getattr(provider,'provider',provider);metrics_start=len(getattr(metric_provider,'metrics',[]))
+    metric_provider=getattr(provider,'provider',provider);metrics_start=len(getattr(metric_provider,'metrics',[]));started=time.monotonic()
     def evaluate():
         try:return dataset.evaluate(source,task)
         except BackendError as exc:return exc.result
@@ -138,10 +151,12 @@ def run(task_id,source,directory,config,*,seed=None,max_revisions=3,review=True,
     except (ProviderError,Cancelled,ValueError,KeyError,TypeError,OSError) as exc:
         status='interrupted' if isinstance(exc,Cancelled) else 'agent_error';result={'status':status,'message':str(exc).replace(config.api_key,'[redacted]') if config.api_key else str(exc)}
     if source.exists():(directory/'final.st').write_bytes(source.read_bytes())
+    metrics=list(getattr(metric_provider,'metrics',[]))[metrics_start:]
     receipt={'schema':'plc-dataset-receipt-v1','task_id':task_id,'status':status,'source_origin':source_origin,
         'source':str(source.resolve()),
         'dataset_sha256':task['dataset_sha256'],'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest() if source.exists() else None,
-        'attempts':attempts,'model':config.model,'model_calls':len(getattr(metric_provider,'metrics',[]))-metrics_start,
+        'attempts':attempts,'model':config.model,'model_calls':len(metrics),
+        'token_usage':usage_totals(metrics),'metrics':metrics,'seconds':round(time.monotonic()-started,3),
         'final_evaluation':compact(result),'reviews':reviews,'target_compile':'not_executed',
         'supplied_evaluation':compact(supplied_result),
         'ltl_status':'requirements_only_not_executed','scope':'Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle.'}

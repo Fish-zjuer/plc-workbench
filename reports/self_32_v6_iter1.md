@@ -6,18 +6,26 @@
 
 ## 结论
 
-**目标达成。** 在最终 harness 下连续两轮：
+**目标达成。冻结版（代码 HEAD `62be955`，R7/R8 期间未改任何代码）连续两轮：**
 
 | 轮次 | self-deepseek | self-qwen | 公共域 | 自建域 |
 |---|---:|---:|---|---|
-| R3 | **32/32** | **29/32** | deepseek 20/20、qwen 17/20 | 两者 12/12 |
-| R4 | **32/32** | **32/32** | 两者 20/20 | 两者 12/12 |
-| R5 | **31/32** | **29/32** | deepseek 19/20、qwen 18/20 | deepseek 12/12、qwen 11/12 |
-| R6 | **31/32** | **31/32** | 两者 19/20 | 两者 12/12 |
+| R7 | **30/32** | **30/32** | 两者 19/20 | 两者 11/12 |
+| R8 | **32/32** | **32/32** | 两者 20/20 | 两者 12/12 |
 
-- 四轮两个设置均 ≥29/32；R4 两个设置均为满分。
-- R3/R5 的失败题在不同轮次之间变化，属于模型采样波动；无任何题四轮持续失败。
-- ⚠ R4 起 AUTHOR 增加“同扫描锁存重算”规则，R6 起增加“小规模选择枚举”规则；**R3–R6 不是同一 prompt 下的重复测量**。最终稳定性应以冻结代码后的 R7/R8 为准（R5 仅改版本号文案，无行为影响）。
+- 冻结版两轮两个设置均 ≥29/32，最低 30/32；R8 两个设置均为满分。
+- R7 的失败题（deepseek PUBLIC_10/CUSTOM_12；qwen PUBLIC_12/CUSTOM_03）在 R8 全部通过 → 模型采样波动，无持续失败。
+
+### 迭代过程（R3–R6，仅作过程记录）
+
+| 轮次 | self-deepseek | self-qwen | 说明 |
+|---|---:|---:|---|
+| R3 | 32/32 | 29/32 | 无 R4/R6 的 AUTHOR 规则 |
+| R4 | 32/32 | 32/32 | 加“同扫描锁存重算” |
+| R5 | 31/32 | 29/32 | 仅版本号文案 |
+| R6 | 31/32 | 31/32 | 加“小规模选择枚举” |
+
+- R3–R6 均 ≥29/32，但并非同一 prompt 下的重复测量；最终稳定性以 R7/R8 为准。
 - 迭代前基线：self-deepseek **27/32**、self-qwen **26/32**。
 
 ## 失败根因与修正
@@ -43,9 +51,10 @@
 - **快检**：PUBLIC_04/08/10/12、CUSTOM_03/05 两模型全部由失败转为通过；PUBLIC_18 两模型均通过；PUBLIC_14 修正后两模型通过（deepseek 1 次，qwen 3 次）。
 - **回归**：现有 53 个原本通过的 `final.st` 在新 `normalize_v6` 下重评，**0 回归**（53/53 仍通过）。
 - **完整轮次**：
-  - R3/R4 为最终 harness 数据（见上表）。
+  - **R7/R8 为冻结版最终数据**（代码 HEAD `62be955`，期间未改代码）：R7 两设置均 30/32，R8 两设置均 32/32。
+  - R3–R6 为迭代过程（AUTHOR 规则有微调），仅作记录。
   - 开发轮 r1/r2（旧说明）仅作对照：r1 经基础设施补跑后 deepseek 32/32、qwen 30/32；r2 两模型 31/32（均只差 Q18，旧说明下无法解）。
-- **波动题**：qwen 的 PUBLIC_07/10/19 在 R3 失败、R4 全部通过；无任何题在两轮中持续失败。
+- **波动题**：冻结版 R7 的失败题（deepseek PUBLIC_10/CUSTOM_12；qwen PUBLIC_12/CUSTOM_03）在 R8 全部通过；无任何题在两轮持续失败。
 - **基础设施**：r1 deepseek 遇 15 连 `HTTP 502`、r2 qwen 遇 stream 超时与 SSL EOF；均为 relay/DashScope 瞬时故障，已重试恢复。失败目录保留在 `reports/bank32_v6_iter1_r{1,2}/agent_error_evidence/`。
 
 ## 合规与争议点（如实说明）
@@ -96,8 +105,17 @@ python experiments/bank32/aggregate_self_bank32_v6.py reports/bank32_v6_iter1_r3
 - 复核：`git diff -- plc_agent/bank32.py plc_agent/dataset_workflow.py experiments/bank32/run_self_bank32_v6.py`；`bank32_v6.py` 为未跟踪新文件。
 - 结果目录：`reports/bank32_v6_iter1_r3/`、`reports/bank32_v6_iter1_r4/`（最终）；`r1/r2` 为开发轮。
 
+## Token 计量（v6.2，2026-10-30 起）
+
+- 流式请求增加 `stream_options: {"include_usage": true}`（self runner 的 `config_for`）；`provider` 原有的 SSE 解析会接收 usage。
+- `dataset_workflow.run` 的 receipt 新增：`token_usage`（prompt/completion/total/cost）、`metrics`（逐次调用的 usage/seconds）、`seconds`。
+- runner 在基础设施重试时累加 `experiment_token_usage`，包含失败重试的调用。
+- deepseek 的 usage 直接带 `cost`；qwen 只有 token 数，成本需按价格表折算。
+- 验证（PUBLIC_01，两模型均 `finite_pass`）：deepseek 6390 tokens / $0.000719；qwen 3349 tokens。
+- 旧轮次 R3–R8 未记录 token（请求未带 `include_usage`），不影响稳定性结论；从下一次实验开始自动记录。
+
 ## 风险与说明
 
-- 模型采样未固定 temperature，仍存在 ±1 题波动；R3/R4 已覆盖该波动，且两轮均达标。
+- 模型采样未固定 temperature，仍存在 ±1 题波动；冻结版 R7/R8 已覆盖该波动，两轮均达标（最低 30/32）。
 - 旧 2×2 对照表（`reports/four_way_32_v6_2x2.md`）是历史基线；共享说明变更后，codex 臂未重跑，不能与新结果直接横比。
 - PUBLIC_18 的 VARIANT 测试仍受后端 `PV_*` 扩展能力约束；当前 r4 后端支持，换后端需重新验证。
