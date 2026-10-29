@@ -19,6 +19,16 @@ Environment and test contract:
 - Use check.ps1 diagnostics only. Do not inspect generated C++ headers or compiler caches.
 - Never add, remove, or change interface variables. If the task does not declare CycleTime or Dt inputs, do not add them; use only the frozen interface.
 - Do not access TON internal members such as CURRENT_TIME; use declared TON instances' public Q/ET outputs.
+- LTIME is a distinct duration type on this backend: use LTIME#0ms / LTIME#500h literals, and convert a TIME value with TIME_TO_LTIME(x) or TO_LTIME(x). Do not assign INT/LINT/TIME directly to LTIME; do not declare TYPE LTIME.
+- Do not use LEN or CHAR as variable names; LEN() is a function.
+- For ARRAY[*] interfaces, read the declared lower bound with LOWER_BOUND(array, 1); the .LOWERBOUND member does not exist.
+- STRING input: declare `p : POINTER TO BYTE`, set `p := ADR(text);`, offset with `p := p + i;`, and read a byte as `p^`. Do not write `(p + i)^`, index the STRING, use .at(), or write ADR(text)[i].
+- VARIANT interfaces: PV_COUNT(buffer) returns the array length, PV_COMPATIBLE(buffer, item) checks that item matches the buffer element type, and PV_READ(buffer, index, item) / PV_WRITE(buffer, index, item) copy one element to/from the item VARIANT.
+- Update R_TRIG instances every scan, including scans where the requested operation is suppressed (e.g. reset), so a request already held during the suppressed scan is not treated as a new rising edge on the next scan.
+- REAL/LREAL to integer conversions round to nearest (IEC 61131-3); apply TRUNC(x) before converting when the requirement specifies floor or truncation.
+- Bit shifts/rotates are function calls: SHL(x, n), SHR(x, n), ROL(x, n), ROR(x, n). Infix forms such as `x SHL n` are not accepted.
+- TON timing is driven by the scan timestamp and starts on the scan where IN rises. Feed it the value you command in the same scan (not the previous scan's output), and reset it while the timed operation is suppressed. Call the TON before reading its Q in the same scan: Q is updated by that call, so testing Q first sees last scan's value.
+- Output variables power up as FALSE/0. When requirements specify a different power-up value, initialize it explicitly on the first scan (e.g. an InitDone flag), not only inside the Reset branch.
 - At most 6 source versions, 24 model requests and 1800 seconds per task. Never edit tests or expected data.
 """
 

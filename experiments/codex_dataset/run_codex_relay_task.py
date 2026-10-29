@@ -14,7 +14,7 @@ os.environ.setdefault("PLC_EXPERIMENT_MAX_OUTPUT", "32768")
 os.environ.setdefault("PLC_EXPERIMENT_UPSTREAM_TIMEOUT", "600")
 
 from plc_agent import bank32, dataset
-from plc_agent.dataset_workflow import normalize_source
+from plc_agent.bank32_v6 import normalize_v6
 from experiments.public20.service import start_service
 
 R8 = Path(__file__).resolve().parents[2]
@@ -79,7 +79,6 @@ After each source version run: powershell -NoProfile -ExecutionPolicy Bypass -Fi
 Use only the checker diagnostics to repair your own ST. Do not inspect generated C++ headers, compiler caches, or files outside this task directory. Do not access TON internal members such as CURRENT_TIME. Never edit requirements.md, policy.md or check.ps1.
 There are at most 6 submitted source versions (initial candidate plus 5 repairs), 24 model requests and 1800 seconds. Stop on pass or any budget limit. Rechecking identical source does not add a version.
 Finish with the status and a short explanation. Do not claim success without checker evidence.
-Strict budget mode: use at most 24 model requests. Do NOT run any PowerShell command other than check.ps1. Do not inspect check.ps1, requirements more than once, generated C++, caches, or other files. Write candidate.st directly. Never use LEN or CHAR as variable names; use LEN() as a function. Make one focused repair per failed version; stop after 6 versions.
 """
     (workspace / "prompt.txt").write_text(prompt, encoding="utf-8")
     (home / "config.toml").write_text(f'''model = "{model}"
@@ -115,7 +114,7 @@ http_headers = {{ "X-Experiment-Task" = "{task_key}" }}
     candidate = workspace / "candidate.st"
     if candidate.is_file():
         text = candidate.read_text(encoding="utf-8-sig")
-        normalized = normalize_source(text, task["block"])
+        normalized = normalize_v6(text, task["block"])
         if normalized != text:
             candidate.write_text(normalized, encoding="utf-8")
         try:

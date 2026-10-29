@@ -5,9 +5,11 @@ import json
 import os
 import re
 import sys
+import time
 from pathlib import Path
 
 from plc_agent import dataset_workflow
+from plc_agent.bank32_v6 import normalize_v6
 from plc_agent.config import ModelConfig
 from plc_agent.provider import ChatProvider
 
@@ -17,9 +19,7 @@ OUT = Path(os.environ.get("BANK32_V6_OUT", str(R8 / "reports" / "bank32_v6")))
 BACKEND = """
 
 后端事实：
-- 当前 STruC++ 后端没有内建 LTIME；如使用 LTIME，必须声明 TYPE LTIME : LINT;。
-- TIME 转 LTIME：先 TIME_TO_MS(...) 得到毫秒，再乘 1000000 赋给 LTIME（LTIME 是 LINT 别名）；不要使用 TO_LTIME/TIME_TO_LTIME/(LTIME) 强制转换。
-- STRING 使用 ADR/POINTER TO BYTE；不要使用 CHAR、.at() 或 STRING 下标；不要把 LEN 用作变量名。
+- 类型与语法约定以输入包中的 backend_notes 为准（LTIME、STRING、数组下界、TON 时序等），不要自行假定或重定义内置类型。
 - 输出必须是严格 JSON；code 中换行写成 \\n，不要使用 Markdown 代码围栏。
 """
 
@@ -60,32 +60,37 @@ def main() -> int:
         [f"PUBLIC_{i:02d}" for i in range(1, 21)] + [f"CUSTOM_{i:02d}" for i in range(1, 13)])
     dataset_workflow.json_value = tolerant_json
     dataset_workflow.AUTHOR += BACKEND
-    original_normalize = dataset_workflow.normalize_source
-
-    def normalize(code, block):
-        code = original_normalize(code, block)
-        code = re.sub(r"TO_LTIME\(([^()]+)\)", r"(TIME_TO_MS(\1) * 1000000)", code)
-        code = re.sub(r"TIME_TO_LTIME\(([^()]+)\)", r"(TIME_TO_MS(\1) * 1000000)", code)
-        code = code.replace("(LTIME)", "")
-        if "LTIME" in code.upper() and "TYPE LTIME" not in code.upper():
-            code = "TYPE LTIME : LINT; END_TYPE\n" + code
-        if re.search(r"\bLEN\s*:", code, re.I):
-            code = re.sub(r"\bLEN\b(?!\s*\()", "nLen", code, flags=re.I)
-        return code
-
-    dataset_workflow.normalize_source = normalize
+    # Use the same packaging normalization as the Codex arm (single source of truth).
+    dataset_workflow.normalize_source = normalize_v6
     cfg = config_for(model)
     cfg.validate()
     provider = ChatProvider(cfg)
     root = OUT / ("self_" + model)
+    consecutive_errors = 0
     for ident in ids:
         directory = root / ident
         directory.mkdir(parents=True, exist_ok=True)
         source = directory / "candidate.st"
-        receipt = dataset_workflow.run(ident, source, directory, cfg, provider=provider,
-                                       max_revisions=5, review=False, notify=lambda text: print(text, flush=True))
+        # Provider/relay outages are infrastructure failures, not model results;
+        # retry them a bounded number of times before recording the receipt.
+        for attempt in range(4):
+            receipt = dataset_workflow.run(ident, source, directory, cfg, provider=provider,
+                                           max_revisions=5, review=False,
+                                           notify=lambda text: print(text, flush=True))
+            if receipt.get("status") not in ("agent_error", "interrupted") or attempt == 3:
+                break
+            print(f"{ident} {receipt.get('status')}; retry {attempt + 1}", flush=True)
+            time.sleep(15 * (2 ** attempt))
         (directory / "receipt.json").write_text(json.dumps(receipt, ensure_ascii=False, indent=2), encoding="utf-8")
         print(ident, receipt.get("status"), flush=True)
+        if receipt.get("status") in ("agent_error", "interrupted"):
+            consecutive_errors += 1
+            if consecutive_errors >= 2:
+                pause = min(60 * consecutive_errors, 180)
+                print(f"infrastructure pause {pause}s after {consecutive_errors} consecutive errors", flush=True)
+                time.sleep(pause)
+        else:
+            consecutive_errors = 0
     return 0
 
 
