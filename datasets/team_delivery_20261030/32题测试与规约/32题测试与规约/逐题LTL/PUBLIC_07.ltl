@@ -1,0 +1,50 @@
+# PUBLIC_07
+# Requirement-level LTL; observer macros require tool-specific expansion.
+# # 统一的观察约定
+# 
+# 本文件是需求层 LTL 草稿，使用明确数学定义的观察器原子命题，不是 PLCVerif/Z3 的原生输入语法；没有声称完成形式化证明。
+# 一次观测 O_t 同时包含本轮调用前的输入 inputs_t 和本轮调用后的输出 outputs_t。
+# pre.y 表示本轮调用前保存的输出/状态；从第二次调用起通常等于上一轮 post.y。首次调用的 pre 状态按题目规定初始化。
+# G p 表示每次观测都满足 p；X p 表示下一轮观测满足 p；F p 表示最终某轮满足 p；U 表示直到。
+# 当前输入触发本轮输出的规则不加 X。涉及上一轮的状态以 pre 或独立观察器表示，不能直接用下一轮输入替代。
+# initial 专指第一次调用前的初始化检查，与正常 O_t 观测分开。初始输出允许在第一次调用后依输入改变。
+# R1(p) := p | X(p)，仅用于题面/既有公共测试允许当拍或下一拍响应的工序输出，不能用于放宽急停、互锁等同拍要求。
+# rise(x) := x_t & !x_(t-1)，首拍历史仅在题目明确时取 FALSE；未明确的首扫历史不评分。
+# 数学表达式先求值为布尔原子命题，再由 LTL 组合。有限数组、掩码上的量词需按实际实例逐项展开；它们不是未定义的模型自报变量。
+# 所有实数输入限定有限值；数值公式是精确数学约束，实际测试按文件中的数值容差比较。测试通过不等于普遍成立。
+# 
+# # 公共20题：规约、采样及实验边界
+# 
+# 版本：public20-spec-v1；题面以 `experiments/deepseek_20/questions.json` 为准。这里只处理公共20题。下列LTL是逐题需求规约，不是已经由PLCVerif证明的结论；本项目实际执行的自动检查是有限场景与独立数值/状态观察器。测试覆盖不等于整个规约覆盖。
+# 
+# ## 公共记号与观察器定义
+# 
+# `G p`表示始终，`X p`表示下一次扫描，`F p`表示最终，`p U q`表示在q成立前持续p。`R1(p)`是LTL宏`p | X p`，表示当拍或下一拍响应；其允许时间是扫描次数，不是固定毫秒。展开时保留括号。安全停机和互锁的同拍规则不使用R1。
+# 
+# 普通观测状态同时包含本次调用前的输入、调用前的数据副本`pre`及本次FB调用后的输出`post`。`rise(x)`由输入观察器保存前次x计算；计时器根据测试给出的真实时间戳计算，不使用被测程序自己的内部计时值。`initial`指FB实例创建后、第一次调用前的初始化状态。除初始化性质外，公式只在正常调用观测状态解释。
+# 
+# 下文`sumOK`、`queueAfterPopOK`等名字是原子命题：由紧邻说明给出的独立数学定义求值，不是模型自己报告的布尔变量。有限数组上的“每个i”表示对实例的所有合法索引分别展开一条LTL。对任意具体数组长度的性质，应针对该实例展开；本项目没有声称证明无限容量。
+# 
+# 除明确写明的输入域外，不替题面新增错误处理。多个操作同时发出、模式切换的状态保持、未定义的首扫历史等若未明确，不计为无条件缺陷。REAL/LREAL的执行比较分别采用1e-5/1e-9绝对和相对容差，数学规约仍用精确表达式。
+# 
+# 
+# ## Q07 五泵切换
+# 
+# 独立运行使能锁存器`enabled`在stop时关闭，在start且非stop时开启，其余保持；停止优先是当前测试口径。`manualSelectionOK`为每个RunComd=enabled & selection。`topThreeOK`为启用自动模式恰好3泵运行，且任一运行泵的priority不低于任一备用泵。`configPreserved`表示priority和selection均未被FB改写。
+# 
+# ```text
+# G(stop -> allPumpsOff)
+# G(!enabled -> allPumpsOff)
+# G(!mode & enabled -> manualSelectionOK)
+# G(mode & enabled -> topThreeOK)
+# G(configPreserved)
+# ```
+# 
+# 优先级较大者优先；边界相同优先级允许任意满足topThreeOK的选择，不把未规定的索引优先当必需条件。当前结构体适配采用调用方持有数据的显式copy-in/copy-out，未证明厂商ABI兼容。
+# 
+
+P01: G(stop -> allPumpsOff)
+P02: G(!enabled -> allPumpsOff)
+P03: G(!mode & enabled -> manualSelectionOK)
+P04: G(mode & enabled -> topThreeOK)
+P05: G(configPreserved)

@@ -187,3 +187,8 @@ R4后端提供LTIME、一维开放数组和本地PV1泛型引用接口。第18�
 ## CODESYS 编译与 2×2 批量实验
 
 网页“模型与环境”可配置/验证 CODESYS，“代码工作台”可执行厂商编译，“实验记录”可启动两个框架 × 两个模型的批量对比。操作与脚本见 [CODESYS 和 2×2 实验](docs/CODESYS_WEB_EXPERIMENTS.md)。
+
+
+## 从 GitHub 复现当前网页与完整数据
+
+请使用 `bank32-v6` 分支，按 [完整复现步骤](docs/REPRODUCE_FROM_GITHUB.md) 配置。可直接导入的完整32题在 [datasets/importable/course32_20261030.json](datasets/importable/course32_20261030.json)，队友原始交付和逐题测试、LTL、溯源在 `datasets/team_delivery_20261030/`。执行 `python scripts/verify_reproduction_data.py` 可离线校验数据；`scripts/setup-reproduction.ps1` 帮助构建R4与安装当前项目内的Codex依赖。API密钥、CODESYS安装和本机工程配置需自行准备。

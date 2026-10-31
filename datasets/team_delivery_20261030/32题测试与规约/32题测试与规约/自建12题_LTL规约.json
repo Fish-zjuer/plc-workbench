@@ -1,0 +1,442 @@
+{
+  "schema": "plc-ltl-requirements-v1",
+  "observation": "# 统一的观察约定\n\n本文件是需求层 LTL 草稿，使用明确数学定义的观察器原子命题，不是 PLCVerif/Z3 的原生输入语法；没有声称完成形式化证明。\n一次观测 O_t 同时包含本轮调用前的输入 inputs_t 和本轮调用后的输出 outputs_t。\npre.y 表示本轮调用前保存的输出/状态；从第二次调用起通常等于上一轮 post.y。首次调用的 pre 状态按题目规定初始化。\nG p 表示每次观测都满足 p；X p 表示下一轮观测满足 p；F p 表示最终某轮满足 p；U 表示直到。\n当前输入触发本轮输出的规则不加 X。涉及上一轮的状态以 pre 或独立观察器表示，不能直接用下一轮输入替代。\ninitial 专指第一次调用前的初始化检查，与正常 O_t 观测分开。初始输出允许在第一次调用后依输入改变。\nR1(p) := p | X(p)，仅用于题面/既有公共测试允许当拍或下一拍响应的工序输出，不能用于放宽急停、互锁等同拍要求。\nrise(x) := x_t & !x_(t-1)，首拍历史仅在题目明确时取 FALSE；未明确的首扫历史不评分。\n数学表达式先求值为布尔原子命题，再由 LTL 组合。有限数组、掩码上的量词需按实际实例逐项展开；它们不是未定义的模型自报变量。\n所有实数输入限定有限值；数值公式是精确数学约束，实际测试按文件中的数值容差比较。测试通过不等于普遍成立。\n",
+  "tasks": [
+    {
+      "id": "CUSTOM_01",
+      "title": "电梯方向保持与满载屏蔽目标调度",
+      "definitions": "输入域：CurrentFloor∈1..6，Direction∈{-1,0,1}；数组下界为1、长度6。\nE={i | CabReq[i] OR (HallReq[i] AND NOT FullLoad)}；输入数组只读。\n令f=CurrentFloor。独立数学选择器T：Enable为FALSE或E为空时T=f；否则f∈E时T=f；\nDirection=1且存在i>f时T=min{i∈E:i>f}；Direction=-1且存在i<f时T=max{i∈E:i<f}；\n其他情况T为E中使(abs(i-f),i)按字典序最小的楼层。对应方向无请求时转向另一侧最近请求。\nselectedOK := TargetFloor=T AND NextDirection=sign(T-f)。requestArraysPreserved表示调用前后两输入数组完全相同。\n本题不保存请求队列，不要求最终完成运输；HasTarget不是电机命令。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(HasTarget <-> (Enable & nonempty(E)))"
+        },
+        {
+          "id": "P02",
+          "formula": "G(selectedOK)"
+        },
+        {
+          "id": "P03",
+          "formula": "G((!Enable | empty(E)) -> (!HasTarget & TargetFloor=CurrentFloor & NextDirection=0))"
+        },
+        {
+          "id": "P04",
+          "formula": "G((Enable & CurrentFloor_in_E) -> (HasTarget & TargetFloor=CurrentFloor & NextDirection=0))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(HasTarget -> targetInE)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(requestArraysPreserved)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_02",
+      "title": "工业 HMI 访问权限与参数写入控制",
+      "definitions": "V := SessionValid AND Role∈{1,2,3}。AllowedPages(1)={1,2}，AllowedPages(2)={1,2,4}，AllowedPages(3)={1,2,3,4}，其他角色为空集。\nview := V AND Page∈AllowedPages(Role)。write := SessionValid AND Role∈{2,3} AND Page=4。\naccept := WriteReq AND write AND 0<=WriteValue<=100。所有LREAL输入有限。\nparameterUpdated := ParamValue=WriteValue；parameterHeld := ParamValue=pre.ParamValue；初始pre.ParamValue=0。\nAccepted/Denied为本轮结果，WriteReq为调用方提供的单扫描请求；本题不替上游做身份认证。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(ViewAllowed <-> view)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(WriteAllowed <-> write)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(Accepted <-> accept)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(Denied <-> (WriteReq & !accept))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(accept -> parameterUpdated)"
+        },
+        {
+          "id": "P06",
+          "formula": "G(!accept -> parameterHeld)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(!(Accepted & Denied))"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_03",
+      "title": "远程闸门站报文新鲜度与远程写入恢复",
+      "definitions": "独立观察器保存known、seq、age、fault，初始分别FALSE、0、0、TRUE；它不是候选ST的内部变量。\nvalidTiming := 1<=DtMs<=1000 AND 1<=TimeoutMs<=60000。每轮按下列完整转移生成观察器期望：\nReset最高优先：known=FALSE、seq=0、age=0、fault=TRUE，fresh=FALSE，err=FALSE，忽略其余输入。\n否则若参数非法：known/seq/age保持，fault=TRUE，fresh=FALSE，err=TRUE。\n否则fresh := FrameValid AND (!pre.known OR FrameSeq!=pre.seq)；fresh时known=TRUE、seq=FrameSeq、age=0；\n无fresh时known/seq保持，age=min(60000,pre.age+DtMs)。fault从pre.fault开始，age>=TimeoutMs时置位，fresh AND Ack时清除。\n序号只比较不相等，4294967295到0也是新帧，不是防重放认证。\nmonitorMatch := Fresh=fresh AND AgeMs=age AND CommFault=fault AND Error=err。\npermit := !Reset AND !err AND !fault AND age<TimeoutMs；ageHeld := AgeMs=pre.age。\nhistoryHeld := known=pre.known AND seq=pre.seq，为观察器转移定义；不要求读取ST私有历史。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(monitorMatch)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(RemoteWritePermit <-> permit)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(Reset -> (!Fresh & AgeMs=0 & CommFault & !RemoteWritePermit & !Error))"
+        },
+        {
+          "id": "P04",
+          "formula": "G((!Reset & !validTiming) -> (Error & CommFault & !Fresh & !RemoteWritePermit & ageHeld))"
+        },
+        {
+          "id": "P05",
+          "formula": "G((!Reset & validTiming & !fresh) -> (AgeMs=min(60000,pre.age+DtMs)))"
+        },
+        {
+          "id": "P06",
+          "formula": "G((!Reset & validTiming & fresh & Ack) -> (!CommFault & RemoteWritePermit))"
+        },
+        {
+          "id": "P07",
+          "formula": "G((!Reset & validTiming & pre.fault & !(fresh & Ack)) -> CommFault)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_04",
+      "title": "收放卷卷径估算与转速补偿",
+      "definitions": "PI=3.141592653589793，CoreD=76，MaxD=140，h=0.135，Lmax=PI*(140^2-76^2)/(4*h)。\n独立观察器初始initialized=FALSE、length=0、diameter=76。init := !pre.initialized OR Reset。\nvalid := -15<=SpeedMpm<=15 AND 0<=EncoderDelta<=1000000 AND (!init OR 76<=InitialD<=140)，输入均有限。\nvalid AND init时length=PI*(InitialD^2-76^2)/(4*h)，diameter=InitialD，rpm=0，hit=FALSE，initialized=TRUE；忽略脉冲。\nvalid AND !init时raw=pre.length+(Receiving?1:-1)*EncoderDelta*PI*50/1024，length=clamp(raw,0,Lmax)，\ndiameter=sqrt(76^2+4*h*length/PI)，rpm=clamp(SpeedMpm*1000*50/(PI*diameter),-6000,6000)，hit=(raw<0 OR raw>Lmax)。\n!valid时length/diameter/initialized保持，rpm=0，hit=FALSE；不是无条件Reset优先于输入校验。\ngeometryMatch表示StoredLength/ Diameter/MotorRPM/LimitHit分别等于上述独立期望。\n长度和直径测试绝对容差0.001mm，RPM为0.01；LTL数学定义精确，测试容差不改变限幅严格边界。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(Error <-> !valid)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(geometryMatch)"
+        },
+        {
+          "id": "P03",
+          "formula": "G((!valid) -> (MotorRPM=0 & !LimitHit & StoredLength=pre.length & Diameter=pre.diameter))"
+        },
+        {
+          "id": "P04",
+          "formula": "G((valid & init) -> (Diameter=InitialD & MotorRPM=0 & !LimitHit))"
+        },
+        {
+          "id": "P05",
+          "formula": "G((valid & !init) -> (LimitHit <-> (raw<0 | raw>Lmax)))"
+        },
+        {
+          "id": "P06",
+          "formula": "G(0<=StoredLength & StoredLength<=Lmax & 76<=Diameter & Diameter<=140)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(-6000<=MotorRPM & MotorRPM<=6000)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_05",
+      "title": "轨道巡检车按里程触发图像采集",
+      "definitions": "独立观察器保存first、prevEnable、origin、spacing、lastDistance、k、issued、missed、err；初始first=TRUE，其余计数0、err=FALSE。\ninit := first OR Reset OR (Enable AND !pre.prevEnable)。validInit := DistanceMm>=0 AND SpacingMm>0，实数有限。\ninit且validInit：锁存本轮origin=DistanceMm和spacing=SpacingMm，lastDistance=DistanceMm，k/issued/missed=0，err=FALSE，本轮pulse=FALSE。\ninit且非法：err=TRUE，计数和原点保持，pulse=FALSE。\n非init时，disabled或pre.err为TRUE则计数保持、pulse=FALSE、err保持。\n非init且Enable且!pre.err：若DistanceMm<pre.lastDistance或位置非法，则锁存err且计数保持；\n否则newK=floor((DistanceMm-pre.origin)/pre.spacing)，d=newK-pre.k，pulse=(d>0 AND !CameraBusy)，\nissued=pre.issued+int(pulse)，missed=pre.missed+d-int(pulse)，k=newK，lastDistance=DistanceMm。\n每轮无论是否故障均更新prevEnable=Enable，first=FALSE。段内跨点总数<=1e9。\ncaptureMatch表示CapturePulse/CaptureCount/MissedCount/Error分别等于上述期望。\nvalidRun表示非init、Enable、无既有或本轮位置错误。连续两轮pulse均TRUE合法，不能额外要求脉冲之间插入FALSE。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(captureMatch)"
+        },
+        {
+          "id": "P02",
+          "formula": "G((init & validInit) -> (!CapturePulse & CaptureCount=0 & MissedCount=0 & !Error))"
+        },
+        {
+          "id": "P03",
+          "formula": "G(!Enable -> !CapturePulse)"
+        },
+        {
+          "id": "P04",
+          "formula": "G((validRun & d=0) -> (!CapturePulse & CaptureCount=pre.issued & MissedCount=pre.missed))"
+        },
+        {
+          "id": "P05",
+          "formula": "G((validRun & d>0 & !CameraBusy) -> (CapturePulse & CaptureCount=pre.issued+1 & MissedCount=pre.missed+d-1))"
+        },
+        {
+          "id": "P06",
+          "formula": "G((validRun & CameraBusy) -> (!CapturePulse & CaptureCount=pre.issued & MissedCount=pre.missed+d))"
+        },
+        {
+          "id": "P07",
+          "formula": "G((pre.err & !(init & validInit)) -> Error)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_06",
+      "title": "压缩空气母管压力的用气前馈调节",
+      "definitions": "独立观察器积分I初始0。valid := PressureKpa∈[0,1000] AND AirUseFlow∈[0,90] AND Kp∈[0,1] AND Ki∈[0,0.1] AND DtSec∈[0.001,1]，均有限。\nReset最高优先：I=0，u=0，sat=FALSE，err=FALSE。\n否则!Enable：I保持，u=0，sat=FALSE，err=FALSE。\n否则!valid：I保持，u=0，sat=FALSE，err=TRUE。\n合法使能：e=500-PressureKpa，FF=2*AirUseFlow，Ic=pre.I+Ki*e*DtSec，Uc=FF+Kp*e+Ic；\nreject := (Uc>100 AND e>0) OR (Uc<0 AND e<0)，I=(reject?pre.I:Ic)，U=FF+Kp*e+I，u=clamp(U,0,100)，sat=(U<0 OR U>100)，err=FALSE。\npressureMatch := Integral=I AND CapacityPct=u AND Saturated=sat AND Error=err。|I|<=1e9为运行域假设；不模拟压力物理演化。\n饱和判断使用最终U，不能用被拒绝积分的Uc代替。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(pressureMatch)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(Reset -> (Integral=0 & CapacityPct=0 & !Saturated & !Error))"
+        },
+        {
+          "id": "P03",
+          "formula": "G((!Reset & !Enable) -> (Integral=pre.I & CapacityPct=0 & !Saturated & !Error))"
+        },
+        {
+          "id": "P04",
+          "formula": "G((!Reset & Enable & !valid) -> (Integral=pre.I & CapacityPct=0 & !Saturated & Error))"
+        },
+        {
+          "id": "P05",
+          "formula": "G((!Reset & Enable & valid & reject) -> (Integral=pre.I))"
+        },
+        {
+          "id": "P06",
+          "formula": "G((!Reset & Enable & valid) -> (Saturated <-> (U<0 | U>100)))"
+        },
+        {
+          "id": "P07",
+          "formula": "G(0<=CapacityPct & CapacityPct<=100)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_07",
+      "title": "矿石破碎给料与抽尘风量交叉限幅",
+      "definitions": "active := Enable AND !Trip。valid表示FeedDemand、FeedActual、ExtractionCapacity三个有限LREAL均在[0,100]。\nfeedOK := FeedSP=min(FeedDemand,ExtractionCapacity)。extractionOK := ExtractionSP=max(FeedDemand,FeedActual)。\n两个反馈必须来自实际能力，不能使用对方的设定值代替。Trip和禁用优先于参数错误。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(!active -> (FeedSP=0 & ExtractionSP=0 & !Error))"
+        },
+        {
+          "id": "P02",
+          "formula": "G((active & !valid) -> (FeedSP=0 & ExtractionSP=0 & Error))"
+        },
+        {
+          "id": "P03",
+          "formula": "G((active & valid) -> (feedOK & extractionOK & !Error))"
+        },
+        {
+          "id": "P04",
+          "formula": "G((active & valid) -> (FeedSP<=ExtractionCapacity & ExtractionSP>=FeedActual))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(0<=FeedSP & FeedSP<=100 & 0<=ExtractionSP & ExtractionSP<=100)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_08",
+      "title": "桥式起重机双侧传动测速一致性校验",
+      "definitions": "V := 0<=LeftSpeed10<=100 AND 0<=RightSpeed10<=100 AND 0<ReferenceSpeed10<=100。\nR := abs(LeftSpeed10-RightSpeed10)<=1 AND abs(LeftSpeed10+RightSpeed10-13*ReferenceSpeed10)<=2，只在V真时求值。\n差值、乘法采用足够宽的整数。极值输入先检查量程，不能在INT中先计算再校验。\n初始调用前三个输出均FALSE；第一次调用后的输出按当前输入计算。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(SyncOK <-> (V & R))"
+        },
+        {
+          "id": "P02",
+          "formula": "G(SyncBad <-> (V & !R))"
+        },
+        {
+          "id": "P03",
+          "formula": "G(Invalid <-> !V)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(!(SyncOK & SyncBad) & !(SyncOK & Invalid) & !(SyncBad & Invalid))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(SyncOK | SyncBad | Invalid)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_09",
+      "title": "在线光谱仪维护后标定状态与测量许可控制",
+      "definitions": "独立状态S初始0（等待标定），1就绪、2维护。每轮从pre.S决定且最多转换一次：\nS=(Maintenance?2:(pre.S=2?0:(pre.S=0 AND CalibDone?1:pre.S)))。\nMaintenance优先；退出维护的同轮即使CalibDone为TRUE仍进入0，下一轮完成电平持续TRUE则允许转入1。\nstateMatch := State=S；输出映射使用本轮更新后的State。\n调用前初始CalibReq=TRUE、MaintLamp=FALSE、MeasurePermit=FALSE。没有新增CalibDone上升沿要求。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(stateMatch)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(Maintenance -> State=2)"
+        },
+        {
+          "id": "P03",
+          "formula": "G((!Maintenance & pre.S=2) -> State=0)"
+        },
+        {
+          "id": "P04",
+          "formula": "G((!Maintenance & pre.S=0 & CalibDone) -> State=1)"
+        },
+        {
+          "id": "P05",
+          "formula": "G((!Maintenance & pre.S=0 & !CalibDone) -> State=0)"
+        },
+        {
+          "id": "P06",
+          "formula": "G((!Maintenance & pre.S=1) -> State=1)"
+        },
+        {
+          "id": "P07",
+          "formula": "G(CalibReq <-> State=0)"
+        },
+        {
+          "id": "P08",
+          "formula": "G(MaintLamp <-> State=2)"
+        },
+        {
+          "id": "P09",
+          "formula": "G(MeasurePermit <-> (MeasureReq & State=1))"
+        },
+        {
+          "id": "P10",
+          "formula": "G(State=0 | State=1 | State=2)"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_10",
+      "title": "仓库盘点请求的挂起、派发与取消控制",
+      "definitions": "独立观察器preButton、pending初始FALSE。rise := RequestBtn AND !pre.preButton；request := pre.pending OR rise；canServe := ServiceReady AND !Busy。\n本轮pending := !Cancel AND request AND !canServe；dispatch := !Cancel AND request AND canServe。\n每轮都更新preButton=本轮RequestBtn，包括取消期间。按钮持续TRUE不形成第二个上升沿。\npendingMatch := Pending=pending。此处请求只有一位，不是FIFO；Dispatched不表示盘点完成。\n活性只在最终出现取消或可服务扫描的环境条件下要求最终结束等待；不能在永久Busy的环境中要求无条件完成。\nA_service := G(Pending -> F(Cancel | canServe))，为环境公平性假设，不是候选程序的输出保证。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(pendingMatch)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(Dispatched <-> (!Cancel & request & canServe))"
+        },
+        {
+          "id": "P03",
+          "formula": "G(RequestLamp <-> Pending)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(Cancel -> (!Pending & !Dispatched & !RequestLamp))"
+        },
+        {
+          "id": "P05",
+          "formula": "G((!Cancel & request & Busy) -> (Pending & !Dispatched))"
+        },
+        {
+          "id": "P06",
+          "formula": "G(!request -> (!Pending & !Dispatched))"
+        },
+        {
+          "id": "P07",
+          "formula": "G(!(Pending & Dispatched))"
+        },
+        {
+          "id": "P08",
+          "formula": "A_service -> G(Pending -> F(Cancel | Dispatched))"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_11",
+      "title": "车辆地磅三路称重一致性投票",
+      "definitions": "对AB、AC、BC分别计算：组成该对的两路都在0..20000kg且绝对差<=200kg，才是候选一致对；某一路坏值不能否决另外两路好值。\n候选按(差值,次序)最小选择，次序AB<AC<BC，掩码分别3、5、6。V表示存在候选；M为选中掩码，无候选时M=0。\nW为选中两路的LREAL平均，允许0.5kg；无候选时W=0。O := V AND W>10000。\nvoteMatch := PairMask=M AND VotedKg=W；三路为独立整车总重，不做三路相加或直接平均三路。\nReleaseReq、BarrierReady关闭仅影响许可，不影响融合。初始调用前所有输出0/FALSE；每次调用后按本轮计算。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(voteMatch)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(LoadFault <-> !V)"
+        },
+        {
+          "id": "P03",
+          "formula": "G(Overload <-> O)"
+        },
+        {
+          "id": "P04",
+          "formula": "G(ReleasePermit <-> (V & ReleaseReq & BarrierReady & !O))"
+        },
+        {
+          "id": "P05",
+          "formula": "G(!V -> (PairMask=0 & VotedKg=0 & LoadFault & !Overload & !ReleasePermit))"
+        },
+        {
+          "id": "P06",
+          "formula": "G(V -> (PairMask=3 | PairMask=5 | PairMask=6))"
+        },
+        {
+          "id": "P07",
+          "formula": "G(!(LoadFault & Overload))"
+        }
+      ],
+      "status": "specification_not_proved"
+    },
+    {
+      "id": "CUSTOM_12",
+      "title": "海洋监测浮标的辅助负载功率预算",
+      "definitions": "V := 0<=BudgetW<=200；B := MandatorySensor AND BudgetW<40。\n允许集合A由NeedSensor OR MandatorySensor、NeedHeater、NeedRadio分别决定比特1、2、4。\n对m=0..7，p(m)=40*[m&1!=0]+70*[m&2!=0]+60*[m&4!=0]；s(m)=7*[m&1!=0]+10*[m&2!=0]+9*[m&4!=0]。\nfeasible(m) := (m无A以外的比特) AND p(m)<=BudgetW AND (!MandatorySensor OR m&1!=0)。\n合法且非B时可行集合非空（至少空集或传感单元），M=按(-s(m),p(m),m)字典序最小的可行掩码。\ndisabled := !Enable；invalid := Enable AND !V；shortage := Enable AND V AND B；normal := Enable AND V AND !B。\n前三种分支M=0、功率/分数0、三个负载关闭；Error仅invalid为TRUE，BudgetShortage仅shortage为TRUE。\nmaskMapOK表示SensorOn、HeaterOn、RadioOn与SelectedMask比特1/2/4逐一等价。\noptimalChoiceOK := SelectedMask=M AND PowerW=p(M) AND Score=s(M)。有限集合定义可完整展开8个选择条件，不按单项分数或性价比贪心。",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(Error <-> invalid)"
+        },
+        {
+          "id": "P02",
+          "formula": "G(BudgetShortage <-> shortage)"
+        },
+        {
+          "id": "P03",
+          "formula": "G((disabled | invalid | shortage) -> (SelectedMask=0 & PowerW=0 & Score=0 & !SensorOn & !HeaterOn & !RadioOn))"
+        },
+        {
+          "id": "P04",
+          "formula": "G(normal -> optimalChoiceOK)"
+        },
+        {
+          "id": "P05",
+          "formula": "G(maskMapOK)"
+        },
+        {
+          "id": "P06",
+          "formula": "G((Enable & V) -> PowerW<=BudgetW)"
+        },
+        {
+          "id": "P07",
+          "formula": "G((normal & MandatorySensor) -> SensorOn)"
+        },
+        {
+          "id": "P08",
+          "formula": "G((normal & !NeedHeater) -> !HeaterOn)"
+        },
+        {
+          "id": "P09",
+          "formula": "G((normal & !NeedRadio) -> !RadioOn)"
+        }
+      ],
+      "status": "specification_not_proved"
+    }
+  ]
+}

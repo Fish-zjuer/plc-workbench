@@ -1,0 +1,32 @@
+# CUSTOM_04
+# Requirement-level LTL; not native PLCVerif or Z3 syntax.
+# # 统一的观察约定
+# 
+# 本文件是需求层 LTL 草稿，使用明确数学定义的观察器原子命题，不是 PLCVerif/Z3 的原生输入语法；没有声称完成形式化证明。
+# 一次观测 O_t 同时包含本轮调用前的输入 inputs_t 和本轮调用后的输出 outputs_t。
+# pre.y 表示本轮调用前保存的输出/状态；从第二次调用起通常等于上一轮 post.y。首次调用的 pre 状态按题目规定初始化。
+# G p 表示每次观测都满足 p；X p 表示下一轮观测满足 p；F p 表示最终某轮满足 p；U 表示直到。
+# 当前输入触发本轮输出的规则不加 X。涉及上一轮的状态以 pre 或独立观察器表示，不能直接用下一轮输入替代。
+# initial 专指第一次调用前的初始化检查，与正常 O_t 观测分开。初始输出允许在第一次调用后依输入改变。
+# R1(p) := p | X(p)，仅用于题面/既有公共测试允许当拍或下一拍响应的工序输出，不能用于放宽急停、互锁等同拍要求。
+# rise(x) := x_t & !x_(t-1)，首拍历史仅在题目明确时取 FALSE；未明确的首扫历史不评分。
+# 数学表达式先求值为布尔原子命题，再由 LTL 组合。有限数组、掩码上的量词需按实际实例逐项展开；它们不是未定义的模型自报变量。
+# 所有实数输入限定有限值；数值公式是精确数学约束，实际测试按文件中的数值容差比较。测试通过不等于普遍成立。
+# 
+# PI=3.141592653589793，CoreD=76，MaxD=140，h=0.135，Lmax=PI*(140^2-76^2)/(4*h)。
+# 独立观察器初始initialized=FALSE、length=0、diameter=76。init := !pre.initialized OR Reset。
+# valid := -15<=SpeedMpm<=15 AND 0<=EncoderDelta<=1000000 AND (!init OR 76<=InitialD<=140)，输入均有限。
+# valid AND init时length=PI*(InitialD^2-76^2)/(4*h)，diameter=InitialD，rpm=0，hit=FALSE，initialized=TRUE；忽略脉冲。
+# valid AND !init时raw=pre.length+(Receiving?1:-1)*EncoderDelta*PI*50/1024，length=clamp(raw,0,Lmax)，
+# diameter=sqrt(76^2+4*h*length/PI)，rpm=clamp(SpeedMpm*1000*50/(PI*diameter),-6000,6000)，hit=(raw<0 OR raw>Lmax)。
+# !valid时length/diameter/initialized保持，rpm=0，hit=FALSE；不是无条件Reset优先于输入校验。
+# geometryMatch表示StoredLength/ Diameter/MotorRPM/LimitHit分别等于上述独立期望。
+# 长度和直径测试绝对容差0.001mm，RPM为0.01；LTL数学定义精确，测试容差不改变限幅严格边界。
+
+P01: G(Error <-> !valid)
+P02: G(geometryMatch)
+P03: G((!valid) -> (MotorRPM=0 & !LimitHit & StoredLength=pre.length & Diameter=pre.diameter))
+P04: G((valid & init) -> (Diameter=InitialD & MotorRPM=0 & !LimitHit))
+P05: G((valid & !init) -> (LimitHit <-> (raw<0 | raw>Lmax)))
+P06: G(0<=StoredLength & StoredLength<=Lmax & 76<=Diameter & Diameter<=140)
+P07: G(-6000<=MotorRPM & MotorRPM<=6000)
