@@ -23,6 +23,7 @@ class ModelConfig:
     max_output_tokens: int = 4096
     max_steps: int = 24
     timeout: int = 45
+    transport_retries: int = 2
     review_model: str = ""
     extra_body: dict = field(default_factory=dict)
     compact_keep_turns: int = 2
@@ -30,11 +31,22 @@ class ModelConfig:
     compact_summary_tokens: int = 2048
     compact_extra_body: dict = field(default_factory=dict)
 
+    @classmethod
+    def dmxapi(cls, model="", api_key="", stream=False, **kwargs):
+        """Teacher-provided Chat Completions endpoint; use the exact model ID."""
+        extra = kwargs.pop("extra_body", {})
+        if stream:
+            extra = {"stream_options": {"include_usage": True}, **extra}
+        return cls(base_url="https://www.dmxapi.cn/v1", model=model,
+                   api_key=api_key or os.environ.get("DMXAPI_API_KEY", ""),
+                   key_env="DMXAPI_API_KEY", stream=stream, extra_body=extra, **kwargs)
+
     def validate(self, require_ready=True):
         for name in ('base_url','model','key_env','api_key','tool_mode','review_model'):
             if not isinstance(getattr(self,name),str):raise ValueError(f'{name} 必须为文本')
-        for name in ('context_window','max_output_tokens','max_steps','timeout','compact_keep_turns','compact_summary_tokens'):
+        for name in ('context_window','max_output_tokens','max_steps','timeout','transport_retries','compact_keep_turns','compact_summary_tokens'):
             if type(getattr(self,name)) is not int:raise ValueError(f'{name} 必须为整数')
+        if not 0 <= self.transport_retries <= 2:raise ValueError('transport_retries must be 0..2')
         if type(self.stream) is not bool:raise ValueError('stream 必须为布尔值')
         if type(self.compact_target_ratio) not in (int,float) or not .25<=self.compact_target_ratio<=.7:
             raise ValueError('压缩目标比例须为0.25..0.7')

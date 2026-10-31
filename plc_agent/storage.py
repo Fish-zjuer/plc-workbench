@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import re
 import threading
+import time
 import uuid
 from contextlib import contextmanager
 from collections import deque
@@ -17,7 +18,28 @@ def now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+# Bounded lock table serializes readers and replacements within this process.
+_JSON_LOCKS = [threading.RLock() for _ in range(64)]
+
+def _json_lock(path):
+    return _JSON_LOCKS[hash(os.path.normcase(str(Path(path).resolve()))) % len(_JSON_LOCKS)]
+
+def read_json(path):
+    path = Path(path)
+    with _json_lock(path):
+        for attempt in range(10):
+            try:
+                return json.loads(path.read_text(encoding='utf-8'))
+            except PermissionError:
+                if attempt == 9: raise
+                time.sleep(.05 * (attempt + 1))
+
 def atomic_json(path: Path, value: dict) -> None:
+    with _json_lock(path):
+        _atomic_json(Path(path), value)
+
+
+def _atomic_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + "." + uuid.uuid4().hex + ".tmp")
     try:
@@ -25,7 +47,14 @@ def atomic_json(path: Path, value: dict) -> None:
             json.dump(value, stream, ensure_ascii=False, indent=2, allow_nan=False)
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        # Windows readers/antivirus can briefly deny atomic replacement.
+        for attempt in range(10):
+            try:
+                os.replace(temporary, path)
+                break
+            except PermissionError:
+                if attempt == 9: raise
+                time.sleep(.05 * (attempt + 1))
     finally:
         temporary.unlink(missing_ok=True)
 

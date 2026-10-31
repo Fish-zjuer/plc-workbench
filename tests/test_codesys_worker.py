@@ -22,7 +22,7 @@ class WorkerTests(unittest.TestCase):
             device=NS(set_simulation_mode=lambda value:calls.append(('simulation',value)),get_simulation_mode=lambda:simulation)
             class Application:
                 is_application=True;parent=device
-                def find(self,name,recursive):return [NS(textual_declaration=text(),textual_implementation=text())] if name=='PLC_PRG' else []
+                def find(self,name,recursive):return [NS(),NS(textual_declaration=text(),textual_implementation=text())] if name=='PLC_PRG' else []
                 def create_function_block(self,name):calls.append(('create',name));return NS(textual_declaration=text(),textual_implementation=text())
                 def rebuild(self):calls.append(('rebuild',))
                 def generate_code(self):calls.append(('generate',))

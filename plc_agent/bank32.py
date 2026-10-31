@@ -52,6 +52,7 @@ def author_packet(task: dict, current_source: str = "", failure=None):
         "title": task["title"],
         "block": task["block"],
         "requirements": task["requirements"],
+        "additional_constraints": task.get("constraints", []),
         "interface": task["interface"],
         "ltl_requirements": task.get("ltl", {}),
         "backend_notes": BACKEND_NOTES,

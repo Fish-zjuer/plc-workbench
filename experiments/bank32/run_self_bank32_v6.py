@@ -40,6 +40,12 @@ def tolerant_json(text):
 
 
 def config_for(model: str) -> ModelConfig:
+    if os.environ.get("PLC_AGENT_PROVIDER", "").lower() == "dmxapi":
+        cfg = ModelConfig.dmxapi(model=model, context_window=128000,
+                                max_output_tokens=32768, max_steps=24, timeout=180)
+        if not cfg.api_key:
+            raise SystemExit("missing DMXAPI_API_KEY")
+        return cfg
     if model.startswith("qwen"):
         key = os.environ.get("DASHSCOPE_API_KEY", "")
         if not key:
@@ -67,7 +73,7 @@ def main() -> int:
     cfg = config_for(model)
     cfg.validate()
     provider = ChatProvider(cfg)
-    root = OUT / ("self_" + model)
+    root = OUT / ("self_" + re.sub(r"[^A-Za-z0-9_.-]", "_", model))
     consecutive_errors = 0
     for ident in ids:
         directory = root / ident

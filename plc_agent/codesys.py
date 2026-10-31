@@ -84,20 +84,28 @@ def fingerprint(config=None):
     return _identity(_identity_files(cfg),json.dumps(cfg,sort_keys=True))
 
 @contextmanager
-def profile_lease(cfg):
+def profile_lease(cfg,cancel_event=None):
     key=digest({k:cfg.get(k) for k in ('executable','profile','additional_folder')})
     path=work_root().parent/(key+'.lock')
     with path.open('a+b') as stream:
         if path.stat().st_size==0:stream.write(b'0');stream.flush()
         stream.seek(0)
-        try:
-            if os.name=='nt':
-                import msvcrt
-                msvcrt.locking(stream.fileno(),msvcrt.LK_NBLCK,1)
-            else:
-                import fcntl
-                fcntl.flock(stream.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
-        except OSError:raise BackendError({'status':'backend_busy','message':'This CODESYS profile is already running another workbench invocation'}) from None
+        queued=time.monotonic()
+        while True:
+            if time.monotonic()-queued>1800:raise BackendError({'status':'timeout','phase':'codesys_queue','message':'CODESYS queue wait exceeded 1800 seconds'})
+            if cancel_event and cancel_event.is_set():raise Cancelled('CODESYS queue cancelled')
+            try:
+                if os.name=='nt':
+                    import msvcrt
+                    msvcrt.locking(stream.fileno(),msvcrt.LK_NBLCK,1)
+                else:
+                    import fcntl
+                    fcntl.flock(stream.fileno(),fcntl.LOCK_EX|fcntl.LOCK_NB)
+                break
+            except OSError:
+                if cancel_event is None:
+                    raise BackendError({'status':'backend_busy','message':'This CODESYS profile is already running another workbench invocation'}) from None
+                cancel_event.wait(.1)
         try:yield
         finally:
             stream.seek(0)
@@ -107,7 +115,7 @@ def profile_lease(cfg):
 def invoke(payload,directory,config=None,cancel_event=None):
     cfg=load_config() if config is None else config
     validate_config(cfg,require_template=payload.get('action')!='probe')
-    with profile_lease(cfg):return _invoke(payload,directory,cfg,cancel_event)
+    with profile_lease(cfg,cancel_event):return _invoke(payload,directory,cfg,cancel_event)
 
 def _invoke(payload,directory,cfg,cancel_event):
     directory=Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
@@ -125,6 +133,7 @@ def _invoke(payload,directory,cfg,cancel_event):
         if cfg.get('additional_folder'):args+=' --additionalfolder="'+cfg['additional_folder']+'"'
     env={k:v for k,v in os.environ.items() if not k.startswith('PLC_AGENT_')}
     env['PLC_WORKBENCH_REQUEST']=str(directory/'request.json')
+    env['PLC_WORKBENCH_EXECUTABLE']=str(Path(cfg['executable']).resolve())
     started=time.monotonic()
     process=subprocess.Popen(args,cwd=directory,env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
         creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
@@ -147,7 +156,7 @@ def _invoke(payload,directory,cfg,cancel_event):
     if not response.is_file():
         raise BackendError({'status':'tool_error','phase':'codesys','returncode':process.returncode,
              'message':'CODESYS did not write an authenticated run response; inspect exact profile and script logs.',
-             'stderr':err.decode('utf-8','replace')[-3000:]})
+             'stderr':err.decode('utf-8','replace')[-3000:], 'stdout':out.decode('utf-8','replace')[-3000:], 'evidence_path':str(directory)})
     try:value=json.loads(response.read_text(encoding='utf-8'))
     except (ValueError,OSError) as exc:raise BackendError({'status':'protocol_error','message':'Invalid CODESYS response JSON'}) from exc
     if not isinstance(value,dict):raise BackendError({'status':'protocol_error','message':'Expected a CODESYS response object'})

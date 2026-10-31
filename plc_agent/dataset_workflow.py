@@ -56,7 +56,9 @@ def compact(result):
 
 def usage_totals(metrics):
     """Sum provider usage records into prompt/completion/total/cost counters."""
-    total={'prompt_tokens':0,'completion_tokens':0,'total_tokens':0,'cost':0.0}
+    total={'prompt_tokens':0,'completion_tokens':0,'total_tokens':0,'cost':0.0,
+           'usage_calls':sum(bool(m.get('usage')) for m in metrics),
+           'complete':all(bool(m.get('usage')) for m in metrics)}
     for metric in metrics:
         usage=metric.get('usage') or {}
         for key in ('prompt_tokens','completion_tokens','total_tokens'):
@@ -66,8 +68,8 @@ def usage_totals(metrics):
         if isinstance(cost,(int,float)):total['cost']+=cost
     return total
 
-def run(task_id,source,directory,config,*,seed=None,max_revisions=3,review=True,notify=print,provider=None):
-    task=dataset.load(task_id);source=Path(source);directory=Path(directory);directory.mkdir(parents=True,exist_ok=True)
+def run(task_id,source,directory,config,*,seed=None,max_revisions=3,review=True,notify=print,provider=None,task_override=None,evaluator=None):
+    task=task_override if task_override is not None else dataset.load(task_id);source=Path(source);directory=Path(directory);directory.mkdir(parents=True,exist_ok=True)
     source.parent.mkdir(parents=True,exist_ok=True)
     if seed and not source.exists():shutil.copyfile(seed,source)
     source_origin='saved weak-model candidate' if source.exists() else 'new weak-model generation'
@@ -76,7 +78,14 @@ def run(task_id,source,directory,config,*,seed=None,max_revisions=3,review=True,
     provider=provider or ChatProvider(config);attempts=[];result=None;status='revision_limit';reviews=[];proposal_failure=None;supplied_result=None
     metric_provider=getattr(provider,'provider',provider);metrics_start=len(getattr(metric_provider,'metrics',[]));started=time.monotonic()
     def evaluate():
-        try:return dataset.evaluate(source,task)
+        try:
+            if evaluator is not None:return evaluator(source,task)
+            if not task.get('scenarios'):
+                artifact=dataset.compile_task(source,task)
+                return {'status':'compiled_without_tests','source_sha256':artifact['source_sha256'],
+                        'message':'Local compilation only; no functional tests supplied',
+                        'target_compile':'not_executed'}
+            return dataset.evaluate(source,task)
         except BackendError as exc:return exc.result
         except (ValueError,OSError) as exc:return {'status':'invalid_candidate','message':str(exc)}
     try:
@@ -86,6 +95,7 @@ def run(task_id,source,directory,config,*,seed=None,max_revisions=3,review=True,
                 result=evaluate();atomic_json(directory/f'evaluation_{revision:02d}.json',result)
                 notify(task_id+' '+result['status'])
                 if result['status']=='pass':status='finite_pass';break
+                if result['status']=='compiled_without_tests':status='compiled_without_tests';break
                 # A candidate-caused execution crash (runtime_error) is repairable;
                 # only infrastructure/tool failures stop the chain.
                 if result['status'] in ('missing_dependency','timeout','tool_error','protocol_error','stale_source'):
@@ -157,7 +167,7 @@ def run(task_id,source,directory,config,*,seed=None,max_revisions=3,review=True,
         'dataset_sha256':task['dataset_sha256'],'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest() if source.exists() else None,
         'attempts':attempts,'model':config.model,'model_calls':len(metrics),
         'token_usage':usage_totals(metrics),'metrics':metrics,'seconds':round(time.monotonic()-started,3),
-        'final_evaluation':compact(result),'reviews':reviews,'target_compile':'not_executed',
+        'final_evaluation':compact(result),'reviews':reviews,'target_compile':(result or {}).get('target_compile','not_executed'),
         'supplied_evaluation':compact(supplied_result),
         'ltl_status':'requirements_only_not_executed','scope':'Adaptive repair on supplied tests; no held-out accuracy claim. Review expectations remain advisory, not frozen oracle.'}
     atomic_json(directory/'receipt.json',receipt);return receipt

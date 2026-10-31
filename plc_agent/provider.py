@@ -61,6 +61,8 @@ class ChatProvider:
             from dataclasses import replace
             replace(self.config,extra_body=extra_body).validate()
             body.update(extra_body)
+        if body.get("stream"):
+            body.setdefault("stream_options", {"include_usage": True})
         started = time.monotonic()
         if tools:
             body.update(tools=tools, tool_choice="auto")
@@ -71,13 +73,13 @@ class ChatProvider:
         request = urllib.request.Request(self.config.endpoint,
                                          data=json.dumps(body, ensure_ascii=False, allow_nan=False).encode("utf-8"),
                                          headers=headers, method="POST")
-        for attempt in range(3):
+        for attempt in range(self.config.transport_retries+1):
             if self.cancel_event.is_set():raise Cancelled('已停止')
             try:
                 self._response = urllib.request.urlopen(request, timeout=self.config.timeout)
                 break
             except urllib.error.HTTPError as exc:
-                if exc.code in (429, 502, 503, 504) and attempt < 2:
+                if exc.code in (429, 502, 503, 504) and attempt < self.config.transport_retries:
                     exc.close()
                     if self.cancel_event.wait(2 ** attempt):
                         raise Cancelled("已停止")

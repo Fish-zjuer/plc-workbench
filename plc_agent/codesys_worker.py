@@ -16,7 +16,7 @@ def main():
     from System.Diagnostics import FileVersionInfo
     request_path=os.environ['PLC_WORKBENCH_REQUEST']
     with codecs.open(request_path,'r','utf-8') as stream:request=json.load(stream)
-    result={'vendor':'CODESYS','vendor_version':FileVersionInfo.GetVersionInfo(system.executable_filename).FileVersion,
+    result={'vendor':'CODESYS','vendor_version':FileVersionInfo.GetVersionInfo(os.environ.get('PLC_WORKBENCH_EXECUTABLE',system.executable_filename)).FileVersion,
             'nonce':request['nonce'],'source_sha256':request.get('source_sha256'),
             'status':'error','target_compile':'not_executed','simulation':False}
     project=None
@@ -49,10 +49,24 @@ def main():
             result['simulation']=True
             existing=app.find(request['block'],True)
             if existing:raise RuntimeError('Dedicated template unexpectedly already contains the candidate block')
-            candidate=app.create_function_block(request['block'])
-            candidate.textual_declaration.replace(request['declaration'])
-            candidate.textual_implementation.replace(request['implementation'])
-            programs=app.find('PLC_PRG',True)
+            if request.get('units'):
+                from scriptengine import PouType
+                for unit in request['units']:
+                    if app.find(unit['name'],True):raise RuntimeError('Template name conflict: '+unit['name'])
+                    if unit['kind']=='TYPE':candidate=app.create_dut(name=unit['name'])
+                    else:
+                        kwargs={'name':unit['name'],'type':{'FUNCTION_BLOCK':PouType.FunctionBlock,
+                            'FUNCTION':PouType.Function,'PROGRAM':PouType.Program}[unit['kind']]}
+                        if unit.get('return_type'):kwargs['return_type']=unit['return_type']
+                        candidate=app.create_pou(**kwargs)
+                    candidate.textual_declaration.replace(unit['declaration'])
+                    if 'implementation' in unit:candidate.textual_implementation.replace(unit['implementation'])
+            else:
+                candidate=app.create_function_block(request['block'])
+                candidate.textual_declaration.replace(request['declaration'])
+                candidate.textual_implementation.replace(request['implementation'])
+            programs=[obj for obj in app.find('PLC_PRG',True)
+                      if hasattr(obj,'textual_declaration') and hasattr(obj,'textual_implementation')]
             if len(programs)!=1:raise RuntimeError('Template must schedule exactly one empty PLC_PRG program')
             harness=programs[0]
             harness.textual_declaration.replace(request['harness_declaration'])
