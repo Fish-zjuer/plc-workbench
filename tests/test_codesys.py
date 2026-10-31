@@ -81,6 +81,23 @@ class CodesysTests(unittest.TestCase):
         for key,value in [('nonce','wrong'),('source_sha256','wrong'),('vendor','fake'),('vendor_version','')]:
             with self.subTest(key=key),patch.object(codesys.subprocess,'Popen',side_effect=self.transport(lambda r:r.update({key:value}))):
                 with self.assertRaises(BackendError):codesys.invoke({'action':'probe','source_sha256':None},self.root/key,self.cfg)
+    def test_timeout_retains_logs_and_stage(self):
+        class Process:
+            pid=123;returncode=None
+            def __init__(self,args,**kwargs):
+                path=Path(kwargs['env']['PLC_WORKBENCH_REQUEST']).parent
+                (path/'progress.json').write_text(json.dumps({'stage':'opening_project'}))
+            def communicate(self,timeout=None):return b'last stdout',b'last stderr'
+            def poll(self):return None
+            def kill(self):pass
+        with patch.object(codesys.subprocess,'Popen',side_effect=Process),patch.object(codesys.subprocess,'run'),patch.object(codesys.time,'monotonic',side_effect=[0,999,1000]):
+            with self.assertRaises(BackendError) as caught:
+                codesys._invoke({'action':'probe','source_sha256':None},self.root/'timeout_run',self.cfg,None)
+        self.assertEqual(caught.exception.result['status'],'timeout')
+        self.assertEqual(caught.exception.result['last_stage'],'opening_project')
+        self.assertEqual((self.root/'timeout_run'/'stdout.log').read_bytes(),b'last stdout')
+        self.assertEqual((self.root/'timeout_run'/'stderr.log').read_bytes(),b'last stderr')
+
     def test_timer_program_cannot_enter_clock_independent_simulation(self):
         code=GOOD.replace('VAR_OUTPUT','VAR t : TON; END_VAR\nVAR_OUTPUT')
         with patch.object(codesys,'load_config',return_value=self.cfg):

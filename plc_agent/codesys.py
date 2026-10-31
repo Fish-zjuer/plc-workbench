@@ -137,11 +137,14 @@ def _invoke(payload,directory,cfg,cancel_event):
     started=time.monotonic()
     process=subprocess.Popen(args,cwd=directory,env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
         creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
+    out,err=b'',b''
+    timed_out=False
     try:
         while True:
             if cancel_event and cancel_event.is_set():raise Cancelled('CODESYS run cancelled')
             if time.monotonic()-started>cfg.get('timeout_seconds',120):
-                raise BackendError({'status':'timeout','phase':'codesys','message':'CODESYS headless invocation timed out'})
+                timed_out=True
+                break
             try:out,err=process.communicate(timeout=.25);break
             except subprocess.TimeoutExpired:pass
     finally:
@@ -150,8 +153,19 @@ def _invoke(payload,directory,cfg,cancel_event):
                 subprocess.run(['taskkill.exe','/PID',str(process.pid),'/T','/F'],capture_output=True,
                                creationflags=subprocess.CREATE_NO_WINDOW)
             else:process.kill()
-            process.communicate()
-    (directory/'stdout.log').write_bytes(out);(directory/'stderr.log').write_bytes(err)
+            out,err=process.communicate()
+        (directory/'stdout.log').write_bytes(out);(directory/'stderr.log').write_bytes(err)
+    if timed_out:
+        progress={}
+        try:progress=json.loads((directory/'progress.json').read_text(encoding='utf-8'))
+        except (OSError,ValueError):pass
+        raise BackendError({'status':'timeout','phase':'codesys',
+            'message':'CODESYS headless invocation timed out',
+            'elapsed_seconds':round(time.monotonic()-started,3),
+            'last_stage':progress.get('stage','before_worker_started'),
+            'evidence_path':str(directory),
+            'stdout':out.decode('utf-8','replace')[-3000:],
+            'stderr':err.decode('utf-8','replace')[-3000:]})
     response=directory/'response.json'
     if not response.is_file():
         raise BackendError({'status':'tool_error','phase':'codesys','returncode':process.returncode,

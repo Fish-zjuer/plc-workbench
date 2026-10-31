@@ -20,6 +20,11 @@ def main():
             'nonce':request['nonce'],'source_sha256':request.get('source_sha256'),
             'status':'error','target_compile':'not_executed','simulation':False}
     project=None
+    def stage(name):
+        path=os.path.join(os.path.dirname(request['output']),'progress.json')
+        with codecs.open(path,'w','utf-8') as stream:
+            stream.write(json.dumps({'stage':name,'timestamp':time.time()},ensure_ascii=True))
+    stage('worker_started')
     def messages():
         records=[]
         for category in system.get_message_categories():
@@ -34,6 +39,7 @@ def main():
             folder=os.path.dirname(request['output'])
             local=os.path.join(folder,'work.project')
             shutil.copyfile(request['template_project'],local)
+            stage('opening_project')
             project=projects.open(local)
             apps=[obj for obj in project.get_children(True) if hasattr(obj,'is_application') and obj.is_application]
             if len(apps)!=1:raise RuntimeError('Template must contain exactly one application')
@@ -44,6 +50,7 @@ def main():
                 device=device.parent
                 if device is None:raise RuntimeError('No application device found')
             if not hasattr(device,'set_simulation_mode'):raise RuntimeError('No simulation-capable application device')
+            stage('enabling_simulation')
             device.set_simulation_mode(True)
             if not device.get_simulation_mode():raise RuntimeError('Simulation mode was not enabled; online login is forbidden')
             result['simulation']=True
@@ -72,16 +79,20 @@ def main():
             harness.textual_declaration.replace(request['harness_declaration'])
             harness.textual_implementation.replace(request['harness_body'])
             for category in system.get_message_categories():system.clear_messages(category)
+            stage('rebuilding')
             app.rebuild()
+            stage('generating_code')
             app.generate_code()
             result['diagnostics']=messages()
             result['compile_errors']=sum(len(system.get_message_objects(c,Severity.Error)) for c in system.get_message_categories())
             if result['compile_errors']:raise RuntimeError('CODESYS reported compiler errors')
             image=os.path.join(folder,'compiled.app')
+            stage('creating_boot_image')
             app.create_boot_application(image)
             if not os.path.isfile(image) or os.path.getsize(image)==0:raise RuntimeError('CODESYS produced no compiled application image')
             with open(image,'rb') as stream:result['compiled_image_sha256']=hashlib.sha256(stream.read()).hexdigest()
             result['target_compile']='passed'
+            stage('saving_project')
             project.save()
             if request['action']=='simulate':
                 # Simulation is rechecked immediately before every online operation.
@@ -115,10 +126,13 @@ def main():
         except Exception:pass
     finally:
         if project is not None:
-            try:project.close()
+            try:
+                stage('closing_project')
+                project.close()
             except Exception:pass
         with codecs.open(request['output'],'w','utf-8') as stream:
             stream.write(json.dumps(result,ensure_ascii=True,indent=2))
+    stage('response_written')
     if result['status']=='error':system.exit(1)
 
 if __name__=='__main__':main()

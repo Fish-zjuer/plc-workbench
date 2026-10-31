@@ -27,21 +27,35 @@ def compile_dataset(source, task, config=None, cancel_event=None):
             bindings.append(port['name']+' := '+name)
     declarations.append('END_VAR')
     before=codesys.fingerprint(cfg)
-    directory=Path(tempfile.mkdtemp(prefix='dataset_compile_',dir=codesys.work_root()))
-    try:
-        value=codesys.invoke({'action':'compile','source_sha256':hashlib.sha256(data).hexdigest(),
-            'block':task['block'],'template_project':cfg['template_project'],'units':units,
-            'harness_declaration':'\n'.join(declarations),'harness_body':'WB_Uut('+', '.join(bindings)+');'},
-            directory,config=cfg,cancel_event=cancel_event)
-    except BackendError as exc:
-        raise BackendError({**exc.result,'evidence_path':str(directory),
-            'source_sha256':hashlib.sha256(data).hexdigest(), 'dataset_sha256':task['dataset_sha256']}) from exc
+    attempts=[]
+    for attempt in range(2):
+        if cancel_event and cancel_event.is_set():
+            from .provider import Cancelled
+            raise Cancelled('CODESYS compilation cancelled')
+        if source.read_bytes()!=data or before!=codesys.fingerprint(cfg):
+            raise BackendError({'status':'stale_evidence','message':'Source or vendor environment changed before compilation'})
+        directory=Path(tempfile.mkdtemp(prefix='dataset_compile_',dir=codesys.work_root()))
+        try:
+            value=codesys.invoke({'action':'compile','source_sha256':hashlib.sha256(data).hexdigest(),
+                'block':task['block'],'template_project':cfg['template_project'],'units':units,
+                'harness_declaration':'\n'.join(declarations),'harness_body':'WB_Uut('+', '.join(bindings)+');'},
+                directory,config=cfg,cancel_event=cancel_event)
+            attempts.append({'attempt':attempt+1,'status':'compiled','evidence_path':str(directory)})
+            break
+        except BackendError as exc:
+            failure={**exc.result,'evidence_path':str(directory),
+                'source_sha256':hashlib.sha256(data).hexdigest(),'dataset_sha256':task['dataset_sha256']}
+            attempts.append({'attempt':attempt+1,**failure})
+            atomic_json(directory/'attempt_failure.json',failure)
+            # Only transient IDE execution timeouts; never retry compiler rejection.
+            if failure.get('status')!='timeout' or failure.get('phase')!='codesys' or attempt==1:
+                raise BackendError({**failure,'compile_attempts':attempts}) from exc
     if before!=codesys.fingerprint(cfg) or source.read_bytes()!=data:
         raise BackendError({'status':'stale_evidence','message':'Source or vendor environment changed'})
     result={'status':'compiled_unit','target_compile':value['target_compile'],
         'vendor_version':value['vendor_version'],'source_sha256':hashlib.sha256(data).hexdigest(),
         'dataset_sha256':task['dataset_sha256'],'execution_fingerprint':before,
-        'evidence_path':str(directory),'diagnostics':value.get('diagnostics',[]),'behavior_tested':False}
+        'evidence_path':str(directory),'compile_attempts':attempts,'diagnostics':value.get('diagnostics',[]),'behavior_tested':False}
     atomic_json(directory/'result.json',result)
     return result
 

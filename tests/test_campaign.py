@@ -27,6 +27,26 @@ class CampaignTests(unittest.TestCase):
             with self.assertRaisesRegex(ProviderError,'model_call_limit'):t.complete([])
         self.assertEqual(t.calls,24);self.assertEqual(len(t.metrics),24)
         self.assertFalse(t.receipt('agent_error')['token_usage']['complete'])
+    def test_transient_retry_counts_every_request(self):
+        t=self.trial()
+        def respond(*args,**kwargs):
+            if t.calls<3:raise ProviderError('模型连接失败: timed out')
+            t.provider.metrics.append({'usage':{'total_tokens':10}})
+            return {'text':'ok'}
+        with patch.object(t.provider,'complete',side_effect=respond),patch.object(t.stop,'wait',return_value=False):
+            self.assertEqual(t.complete([])['text'],'ok')
+        self.assertEqual(t.calls,3);self.assertEqual(len(t.metrics),3)
+
+    def test_truncated_response_retains_real_usage_without_retry(self):
+        t=self.trial()
+        def respond(*args,**kwargs):
+            t.provider.metrics.append({'usage':{'total_tokens':123}})
+            raise ProviderError('模型响应未完成（length）')
+        with patch.object(t.provider,'complete',side_effect=respond):
+            with self.assertRaises(ProviderError):t.complete([])
+        self.assertEqual(t.calls,1)
+        self.assertEqual(t.metrics[0]['usage']['total_tokens'],123)
+
     def test_source_versions_dedup_and_limit(self):
         t=self.trial()
         with patch.object(campaign,'evaluate_candidate',return_value={'status':'fail'}) as evaluate:
@@ -67,6 +87,27 @@ class CampaignTests(unittest.TestCase):
         self.assertEqual(sorted(x[0] for x in seen),['A','A','B','B'])
         self.assertEqual(len({x[1] for x in seen}),1)
         self.assertNotIn('fixture-key',json.dumps(result))
+    def test_model_controls_shared_between_frameworks_and_recorded(self):
+        runner=campaign.Campaigns(self.path);self.cfg.save(self.path)
+        ready={'errors':[],'codesys':{},'codex_path':'fixture'}
+        seen=[]
+        def fake(trial,*_):
+            seen.append((trial.cfg.model,dict(trial.cfg.extra_body)))
+            return trial.receipt('finite_pass')
+        settings=[{'mode':'off'},{'mode':'on','budget':2000}]
+        with patch.object(campaign,'preflight',return_value=ready),patch.object(campaign,'run_self',side_effect=fake),patch.object(campaign,'run_codex',side_effect=fake):
+            job=runner.start({'models':['deepseek-v4.1-flash-1017','qwen3.8-flash'],'model_settings':settings,'task_ids':['PUBLIC_01'],'codesys':False})
+            deadline=time.monotonic()+15
+            while job['id'] in runner.active and time.monotonic()<deadline:time.sleep(.01)
+        record=runner.read(job['id'])
+        self.assertEqual(record['completed'],4)
+        self.assertEqual(record['model_settings'],settings)
+        for model in record['models']:
+            rows=[s for m,s in seen if m==model]
+            self.assertEqual(len(rows),2);self.assertEqual(rows[0],rows[1])
+        self.assertNotIn('fixture-key',json.dumps(record))
+        self.assertEqual(record['model_configurations']['qwen3.8-flash']['extra_body']['thinking_budget'],2000)
+
     def test_160_tasks_schedule_640_trials(self):
         runner=campaign.Campaigns(self.path)
         self.cfg.save(self.path)
@@ -85,11 +126,13 @@ class CampaignTests(unittest.TestCase):
     def test_concurrency_limit_and_complete_results(self):
         runner=campaign.Campaigns(self.path);self.cfg.save(self.path)
         ready={'errors':[],'codesys':{},'codex_path':'fixture'}
-        lock=threading.Lock();running=0;peak=0
+        lock=threading.Lock();running=0;peak=0;release=threading.Event()
         def fake(trial,*_):
             nonlocal running,peak
-            with lock:running+=1;peak=max(peak,running)
-            time.sleep(.05)
+            with lock:
+                running+=1;peak=max(peak,running)
+                if running==3:release.set()
+            release.wait(5)
             with lock:running-=1
             return trial.receipt('finite_pass')
         with patch.object(campaign,'preflight',return_value=ready),patch.object(campaign,'run_self',side_effect=fake),patch.object(campaign,'run_codex',side_effect=fake):
@@ -150,6 +193,30 @@ class CampaignTests(unittest.TestCase):
         with patch.object(codesys_dataset,'compile_dataset',side_effect=BackendError({'status':'compile_error','diagnostics':['bad']})),patch.object(dataset,'evaluate') as evaluate:
             result=codesys_dataset.evaluate_candidate('fixture',self.task,{'configured':True})
         self.assertEqual(result['target_compile'],'failed');evaluate.assert_not_called()
+    def test_vendor_timeout_retries_same_source_and_keeps_both_attempts(self):
+        source=self.path/'timeout_candidate.st'
+        source.write_text('FUNCTION_BLOCK Foo\nVAR X : BOOL; END_VAR\nX := TRUE;\nEND_FUNCTION_BLOCK')
+        task={'block':'Foo','interface':[],'dataset_sha256':'test'}
+        requests=[]
+        def invoke(request,directory,**kwargs):
+            requests.append((request,directory))
+            if len(requests)==1:raise BackendError({'status':'timeout','phase':'codesys'})
+            return {'target_compile':'passed','vendor_version':'fixture'}
+        with patch.object(codesys_dataset.codesys,'validate_config'),patch.object(codesys_dataset.codesys,'fingerprint',return_value='frozen'),patch.object(codesys_dataset.codesys,'work_root',return_value=self.path),patch.object(codesys_dataset.codesys,'invoke',side_effect=invoke):
+            result=codesys_dataset.compile_dataset(source,task,{'template_project':'fixture'})
+        self.assertEqual(len(result['compile_attempts']),2)
+        self.assertEqual(requests[0][0],requests[1][0])
+        self.assertNotEqual(requests[0][1],requests[1][1])
+        self.assertTrue((requests[0][1]/'attempt_failure.json').exists())
+
+    def test_vendor_rejection_is_not_retried(self):
+        source=self.path/'bad_candidate.st'
+        source.write_text('FUNCTION_BLOCK Foo\nEND_FUNCTION_BLOCK')
+        task={'block':'Foo','interface':[],'dataset_sha256':'test'}
+        with patch.object(codesys_dataset.codesys,'validate_config'),patch.object(codesys_dataset.codesys,'fingerprint',return_value='frozen'),patch.object(codesys_dataset.codesys,'work_root',return_value=self.path),patch.object(codesys_dataset.codesys,'invoke',side_effect=BackendError({'status':'compile_error','phase':'codesys'})) as invoke:
+            with self.assertRaises(BackendError):codesys_dataset.compile_dataset(source,task,{'template_project':'fixture'})
+        self.assertEqual(invoke.call_count,1)
+
     def test_vendor_multiu_unit_import_and_digest(self):
         t={'block':'Foo','interface':[],'dataset_sha256':'test'}
         source=self.path/'candidate.st'

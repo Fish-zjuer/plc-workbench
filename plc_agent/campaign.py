@@ -19,6 +19,7 @@ from .codesys_dataset import evaluate_candidate
 from .config import ROOT, STATE_ROOT, ModelConfig
 from .imported_bank import ImportedBank
 from .provider import ChatProvider, ProviderError
+from .inference import inference_config
 from .storage import atomic_json, read_json
 
 LIMITS={'source_versions':6,'model_requests':24,'seconds':1800}
@@ -66,7 +67,13 @@ def preflight(home=STATE_ROOT, require_vendor=True):
     from plc_probe.config import toolchain_dir
     if not (toolchain_dir()/('strucpp.exe' if os.name=='nt' else 'strucpp')).is_file(): errors.append('本地 ST 编译器未配置')
     if not (os.environ.get('CXX') or shutil.which('g++')): errors.append('g++ 未配置（CXX 或 PATH）')
-    return {'status':'ready' if not errors else 'setup_required','errors':errors,
+    from .backend_r4 import info
+    backend=None
+    try:
+        backend=info()
+        if backend is None:errors.append('当前本地后端为原版，缺少工作台声明的 LTIME/开放数组支持；请运行 python -m plc_agent.backend_r4 activate')
+    except (ValueError,OSError) as exc:errors.append('本地扩展后端校验失败: '+str(exc))
+    return {'local_backend':{'home':str(toolchain_dir()),'extension':backend.get('extension') if backend else None,'fingerprint':backend.get('fingerprint') if backend else None},'status':'ready' if not errors else 'setup_required','errors':errors,
         'codex_path':str(cli) if cli else None,'codex_version':version,
         'vendor_required':require_vendor,'codesys':vendor,'limits':LIMITS,'tools':tools}
 
@@ -75,22 +82,33 @@ class Trial:
     def __init__(self,path,task,cfg,vendor,stop):
         self.path=Path(path); self.path.mkdir(parents=True,exist_ok=True)
         self.task=task;self.cfg=cfg;self.vendor=vendor;self.stop=stop
-        self.provider=ChatProvider(replace(cfg,stream=False,transport_retries=0)); self.metrics=[]
+        self.provider=ChatProvider(replace(cfg,transport_retries=0)); self.metrics=[]
         self.calls=0;self.started=time.monotonic();self.submissions={};self.lock=threading.RLock()
         atomic_json(self.path/'task_snapshot.json',task)
     def complete(self,messages,tools=None,on_delta=None,**kwargs):
-        with self.lock:
-            if self.stop.is_set() or time.monotonic()-self.started>LIMITS['seconds']:
-                self.provider.cancel(); raise ProviderError('Campaign stopped or task timed out')
-            if self.calls>=LIMITS['model_requests']: raise ProviderError('model_call_limit')
-            self.calls+=1
-            self.provider.config=replace(self.provider.config, timeout=max(5,min(self.cfg.timeout,int(LIMITS['seconds']-(time.monotonic()-self.started)))))
-        try:
-            # Meter actual upstream HTTP requests, including retryable HTTP failures.
-            answer=self.provider.complete(messages,tools,on_delta,**kwargs)
-            self.metrics.append(self.provider.metrics[-1]); return answer
-        except Exception:
-            self.metrics.append({'usage':{},'status':'request_error'});raise
+        # Shared policy for self and Codex: at most three transport attempts.
+        # Every actual request consumes the same per-task budget.
+        for attempt in range(3):
+            with self.lock:
+                if self.stop.is_set() or time.monotonic()-self.started>LIMITS['seconds']:
+                    self.provider.cancel(); raise ProviderError('Campaign stopped or task timed out')
+                if self.calls>=LIMITS['model_requests']: raise ProviderError('model_call_limit')
+                self.calls+=1
+                self.provider.config=replace(self.provider.config, timeout=max(5,min(self.cfg.timeout,int(LIMITS['seconds']-(time.monotonic()-self.started)))))
+            before=len(self.provider.metrics)
+            try:
+                answer=self.provider.complete(messages,tools,on_delta,**kwargs)
+                self.metrics.append(self.provider.metrics[-1]); return answer
+            except Exception as exc:
+                # A rejected/truncated response can still contain billable usage.
+                metric=dict(self.provider.metrics[-1]) if len(self.provider.metrics)>before else {'usage':{}}
+                message=str(exc).replace(self.cfg.api_key,'[redacted]') if self.cfg.api_key else str(exc)
+                metric.update(status='request_error',error=message)
+                self.metrics.append(metric)
+                transient=isinstance(exc,ProviderError) and any(token in message for token in (
+                    '模型连接失败','HTTP 429','HTTP 502','HTTP 503','HTTP 504','timed out','UNEXPECTED_EOF','模型流提前中断'))
+                if not transient or attempt==2:raise
+                if self.stop.wait(2**attempt):raise ProviderError('Campaign stopped')
     @property
     def cancel_event(self):return self.stop
     def check(self,text):
@@ -113,7 +131,7 @@ class Trial:
             return result
     def receipt(self,status,extra=None):
         value={'task_id':self.task['id'],'dataset_sha256':self.task['dataset_sha256'],
-            'model':self.cfg.model,'status':status,'model_calls':self.calls,
+            'model':self.cfg.model,'inference_parameters':self.cfg.extra_body,'status':status,'model_calls':self.calls,
             'token_usage':dataset_workflow.usage_totals(self.metrics),'metrics':self.metrics,
             'seconds':round(time.monotonic()-self.started,3),'evidence_path':str(self.path),'submissions':list(self.submissions.values()),
             'limits':LIMITS, **(extra or {})}
@@ -253,6 +271,10 @@ class Campaigns:
             if len(model)>200 or any(ord(c)<32 for c in model):raise ValueError('Invalid model ID')
         concurrency=data.get('concurrency',16)
         if type(concurrency) is not int or concurrency<1:raise ValueError('并发数必须为正整数')
+        settings=data.get('model_settings',[{},{}])
+        if not isinstance(settings,list) or len(settings)!=2:raise ValueError('需要模型 A、B 的两份推理设置')
+        cfg=ModelConfig.load(self.home)
+        model_configs={m:inference_config(cfg,m,s) for m,s in zip(models,settings)}
         ready=preflight(self.home,vendor_required)
         if ready['errors']:raise ValueError('\n'.join(ready['errors']))
         bank=ImportedBank(self.home);tasks=[bank.load(ident) for ident in ids]
@@ -269,7 +291,8 @@ class Campaigns:
                      for p in [*sorted((ROOT/'plc_agent').glob('*.py'))]}
         record={'id':ident,'status':'running','models':models,'task_ids':ids,'total':4*len(tasks),
             'completed':0,'results':[],'summary':summarize([],expected),'limits':LIMITS,
-            'model_configuration':cfg.public(),'code_hashes':code_hashes,'preflight':ready,
+            'model_configuration':cfg.public(),'model_settings':settings,
+            'model_configurations':{m:c.public() for m,c in model_configs.items()},'code_hashes':code_hashes,'preflight':ready,
             'task_count':len(tasks),'concurrency':concurrency,
             'scope':'CODESYS compilation + local finite tests' if vendor_required else 'Local-only pilot; not assignment vendor evidence'}
         atomic_json(path/'tasks.json',tasks);atomic_json(path/'campaign.json',record)
@@ -281,7 +304,7 @@ class Campaigns:
                 jobs=iter((framework,model,index,task) for index,task in enumerate(tasks) for framework,model in expected)
                 def execute(job):
                     framework,model,index,task=job
-                    trial=Trial(path/framework/str(models.index(model))/str(index),task,replace(cfg,model=model),ready['codesys'] if vendor_required else None,stop)
+                    trial=Trial(path/framework/str(models.index(model))/str(index),task,model_configs[model],ready['codesys'] if vendor_required else None,stop)
                     try:
                         value=run_self(trial) if framework=='self' else run_codex(trial,Path(ready['codex_path']))
                     except Exception as exc:

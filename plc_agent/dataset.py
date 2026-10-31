@@ -139,7 +139,7 @@ def commands(task,artifact):
         if fmt=='analog_reference_rows':lines.append('R '+' '.join(str(case[k]) for k in ('analog_length','analog_lower','channel_length','channel_lower')))
         elif fmt=='fifo_reference_rows':lines.append(f"R {case['kind']} {case['capacity']}")
         else:lines.append('R')
-        if fmt=='struct_rows' and task['id']=='PUBLIC_17':lines.append('D '+token([v for record in case['initial'] for v in record]))
+        if fmt=='struct_rows' and 'initial' in case:lines.append('D '+token([v for record in case['initial'] for v in record]))
         for row in case.get('trace',case.get('rows',[])):
             if fmt=='analog_reference_rows':values=[row['count'],*row['raw'],*[v for record in row['channels'] for v in record]]
             elif fmt=='fifo_reference_rows':values=[row['enqueue'],row['dequeue'],row['reset'],row['item']]
@@ -155,7 +155,7 @@ def equal(actual,expected,task,name=''):
     if type(expected) in (int,float):
         if not math.isfinite(actual):return False
         tolerances=task.get('tolerance',{});default=1e-9 if dtype=='LREAL' else 1e-5
-        absolute=tolerances.get(name,tolerances.get('default_absolute',default));relative=0 if task['id'].startswith('CUSTOM') else default
+        absolute=tolerances.get(name,tolerances.get('default_absolute',default));relative=0 if task.get('original_id',task['id']).split('__')[-1].startswith('CUSTOM') else default
         if task['adapter_format']=='analog_reference_rows':absolute=relative=1e-6
         if task['adapter_format']=='fifo_reference_rows':absolute=relative=1e-6 if task.get('reference_kind')=='real' else 1e-12
         # Exact integer expectations are above; REAL transports round to IEEE binary32.
