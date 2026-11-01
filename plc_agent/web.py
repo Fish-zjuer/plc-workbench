@@ -227,6 +227,10 @@ def make_handler(app):
                 if self.path == '/api/formal/config':
                     from plc_agent.plcverif_backend import environment
                     return self.send_json(environment(app.home))
+                if self.path == '/api/codesys/config':
+                    cfg=codesys.load_config(app.home)
+                    return self.send_json({'configuration':cfg,'saved':(app.home/'codesys.json').is_file(),
+                                           'config_file':'agent_data/codesys.json'})
                 if self.path == '/api/tasks': return self.send_json({'schema':'plc-workbench-catalog-v1','tasks':[]})
                 if self.path.startswith('/api/tasks/'):
                     return self.send_json(app.bank.load(self.path.rsplit('/',1)[1]))

@@ -106,19 +106,23 @@ def validate(cfg):
 
 def environment(home=STATE_ROOT):
     path=str((Path(home)/'formal_config.json').resolve())
+    public_path='agent_data/formal_config.json'
     try:
         cfg=configuration(home)
+        saved=json.loads(Path(path).read_text(encoding='utf-8')) if Path(path).is_file() else {}
+        origins={name:'saved' if saved.get(name) else 'auto' if cfg.get(name) else 'missing' for name in TOOL_LABELS}
+        cfg={**cfg,'path_sources':origins}
         missing=[{'key':name,'label':TOOL_LABELS[name],'path':cfg.get(name,'')} for name in ('plcverif','java',cfg.get('engine','cbmc'))
                  if name in TOOL_LABELS and (not isinstance(cfg.get(name),str) or not cfg[name] or not Path(cfg[name]).is_file())]
         if missing:
-            return {**cfg,'status':'not_configured','config_file':path,'saved':Path(path).is_file(),'missing_tools':missing,
+            return {**cfg,'status':'not_configured','config_file':public_path,'saved':Path(path).is_file(),'missing_tools':missing,
                     'message':'未找到 '+ '、'.join(item['label'] for item in missing)+'，请在下方填写本机可执行文件路径并保存。'}
         validate(cfg)
-        return {**cfg,'status':'tools_ready','config_file':path,'saved':Path(path).is_file(),'missing_tools':[],
+        return {**cfg,'status':'tools_ready','config_file':public_path,'saved':Path(path).is_file(),'missing_tools':[],
                 'message':'已找到所需工具；这只确认文件存在，尚未执行验证。','scope':'Executables found; this is not a claim of full dataset/model compatibility.',
                 'unsupported_models':['unbound open-array callers','CODESYS VARIANT reference/aliasing','mixed-width float literals and REAL math calls requiring a typed exporter'],
                 'floating_point_reference':'https://plcverif-oss.gitlab.io/plcverif-docs/library/backends/Cbmc.html'}
-    except (ValueError,OSError) as exc:return {**DEFAULTS,'status':'not_configured','config_file':path,'message':str(exc)}
+    except (ValueError,OSError) as exc:return {**DEFAULTS,'status':'not_configured','config_file':public_path,'message':str(exc)}
 
 
 def save_configuration(value,home=STATE_ROOT):

@@ -96,6 +96,11 @@ class WebTests(unittest.TestCase):
         self.assertEqual(saved['status'],'tools_ready');self.assertTrue(saved['saved'])
         loaded=json.loads(self.request('/api/formal/config'))
         self.assertEqual(loaded['plcverif'],paths['plcverif']);self.assertEqual(loaded['bound'],10)
+    def test_settings_read_codesys_configuration_without_running_preflight(self):
+        with patch('plc_agent.web.preflight',side_effect=AssertionError('No preflight during form load')):
+            state=json.loads(self.request('/api/codesys/config'))
+        self.assertEqual(state['configuration'],{});self.assertFalse(state['saved'])
+        self.assertIn('codesys.json',state['config_file'])
     def test_usage_missing_is_explicit(self):
         self.assertFalse(usage_totals([{'usage':{}}])['complete'])
         totals=usage_totals([{'usage':{'prompt_tokens':3,'completion_tokens':4,'total_tokens':7}}])
