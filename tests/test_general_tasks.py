@@ -14,8 +14,8 @@ from plc_agent.storage import Project,Session
 from plc_agent.task_spec import validate_spec,validate_source,capability_report
 from plc_agent.task_store import TaskStore
 from plc_agent.task_runner import evaluate_task,monitor,execute_task,compile_task
-from plc_agent.task_workflow import TaskWorkflow
-from plc_agent.toolbox import Toolbox
+from plc_agent.legacy.task_workflow import TaskWorkflow
+from plc_agent.legacy.toolbox import Toolbox
 from plc_probe.config import cache_dir
 from plc_agent.provider import Cancelled
 
@@ -329,7 +329,7 @@ class GeneralTaskTests(unittest.TestCase):
         self.assertEqual(len(provider.requests),1)
 
     def test_outer_chat_uses_general_receipt_when_shared_budget_is_exhausted(self):
-        from plc_agent.engine import Engine
+        from plc_agent.legacy.engine import Engine
         from test_agent_core import ScriptedProvider,call
         task_id=self.plan();self.session.data['mode']='execute';self.cfg.max_steps=3
         provider=ScriptedProvider([call('plc_task_run',{'task_id':task_id}),proposal(GOOD),review()])
@@ -341,7 +341,7 @@ class GeneralTaskTests(unittest.TestCase):
         self.assertIn('not_executed',answer)
 
     def test_outer_model_claim_cannot_override_general_task_failure(self):
-        from plc_agent.engine import Engine
+        from plc_agent.legacy.engine import Engine
         from test_agent_core import ScriptedProvider,call
         task_id=self.plan();self.session.data['mode']='execute'
         provider=ScriptedProvider([call('plc_task_run',{'task_id':task_id}),proposal(GOOD),review([scenario(False)]),

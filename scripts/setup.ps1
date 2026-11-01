@@ -38,4 +38,4 @@ foreach ($package in $packages) {
 }
 & $runtimePython -m pip install --no-index --find-links $wheelRoot --require-hashes -r (Join-Path $projectRoot 'requirements.lock')
 if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed' }
-Write-Host 'Ready. Start using launch.cmd.'
+Write-Host 'Ready. Start using start.cmd.'

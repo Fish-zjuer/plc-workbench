@@ -1,11 +1,12 @@
-"""Actual CODESYS compilation of dataset candidates; never substitutes local checks."""
+"""统一检查链：调用CODESYS编译、功能测试和形式化验证，各阶段结果分别记录。"""
 import hashlib
 from pathlib import Path
 import re
 import tempfile
-from . import codesys, dataset
-from .st_source import split_units
-from .storage import atomic_json
+from plc_agent import codesys
+from plc_agent import dataset
+from plc_agent.st_source import split_units
+from plc_agent.storage import atomic_json
 from plc_probe.backend import BackendError
 
 
@@ -30,11 +31,11 @@ def compile_dataset(source, task, config=None, cancel_event=None):
     attempts=[]
     for attempt in range(2):
         if cancel_event and cancel_event.is_set():
-            from .provider import Cancelled
+            from plc_agent.provider import Cancelled
             raise Cancelled('CODESYS compilation cancelled')
         if source.read_bytes()!=data or before!=codesys.fingerprint(cfg):
             raise BackendError({'status':'stale_evidence','message':'Source or vendor environment changed before compilation'})
-        directory=Path(tempfile.mkdtemp(prefix='dataset_compile_',dir=codesys.work_root()))
+        directory=codesys.evidence_directory(source,'codesys_compile')
         try:
             value=codesys.invoke({'action':'compile','source_sha256':hashlib.sha256(data).hexdigest(),
                 'block':task['block'],'template_project':cfg['template_project'],'units':units,
@@ -60,22 +61,33 @@ def compile_dataset(source, task, config=None, cancel_event=None):
     return result
 
 
-def evaluate_candidate(source,task,vendor_config=None,cancel_event=None):
+def evaluate_candidate(source,task,vendor_config=None,cancel_event=None,*,formal_directory=None,formal_timeout=None,formal_config=None):
     """Identical checker feedback for both frameworks. Vendor stage is explicit."""
+    from plc_agent.dataset_formal import attach
+    def finish(value):
+        return attach(value,task,source,formal_directory or Path(source).parent/'formal',
+                      cancel_event=cancel_event,timeout_seconds=formal_timeout,config=formal_config)
     result={'target_compile':'not_executed'}
     if vendor_config is not None:
         try: result['codesys']=compile_dataset(source,task,vendor_config,cancel_event)
         except BackendError as exc:
-            return {**exc.result,'target_compile':'failed' if exc.result['status']=='compile_error' else 'not_executed'}
+            return finish({**exc.result,'target_compile':'failed' if exc.result['status']=='compile_error' else 'not_executed'})
         except (ValueError,OSError) as exc:
-            return {'status':'invalid_candidate','message':str(exc),'target_compile':'not_executed'}
+            return finish({'status':'invalid_candidate','message':str(exc),'target_compile':'not_executed'})
         result['target_compile']='passed'
     try:
-        if task.get('scenarios'):
+        if vendor_config is not None and task.get('scenarios'):
+            from plc_agent.codesys_tests import evaluate
+            local=evaluate(source,task,vendor_config,cancel_event)
+        elif vendor_config is not None:
+            local={'status':'compiled_without_tests','message':'CODESYS compiled; no functional tests supplied',
+                   'test_backend':'codesys'}
+        elif task.get('scenarios'):
             local=dataset.evaluate(source,task)
         else:
             dataset.compile_task(source,task)
-            local={'status':'compiled_without_tests','message':'No functional tests supplied'}
-    except BackendError as exc: local=exc.result
+            local={'status':'compiled_without_tests','message':'Optional local compilation; no functional tests supplied',
+                   'test_backend':'optional_local'}
+    except BackendError as exc: local={**exc.result,'test_backend':'codesys' if vendor_config is not None else 'optional_local'}
     except (ValueError,OSError) as exc: local={'status':'invalid_candidate','message':str(exc)}
-    return {**local,**result}
+    return finish({**local,**result})

@@ -3,7 +3,7 @@ import unittest
 import tempfile
 
 from plc_agent.bank_contracts import questions
-from plc_agent.codesys_bank import caller, read_receipt, split_units, summarize
+from plc_agent.legacy.codesys_bank import caller, read_receipt, split_units, summarize
 from plc_agent.config import ROOT
 
 
@@ -26,7 +26,7 @@ END_FUNCTION_BLOCK"""
 
     def test_all_current_sources_import_and_keep_actual_implementation(self):
         for question in questions():
-            source = (ROOT / 'experiments/backend_r4/tasks' / question['id'] / 'final.st').read_text(encoding='utf-8')
+            source = (ROOT / 'tests/fixtures/backend_r4/tasks' / question['id'] / 'final.st').read_text(encoding='utf-8')
             with self.subTest(question=question['id']):
                 units = split_units(source)
                 self.assertTrue(any(u['kind'] == 'FUNCTION_BLOCK' for u in units))

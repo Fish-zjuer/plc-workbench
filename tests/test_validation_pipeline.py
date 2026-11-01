@@ -8,11 +8,11 @@ from unittest.mock import patch
 
 from plc_agent.bank_contracts import questions
 from plc_agent.config import ModelConfig, ROOT
-from plc_agent.engine import Engine, source_hash_for_receipt
+from plc_agent.legacy.engine import Engine, source_hash_for_receipt
 from plc_agent.storage import Project, Session, atomic_json
-from plc_agent.toolbox import Toolbox
-from plc_agent.validation import CodesysCompiler, ValidationConfig, ValidationPipeline, static_check
-from plc_agent.workflow import PLCWorkflow
+from plc_agent.legacy.toolbox import Toolbox
+from plc_agent.legacy.validation import CodesysCompiler, ValidationConfig, ValidationPipeline, static_check
+from plc_agent.legacy.workflow import PLCWorkflow
 from test_agent_core import ScriptedProvider, call
 
 
@@ -28,7 +28,7 @@ class ValidationTests(unittest.TestCase):
         self.project=Project.create('target validation',self.home)
         self.session=Session.create(self.project);self.session.data['mode']='execute'
         self.path=self.project.workspace/'candidate.st'
-        self.code=(ROOT/'experiments/backend_r4/tasks/03/final.st').read_text(encoding='utf-8')
+        self.code=(ROOT/'tests/fixtures/backend_r4/tasks/03/final.st').read_text(encoding='utf-8')
         self.path.write_text(self.code,encoding='utf-8')
         self.model=ModelConfig(base_url='http://fixture.invalid/v1',model='scripted-fixture')
 
@@ -71,7 +71,7 @@ class ValidationTests(unittest.TestCase):
             self.assertEqual(behavior,[])
 
     def test_static_reserved_word_is_detected_before_compilation(self):
-        source=(ROOT/'experiments/backend_r4/tasks/20/final.st').read_text(encoding='utf-8')
+        source=(ROOT/'tests/fixtures/backend_r4/tasks/20/final.st').read_text(encoding='utf-8')
         self.path.write_text(source,encoding='utf-8')
         pipeline,compiler,behavior=self.pipeline()
         result=pipeline.evaluate(self.path,'20')
@@ -88,7 +88,7 @@ class ValidationTests(unittest.TestCase):
 
     def test_platform_interface_is_a_blocker_and_consumes_no_model_request(self):
         self.config.save(self.home)
-        self.path.write_bytes((ROOT/'experiments/backend_r4/tasks/18/final.st').read_bytes())
+        self.path.write_bytes((ROOT/'tests/fixtures/backend_r4/tasks/18/final.st').read_bytes())
         provider=ScriptedProvider([])
         result=PLCWorkflow(self.session,self.model,provider).run('18')
         self.assertEqual(result['status'],'platform_blocked');self.assertEqual(provider.requests,[])
@@ -102,14 +102,14 @@ class ValidationTests(unittest.TestCase):
 
     def test_plan_mode_cannot_invoke_target_compiler(self):
         self.config.save(self.home);self.session.data['mode']='plan'
-        with patch('plc_agent.validation.CodesysCompiler.compile') as compiler:
+        with patch('plc_agent.legacy.validation.CodesysCompiler.compile') as compiler:
             result=PLCWorkflow(self.session,ModelConfig(),ScriptedProvider([])).run('03')
         self.assertEqual(result['status'],'planned');compiler.assert_not_called()
 
     def test_both_gates_required_in_receipt_and_config_changes_make_it_stale(self):
         self.config.save(self.home)
         pipeline,_,_=self.pipeline()
-        with patch('plc_agent.validation.pipeline_for',return_value=pipeline):
+        with patch('plc_agent.legacy.validation.pipeline_for',return_value=pipeline):
             result=PLCWorkflow(self.session,ModelConfig(),ScriptedProvider([])).run('03')
         tools=Toolbox(self.session)
         self.assertTrue(source_hash_for_receipt(tools,result))
@@ -127,7 +127,7 @@ class ValidationTests(unittest.TestCase):
                     'errors':[{'number':46,'text':'Missing target function'}] if len(calls)==1 else []}
         compiler.compile=compile
         provider=ScriptedProvider([{'text':json.dumps({'summary':'fixture repair','code':self.code+'\n(* fixture revision *)','assumptions':[]})}])
-        with patch('plc_agent.validation.pipeline_for',return_value=pipeline):
+        with patch('plc_agent.legacy.validation.pipeline_for',return_value=pipeline):
             result=PLCWorkflow(self.session,self.model,provider).run('03')
         self.assertEqual(result['status'],'verified');self.assertEqual(result['model_calls'],1)
         packet=json.loads(provider.requests[0][0][1]['content'])
@@ -149,7 +149,7 @@ class ValidationTests(unittest.TestCase):
                    'results':[{'status':'pass','stage':'compiled','source_sha256':sha(source),'errors':[]}]}
             atomic_json(output/'results.json',value)
             return value
-        with patch('plc_agent.codesys_bank.run_bank',side_effect=measure) as run:
+        with patch('plc_agent.legacy.codesys_bank.run_bank',side_effect=measure) as run:
             first=compiler.compile(self.path,'03','environment-a')
             second=compiler.compile(self.path,'03','environment-a')
             self.assertFalse(first['cached']);self.assertTrue(second['cached']);self.assertEqual(run.call_count,1)
@@ -164,7 +164,7 @@ class ValidationTests(unittest.TestCase):
     def test_tool_call_obeys_the_same_target_policy(self):
         self.config.save(self.home)
         pipeline,compiler,_=self.pipeline(compiler_status='compile_error')
-        with patch('plc_agent.validation.pipeline_for',return_value=pipeline):
+        with patch('plc_agent.legacy.validation.pipeline_for',return_value=pipeline):
             result=Toolbox(self.session).call('plc_bank_test',{'source':'candidate.st','question_id':'03'})
         self.assertEqual(result['status'],'compile_error');self.assertEqual(compiler.calls,1)
 
@@ -173,7 +173,7 @@ class ValidationTests(unittest.TestCase):
         pipeline,_,_=self.pipeline(compiler_status='compile_error')
         provider=ScriptedProvider([call('plc_bank_test',{'source':'candidate.st','question_id':'03'}),
                                    {'text':'已经全部通过'}])
-        with patch('plc_agent.validation.pipeline_for',return_value=pipeline):
+        with patch('plc_agent.legacy.validation.pipeline_for',return_value=pipeline):
             answer=Engine(self.session,self.model,provider).run('测试第03题')
         self.assertIn('尚无当前源码验证通过',answer)
         self.assertEqual(self.session.data['status'],'workflow_blocked')

@@ -8,8 +8,7 @@ import tempfile
 import unittest
 
 from plc_agent.bank_contracts import KNOWN, UNSUPPORTED, interface, protocol, questions, scenarios
-from plc_agent.bank_runner import test_bank as execute_bank
-from plc_agent.benchmark import Budget
+from plc_agent.legacy.bank_runner import test_bank as execute_bank
 from plc_agent.config import ModelConfig
 from plc_agent.provider import ProviderError
 from plc_probe.config import cache_dir
@@ -56,14 +55,6 @@ END_FUNCTION_BLOCK'''
             self.assertEqual(result['first_failure']['actual'],0)
             self.assertEqual(result['first_failure']['expected'],1)
 
-    def test_budget_guard_reserves_concurrent_work_and_accounts_usage(self):
-        budget=Budget(.1)
-        reserve=budget.reserve([{'role':'user','content':'hello'}],1024)
-        with self.assertRaises(ProviderError):
-            budget.reserve([{'role':'user','content':'x'*100000}],8192)
-        budget.settle(reserve,{'prompt_tokens':100,'completion_tokens':10})
-        self.assertGreater(budget.used,0)
-        self.assertEqual(budget.reserved,0)
 
     def test_extra_body_cannot_overwrite_tool_or_auth_protocol(self):
         config=ModelConfig(base_url='https://example.test',model='custom',extra_body={'thinking':{'type':'disabled'}})

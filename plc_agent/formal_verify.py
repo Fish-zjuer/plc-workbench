@@ -5,10 +5,10 @@ import json
 from pathlib import Path
 import time
 from functools import lru_cache
-from .formal_st import parse,UnsupportedST,INTEGER_TYPES
-from .task_spec import digest,validate_source
-from .storage import atomic_json
-from .provider import Cancelled
+from plc_agent.formal_st import parse, UnsupportedST, INTEGER_TYPES
+from plc_agent.task_spec import digest, validate_source
+from plc_agent.storage import atomic_json
+from plc_agent.provider import Cancelled
 
 def fingerprint():
     try:
@@ -173,7 +173,7 @@ def evidence_valid(record,root):
         directory=Path(record['evidence_path']).resolve();root=Path(root).resolve()
         if not directory.is_relative_to(root):return False
         saved=json.loads((directory/'formal.json').read_text(encoding='utf-8'))
-        from .task_formal import summary
+        from plc_agent.task_formal import summary
         if digest(summary(saved))!=digest(summary(record)):return False
         queries=saved.get('queries',[])
         if saved.get('evidence_sha256')!=digest(queries):return False

@@ -2,7 +2,7 @@
 import os
 from pathlib import Path
 import shutil
-from .config import ROOT
+from plc_agent.config import ROOT
 
 
 def configure_tools():

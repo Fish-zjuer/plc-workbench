@@ -8,7 +8,7 @@ import urllib.request
 import uuid
 import time
 
-from .config import ModelConfig
+from plc_agent.config import ModelConfig
 
 
 class ProviderError(RuntimeError):

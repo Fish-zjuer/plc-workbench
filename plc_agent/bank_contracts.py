@@ -11,7 +11,7 @@ from pathlib import Path
 import random
 import re
 
-from .config import ROOT
+from plc_agent.config import ROOT
 
 KNOWN = {"02": "edges", "06": "blower", "09": "moving_average", "14": "ipv4"}
 BLOCKS = {"02": "EdgeDetection", "06": "BlowerControl", "09": "MovingAverage", "14": "IPv4Parser"}
@@ -24,7 +24,7 @@ UNSUPPORTED = {
 
 
 def questions():
-    path = ROOT / "experiments/deepseek_20/questions.json"
+    path = ROOT / "datasets/public20_questions.json"
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -211,7 +211,7 @@ def scenarios(question):
              (10,{"Start":1,"UpLimitSwitch":1,"LeftLimitSwitch":1}), (20,{}, {"MoveDown":1}),
              (30,{"EmergencyStop":0},{k:0 for k in outputs})],{"SingleCycleMode":1,"EmergencyStop":1})
     elif ident == "20":
-        from .q20_contract import scenarios as production_scenarios
+        from plc_agent.q20_contract import scenarios as production_scenarios
         return production_scenarios()
     return cases
 

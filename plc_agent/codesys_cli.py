@@ -3,9 +3,9 @@ import argparse
 import json
 from pathlib import Path
 import tempfile
-from .codesys import doctor,load_config,validate_config,invoke,work_root
-from .config import STATE_ROOT
-from .storage import atomic_json
+from plc_agent.codesys import doctor, load_config, validate_config, invoke, work_root
+from plc_agent.config import STATE_ROOT
+from plc_agent.storage import atomic_json
 from plc_probe.backend import BackendError
 
 def main(argv=None):

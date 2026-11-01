@@ -4,6 +4,8 @@ Requirements are prompt data; expected tables stay in the host-side checker.
 No arbitrary expressions from the supplied LTL are evaluated.
 """
 from __future__ import annotations
+from copy import deepcopy
+from functools import lru_cache
 import hashlib
 import json
 import math
@@ -12,32 +14,54 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
-from .config import ROOT
-from .storage import atomic_json
-from .task_spec import digest,SCALARS
-from .task_runner import execution_fingerprint
+from plc_agent.config import ROOT
+from plc_agent.storage import atomic_json
+from plc_agent.task_spec import digest, SCALARS
+from plc_agent.task_runner import execution_fingerprint
 from plc_probe.config import cache_dir,toolchain_dir
 from plc_probe.backend import BackendError,_command
 
-DATA=ROOT/'datasets/standalone32'
+DATA=ROOT/'datasets'
+
 
 def fingerprint():return digest({'native':execution_fingerprint(),'adapter':hashlib.sha256(Path(__file__).read_bytes()).hexdigest()})
 
+
+@lru_cache(maxsize=4)
+def _bank(directory, signature):
+    directory=Path(directory)
+    manifest=json.loads((directory/'manifest.json').read_text(encoding='utf-8'))
+    if manifest['schema']!='plc-dataset-v1' or manifest['file']!='course32.json':
+        raise ValueError('Unknown dataset manifest')
+    raw=(directory/manifest['file']).read_bytes()
+    if hashlib.sha256(raw).hexdigest()!=manifest['sha256']:
+        raise ValueError('Dataset changed since manifest was frozen')
+    bank=json.loads(raw)
+    tasks={t['id']:t for t in bank['tasks']}
+    if len(tasks)!=len(bank['tasks']) or set(tasks)!={t['id'] for t in manifest['tasks']}:
+        raise ValueError('Dataset task IDs do not match manifest')
+    for entry in manifest['tasks']:
+        if digest(tasks[entry['id']])!=entry['sha256']:
+            raise ValueError('Task changed since manifest was frozen')
+    return manifest,tasks
+
+
+def _current_bank():
+    signature=tuple((p.stat().st_size,p.stat().st_mtime_ns) for p in (DATA/'manifest.json',DATA/'course32.json'))
+    return _bank(str(DATA.resolve()),signature)
+
+
 def catalog():
-    manifest=json.loads((DATA/'manifest.json').read_text(encoding='utf-8'))
-    if manifest['schema']!='plc-dataset-v1':raise ValueError('Unknown dataset manifest')
-    return manifest
+    return deepcopy(_current_bank()[0])
+
 
 def load(ident):
     if not re.fullmatch(r'(PUBLIC|CUSTOM)_\d\d',ident):raise ValueError('Use PUBLIC_01..20 or CUSTOM_01..12')
-    entry=next((t for t in catalog()['tasks'] if t['id']==ident),None)
-    if entry is None:raise ValueError('Unknown dataset task')
-    path=(DATA/entry['file']).resolve()
-    if not path.is_relative_to(DATA.resolve()):raise ValueError('Invalid dataset member')
-    data=path.read_bytes()
-    if hashlib.sha256(data).hexdigest()!=entry['sha256']:raise ValueError('Dataset changed since manifest was frozen')
-    task=json.loads(data);task['dataset_sha256']=entry['sha256']
+    manifest,tasks=_current_bank()
+    if ident not in tasks:raise ValueError('Unknown dataset task')
+    task=deepcopy(tasks[ident]);task['dataset_sha256']=next(t['sha256'] for t in manifest['tasks'] if t['id']==ident)
     return task
+
 
 def ports(task,direction):return {p['name']:p['type'].upper() for p in task['interface'] if p['direction']==direction}
 
@@ -84,7 +108,7 @@ ASSIGN
     return bridge,ins,outs+readonly
 
 def validate_source(source,task):
-    from .st_source import split_units,mask_noncode
+    from plc_agent.st_source import split_units, mask_noncode
     code=Path(source).read_text(encoding='utf-8-sig')
     units=split_units(code);main=[u for u in units if u['kind']=='FUNCTION_BLOCK' and u['name'].upper()==task['block'].upper()]
     if len(main)!=1:raise ValueError('Expected exactly one complete '+task['block'])
@@ -97,28 +121,9 @@ def validate_source(source,task):
     if declared!=expected:raise ValueError('Candidate changed the frozen dataset interface')
 
 def compile_task(source,task):
-    source=Path(source);validate_source(source,task)
-    fmt=task['adapter_format'];qid=task['id'][-2:]
-    if fmt=='struct_rows':
-        from .struct_checks import driver
-        bridge=driver(qid);ins=[];outs=task['field_order']['outputs']
-    elif fmt in ('analog_reference_rows','fifo_reference_rows'):
-        from .reference_checks import ANALOG_DRIVER,FIFO_DRIVER
-        bridge=ANALOG_DRIVER if fmt=='analog_reference_rows' else FIFO_DRIVER;ins=[];outs=[]
-    else:bridge,ins,outs=trace_driver(task)
-    identity=fingerprint()
-    data=source.read_bytes();key=hashlib.sha256(data+bridge.encode()+identity.encode()).hexdigest()[:24]
-    directory=cache_dir()/'dataset_builds'/key;directory.mkdir(parents=True,exist_ok=True)
-    exe=directory/('runner.exe' if os.name=='nt' else 'runner');meta=directory/'build.json'
-    if not exe.is_file() or not meta.is_file():
-        compiler=toolchain_dir()/('strucpp.exe' if os.name=='nt' else 'strucpp');cxx=os.environ.get('CXX') or shutil.which('g++')
-        if not compiler.is_file() or not cxx:raise BackendError({'status':'missing_dependency','message':'Need selected STruC++ and g++'})
-        (directory/'candidate.st').write_bytes(data);(directory/'driver.cpp').write_text(bridge,encoding='utf-8')
-        logs=[_command([str(compiler),'candidate.st','-o','candidate.cpp'],directory,'st_to_cpp')]
-        include=os.path.relpath(toolchain_dir()/'runtime/include',directory);flags=['-std=c++17','-O1']+(['-static'] if os.name=='nt' else [])
-        logs.append(_command([cxx,*flags,'-I',include,'candidate.cpp','driver.cpp','-o',exe.name],directory,'native_compile'))
-        atomic_json(meta,{'source_sha256':hashlib.sha256(data).hexdigest(),'execution_fingerprint':identity,'logs':logs})
-    return {'executable':exe,'directory':directory,'source_sha256':hashlib.sha256(data).hexdigest(),'execution_fingerprint':identity,'inputs':ins,'outputs':outs,'build_evidence':str(meta)}
+    from plc_agent.local_test_support import backend
+    return backend().compile_task(source,task)
+
 
 def input_value(row,name,task):
     if name in row['inputs']:return row['inputs'][name]
@@ -163,11 +168,13 @@ def equal(actual,expected,task,name=''):
     return actual==expected
 
 def evaluate(source,task):
-    artifact=compile_task(source,task)
-    try:run=subprocess.run([str(artifact['executable'])],input=commands(task,artifact),capture_output=True,text=True,encoding='utf-8',timeout=25,cwd=artifact['directory'])
-    except subprocess.TimeoutExpired:raise BackendError({'status':'timeout','phase':'execution','message':'Dataset execution exceeded 25 seconds'}) from None
-    if run.returncode:raise BackendError({'status':'runtime_error','phase':'execution','message':run.stderr[-2000:]})
-    output=run.stdout.splitlines();total=sum(len(c.get('trace',c.get('rows',[]))) for c in task['scenarios'])
+    from plc_agent.local_test_support import backend
+    return backend().evaluate(source,task)
+
+
+def judge_output(source,task,artifact,output):
+    """Shared frozen predicates; execution is supplied by the selected backend."""
+    total=sum(len(c.get('trace',c.get('rows',[]))) for c in task['scenarios'])
     if len(output)!=total:raise BackendError({'status':'protocol_error','message':'Dataset output row count mismatch'})
     results=[];cursor=assertions=0;fmt=task['adapter_format']
     for case in task['scenarios']:
@@ -216,7 +223,8 @@ def evaluate(source,task):
     result={'status':'fail' if any(c['status']=='fail' for c in results) else 'pass','task_id':task['id'],
         'source_sha256':artifact['source_sha256'],'dataset_sha256':task['dataset_sha256'],'execution_fingerprint':artifact['execution_fingerprint'],
         'cases':results,'summary':{'scenarios':len(results),'scans':total,'assertions':assertions,'failed':sum(c['status']=='fail' for c in results)},
-        'target_compile':'not_executed','ltl_status':'requirements_only_not_executed','build_evidence':artifact['build_evidence'],
-        'scope':'Supplied finite tests on actual local ST execution; struct07/17 copy-in/out and local VARIANT ABI limits remain. Not full LTL or vendor runtime verification.'}
+        'target_compile':artifact.get('target_compile','not_executed'),'ltl_status':'requirements_only_not_executed','build_evidence':artifact['build_evidence'],
+        'test_backend':artifact.get('test_backend','optional_local'),
+        'scope':artifact.get('scope','Optional local STruC++ finite tests; not CODESYS runtime verification.')}
     if hashlib.sha256(Path(source).read_bytes()).hexdigest()!=artifact['source_sha256']:result['status']='stale_source'
     return result

@@ -1,6 +1,6 @@
 """Explicit per-model inference controls for Chat Completions experiments."""
 from dataclasses import replace
-from .config import ModelConfig
+from plc_agent.config import ModelConfig
 
 CONTROL_KEYS={'thinking','reasoning_effort','enable_thinking','thinking_budget','reasoning'}
 

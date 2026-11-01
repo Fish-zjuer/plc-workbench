@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import unittest
 
-from plc_agent.backend_capabilities import candidate_warnings
+from optional_local_tests.backend_capabilities import candidate_warnings
 from plc_agent.bank_contracts import questions
-from plc_agent.workflow import (
+from plc_agent.legacy.workflow import (
     candidate_rank,
     normalize_candidate,
     requirement_checklist,

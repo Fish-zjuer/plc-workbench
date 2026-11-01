@@ -10,7 +10,7 @@ from textual.widgets import Button, Input, TextArea
 
 from plc_agent.config import ModelConfig
 from plc_agent.storage import Project, Session
-from plc_agent.tui import FilePicker, Settings, Workbench
+from plc_agent.legacy.tui import FilePicker, Settings, Workbench
 from plc_probe.config import cache_dir
 from test_agent_core import ScriptedProvider
 

@@ -14,9 +14,9 @@ from functools import lru_cache
 
 from plc_probe.backend import BackendError, _command
 from plc_probe.config import cache_dir, toolchain_dir
-from .provider import Cancelled
-from .task_spec import SCALARS, SAMPLING, digest, validate_case, validate_source
-from .storage import atomic_json
+from plc_agent.provider import Cancelled
+from plc_agent.task_spec import SCALARS, SAMPLING, digest, validate_case, validate_source
+from plc_agent.storage import atomic_json
 
 @dataclass
 class TaskArtifact:
@@ -29,7 +29,8 @@ def execution_fingerprint():
     home=toolchain_dir()
     names=[home/("strucpp.exe" if os.name=="nt" else "strucpp"),home/"compiler.cjs"]
     names+=sorted((home/"runtime/include").rglob("*.hpp"))+sorted((home/"libs").glob("*.stlib"))
-    names += [Path(__file__),*(Path(__file__).with_name(n) for n in ('task_spec.py','task_backend.py','task_workflow.py','task_store.py')),
+    names += [Path(__file__),*(Path(__file__).with_name(n) for n in ('task_spec.py','task_backend.py','task_store.py')),
+              Path(__file__).parent/'legacy/task_workflow.py',
               Path(__file__).parents[1]/'plc_probe/backend.py',Path(__file__).parents[1]/'plc_probe/config.py']
     for name in ('node-path.txt','cli-path.txt'):
         pointer=home/name

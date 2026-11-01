@@ -8,11 +8,11 @@ import unittest
 from plc_agent.bank_contracts import questions
 from plc_agent.config import ModelConfig,ROOT
 from plc_agent.provider import ProviderError
-from plc_agent.call_budget import CallBudget
-from plc_agent.engine import Engine
+from plc_agent.legacy.call_budget import CallBudget
+from plc_agent.legacy.engine import Engine
 from plc_agent.storage import Project,Session
-from plc_agent.toolbox import Toolbox
-from plc_agent.workflow import PLCWorkflow,validate_candidate,evidence_brief
+from plc_agent.legacy.toolbox import Toolbox
+from plc_agent.legacy.workflow import PLCWorkflow,validate_candidate,evidence_brief
 from plc_probe.config import cache_dir
 from test_agent_core import ScriptedProvider,call
 
@@ -23,7 +23,7 @@ class WorkflowTests(unittest.TestCase):
         self.project=Project.create('workflow fixture',Path(self.temp.name));self.session=Session.create(self.project)
         self.cfg=ModelConfig(base_url='http://localhost:1/v1',model='fixture')
         self.question=next(q for q in questions() if q['id']=='03')
-        self.code=(ROOT/'experiments/deepseek_20/tasks/03/final.st').read_text(encoding='utf-8')
+        self.code=(ROOT/'tests/fixtures/deepseek_20/tasks/03/final.st').read_text(encoding='utf-8')
 
     def proposal(self,code=None):
         return {'text':json.dumps({'summary':'model-authored fixture','code':self.code if code is None else code,'assumptions':[]})}

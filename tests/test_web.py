@@ -38,6 +38,15 @@ class WebTests(unittest.TestCase):
             self.assertFalse(cfg.stream)
             self.assertEqual(cfg.api_key,'test-secret')
             self.assertEqual(cfg.extra_body,{})
+            self.assertEqual(cfg.comparison_model,'qwen3.8-flash')
+            result=json.loads(self.request('/api/config',{'model':'model-a','comparison_model':'my-model-b'}))
+            self.assertEqual(result['comparison_model'],'my-model-b')
+            self.assertEqual(ModelConfig.load(self.app.home).comparison_model,'my-model-b')
+            saved=json.loads((self.app.home/'config.json').read_text(encoding='utf-8'))
+            self.assertEqual((saved['model'],saved['comparison_model']),('model-a','my-model-b'))
+            with self.assertRaises(urllib.error.HTTPError):
+                self.request('/api/config',{'model':'model-a','comparison_model':'undefined'})
+            self.assertEqual(ModelConfig.load(self.app.home).comparison_model,'my-model-b')
     def test_no_cross_provider_key_reuse(self):
         ModelConfig(base_url='https://example.test/v1',model='old',api_key='other-secret').save(self.app.home)
         with patch.dict('os.environ',{'DMXAPI_API_KEY':''}):
@@ -61,10 +70,31 @@ class WebTests(unittest.TestCase):
             self.request('/api/config',{},'https://example.test')
         self.assertEqual(e.exception.code,403)
         with self.assertRaises(urllib.error.HTTPError): self.request('/api/runs/../../private')
+
+    def test_campaign_preflight_checks_current_form_without_model_calls(self):
+        data={'models':['deepseek-v4.1-flash-1017','qwen3.8-flash'],
+              'model_settings':[{'mode':'off'},{'mode':'on','budget':1000}],
+              'task_ids':['CUSTOM_09'],'concurrency':16,'codesys':True}
+        with patch('plc_agent.web.preflight',return_value={'status':'ready','errors':[]}),patch.object(ChatProvider,'complete') as complete:
+            result=json.loads(self.request('/api/campaign-preflight',data))
+        self.assertEqual(result['total'],4);self.assertEqual(result['effective_concurrency'],4)
+        self.assertEqual(result['model_calls'],0);complete.assert_not_called()
+        data['model_settings'][1]={'mode':'on','budget':999999}
+        with patch('plc_agent.web.preflight') as local:
+            result=json.loads(self.request('/api/campaign-preflight',data))
+        self.assertEqual(result['status'],'setup_required');local.assert_not_called()
+        self.assertTrue(result['errors'])
     def test_usage_missing_is_explicit(self):
         self.assertFalse(usage_totals([{'usage':{}}])['complete'])
         totals=usage_totals([{'usage':{'prompt_tokens':3,'completion_tokens':4,'total_tokens':7}}])
         self.assertTrue(totals['complete']); self.assertEqual(totals['total_tokens'],7)
+    def test_shutdown_refuses_active_work_and_can_close_idle_service(self):
+        self.app.campaigns.active['fixture']=threading.Event()
+        with self.assertRaises(urllib.error.HTTPError) as rejected:self.request('/api/shutdown',{})
+        self.assertEqual(rejected.exception.code,400)
+        self.app.campaigns.active.clear()
+        result=json.loads(self.request('/api/shutdown',{}))
+        self.assertEqual(result['status'],'closing')
     def test_stream_requests_usage(self):
         payload='data: '+json.dumps({'choices':[{'delta':{'content':'OK'},'finish_reason':'stop'}]})+'\n\n'
         payload+='data: '+json.dumps({'choices':[],'usage':{'prompt_tokens':3,'completion_tokens':1,'total_tokens':4}})+'\n\n'

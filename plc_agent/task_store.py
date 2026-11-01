@@ -6,9 +6,9 @@ from pathlib import Path
 import uuid
 import zipfile
 
-from .storage import atomic_json, identifier, now
-from .task_spec import digest, render_plan, validate_spec
-from .task_backend import capabilities, get_backend
+from plc_agent.storage import atomic_json, identifier, now
+from plc_agent.task_spec import digest, render_plan, validate_spec
+from plc_agent.task_backend import capabilities, get_backend
 
 class TaskStore:
     def __init__(self,session):
@@ -52,7 +52,7 @@ class TaskStore:
         return self.validate_regressions(value,spec)
 
     def validate_regressions(self,value,spec):
-        from .task_spec import validate_case
+        from plc_agent.task_spec import validate_case
         if value['contract_sha256']!=digest(spec):raise ValueError('Regression cases belong to a different contract')
         for case in value['cases']:
             validate_case(case,spec)
@@ -128,8 +128,8 @@ class TaskStore:
     def formal_status(self,task_id):
         path=self.directory(task_id)/'formal_latest.json'
         if not path.exists():return {'status':'not_executed'}
-        from .formal_verify import fingerprint,evidence_valid
-        from .task_formal import summary
+        from plc_agent.formal_verify import fingerprint, evidence_valid
+        from plc_agent.task_formal import summary
         value=json.loads(path.read_text(encoding='utf-8'));source=(self.project.workspace/value['source']).resolve()
         valid=(source.is_relative_to(self.project.workspace) and source.is_file()
                and hashlib.sha256(source.read_bytes()).hexdigest()==value['source_sha256']
@@ -172,13 +172,13 @@ class TaskStore:
         if digest(self.load(task_id))!=receipt.get("contract_sha256"):reasons.append("contract_changed")
         formal=receipt.get('formal_verification')
         if isinstance(formal,dict):
-            from .formal_verify import fingerprint,evidence_valid
+            from plc_agent.formal_verify import fingerprint, evidence_valid
             if (formal.get('formal_fingerprint')!=fingerprint() or formal.get('source_sha256')!=receipt['source_sha256']
                 or formal.get('contract_sha256')!=receipt['contract_sha256'] or not evidence_valid(formal,self.directory(task_id)/'runs')):
                 reasons.append('formal_evidence_changed')
         evaluation=receipt.get('final_evaluation') or {}
         if evaluation.get('vendor_evidence_files'):
-            from .codesys import work_root
+            from plc_agent.codesys import work_root
             vendor=Path(evaluation['vendor_evidence']).resolve()
             try:
                 if not vendor.is_relative_to(work_root().resolve()):raise ValueError('Invalid vendor evidence root')
@@ -220,7 +220,7 @@ class TaskStore:
                 files['evidence/'+path.relative_to(run).as_posix()]=path.read_bytes()
         evaluation=receipt.get('final_evaluation') or {}
         if evaluation.get('vendor_evidence_files'):
-            from .codesys import work_root
+            from plc_agent.codesys import work_root
             vendor=Path(evaluation['vendor_evidence']).resolve()
             if not vendor.is_relative_to(work_root().resolve()):raise ValueError('Invalid vendor evidence root')
             for name,sha in evaluation['vendor_evidence_files'].items():

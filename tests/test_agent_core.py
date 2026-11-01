@@ -11,12 +11,12 @@ import unittest
 from unittest.mock import patch
 import zipfile
 
-from plc_agent.attachments import attach
+from plc_agent.legacy.attachments import attach
 from plc_agent.config import ModelConfig
-from plc_agent.engine import Engine
+from plc_agent.legacy.engine import Engine
 from plc_agent.provider import ProviderError
 from plc_agent.storage import Project, Session, atomic_json
-from plc_agent.toolbox import Toolbox
+from plc_agent.legacy.toolbox import Toolbox
 from plc_probe.config import ROOT, cache_dir
 
 

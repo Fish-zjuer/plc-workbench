@@ -7,13 +7,13 @@ import tempfile
 import threading
 import unittest
 
-from plc_agent.call_budget import CallBudget
+from plc_agent.legacy.call_budget import CallBudget
 from plc_agent.config import ModelConfig
-from plc_agent.context_memory import estimate, user_turn
-from plc_agent.engine import Engine
+from plc_agent.legacy.context_memory import estimate, user_turn
+from plc_agent.legacy.engine import Engine
 from plc_agent.provider import Cancelled, ProviderError
 from plc_agent.storage import Project, Session
-from plc_agent.toolbox import Toolbox
+from plc_agent.legacy.toolbox import Toolbox
 from plc_probe.config import cache_dir
 from test_agent_core import ScriptedProvider,call
 

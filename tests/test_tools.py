@@ -170,7 +170,7 @@ class InterfaceTests(unittest.TestCase):
                 "source": str(ROOT / "examples/motor/mutants/start_over_stop.st"), "profile": "motor", "shrink_budget": 20}}},
             {"jsonrpc": "2.0", "id": 4, "method": "tools/call", "params": {"name": "plc_probe", "arguments": {"profile": "unknown"}}},
         ]
-        process = subprocess.run([sys.executable, "-B", str(ROOT / "agent_tools.py")],
+        process = subprocess.run([sys.executable, "-B", str(ROOT / "tools" / "agent_tools.py")],
                                  input="\n".join(json.dumps(r) for r in requests) + "\n",
                                  capture_output=True, text=True, encoding="utf-8", timeout=30)
         self.assertEqual(process.returncode, 0, process.stderr)

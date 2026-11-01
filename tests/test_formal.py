@@ -13,11 +13,11 @@ from plc_agent.storage import Project,Session
 from plc_agent.task_store import TaskStore
 from plc_agent.task_spec import validate_spec
 from plc_agent.task_runner import compile_task,execute_task
-from plc_agent.task_workflow import TaskWorkflow
+from plc_agent.legacy.task_workflow import TaskWorkflow
 from plc_agent.formal_st import parse,UnsupportedST
 from plc_agent.formal_verify import verify
 from plc_agent.task_formal import check,standalone
-from plc_agent.toolbox import Toolbox
+from plc_agent.legacy.toolbox import Toolbox
 from plc_probe.config import cache_dir
 from test_general_tasks import contract,GOOD,Provider,proposal,review
 
@@ -40,7 +40,7 @@ class FormalTests(unittest.TestCase):
         self.assertEqual(solver.check(),z3.unsat)
     def test_existing_weak_model_programs_have_real_proofs(self):
         for name,properties in (("interlocked_start",{"P_STOP","P_INTERLOCK"}),("acknowledge_latch",{"P_FAULT"})):
-            base=ROOT/"experiments/general_tasks_r6/final_recheck"/name
+            base=ROOT/"tests/fixtures/general_tasks_r6/final_recheck"/name
             spec=validate_spec(json.loads((base/"contract.json").read_text(encoding="utf-8")))
             result=verify(base/"candidate_final.st",spec,self.root/name,bound=8)
             self.assertEqual(result["status"],"proved")
@@ -86,7 +86,7 @@ class FormalTests(unittest.TestCase):
         spec=contract();spec["properties"]=[]
         self.assertEqual(self.solve(spec=spec)["status"],"no_properties")
     def test_previous_input_and_output_state_are_modeled(self):
-        base=ROOT/"experiments/general_tasks_r6/final_recheck/interlocked_start"
+        base=ROOT/"tests/fixtures/general_tasks_r6/final_recheck/interlocked_start"
         spec=validate_spec(json.loads((base/"contract.json").read_text(encoding="utf-8")))
         spec["properties"]+=[
             {"id":"P_HOLD","requirement":"R1","when":{"previous.outputs.running":True,"inputs.stop":False,"inputs.permit":True},"then":{"outputs.running":True}},

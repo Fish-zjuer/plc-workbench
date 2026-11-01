@@ -8,11 +8,11 @@ import threading
 import unittest
 
 from plc_agent.config import ModelConfig
-from plc_agent.engine import Engine,reconcile_tools
+from plc_agent.legacy.engine import Engine,reconcile_tools
 from plc_agent.provider import ChatProvider,ProviderError
 from plc_agent.provider import Cancelled
 from plc_agent.storage import Project,Session,atomic_json
-from plc_agent.workflow import PLCWorkflow
+from plc_agent.legacy.workflow import PLCWorkflow
 from plc_probe.config import cache_dir
 from test_agent_core import ScriptedProvider,call
 from test_agent_provider import LocalAPI,event
@@ -131,7 +131,7 @@ class MaintenanceTests(unittest.TestCase):
         self.assertEqual(self.session.data['planned_task']['source'],'code/seam.st')
 
     def test_known_backend_gap_stops_before_generating_an_unverifiable_stub(self):
-        from plc_agent.backend_capabilities import preflight
+        from optional_local_tests.backend_capabilities import preflight
         from plc_agent.bank_contracts import questions
         question=next(q for q in questions() if q['id']=='18')
         if preflight(question) is None:self.skipTest('Pinned backend fingerprint differs')
@@ -143,16 +143,16 @@ class MaintenanceTests(unittest.TestCase):
         self.assertEqual(result['backend_preflight']['candidate_correctness'],'not_established')
 
     def test_fifo_missing_data_access_is_exposed_separately_from_backend_gap(self):
-        from plc_agent.backend_capabilities import candidate_warnings
+        from optional_local_tests.backend_capabilities import candidate_warnings
         from plc_agent.config import ROOT
-        code=(ROOT/'experiments/workflow_r2/tasks/18/final.st').read_text(encoding='utf-8')
+        code=(ROOT/'tests/fixtures/workflow_r2/tasks/18/final.st').read_text(encoding='utf-8')
         warning=candidate_warnings(code,'18')
         self.assertEqual(warning[0]['fields'],['item','buffer'])
 
     def test_workflow_cancel_saves_receipt_without_writing_model_source(self):
         self.session.data['mode']='execute'
         from plc_agent.bank_contracts import block,questions
-        from plc_agent.workflow import interface_contract
+        from plc_agent.legacy.workflow import interface_contract
         question=next(q for q in questions() if q['id']=='03')
         provider=ScriptedProvider([Cancelled('stopped')])
         with self.assertRaises(Cancelled):PLCWorkflow(self.session,self.config,provider).run('03')

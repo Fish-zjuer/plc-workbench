@@ -11,7 +11,7 @@ import uuid
 from contextlib import contextmanager
 from collections import deque
 
-from .config import DEFAULT_MODEL, STATE_ROOT
+from plc_agent.config import DEFAULT_MODEL, STATE_ROOT
 
 
 def now() -> str:

@@ -15,6 +15,7 @@ DEFAULT_MODEL = ""
 class ModelConfig:
     base_url: str = ""
     model: str = ""
+    comparison_model: str = "qwen3.8-flash"
     key_env: str = "PLC_AGENT_API_KEY"
     api_key: str = field(default="", repr=False)
     tool_mode: str = "native"
@@ -42,8 +43,10 @@ class ModelConfig:
                    key_env="DMXAPI_API_KEY", stream=stream, extra_body=extra, **kwargs)
 
     def validate(self, require_ready=True):
-        for name in ('base_url','model','key_env','api_key','tool_mode','review_model'):
+        for name in ('base_url','model','comparison_model','key_env','api_key','tool_mode','review_model'):
             if not isinstance(getattr(self,name),str):raise ValueError(f'{name} 必须为文本')
+        if len(self.comparison_model)>200 or any(ord(c)<32 for c in self.comparison_model):raise ValueError('模型 B 名称无效')
+        if not self.comparison_model.strip() or self.comparison_model.strip().lower() in ('undefined','null'):raise ValueError('请填写有效的模型 B 名称')
         for name in ('context_window','max_output_tokens','max_steps','timeout','transport_retries','compact_keep_turns','compact_summary_tokens'):
             if type(getattr(self,name)) is not int:raise ValueError(f'{name} 必须为整数')
         if not 0 <= self.transport_retries <= 2:raise ValueError('transport_retries must be 0..2')
@@ -100,7 +103,7 @@ class ModelConfig:
         return config
 
     def save(self, home: Path = STATE_ROOT):
-        from .storage import atomic_json
+        from plc_agent.storage import atomic_json
         self.validate(require_ready=False)
         atomic_json(home / "config.json", self.public())
         path = home / "private" / "credentials.json"

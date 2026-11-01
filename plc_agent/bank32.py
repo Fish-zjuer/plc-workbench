@@ -6,31 +6,28 @@ packet (or a file rendering of it) so the information set is identical.
 """
 from __future__ import annotations
 
-from . import dataset
+from plc_agent import dataset
 
-BACKEND_NOTES = """\
-Environment and test contract:
-- Frozen finite tests are host-owned; expected answers are never shown to the author.
-- Local behavior backend is STruC++ 0.7 with g++; TON/R_TRIG and common math functions are available.
-- Declare STRUCT types as TYPE Name : STRUCT ... END_STRUCT END_TYPE; fields use ':'.
-- CASE ELSE has no colon. Prefer IF/ELSIF where possible.
-- Fixed arrays keep their declared lower bounds; array JSON values start at the declared lower bound.
-- CODESYS target compilation is a separate evidence stage; local behavior pass is not a CODESYS runtime claim.
-- Use check.ps1 diagnostics only. Do not inspect generated C++ headers or compiler caches.
-- Never add, remove, or change interface variables. If the task does not declare CycleTime or Dt inputs, do not add them; use only the frozen interface.
-- Do not access TON internal members such as CURRENT_TIME; use declared TON instances' public Q/ET outputs.
-- LTIME is a distinct duration type on this backend: use LTIME#0ms / LTIME#500h literals, and convert a TIME value with TIME_TO_LTIME(x) or TO_LTIME(x). Do not assign INT/LINT/TIME directly to LTIME; do not declare TYPE LTIME.
-- Do not use LEN or CHAR as variable names; LEN() is a function.
-- For ARRAY[*] interfaces, read the declared lower bound with LOWER_BOUND(array, 1); the .LOWERBOUND member does not exist.
-- STRING input: declare `p : POINTER TO BYTE`, set `p := ADR(text);`, offset with `p := p + i;`, and read a byte as `p^`. Do not write `(p + i)^`, index the STRING, use .at(), or write ADR(text)[i].
-- VARIANT interfaces: PV_COUNT(buffer) returns the array length, PV_COMPATIBLE(buffer, item) checks that item matches the buffer element type, and PV_READ(buffer, index, item) / PV_WRITE(buffer, index, item) copy one element to/from the item VARIANT.
-- Update R_TRIG instances every scan, including scans where the requested operation is suppressed (e.g. reset), so a request already held during the suppressed scan is not treated as a new rising edge on the next scan.
-- REAL/LREAL to integer conversions round to nearest (IEC 61131-3); apply TRUNC(x) before converting when the requirement specifies floor or truncation.
-- Bit shifts/rotates are function calls: SHL(x, n), SHR(x, n), ROL(x, n), ROR(x, n). Infix forms such as `x SHL n` are not accepted.
-- TON timing is driven by the scan timestamp and starts on the scan where IN rises. Feed it the value you command in the same scan (not the previous scan's output), and reset it while the timed operation is suppressed. Call the TON before reading its Q in the same scan: Q is updated by that call, so testing Q first sees last scan's value.
-- Output variables power up as FALSE/0. When requirements specify a different power-up value, initialize it explicitly on the first scan (e.g. an InitDone flag), not only inside the Reset branch.
-- At most 6 source versions, 24 model requests and 1800 seconds per task. Never edit tests or expected data.
+BACKEND_NOTES = """Environment and test contract:
+- Target compiler and functional test executor are CODESYS; tests run in its simulation runtime.
+- Preserve the exact task interface, types and array bounds. Never add CycleTime or other inputs.
+- Standard TON/R_TRIG and IEC functions use the installed CODESYS libraries and native semantics.
+- Use only diagnostics from the shared checker; never inspect hidden tests, compiler caches or reference solutions.
+- One fresh FB instance per scenario; inputs are assigned before invocation and outputs sampled afterwards.
+- Timer tests use the real CODESYS simulation clock; unsupported scheduling or platform features are infrastructure limits, not permission to change the task.
+- The optional local PV_COUNT/PV_READ/PV_WRITE/PV_COMPATIBLE ABI is not a CODESYS library. Do not invent these helpers in native target code.
+- Declare STRUCT types as TYPE Name : STRUCT ... END_STRUCT END_TYPE. Keep caller-owned IN_OUT references.
+- Compilation, finite testing and formal verification are separate evidence stages. Do not claim unexecuted stages passed.
+- Frozen test expectations stay host-owned. At most 6 source versions, 24 model requests and 1800 seconds per task.
 """
+
+
+def backend_notes(backend):
+    if backend=='codesys':return BACKEND_NOTES
+    if backend=='optional_local':
+        from optional_local_tests.author_notes import BACKEND_NOTES as local_notes
+        return local_notes
+    raise ValueError('Unknown test backend: '+str(backend))
 
 
 def catalog():
@@ -45,8 +42,10 @@ def questions():
     return [load(entry["id"]) for entry in catalog()["tasks"]]
 
 
-def author_packet(task: dict, current_source: str = "", failure=None):
+def author_packet(task: dict, current_source: str = "", failure=None, *, backend="codesys"):
     """Information parity packet for self and Codex authors."""
+    ltl=task.get('ltl',{})
+    if isinstance(ltl,dict):ltl={k:v for k,v in ltl.items() if k!='execution'}
     return {
         "task_id": task["id"],
         "title": task["title"],
@@ -54,8 +53,8 @@ def author_packet(task: dict, current_source: str = "", failure=None):
         "requirements": task["requirements"],
         "additional_constraints": task.get("constraints", []),
         "interface": task["interface"],
-        "ltl_requirements": task.get("ltl", {}),
-        "backend_notes": BACKEND_NOTES,
+        "ltl_requirements": ltl,
+        "backend_notes": backend_notes(backend),
         "current_source": current_source,
         "actual_failure": failure,
         "limits": {
@@ -63,6 +62,7 @@ def author_packet(task: dict, current_source: str = "", failure=None):
             "max_model_requests": 24,
             "timeout_seconds": 1800,
             "expected_tables": "host_owned_not_visible",
+            "reserved_internal_prefix": "PVL_ (verification wrapper storage; do not use in candidate code)",
         },
     }
 

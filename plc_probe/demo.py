@@ -129,7 +129,7 @@ def render_report(result: dict, output: Path) -> None:
         "- `results.json`：源代码 SHA256、每个场景结论、构建日志位置、环境。",
         "- `counterexamples/*.json`：精简输入、逐轮实际/预期输出、违反的性质及重放状态。",
         "- `../../examples/manifest.json`：人工故障定义及全部 ST 源码位置。",
-        "- `../../docs/CONTRACTS.md`：扫描语义、时间约定、规约与假设。", "",
+        "- `../../docs/FORMAL_MAIN_FLOW.md`：扫描语义、时间约定、规约与假设。", "",
     ])
     (output / "report.md").write_text("\n".join(markdown), encoding="utf-8")
     selected_key = "blower__timer_not_reset"

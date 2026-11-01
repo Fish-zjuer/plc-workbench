@@ -3,12 +3,12 @@
 R5 can register a CODESYS implementation without replacing the task orchestrator.
 An adapter owns capabilities, evaluate(source,spec,cancel,extra), replay and fingerprint.
 """
-from .task_spec import capability_report
-from .task_runner import evaluate_task,execute_task,execution_fingerprint
+from plc_agent.task_spec import capability_report
+from plc_agent.task_runner import evaluate_task, execute_task, execution_fingerprint
 
 def replay_identity(result):
     """Compare observed behavior, ignoring per-invocation evidence paths/nonces."""
-    from .task_spec import digest
+    from plc_agent.task_spec import digest
     return digest({k:v for k,v in result.items() if k not in ('vendor_evidence','vendor_evidence_files')})
 
 class OfflineBackend:
@@ -20,11 +20,11 @@ class OfflineBackend:
         return execute_task(artifact,spec,cases,cancel_event)
     def fingerprint(self):return execution_fingerprint()
 
-from .codesys import CodesysBackend
+from plc_agent.codesys import CodesysBackend
 _FACTORIES={"offline":OfflineBackend,'codesys':CodesysBackend}
 
 def register_backend(name,factory):
-    from .task_spec import identifier
+    from plc_agent.task_spec import identifier
     identifier(name)
     if name in _FACTORIES:raise ValueError("Backend already registered: "+name)
     _FACTORIES[name]=factory

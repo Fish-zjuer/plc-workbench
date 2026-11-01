@@ -34,8 +34,8 @@ class TaskUITests(unittest.IsolatedAsyncioTestCase):
         asyncio.get_running_loop().set_debug(False)
 
     async def test_task_inspector_requires_human_checkbox_before_confirmation(self):
-        from plc_agent.tui import Workbench
-        from plc_agent.task_ui import TaskInspector
+        from plc_agent.legacy.tui import Workbench
+        from plc_agent.legacy.task_ui import TaskInspector
         from textual.widgets import Button,Checkbox
         with tempfile.TemporaryDirectory(dir=cache_dir()) as folder:
             project=Project.create('Task inspector',Path(folder));session=Session.create(project)
@@ -65,7 +65,7 @@ class TaskUITests(unittest.IsolatedAsyncioTestCase):
                 self.assertFalse(list(project.workspace.rglob('*.st')))
 
     async def test_tui_import_show_accept_and_run_in_plan_mode(self):
-        from plc_agent.tui import Workbench
+        from plc_agent.legacy.tui import Workbench
         with tempfile.TemporaryDirectory(dir=cache_dir()) as folder:
             project=Project.create("TUI task fixture",Path(folder));session=Session.create(project)
             config=ModelConfig(base_url="http://localhost:1/v1",model="unreachable-fixture")

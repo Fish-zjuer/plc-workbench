@@ -7,9 +7,9 @@ import threading
 import time
 import unittest
 from unittest.mock import patch
-from plc_agent import campaign, codesys_dataset, dataset
+from plc_agent import campaign; from plc_agent import codesys_dataset; from plc_agent import dataset
 from plc_agent.config import ModelConfig
-from plc_agent.provider import ProviderError
+from plc_agent.provider import ProviderError, Cancelled
 from plc_probe.backend import BackendError
 
 class CampaignTests(unittest.TestCase):
@@ -18,6 +18,13 @@ class CampaignTests(unittest.TestCase):
         self.cfg=ModelConfig.dmxapi(model='model-A',api_key='fixture-key')
         self.task=dataset.load('CUSTOM_02')
     def tearDown(self):self.tmp.cleanup()
+    def test_cli_loopback_bypass_preserves_external_proxy_and_exclusions(self):
+        original={'HTTPS_PROXY':'http://proxy.test:9000','NO_PROXY':'internal.test','no_proxy':'other.test,internal.test'}
+        result=campaign.local_proxy_bypass(original)
+        self.assertEqual(result['HTTPS_PROXY'],original['HTTPS_PROXY'])
+        self.assertEqual(result['NO_PROXY'],result['no_proxy'])
+        self.assertEqual(set(result['NO_PROXY'].split(',')),{'internal.test','other.test','127.0.0.1','localhost','::1'})
+        self.assertEqual(original['NO_PROXY'],'internal.test')
     def trial(self):return campaign.Trial(self.path/'trial',self.task,self.cfg,None,threading.Event())
     def test_budget_counts_failed_requests_without_reset(self):
         t=self.trial()
@@ -56,7 +63,7 @@ class CampaignTests(unittest.TestCase):
             self.assertEqual(t.check('new')['status'],'revision_limit')
     def test_stop_prevents_new_model_request(self):
         t=self.trial();t.stop.set()
-        with self.assertRaises(ProviderError):t.complete([])
+        with self.assertRaises(Cancelled):t.complete([])
         self.assertEqual(t.calls,0)
     def test_summary_separates_vendor_and_local(self):
         rows=[{'framework':'self','model':'A','status':'finite_pass','target_compile':'not_executed','metrics':[]},
@@ -191,7 +198,7 @@ class CampaignTests(unittest.TestCase):
 
     def test_vendor_failure_not_relabelled_as_local_pass(self):
         with patch.object(codesys_dataset,'compile_dataset',side_effect=BackendError({'status':'compile_error','diagnostics':['bad']})),patch.object(dataset,'evaluate') as evaluate:
-            result=codesys_dataset.evaluate_candidate('fixture',self.task,{'configured':True})
+            result=codesys_dataset.evaluate_candidate('fixture',self.task,{'configured':True},formal_directory=self.path/'formal')
         self.assertEqual(result['target_compile'],'failed');evaluate.assert_not_called()
     def test_vendor_timeout_retries_same_source_and_keeps_both_attempts(self):
         source=self.path/'timeout_candidate.st'

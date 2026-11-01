@@ -5,8 +5,8 @@ import json
 from pathlib import Path
 import re
 import uuid
-from . import dataset
-from .storage import atomic_json
+from plc_agent import dataset
+from plc_agent.storage import atomic_json
 
 FORMATS = {'bank_trace', 'complete_input_trace', 'profile_trace', 'struct_rows', 'analog_reference_rows', 'fifo_reference_rows'}
 NAME = re.compile(r'[A-Za-z_][A-Za-z0-9_]{0,63}\Z')

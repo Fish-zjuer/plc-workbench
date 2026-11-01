@@ -2,11 +2,11 @@
 from pathlib import Path
 import hashlib
 import uuid
-from .formal_verify import verify,fingerprint
-from .task_spec import digest
-from .task_backend import get_backend,replay_identity
-from .task_store import TaskStore
-from .storage import atomic_json
+from plc_agent.formal_verify import verify, fingerprint
+from plc_agent.task_spec import digest
+from plc_agent.task_backend import get_backend, replay_identity
+from plc_agent.task_store import TaskStore
+from plc_agent.storage import atomic_json
 from plc_probe.backend import BackendError
 
 def check(source,spec,directory,*,backend=None,artifact=None,cancel_event=None):
@@ -25,7 +25,7 @@ def check(source,spec,directory,*,backend=None,artifact=None,cancel_event=None):
             atomic_json(directory/'counterexample_replay_2.json',second)
             same=replay_identity(first)==replay_identity(second)
             claims=[p for p in report['properties'] if p['status']=='counterexample']
-            confirmed=(same and all(c['status']=='fail' and
+            confirmed=(same and len(first['cases'])==len(claims)>0 and all(c['status']=='fail' and
                 any(v.get('property')==claim['id'] for row in c['rows'] for v in row['violations']) and
                 [row['actual'] for row in c['rows']]==[row['symbolic_actual'] for row in claim['symbolic_rows']]
                 for c,claim in zip(first['cases'],claims)))

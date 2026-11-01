@@ -9,12 +9,12 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from plc_agent.backend_r4 import info
-from plc_agent.backend_capabilities import preflight
+from optional_local_tests.backend_r4 import info
+from optional_local_tests.backend_capabilities import preflight
 from plc_agent.bank_contracts import questions
 from plc_agent.config import ROOT
-from plc_agent.duration_checks import test_durations as execute_durations
-from plc_agent.reference_checks import test_references as execute_refs
+from optional_local_tests.duration_checks import test_durations as execute_durations
+from optional_local_tests.reference_checks import test_references as execute_refs
 from plc_probe.backend import _command,BackendError
 from plc_probe.config import base_cache_dir,cache_dir,toolchain_dir
 
@@ -78,7 +78,7 @@ return 0;}''')
         self.assertEqual(result.returncode,0,result.stderr)
 
     def test_original_analog_candidate_passes_and_readonly_mutation_is_caught(self):
-        source=ROOT/'experiments/workflow_r2/tasks/08/final.st'
+        source=ROOT/'tests/fixtures/workflow_r2/tasks/08/final.st'
         self.assertEqual(execute_refs(source,'08')['status'],'pass')
         code=source.read_text(encoding='utf-8')
         mutant=self.folder/'mutant.st';mutant.write_text(code.replace('FOR i := 0 TO nProc - 1 DO','FOR i := 0 TO nProc - 1 DO\n analogValues[aLower+i] := 0;'),encoding='utf-8')
@@ -87,7 +87,7 @@ return 0;}''')
         self.assertEqual(result['first_failure'].get('property'),'readonly_input')
 
     def test_fifo_count_only_mutant_is_caught_by_real_payload_checks(self):
-        source=ROOT/'experiments/backend_r4/tasks/18/final.st'
+        source=ROOT/'tests/fixtures/backend_r4/tasks/18/final.st'
         if not source.exists():self.skipTest('Live candidate not yet available')
         self.assertEqual(execute_refs(source,'18')['status'],'pass')
         code=source.read_text(encoding='utf-8')
@@ -99,7 +99,7 @@ return 0;}''')
 
     def test_duration_supplement_catches_early_maintenance_and_missing_retrigger(self):
         for q in ('04','12'):
-            source=ROOT/'experiments/backend_r4/tasks'/q/'initial_final.st'
+            source=ROOT/'tests/fixtures/backend_r4/tasks'/q/'initial_final.st'
             if not source.exists():self.skipTest('Expanded-check baseline not yet available')
             result=execute_durations(source,q)
             self.assertEqual(result['status'],'fail',q)
@@ -124,10 +124,10 @@ return 0;}''')
 
     def test_receipt_is_stale_when_backend_or_evaluation_protocol_changes(self):
         import hashlib
-        from plc_agent.engine import source_hash_for_receipt
-        from plc_agent.extended_eval import evaluation_fingerprint
+        from plc_agent.legacy.engine import source_hash_for_receipt
+        from plc_agent.legacy.extended_eval import evaluation_fingerprint
         from plc_agent.storage import Project,Session
-        from plc_agent.toolbox import Toolbox
+        from plc_agent.legacy.toolbox import Toolbox
         project=Project.create('receipt identity',self.folder);session=Session.create(project)
         source=project.workspace/'a.st';source.write_text('fixture source',encoding='utf-8')
         receipt={'source':'a.st','source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),

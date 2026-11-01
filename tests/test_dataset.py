@@ -4,10 +4,10 @@ from pathlib import Path
 import tempfile
 import unittest
 from plc_agent import dataset
-from plc_agent.dataset_cli import perform
+from plc_agent.legacy.dataset_cli import perform
 from plc_agent.config import ModelConfig,ROOT
 from plc_agent.storage import Project,Session
-from plc_agent.toolbox import Toolbox
+from plc_agent.legacy.toolbox import Toolbox
 from plc_probe.config import cache_dir
 
 class DatasetTests(unittest.TestCase):
@@ -43,7 +43,7 @@ class DatasetTests(unittest.TestCase):
             task['scenarios'][0]['response_windows'][0]['expected']={'Pending':True}
             self.assertEqual(dataset.evaluate(p,task)['status'],'pass')
     def test_reference_drivers_and_interface_guard_preserve_original_types(self):
-        task=dataset.load('PUBLIC_18');source=ROOT/'experiments/backend_r4/tasks/18/final.st'
+        task=dataset.load('PUBLIC_18');source=ROOT/'tests/fixtures/backend_r4/tasks/18/final.st'
         dataset.validate_source(source,task)
         with tempfile.TemporaryDirectory(dir=cache_dir()) as folder:
             p=Path(folder)/'bad.st';p.write_text(source.read_text(encoding='utf-8').replace('VARIANT','DINT'),encoding='utf-8')

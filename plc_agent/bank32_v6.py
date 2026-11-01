@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import re
 
-from .dataset_workflow import normalize_source as base_normalize
+from plc_agent.dataset_workflow import normalize_source as base_normalize
 
 
 def normalize_v6(code: str, block: str) -> str:

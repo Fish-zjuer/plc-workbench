@@ -20,12 +20,12 @@ import uuid
 
 from plc_probe.backend import BackendError
 from plc_probe.config import base_cache_dir
-from .config import STATE_ROOT
-from .formal_st import parse,UnsupportedST,SUPPORTED
-from .provider import Cancelled
-from .storage import atomic_json
-from .task_spec import digest,validate_source,validate_case
-from .task_runner import monitor
+from plc_agent.config import STATE_ROOT
+from plc_agent.formal_st import parse, UnsupportedST, SUPPORTED
+from plc_agent.provider import Cancelled
+from plc_agent.storage import atomic_json
+from plc_agent.task_spec import digest, validate_source, validate_case
+from plc_agent.task_runner import monitor
 
 def discover():
     result=[]
@@ -64,7 +64,8 @@ def doctor():
             'download':'https://store.codesys.com/en/codesys.html'}
 
 def _identity_files(cfg):
-    exe=Path(cfg['executable']);files=[exe,Path(__file__),Path(__file__).with_name('codesys_worker.py')]
+    exe=Path(cfg['executable']);files=[exe,Path(__file__),Path(__file__).with_name('codesys_worker.py'),
+                                    Path(__file__).with_name('codesys_tests.py'),Path(__file__).with_name('dataset.py')]
     if cfg.get('template_project'):files.append(Path(cfg['template_project']))
     # Include profile/compiler DLLs in the IDE installation, with stat-keyed content hashing.
     for folder in (exe.parent,exe.parent.parent/'Profiles',exe.parent.parent/'PlugIns'):
@@ -86,7 +87,8 @@ def fingerprint(config=None):
 @contextmanager
 def profile_lease(cfg,cancel_event=None):
     key=digest({k:cfg.get(k) for k in ('executable','profile','additional_folder')})
-    path=work_root().parent/(key+'.lock')
+    folder=STATE_ROOT/'runtime/codesys';folder.mkdir(parents=True,exist_ok=True)
+    path=folder/(key+'.lock')
     with path.open('a+b') as stream:
         if path.stat().st_size==0:stream.write(b'0');stream.flush()
         stream.seek(0)
@@ -318,7 +320,16 @@ class CodesysBackend:
                 'vendor_evidence_files':evidence}
 
 def work_root():
-    root=base_cache_dir().parent/'plc-agent/codesys/runs';root.mkdir(parents=True,exist_ok=True);return root
+    root=STATE_ROOT/'runtime/codesys/runs';root.mkdir(parents=True,exist_ok=True);return root
+
+def evidence_directory(source,stage):
+    """Keep real compiler/simulation evidence beside its submitted source."""
+    root=Path(source).resolve().parent/stage;root.mkdir(parents=True,exist_ok=True)
+    for number in range(1,10000):
+        path=root/f'attempt_{number:02d}'
+        try:path.mkdir();return path
+        except FileExistsError:continue
+    raise ValueError('Too many CODESYS invocations for one source version')
 
 def compile_unit(source,spec,cancel_event=None):
     data=Path(source).read_bytes();validate_source(data.decode('utf-8-sig'),spec)

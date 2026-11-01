@@ -176,7 +176,7 @@ def validate_source(code,spec):
     if declared!=expected:raise ValueError("Candidate changed the frozen task interface")
 
 def capability_report(spec,code=""):
-    from .backend_r4 import info
+    from optional_local_tests.backend_r4 import info
     active=info();blockers=[]
     if spec["inouts"]:
         blockers.append({"feature":"reference_bridge","message":"General scan bridge does not bind VAR_IN_OUT; no value-copy substitution.",

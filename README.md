@@ -1,194 +1,124 @@
-# PLC Workbench · 32题整合开发版 R8
+# PLC Workbench
 
-[R8 整合说明与用法](docs/INTEGRATION_R8.md) · [32题实测](experiments/dataset_r8/report.md) · [Nathan 的优化](docs/AGENT_OPTIMIZATION_R5.md)
+PLC Workbench 是面向 CODESYS 的本地 ST 代码生成与验证项目，支持模型驱动的代码生成、编译诊断、功能测试和自动修复，并提供 self / Codex 两框架、两模型的对照实验入口。单题和批量流程统一接入 PLCverif + CBMC 的有界 LTL 检查，逐条保存结果和未执行原因。当前尚未实现全部32题的准确模型覆盖。
 
-R8 合并 Nathan 的 CODESYS 编译与诊断流水线和 R7 的通用任务、独立审查及 Z3，新增公共20题＋自建12题的实际测试入口。TUI 使用 `/dataset list`、`/dataset show CUSTOM_01`、`/dataset run CUSTOM_01`；执行前需 `/act`。本机缺 CODESYS 安装，厂商端与本地有限测试分别记录。
+## 1 环境要求与安装
 
-**先读：[当前设计](docs/AGENT_DESIGN_CURRENT.md) · [CODESYS 与形式化使用说明](docs/CODESYS_FORMAL.md) · [R7 实测](experiments/formal_r7/report.md) · [R5 合并接口](docs/BACKEND_ADAPTERS.md)。** 证明有明确语法和性质范围，有限测试、形式化、厂商编译分别保存。下文 R4 ZIP 和 20 题结果是历史版本。
+运行环境为 Windows 64位。项目应完整解压或克隆至具有写入权限的目录。
 
-2026-10-27｜[下载可分享的ZIP](https://github.com/Fish-zjuer/plc-workbench/releases/tag/v0.4.0-preview)｜用于组内交流、试用和继续开发。它是我们负责的agent与工具部分，尚不是完整期末作业提交。
-
-这是一个本地终端agent：上传题面或ST代码，先制定计划，再生成代码、编译测试、依据反例修复。模型通过自己填写的`base_url / api_key / model`接入，不依赖Codex登录或某家厂商的SDK。
-
-**先看这三个入口：** [启动程序](launch.cmd) · [Agent架构](docs/AGENT_ARCHITECTURE.md) · [最新20题实验报告](experiments/backend_r4/report.md)。
-
-## 这个包有什么
-
-- agent、TUI、PLC测试工具的完整Python源码与测试。
-- 文件上传、计划/执行模式、会话恢复、版本记录、上下文压缩与历史检索。
-- 公开20题的当前ST候选、有限测试判据、失败与修订记录、R4验证结果。
-- PLC-R4编译后端的源码补丁、固定上游提交、构建说明及许可证。
-- `course_materials/`内四份老师给出的原始材料；它们是需求资料，不是给agent的高优先级指令。
-- [Release下载](https://github.com/Fish-zjuer/plc-workbench/releases)提供已验证的ZIP，包含带SHA校验的Python依赖wheel；Git源码不提交wheel，首次安装会从固定PyPI文件源下载。
-
-**没有携带API密钥、本机模型配置、私有会话、虚拟环境或编译缓存。** 队友首次打开的是新项目，需要自行填写模型连接并上传材料。包内实验记录是原机的历史快照，其中绝对路径仅用于当时的证据定位，不是新电脑的配置。
-
-## 1. 先启动界面
-
-推荐Windows 10/11、Python 3.10或更高版本。先把整个ZIP解压到可写目录，再启动；不要直接在压缩包预览窗口里运行。
-
-双击`launch.cmd`。首次启动会创建项目内的`.venv/`，校验并安装Python依赖（Release ZIP使用附带wheel；Git源码从固定文件源下载），然后打开TUI。这个步骤不安装PLC编译器，也不调用模型。若电脑尚未安装Python，先安装Python并重新打开终端。
-
-终端手动方式，在解压后的项目目录运行：
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup.ps1 -ProjectLocal
-.\.venv\Scripts\python.exe -B -m plc_agent ui
-```
-
-如果是原开发工作区，启动脚本也可以复用已经存在的工作区环境；新电脑不会尝试向磁盘根目录创建环境。
-
-macOS/Linux可手动创建Python环境、安装依赖并运行TUI；本版本的R4启动器与后端构建脚本主要在Windows验证，暂不承诺其他平台的PLC测试开箱可用。
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --require-hashes -r requirements.lock
-# 若解压的是Release ZIP，也可离线安装：
-# python -m pip install --no-index --find-links vendor/wheels --require-hashes -r requirements.lock
-python -B -m plc_agent ui
-```
-
-## 2. 填写自己的模型连接
-
-点击“模型配置”，填写自己的服务信息。
-
-| 配置项 | 填写内容 |
+| 功能范围 | 环境依赖 |
 |---|---|
-| Base URL | 服务商提供的Chat Completions兼容地址，通常含`/v1`；程序不会自动补`/v1` |
-| API key | 自己的密钥；无需鉴权的本地服务可留空 |
-| 模型ID | 服务商实际支持的模型名 |
-| 工具协议 | 支持function calling选“原生”；否则使用JSON兼容模式 |
-| 上下文窗口/输出上限 | 按模型实际能力设置，不能只把数值填大 |
-| 独立审查模型 | 可留空，此时用主模型的新上下文 |
+| 打开网页、填写API并测试连接 | Python 3.10或更高版本，安装时让终端能找到 python 或 py；首次安装依赖需要联网 |
+| 默认 CODESYS 编译与仿真测试 | 上述环境，加 CODESYS Development System及脚本支持；不需要本地 ST 编译器或 g++ |
+| 无 CODESYS 的本地备用测试 | 保留 optional_local_tests/，另需 Git、Node.js 22或更高版本及npm、支持C++17的g++与 R4 后端 |
+| 源模型有界 LTL 检查 | 同级 `plcverif/` 中的 PLCverif CLI、匹配的 Java 运行环境（当前包使用 Java 25）、CBMC；实际支持范围见下文 |
+| 运行 self 与 Codex 两框架批量对照 | 上述环境，加项目适配的 Codex CLI 0.80.0 |
 
-发送`/test`做一次连接测试，会产生模型请求。Base URL可以直接填写完整`/chat/completions`端点。
+Python依赖保留Z3求解器供开发检查使用，当前网页主流程不调用它。默认由 CODESYS 执行厂商编译与仿真功能测试，各阶段结果分别记录。无 CODESYS 的同学可取消页面中的 CODESYS 选项，明确使用 `optional_local_tests/` 中的本地备用流程。该目录提交前可整体删除，不影响 CODESYS 主流程。详见 [CODESYS 测试说明](docs/CODESYS_TESTING.md)。
 
-本轮实验用的是DeepSeek服务，主任务使用低思考、16384输出预算、120秒超时。若选择同一服务，可参考扩展参数：
+在项目根目录执行以下命令，准备完整实验环境：
 
-```json
-{"thinking":{"type":"enabled"},"reasoning_effort":"low"}
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup-reproduction.ps1
 ```
 
-仅压缩使用的扩展参数可以单独设置为：
+该脚本创建项目虚拟环境、校验题库，并安装实验适配的 Codex CLI；默认不下载或构建本地 ST 编译器。安装 Codex 需要 Node.js 与 npm，可用 `-SkipCodex` 跳过。只有添加 `-WithOptionalLocalTests` 才构建并启用备用后端，此时另需 Git 和 g++，并保留 `optional_local_tests/`。CODESYS 需自行安装和配置。依赖下载需要联网。
 
-```json
-{"thinking":{"type":"disabled"}}
-```
+## 2 启动服务
 
-这些是本次服务实验的设置；**换其他服务时先留`{}`，不要照搬厂商参数。** 模型ID以自己的服务实际提供为准。
+双击项目根目录的 **`start.cmd`**。
 
-`.env.example`只是格式示例，程序不会自动加载`.env`。界面保存的密钥位于本地`agent_data/private/`，没有加密承诺。修改后的本地项目再次分享前，应排除整个`agent_data/`。
+首次缺少Python虚拟环境时，会创建项目内 `.venv/` 并安装Python依赖；这一步不调用模型，也不会安装CODESYS或功能测试后端。依赖准备完成后会打开浏览器。
 
-## 3. 试一次基本流程
+网页地址：[http://127.0.0.1:18765](http://127.0.0.1:18765)。运行期间保留启动窗口；停止服务时在该窗口按 `Ctrl+C`。
 
-无需PLC编译器就能先体验上传、资料讨论和计划：
+默认端口被占用时，可关闭已有服务，或运行 `start.cmd --port 18766` 指定其他端口。
 
-1. 点击“上传”或`Ctrl+O`，导入`course_materials/`中的题面、PDF、DOCX、ZIP，或自己的ST文件。
-2. 默认是计划模式，可以读取材料和保存计划；写代码、编译、执行由工具层禁止。
-3. 输入“先读作业要求，给我一个agent设计和验证计划”，或发送`/solve 05`查看第05题的固定计划。
-4. 需要真正实现与测试时，先完成下一节后端配置，再发送`/act`切换执行模式，然后再次`/solve 05`。
+## 3 配置模型与CODESYS
 
-| 操作 | 用途 |
+打开网页左侧 **模型与环境**。
+
+**模型配置：** 网页使用DMXAPI的Chat Completions兼容接口。配置API Key及服务支持的模型ID后保存，可通过“测试连接”验证接口。连接测试会产生模型请求，计入服务用量。配置由界面保存；程序不自动加载 `.env` 文件。
+
+API密钥保存在本机 `agent_data/private/`，该目录不纳入源码分发。网页结果接口不返回完整密钥。
+
+**CODESYS配置：** 填写本机 `CODESYS.exe` 完整路径、准确Profile名称，以及一个专用空白 `.project` 模板：
+
+1. 在CODESYS新建 Standard Project，选择ST语言。
+2. 保留Application、空的PLC_PRG，以及调用PLC_PRG的循环任务。
+3. 切换Simulation并另存为专用 `.project` 文件，不使用生产工程。
+4. 将完整文件路径填到网页，保存后点击“验证编译器（正/负对照）”。
+
+编译在模板副本中执行，当前流程不连接实体PLC。编译器可用性以正/负对照结果为依据；“检查环境”用于检查依赖和配置状态。
+
+## 4 题库导入与单题运行
+
+1. 打开 **题库与规约**。
+2. 点击选择文件，导入完整题库 **`datasets/course32.json`**。
+3. 进入 **代码工作台** 并选择任务。`CUSTOM_09` 可用于验证单题运行流程。
+4. 启用“使用 CODESYS 编译与仿真测试”。形式化阶段自动读取该题的 LTL，保存逐条状态、扫描上界和反例。
+5. 点击 **生成并自动修复**。系统在预算范围内生成代码、执行检查并根据诊断修复，模型请求计入服务用量。
+6. 在右侧查看阶段、指标和日志，切换代码版本查看修订；可下载ST和详细日志。
+
+“编译与验证检查”检查当前编辑器代码，不调用作者模型；“CODESYS编译”仅执行编译阶段，功能测试和形式化验证状态单独记录。
+
+**形式化的统一入口覆盖32题，完整程序模型覆盖尚未完成。** 题库的233条公式保持原文，`ltl.execution` 补充辅助命题和独立观察器；30题已有转换定义，开放数组与VARIANT两题仍需存储/引用模型。默认后端改为CBMC，使用IEEE浮点模型；由CFA类型信息修正REAL常量和非确定输入函数的类型。混合精度常量及REAL数学库调用仍保守拒绝，不能将浮点小样本通过视为全部浮点题已支持。其他CODESYS语法或库不支持、超时同样逐条报告。
+
+在“模型与环境”中设置扫描上界（默认20）、规约采样周期（默认10ms）、每版形式化时间上限（默认120秒）和程序内部循环展开上限（默认256）。结论仅针对记录的扫描范围与假设，不是无限扫描证明。新配置及题库快照随运行保存。详细协议见 [形式化流程](docs/FORMAL_MAIN_FLOW.md)。修改题库后，重启服务并重新导入 `datasets/course32.json`；已有实验保留旧快照。
+
+## 5 运行四组对照实验
+
+对照实验位于 **实验记录** 页面。批量运行前应完成单题流程验证：
+
+1. 在“模型与环境”填写模型 A 和模型 B 的准确 ID 并保存，B 首次预填 qwen3.8-flash，可自行修改。模型名称统一保存到config.json，实验页自动读取并显示，不另存一份名称。
+2. 选择题库范围、模型推理参数、并发数及CODESYS编译选项。
+3. 点击“检查配置（不调用模型）”，检查当前两模型的参数、所选题目、密钥是否已配置和本地工具路径；此步骤不测试模型连通性，也不实际编译或仿真。
+4. 点击“开始2×2实验”，执行 self/Codex × 模型A/B 四种设置。完整32题对应128次任务，模型用量按实际请求计费。可选择“仅工作台当前题目”进行小规模验证。
+
+推理设置按模型在当前浏览器保存，支持思考开关的模型首次默认为关闭思考；刷新后保留选择。题库范围显示实际题数：全部已导入题目包含当前工作区的各次导入，“当前题目所属题库”只包含该题所在的一次导入；只有一份题库时合并相同范围。最近导入的题目列表与选择也在当前浏览器保留。
+
+“同时运行任务数”默认16，指最多同时执行16个“题目×框架×模型”组合，结束一个后再补入下一个。它不代表有16个CODESYS实例；CODESYS编译与仿真仍按Profile排队。
+
+两框架共用每题6个源码版本、24次模型请求和1800秒预算，传输重试和返修共用原模型请求预算；形式化工具不请求模型，其耗时计入1800秒总预算。未在CODESYS复现的形式化源模型反例停止为 `formal_blocked`，保留反例供复核。页面分别显示首次/最终CODESYS编译、测试用例与任务通过、形式化状态、请求数、Token及耗时。
+
+## 6 输出目录与指标
+
+直接打开项目中的 `outputs/` 文件夹查看结果，不需要执行额外的 cmd 文件：
+
+| 位置 | 用途 |
 |---|---|
-| `Ctrl+Enter` / 发送 | 发送多行输入；普通回车换行 |
-| `/plan`、`/act` | 切换计划/执行模式 |
-| `/solve 18 code/fifo.st` | 实现或修复指定公共题，使用指定候选路径 |
-| `/compact`、`/memory` | 压缩较早历史、查看工作记忆 |
-| `/history 停止优先` | 找回原始会话中的相关内容 |
-| `/pin 内容`、`/pins`、`/unpin 1` | 管理不经过摘要的固定笔记 |
-| `/sessions`、`/export` | 恢复会话、导出对话 |
-| `/backend` | 查看实际验证后端与范围 |
-| `Esc` | 请求停止；当前有界编译/执行步骤可能需要结束后才返回 |
+| `outputs/single/时间戳_题号/` | 一次单题运行 |
+| `outputs/campaigns/时间戳/` | 一轮四组实验 |
+| 每轮 `SUMMARY.md` | 整轮状态和结果摘要 |
+| 每轮 `results.csv` | 每题结果、失败原因和具体文件夹 |
+| `tasks/题号/self_A/` 等 | 某题、某框架及模型的独立记录 |
+| 每题 `SUMMARY.md`、`final.st`、`run.log` | 人阅读的摘要、最终代码和过程 |
+| 每题 `details/` | JSON结论、统计、请求、各版源码及检查证据 |
 
-压缩采用模型工作记忆＋按预算保留近期原文。默认近期要求2轮，空间足够会多保留，轮数可配置；长历史分段总结，中断后可续接。计划、固定笔记、完整源码SHA另行保留，原始记录可检索。
+外层只放常看的结果，详细文件按需打开。模型输入输出与源码版本不再重复保存多套副本。CODESYS编译与仿真证据随提交版本保存，不再散落在其他输出目录。目录名使用北京时间，完整说明见 [输出说明](outputs/README.md)。
 
-## 4. 配置PLC编译测试后端
+暂停会等待当前任务结束，然后停止领取新任务，可在服务仍运行时继续。结束实验会取消未完成任务，不能原地继续。服务关闭后记录仍保留，下次打开在“实验记录”中查看；“清空记录”只隐藏历史，不删除磁盘文件。
 
-**TUI能打开，不代表PLC工具链已经安装。** 新电脑需要另外准备Git、Node.js≥22、npm，以及支持C++17的g++，并确保这些命令在终端可用。
+网页支持查看指标、逐版代码和日志，并导出结果。`passed`或`finite_pass`表示对应检查范围内的通过状态；完整LTL、目标硬件和工业安全保证不在该状态的结论范围内。
 
-先在项目目录检查：
+## 常见问题
 
-```powershell
-git --version
-node --version
-npm --version
-g++ --version
-```
+- **找不到Python或安装失败：** 先安装Python并重新打开终端，再运行start.cmd；保留启动窗口中的错误信息。
+- **API测试失败：** 检查Key、额度、准确模型ID及网络，模型ID以接口实际提供的名称为准。
+- **Codex刚开始就502且模型请求为0：** 本机中转可能被系统代理拦截。start.cmd和Codex子进程会为127.0.0.1、localhost、::1设置代理排除；外网仍沿用现有代理配置。更新后需重启服务。
+- **缺少功能测试后端、g++或Codex：** 按环境要求安装工具并执行setup-reproduction.ps1。
+- **CODESYS配置失败：** 检查exe、Profile、模板和脚本支持；批量实验前须通过编译器正/负对照。
+- **形式化显示not_configured：** 检查同级 `plcverif/` 中的CLI、Java与CBMC路径。
+- **形式化显示unsupported：** 查看逐条原因；包括未适配的浮点表达式、开放数组、VARIANT及STEP7前端不支持的源程序特性。该状态不表示已验证通过。
+- **形式化显示formal_blocked：** 已取得源模型反例，尚未在CODESYS复现；当前不据此自动修改程序。
+- **修改代码后网页还是旧版：** 关闭旧服务窗口，重新运行start.cmd并刷新网页。
 
-构建R4需要联网下载固定源码及npm锁定依赖，不会安装到系统PATH：
+## 源码结构
 
-```powershell
-.\.venv\Scripts\python.exe -B -m plc_agent.backend_r4 build
-.\.venv\Scripts\python.exe -B -m plc_agent.backend_r4 activate
-.\.venv\Scripts\python.exe -B -m plc_agent.backend_r4 status
-```
+主流程按 `web.py → campaign.py → dataset_workflow.py → codesys_dataset.py → dataset_formal.py → run_output.py` 组织，各模块开头提供用途说明。模块职责及调用关系见 [代码导读](docs/CODE_GUIDE.md)。
 
-产物写入当前工作区缓存，或用户目录`.cache/plc-probe/`；选中状态写入本地`agent_data/backend.json`。包里没有预先选中的原机绝对路径，也不需要原机的`R:`测试盘符。
+题库内容与去重说明见 [datasets/README.md](datasets/README.md)。当前流程变更见 [变更说明](docs/CURRENT_FLOW_CHANGES.md)。原始课程资料保留文件名和内容；私有配置、运行环境和本机输出不纳入源码分发。
 
-R4后端提供LTIME、一维开放数组和本地PV1泛型引用接口。第18题的PV函数只查询容量、检查类型及复制一个元素，FIFO算法仍由ST实现。它不等于Siemens/CODESYS的VARIANT接口兼容。详细语义、补丁、源码提交与许可证见[后端说明](backend_extensions/README.md)。
+## 代码与入口整理
 
-## 5. 不花模型费用，重放已有候选
-
-后端配置完成后，下面的命令直接执行包里的20份ST，不需要API key，也不会生成或修改候选：
-
-```powershell
-.\.venv\Scripts\python.exe -B -m plc_agent.check_bank
-# 或只检查FIFO
-.\.venv\Scripts\python.exe -B -m plc_agent.check_bank --ids 18
-```
-
-结果默认保存到`reports/team_bank_check.json`。当前候选源码在`experiments/backend_r4/tasks/01..20/final.st`，题面文本在`experiments/deepseek_20/questions.json`。
-
-完整单元/集成回归还涉及旧发布后端专属用例与历史实验快照。若准备复现整套开发检查，可先下载保留的旧发布版，再构建并选中R4：
-
-```powershell
-.\.venv\Scripts\python.exe -B -m plc_probe bootstrap
-.\.venv\Scripts\python.exe -B -m plc_agent.backend_r4 build
-.\.venv\Scripts\python.exe -B -m plc_agent.backend_r4 activate
-.\.venv\Scripts\python.exe -B -m unittest discover -s tests -v
-```
-
-历史批测脚本用于原机实验，不是首次启动步骤；其中余额检查、原机凭据发现及绝对证据路径不适合直接在新电脑原样运行。日常体验用`launch.cmd`，重放候选用`plc_agent.check_bank`。
-
-## 已经验证到什么程度
-
-- 当前20份候选在PLC-R4离线后端下通过有限检查，每题各重放两次；原固定判据没有修改。
-- 另换随机种子检查了3261个扫描点，各重放两次；FIFO比较实际出队值，覆盖整数、浮点、布尔和记录类型。
-- 工具回归运行126项：125通过、1项旧后端专属检查跳过；上游选定类型、数组及转换检查93项通过。
-- 自然语言入口从原来错误的FIFO源码出发，实际完成过生成、编译和测试；独立对抗审查及失败尝试都留档。
-
-这来自**既有候选的持续修复＋后端和测试覆盖扩展**，不是独立生成的100%正确率。没有运行厂商编译器、形式化求解器或实体PLC。07/17目前仍使用显式copy-in/copy-out检查；PV1未验证厂商ABI；TIME的离线64位纳秒表示未模拟所有目标平台的溢出行为。
-
-## 接下来怎么一起开发
-
-建议先看[架构说明](docs/AGENT_ARCHITECTURE.md)，再分工查看：
-
-| 目录/文件 | 负责内容 |
-|---|---|
-| `plc_agent/tui.py`、`engine.py` | 终端界面和通用agent工具循环 |
-| `plc_agent/workflow.py` | 题意→提案→接口检查→写版本→编译测试→修复 |
-| `plc_agent/context_memory.py` | 模型摘要、分段续接、近期原文和精确引用 |
-| `plc_agent/provider.py`、`config.py` | 服务无关的模型传输和配置 |
-| `plc_agent/toolbox.py`、`storage.py` | 文件工具、计划边界、版本、会话和执行记录 |
-| `plc_probe/` | 实际ST编译、扫描执行、反例和回归 |
-| `reference_checks.py`、`duration_checks.py` | 引用数据和时间边界的新增判据 |
-| `backend_extensions/` | 固定后端源码补丁、构建及许可证 |
-| `experiments/`、`tests/` | 历史证据与开发回归 |
-
-组里还需要继续完成自建题库、目标平台交叉验证、作业要求的实验对比，以及最终实验报告、PPT和6分钟内的视频。本包重点交付agent设计部分；原始课程要求以`course_materials/`为准。
-
-上传附件、读取本地文本后，按需正文会发给配置的模型服务。不要将密钥写进源码、题面或提交到共享压缩包。
-
-## 浏览器工作台与老师指定中转站
-
-运行 `python -m plc_agent web`，访问 http://127.0.0.1:8765 。支持题库、代码生成/修复、源码版本、实验记录与 DMXAPI 配置；详见 [DMXAPI 与网页工作台](docs/DMXAPI_WEB.md)。
-
-## CODESYS 编译与 2×2 批量实验
-
-网页“模型与环境”可配置/验证 CODESYS，“代码工作台”可执行厂商编译，“实验记录”可启动两个框架 × 两个模型的批量对比。操作与脚本见 [CODESYS 和 2×2 实验](docs/CODESYS_WEB_EXPERIMENTS.md)。
-
-
-## 从 GitHub 复现当前网页与完整数据
-
-请使用 `bank32-v6` 分支，按 [完整复现步骤](docs/REPRODUCE_FROM_GITHUB.md) 配置。可直接导入的完整32题在 [datasets/importable/course32_20261030.json](datasets/importable/course32_20261030.json)，队友原始交付和逐题测试、LTL、溯源在 `datasets/team_delivery_20261030/`。执行 `python scripts/verify_reproduction_data.py` 可离线校验数据；`scripts/setup-reproduction.ps1` 帮助构建R4与安装当前项目内的Codex依赖。API密钥、CODESYS安装和本机工程配置需自行准备。
+日常只需执行 `start.cmd`；查看结果直接打开 `outputs/`，不需要另运行 cmd 文件。主命令入口只保留网页与 CODESYS 环境工具。历史终端和旧批测代码已归入 `plc_agent/legacy/`，本地专用编译器、驱动与补丁集中在 `optional_local_tests/`。后者提交前可以整体删除。目录分工与保留理由见 [代码导读](docs/CODE_GUIDE.md)。

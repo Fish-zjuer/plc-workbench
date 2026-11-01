@@ -1,6 +1,6 @@
 """Lossless ST import helpers shared by validation and CODESYS batching."""
 import re
-from .bank_contracts import block
+from plc_agent.bank_contracts import block
 
 
 def mask_noncode(source):

@@ -1,42 +1,47 @@
-"""Explicit, reviewed safety-property mappings; no automatic claim of full LTL support."""
+"""统一形式化入口：全部题目逐条读取LTL，编译/测试与有界验证分别记录。"""
 from pathlib import Path
-from . import dataset
-from .task_spec import validate_spec
-from .formal_verify import verify
 
-def specification(ident):
-    task=dataset.load(ident);properties=[]
-    def prop(name,when,then):properties.append({'id':name,'requirement':'R1','when':when,'then':then})
-    if ident=='CUSTOM_09':
-        prop('P02_maintenance',{'inputs.Maintenance':True},{'outputs.State':2})
-        prop('P03_exit_maintenance',{'inputs.Maintenance':False,'previous.outputs.State':2},{'outputs.State':0})
-        prop('P04_calibrated',{'inputs.Maintenance':False,'previous.outputs.State':0,'inputs.CalibDone':True},{'outputs.State':1})
-        prop('P05_wait_calibration',{'inputs.Maintenance':False,'previous.outputs.State':0,'inputs.CalibDone':False},{'outputs.State':0})
-        prop('P06_qualified_stays',{'inputs.Maintenance':False,'previous.outputs.State':1},{'outputs.State':1})
-        for state in (0,1,2):
-            prop('P07_calib_'+str(state),{'outputs.State':state},{'outputs.CalibReq':state==0})
-            prop('P08_lamp_'+str(state),{'outputs.State':state},{'outputs.MaintLamp':state==2})
-            prop('P09_permit_'+str(state),{'outputs.State':state,'inputs.MeasureReq':True},{'outputs.MeasurePermit':state==1})
-        prop('P09_no_request',{'inputs.MeasureReq':False},{'outputs.MeasurePermit':False})
-    elif ident=='CUSTOM_10':
-        prop('P04_cancel',{'inputs.Cancel':True},{'outputs.Pending':False,'outputs.Dispatched':False,'outputs.RequestLamp':False})
-        for pending in (False,True):prop('P03_lamp_'+str(int(pending)),{'outputs.Pending':pending},{'outputs.RequestLamp':pending})
-        prop('P07_exclusion',{'outputs.Pending':True},{'outputs.Dispatched':False})
-        prop('P02_busy',{'inputs.Busy':True},{'outputs.Dispatched':False})
-        prop('P02_not_ready',{'inputs.ServiceReady':False},{'outputs.Dispatched':False})
-        prop('P05_retain',{'inputs.Cancel':False,'previous.outputs.Pending':True,'inputs.Busy':True},{'outputs.Pending':True,'outputs.Dispatched':False})
-    else:raise ValueError('No reviewed source-level formal mapping for '+ident)
-    case=task['scenarios'][0]
-    return validate_spec({'schema':'plc-task-v1','title':task['title'],'block':task['block'],'target':'offline',
-        'requirements':[{'id':'R1','text':task['requirements']}],
-        'inputs':dataset.ports(task,'Input'),'outputs':dataset.ports(task,'Output'),
-        'scenarios':[{'name':'supplied_formal_fixture','covers':['R1'],'trace':[{'time_ms':r['time_ms'],'inputs':r['inputs'],'expect':r.get('expected',{})} for r in case['trace']]}],
-        'properties':properties,'formal':{'mode':'required','bound':20}})
 
-def check(ident,source,directory):
-    spec=specification(ident)
-    from .storage import atomic_json
-    atomic_json(Path(directory)/'contract.json',spec)
-    result=verify(source,spec,directory,bound=20)
-    result['mapping_scope']='Only these explicit safety-property mappings of supplied LTL; full LTL, macros and liveness not proved.'
-    atomic_json(Path(directory)/'formal.json',result);return result
+def attach(result, task, source, directory, *, cancel_event=None, timeout_seconds=None, config=None):
+    """保留独立编译/测试结论；源模型反例须复核，不能当作已在CODESYS复现。"""
+    import hashlib
+    from plc_agent.storage import atomic_json
+    from plc_agent.provider import Cancelled
+    from plc_agent.run_output import event
+    from plc_agent import plcverif_backend
+    backend='plcverif+'+(config or plcverif_backend.configuration()).get('engine','nuxmv')
+    if cancel_event is not None and cancel_event.is_set():
+        raise Cancelled('Formal verification cancelled')
+    directory=Path(directory);directory.mkdir(parents=True,exist_ok=True)
+    spec=task.get('ltl',{})
+    atomic_json(directory/'requirements.json',spec)
+    from plc_agent.ltl_adapter import properties, Unsupported
+    spec_error=None
+    try:declared=properties(spec)
+    except Unsupported as exc:declared=[];spec_error=str(exc)
+    if spec_error:
+        raw=spec.get('properties',[]) if isinstance(spec,dict) else []
+        report={'status':'invalid_spec','backend':backend,'model_calls':0,
+                'declared_ltl_total':len(raw) if isinstance(raw,list) else 0,'properties':[],
+                'bounded_verified_property_ids':[],'proved_property_ids':[],
+                'mapped_assertions_total':0,'full_ltl_proved':False,'message':spec_error}
+        atomic_json(directory/'formal.json',report)
+    elif result.get('status') not in ('pass','compiled_without_tests'):
+        report={'status':'not_executed','backend':backend,'model_calls':0,
+                'source_sha256':hashlib.sha256(Path(source).read_bytes()).hexdigest() if Path(source).is_file() else None,
+                'declared_ltl_total':len(declared),
+                'properties':[{**p,'status':'not_executed'} for p in declared],
+                'bounded_verified_property_ids':[],'proved_property_ids':[],'mapped_assertions_total':0,
+                'full_ltl_proved':False,'message':'Repair compilation or functional tests before formal verification.'}
+        atomic_json(directory/'formal.json',report)
+    else:
+        report=plcverif_backend.verify(task,source,directory,cancel_event=cancel_event,timeout_seconds=timeout_seconds,config=config)
+    event(directory.parent,'formal_result',status=report['status'],backend=report.get('backend'),bound=report.get('bound'),
+          unwind=report.get('unwind'),unwind_complete=report.get('unwind_complete'),
+          valid_domain_witness=report.get('valid_domain_witness'),
+          properties=report['properties'],message=report.get('message'),evidence_path=str(directory.resolve()))
+    combined={**result,'formal_verification':report,'ltl_status':report['status'],
+              'finite_test_status':result.get('status')}
+    if report['status']=='counterexample':
+        combined.update(status='formal_blocked',message='PLCverif source-model counterexample requires CODESYS replay before automatic code repair.')
+    return combined

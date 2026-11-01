@@ -98,26 +98,37 @@ def main():
                 # Simulation is rechecked immediately before every online operation.
                 if not device.get_simulation_mode():raise RuntimeError('Simulation mode changed before login')
                 with online.create_online_application(app) as connection:
+                    stage('simulation_login')
                     connection.login(OnlineChangeOption.Never,False)
                     try:
+                        stage('simulation_running')
                         connection.reset(ResetOption.Cold)
                         connection.start()
                         started=time.time()
                         while str(connection.read_value('PLC_PRG.WB_Done')).upper() not in ('TRUE','BOOL#TRUE'):
-                            if time.time()-started>30:raise RuntimeError('Simulation harness did not complete in 30 seconds')
+                            if time.time()-started>request.get('simulation_timeout_seconds',30):raise RuntimeError('Simulation harness execution timed out')
                             system.delay(50)
                         connection.stop()
+                        stage('reading_simulation_outputs')
                         rows=[]
                         for index in range(request['row_count']):
-                            row={}
                             # IronPython 2 dictionaries do not preserve the host's port order.
-                            for output_no,name in enumerate(request['output_names']):
-                                row[name]=str(connection.read_value('PLC_PRG.WB_Out{0}[{1}]'.format(output_no,index)))
+                            expressions=tuple('PLC_PRG.WB_Out{0}[{1}]'.format(output_no,index)
+                                              for output_no in range(len(request['output_names'])))
+                            values=connection.read_values(expressions)
+                            if len(values)!=len(expressions):raise RuntimeError('Incomplete CODESYS output batch')
+                            row=dict((name,str(value)) for name,value in zip(request['output_names'],values))
                             rows.append(row)
                         result['actual_rows']=rows
+                        if request.get('record_scan_times'):
+                            timestamps=connection.read_values(tuple('PLC_PRG.WB_ActualMs[{0}]'.format(i) for i in range(request['row_count'])))
+                            result['actual_scan_times_ms']=[int(str(value).split('#')[-1]) for value in timestamps]
                     finally:
+                        # A completed run was already stopped before reading.
+                        # CODESYS raises when stop() is called again in STOP state.
                         try:connection.stop()
-                        finally:connection.logout()
+                        except Exception:pass
+                        connection.logout()
             result['status']='completed'
     except Exception as exc:
         result['message']=str(exc)

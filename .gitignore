@@ -1,26 +1,54 @@
-agent_data/
-.venv/
-.runtime/
-vendor/wheels/
-__pycache__/
-*.pyc
+# Private configuration and installed runtimes
+/agent_data/
+/.venv/
+/.runtime/
+/vendor/wheels/
 .env
 .env.*
 !.env.example
 
-# Local/generated output and private account state
-*.zip
+# Generated results, reports and workspace scratch files
+/outputs/**
+!/outputs/README.md
+/reports/
+/experiments/
+/.tmp-tests/
+/tmp/
+# Local developer regression tests; assignment cases stay in datasets/course32.json.
+/tests/
+/PLC-team-package-*/
 *.validation.json
-!course_materials/*.zip
+*.log
 *.log.tmp
-PLC-team-package-*/
-reports/local_setup/codesys/run-*/
+*.tmp
 
-# Local experiment evidence; publish only selected summaries.
-reports/experiments/
-reports/codesys_public20/
-reports/agent_optimization/
-reports/handoff_audit_20261028/
-reports/workspace_audit_20261027/
-reports/public20_v2_validation/
-reports/local_setup/
+# Python, JavaScript and editor caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+node_modules/
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
+~$*
+
+# CODESYS generated images, monitoring settings and build caches
+*.app
+*.crc
+*.opt
+*.precompilecache
+*.compileinfo
+*.bootinfo
+*.bootinfo_guids
+*.~u
+*.projectarchive
+
+# Downloaded archives; course source archives are intentional inputs
+*.zip
+!/course_materials/*.zip
+
+# Keep optional_local_tests/ and plc_agent/legacy/ as source code.
+# They are removable source directories, not generated runtime output.

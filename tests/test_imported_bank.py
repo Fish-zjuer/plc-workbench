@@ -3,7 +3,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
-from plc_agent import dataset, bank32, dataset_workflow
+from plc_agent import dataset; from plc_agent import bank32; from plc_agent import dataset_workflow
 from plc_agent.imported_bank import ImportedBank
 
 class ImportTests(unittest.TestCase):

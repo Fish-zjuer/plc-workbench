@@ -10,7 +10,7 @@ from unittest.mock import patch
 from plc_agent import codesys
 from plc_agent.provider import Cancelled
 from plc_agent.storage import Project,Session
-from plc_agent.toolbox import Toolbox
+from plc_agent.legacy.toolbox import Toolbox
 from plc_probe.backend import BackendError
 from plc_probe.config import cache_dir
 from test_general_tasks import contract,GOOD

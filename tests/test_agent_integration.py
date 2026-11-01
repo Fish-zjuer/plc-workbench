@@ -8,8 +8,8 @@ import unittest
 from unittest.mock import patch
 
 from plc_agent.config import ModelConfig
-from plc_agent.engine import Engine
-from plc_agent.review import adjudicate, audit
+from plc_agent.legacy.engine import Engine
+from plc_agent.legacy.review import adjudicate, audit
 from plc_agent.provider import ProviderError,Cancelled
 from plc_agent.storage import Project, Session
 from plc_probe.config import ROOT, cache_dir
@@ -62,7 +62,7 @@ class IntegrationTests(unittest.TestCase):
                    "scenario": {"name": "simultaneous", "trace": [{"time_ms": 0, "inputs": {"StartBtn": 1, "StopBtn": 1, "EStop": 0}}]},
                    "assertions": [{"scan": 0, "output": "Motor", "expected": 0}]}
         reviewer = ScriptedProvider([{"text": json.dumps({"findings": [finding]})}])
-        with patch("plc_agent.review.ChatProvider", return_value=reviewer) as factory:
+        with patch("plc_agent.legacy.review.ChatProvider", return_value=reviewer) as factory:
             result = audit(engine, "motor", "candidate.st", "requirements.md")
             self.assertEqual(factory.call_args.args[0].model, "custom-reviewer")
         self.assertNotIn("AUTHOR_HISTORY_SENTINEL", json.dumps(reviewer.requests))
@@ -79,7 +79,7 @@ class IntegrationTests(unittest.TestCase):
         cfg=ModelConfig(base_url='http://localhost:1/v1',model='author')
         engine=Engine(self.session,cfg,ScriptedProvider([]))
         for error,status in [(ProviderError('injected failure'),'error'),(Cancelled('stopped'),'interrupted')]:
-            with patch('plc_agent.review.ChatProvider',return_value=ScriptedProvider([error])):
+            with patch('plc_agent.legacy.review.ChatProvider',return_value=ScriptedProvider([error])):
                 with self.assertRaises(type(error)):audit(engine,'motor','candidate.st','requirements.md')
             self.assertEqual(self.session.data['status'],status)
             self.assertEqual(engine.scoped_provider.calls,1)
@@ -90,7 +90,7 @@ class IntegrationTests(unittest.TestCase):
         (self.project.workspace/'requirements.md').write_text('x'*50000,encoding='utf-8')
         cfg=ModelConfig(base_url='http://localhost:1/v1',model='author',context_window=8000,max_output_tokens=1024)
         engine=Engine(self.session,cfg,ScriptedProvider([]));reviewer=ScriptedProvider([])
-        with patch('plc_agent.review.ChatProvider',return_value=reviewer):
+        with patch('plc_agent.legacy.review.ChatProvider',return_value=reviewer):
             with self.assertRaisesRegex(ProviderError,'窗口'):audit(engine,'motor','candidate.st','requirements.md')
         self.assertEqual(reviewer.requests,[])
         self.assertEqual(self.session.data['status'],'error')
