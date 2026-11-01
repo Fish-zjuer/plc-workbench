@@ -224,6 +224,9 @@ def make_handler(app):
             if not self.allowed(): return self.send_json({'error':'Invalid origin'},403)
             try:
                 if self.path == '/api/config': return self.send_json(app.public_config())
+                if self.path == '/api/formal/config':
+                    from plc_agent.plcverif_backend import environment
+                    return self.send_json(environment(app.home))
                 if self.path == '/api/tasks': return self.send_json({'schema':'plc-workbench-catalog-v1','tasks':[]})
                 if self.path.startswith('/api/tasks/'):
                     return self.send_json(app.bank.load(self.path.rsplit('/',1)[1]))

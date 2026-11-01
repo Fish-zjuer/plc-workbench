@@ -84,6 +84,18 @@ class WebTests(unittest.TestCase):
             result=json.loads(self.request('/api/campaign-preflight',data))
         self.assertEqual(result['status'],'setup_required');local.assert_not_called()
         self.assertTrue(result['errors'])
+    def test_first_formal_setup_does_not_require_an_existing_config(self):
+        with patch('plc_agent.plcverif_backend.discover_tools',return_value={k:'' for k in ('plcverif','java','cbmc','nuxmv')}):
+            state=json.loads(self.request('/api/formal/config'))
+        self.assertEqual(state['status'],'not_configured');self.assertFalse(state['saved'])
+        self.assertFalse((self.app.home/'formal_config.json').exists())
+        paths={}
+        for name in ('plcverif','java','cbmc'):
+            executable=self.app.home/(name+'.exe');executable.write_bytes(b'fixture');paths[name]=str(executable)
+        saved=json.loads(self.request('/api/formal/config',{'engine':'cbmc',**paths,'bound':10}))
+        self.assertEqual(saved['status'],'tools_ready');self.assertTrue(saved['saved'])
+        loaded=json.loads(self.request('/api/formal/config'))
+        self.assertEqual(loaded['plcverif'],paths['plcverif']);self.assertEqual(loaded['bound'],10)
     def test_usage_missing_is_explicit(self):
         self.assertFalse(usage_totals([{'usage':{}}])['complete'])
         totals=usage_totals([{'usage':{'prompt_tokens':3,'completion_tokens':4,'total_tokens':7}}])

@@ -34,7 +34,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup-reproduction
 
 默认端口被占用时，可关闭已有服务，或运行 `start.cmd --port 18766` 指定其他端口。
 
-## 3 配置模型与CODESYS
+## 3 首次配置模型、CODESYS和形式化工具
 
 打开网页左侧 **模型与环境**。
 
@@ -50,6 +50,16 @@ API密钥保存在本机 `agent_data/private/`，该目录不纳入源码分发�
 4. 将完整文件路径填到网页，保存后点击“验证编译器（正/负对照）”。
 
 编译在模板副本中执行，当前流程不连接实体PLC。编译器可用性以正/负对照结果为依据；“检查环境”用于检查依赖和配置状态。
+
+**形式化工具配置：** 新拿到项目时没有 `agent_data/formal_config.json` 是正常的，这份配置属于每台电脑，不随Git分发。
+
+1. 在本机安装或解压PLCverif CLI、与该安装包匹配的Java和CBMC，工具不由配置文件自动安装。
+2. 打开 **模型与环境 → 形式化工具路径**。页面先自动查找项目内 `tools/plcverif/`、项目同级 `plcverif/`、PATH和JAVA_HOME中的工具。
+3. 自动找不到时，分别填写 **plcverif-clic.exe、java.exe、cbmc.exe 的完整路径**。可以安装在其他目录，不要求沿用开发者的盘符。
+4. 点击 **保存形式化配置**，程序会创建本机 `agent_data/formal_config.json`。以后启动会自动读回路径和验证参数；工具移动后，在同一页面更新并保存。
+
+页面显示“已找到工具”只代表可执行文件存在；实际验证结果要运行题目后查看。不需要手写配置文件，也不需要复制他人的配置。
+
 
 ## 4 题库导入与单题运行
 

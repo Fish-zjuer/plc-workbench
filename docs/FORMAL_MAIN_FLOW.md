@@ -26,7 +26,7 @@ G/F/X/U按有限前缀解释，X跳到下一扫描结束而非下一条ST指令�
 
 ## 工具及准确性限制
 
-默认使用PLCverif + CBMC，自动发现同级 `plcverif/` 的CLI和专用Java，以及PATH、工具目录或常见安装位置的CBMC。本机CBMC为 `D:\cbmc\bin\cbmc.exe`。当前安装包使用Java25。网页保存的设置位于本机状态目录的formal_config.json；运行保存配置快照。tools_ready只表示可执行文件存在。
+默认使用PLCverif + CBMC。首次没有配置文件时，自动发现项目tools目录、同级plcverif、PATH和JAVA_HOME中的工具；不依赖开发者盘符。网页“模型与环境”提供PLCverif CLI、Java和CBMC可执行文件路径，保存时自动生成本机agent_data/formal_config.json，启动时自动读回。Java需匹配使用的PLCverif包。运行保存配置快照；tools_ready只表示可执行文件存在。
 
 当前支持范围仍不完整：
 

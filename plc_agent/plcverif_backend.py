@@ -65,15 +65,31 @@ def _workspace(directory):
                 else:shutil.copyfile(child,target)
 
 
+TOOL_LABELS={'plcverif':'PLCverif CLI','java':'Java','cbmc':'CBMC','nuxmv':'nuXmv'}
+
+
+def discover_tools(plcverif=''):
+    """Portable defaults; no developer drive letter or saved configuration needed."""
+    bases=[ROOT/'tools/plcverif',ROOT.parent/'plcverif']
+    def first(paths):return next((str(p.resolve()) for p in paths if p and Path(p).is_file()),'')
+    executable=plcverif or first([base/'plcverif-clic.exe' for base in bases]) or shutil.which('plcverif-clic') or ''
+    selected=Path(executable).parent if executable else None
+    java_bases=[selected] if selected is not None else bases
+    bundled=[p for base in java_bases for p in sorted(base.glob('**/bin/java.exe'))]
+    java_home=os.environ.get('JAVA_HOME')
+    java=first(bundled+([Path(java_home)/'bin/java.exe'] if java_home else [])) or shutil.which('java') or ''
+    cbmc_roots=[ROOT/'tools/cbmc']+[base/'tools/cbmc' for base in ([selected] if selected is not None else bases)]
+    cbmc=shutil.which('cbmc') or first([p for base in cbmc_roots for p in (base/'bin/cbmc.exe',base/'cbmc.exe')]+[Path(os.environ.get('ProgramFiles','C:/Program Files'))/'cbmc/bin/cbmc.exe'])
+    nuxmv=first([p for base in ([selected] if selected is not None else bases) for p in sorted(base.glob('tools/**/nuXmv.exe'))])
+    return {'plcverif':executable,'java':java,'cbmc':cbmc,'nuxmv':nuxmv}
+
+
 def configuration(home=STATE_ROOT):
     path=Path(home)/'formal_config.json'
     saved=json.loads(path.read_text(encoding='utf-8')) if path.is_file() else {}
-    base=ROOT.parent/'plcverif'
-    def first(pattern):return next(base.glob(pattern),None)
-    cbmc=shutil.which('cbmc') or next((str(p) for p in (base/'tools/cbmc/bin/cbmc.exe',base/'tools/cbmc/cbmc.exe',Path('D:/cbmc/bin/cbmc.exe'),Path('C:/Program Files/cbmc/bin/cbmc.exe')) if p.is_file()),'')
-    return {**DEFAULTS,'plcverif':str(base/'plcverif-clic.exe'),
-            'java':str(first('**/bin/java.exe') or ''),
-            'nuxmv':str(first('tools/**/nuXmv.exe') or ''),'cbmc':cbmc,**saved}
+    if not isinstance(saved,dict):raise ValueError('formal_config.json 必须是 JSON 对象')
+    selected=saved.get('plcverif','')
+    return {**DEFAULTS,**discover_tools(selected if isinstance(selected,str) else ''),**saved}
 
 
 def validate(cfg):
@@ -89,17 +105,35 @@ def validate(cfg):
 
 
 def environment(home=STATE_ROOT):
+    path=str((Path(home)/'formal_config.json').resolve())
     try:
-        cfg=configuration(home);validate(cfg)
-        return {**cfg,'status':'tools_ready','scope':'Executables found; this is not a claim of full dataset/model compatibility.',
+        cfg=configuration(home)
+        missing=[{'key':name,'label':TOOL_LABELS[name],'path':cfg.get(name,'')} for name in ('plcverif','java',cfg.get('engine','cbmc'))
+                 if name in TOOL_LABELS and (not isinstance(cfg.get(name),str) or not cfg[name] or not Path(cfg[name]).is_file())]
+        if missing:
+            return {**cfg,'status':'not_configured','config_file':path,'saved':Path(path).is_file(),'missing_tools':missing,
+                    'message':'未找到 '+ '、'.join(item['label'] for item in missing)+'，请在下方填写本机可执行文件路径并保存。'}
+        validate(cfg)
+        return {**cfg,'status':'tools_ready','config_file':path,'saved':Path(path).is_file(),'missing_tools':[],
+                'message':'已找到所需工具；这只确认文件存在，尚未执行验证。','scope':'Executables found; this is not a claim of full dataset/model compatibility.',
                 'unsupported_models':['unbound open-array callers','CODESYS VARIANT reference/aliasing','mixed-width float literals and REAL math calls requiring a typed exporter'],
                 'floating_point_reference':'https://plcverif-oss.gitlab.io/plcverif-docs/library/backends/Cbmc.html'}
-    except (ValueError,OSError) as exc:return {'status':'not_configured','message':str(exc)}
+    except (ValueError,OSError) as exc:return {**DEFAULTS,'status':'not_configured','config_file':path,'message':str(exc)}
 
 
 def save_configuration(value,home=STATE_ROOT):
     cfg=configuration(home)
     cfg.update({k:v for k,v in value.items() if k in ('engine','bound','timeout_seconds','scan_period_ms','memory_limit_mb','unwind','plcverif','java','nuxmv','cbmc')})
+    for name in TOOL_LABELS:
+        if not isinstance(cfg.get(name,''),str):raise ValueError(TOOL_LABELS[name]+' 路径必须是文本')
+        raw=cfg.get(name,'').strip()
+        if len(raw)>1 and raw[0]==raw[-1]=='"':raw=raw[1:-1]
+        cfg[name]=os.path.expandvars(str(Path(raw).expanduser())) if raw else ''
+    automatic=discover_tools(cfg['plcverif'])
+    for name in TOOL_LABELS:
+        if not cfg[name]:cfg[name]=automatic[name]
+    for name in ('plcverif','java',cfg.get('engine','cbmc')):
+        if name in TOOL_LABELS and (not cfg.get(name) or not Path(cfg[name]).is_file()):raise ValueError('未找到 '+TOOL_LABELS[name]+'，请填写可执行文件完整路径')
     validate(cfg);atomic_json(Path(home)/'formal_config.json',cfg)
     return environment(home)
 
