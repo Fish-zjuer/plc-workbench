@@ -1,0 +1,18 @@
+FUNCTION_BLOCK "WB_MotorControl"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      StartBtn : Bool;
+      StopBtn : Bool;
+      EStop : Bool;
+   END_VAR
+   VAR_OUTPUT
+      Motor : Bool;
+   END_VAR
+BEGIN
+   IF #StopBtn OR #EStop THEN
+      #Motor := FALSE;
+   ELSIF #StartBtn THEN
+      #UndefinedOutput := TRUE;
+   END_IF;
+END_FUNCTION_BLOCK
