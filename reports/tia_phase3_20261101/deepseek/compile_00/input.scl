@@ -1,0 +1,64 @@
+﻿FUNCTION_BLOCK "EdgeDetection"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      value : DWORD;
+   END_VAR
+   VAR_OUTPUT
+      hasChanged : BOOL;
+      hasRisingEdges : BOOL;
+      risingBits : DWORD;
+      noOfRisingBits : USINT;
+      hasFallingEdges : BOOL;
+      fallingBits : DWORD;
+      noOfFallingBits : USINT;
+   END_VAR
+   VAR_TEMP
+      tmpRising : DWORD;
+      tmpFalling : DWORD;
+      i : INT;
+   END_VAR
+   VAR
+      prevValue : DWORD;
+      historyReady : BOOL;
+   END_VAR
+
+BEGIN
+    IF NOT #historyReady THEN
+        #risingBits := DWORD#16#00000000;
+        #fallingBits := DWORD#16#00000000;
+        #noOfRisingBits := USINT#0;
+        #noOfFallingBits := USINT#0;
+        #hasChanged := FALSE;
+        #hasRisingEdges := FALSE;
+        #hasFallingEdges := FALSE;
+        #prevValue := #value;
+        #historyReady := TRUE;
+    ELSE
+        #hasChanged := (#value <> #prevValue);
+        #risingBits := #value AND (NOT #prevValue);
+        #fallingBits := #prevValue AND (NOT #value);
+
+        #tmpRising := #risingBits;
+        #noOfRisingBits := USINT#0;
+        FOR #i := 1 TO 32 DO
+            IF (#tmpRising AND DWORD#16#00000001) <> DWORD#16#00000000 THEN
+                #noOfRisingBits := #noOfRisingBits + USINT#1;
+            END_IF;
+            #tmpRising := SHR(IN := #tmpRising, N := 1);
+        END_FOR;
+
+        #tmpFalling := #fallingBits;
+        #noOfFallingBits := USINT#0;
+        FOR #i := 1 TO 32 DO
+            IF (#tmpFalling AND DWORD#16#00000001) <> DWORD#16#00000000 THEN
+                #noOfFallingBits := #noOfFallingBits + USINT#1;
+            END_IF;
+            #tmpFalling := SHR(IN := #tmpFalling, N := 1);
+        END_FOR;
+
+        #hasRisingEdges := (#risingBits <> DWORD#16#00000000);
+        #hasFallingEdges := (#fallingBits <> DWORD#16#00000000);
+        #prevValue := #value;
+    END_IF;
+END_FUNCTION_BLOCK

@@ -1,0 +1,179 @@
+{
+  "date": "2026-11-01",
+  "branch": "feat/tia-agent-integration",
+  "scope": "real_vendor_compile_only",
+  "runs": [
+    {
+      "label": "public01_deepseek",
+      "run_id": "6941676a887445f89b717a1f2ac42e00",
+      "task_id": "PUBLIC_01",
+      "title": "Automated Filling Line Control",
+      "model": "deepseek-v4.1-flash-1017",
+      "thinking": "service_default",
+      "status": "compile_passed",
+      "compile_results": [
+        {
+          "revision": 0,
+          "status": "compile_passed",
+          "errors": 0,
+          "warnings": 0,
+          "source_sha256": "275903e0487dd1684536b93ead47ce455d7b6971072e11bbac5dc358b6639058"
+        }
+      ],
+      "model_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 1877,
+        "completion_tokens": 7125,
+        "total_tokens": 9002,
+        "cost": 0.0,
+        "usage_calls": 1,
+        "complete": true
+      },
+      "seconds": 110.409,
+      "final_errors": 0,
+      "final_warnings": 0,
+      "behavior_tested": false
+    },
+    {
+      "label": "deepseek",
+      "run_id": "f52219e4ea8e459c95f222d18409eadd",
+      "task_id": "PUBLIC_02",
+      "title": "Dual-Word Edge Detection",
+      "model": "deepseek-v4.1-flash-1017",
+      "thinking": "service_default",
+      "status": "compile_passed",
+      "compile_results": [
+        {
+          "revision": 0,
+          "status": "compile_passed",
+          "errors": 0,
+          "warnings": 0,
+          "source_sha256": "43113e4b832fac5e16411638170d751ab39d5b3b79e7896c1149098fcc3fc3a3"
+        }
+      ],
+      "model_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 1468,
+        "completion_tokens": 6247,
+        "total_tokens": 7715,
+        "cost": 0.0,
+        "usage_calls": 1,
+        "complete": true
+      },
+      "seconds": 84.448,
+      "final_errors": 0,
+      "final_warnings": 0,
+      "behavior_tested": false
+    },
+    {
+      "label": "qwen",
+      "run_id": "ba93b605171547b68fe3e415ddbb9f74",
+      "task_id": "PUBLIC_02",
+      "title": "Dual-Word Edge Detection",
+      "model": "qwen3.8-flash",
+      "thinking": "disabled",
+      "status": "compile_passed",
+      "compile_results": [
+        {
+          "revision": 0,
+          "status": "compile_failed",
+          "errors": 2,
+          "warnings": 0,
+          "source_sha256": "455bd30bceb07213aedc9fed0ca67db97fe566d89ed3a3d7dd271f080e5ecf50"
+        },
+        {
+          "revision": 1,
+          "status": "compile_failed",
+          "errors": 2,
+          "warnings": 2,
+          "source_sha256": "f4d63ab15bd21fe6ff0af14399aceca5195f3c184c1784bcc010bbaa8619bafa"
+        },
+        {
+          "revision": 2,
+          "status": "compile_passed",
+          "errors": 0,
+          "warnings": 2,
+          "source_sha256": "02cd60083fd0a7b2dbdcbf24e43a7d409116f27b2f77260a10ffa49c1817b72c"
+        }
+      ],
+      "model_calls": 3,
+      "token_usage": {
+        "prompt_tokens": 7137,
+        "completion_tokens": 2592,
+        "total_tokens": 9729,
+        "cost": 0.0,
+        "usage_calls": 3,
+        "complete": true
+      },
+      "seconds": 194.35,
+      "final_errors": 0,
+      "final_warnings": 2,
+      "behavior_tested": false
+    },
+    {
+      "label": "custom01_deepseek",
+      "run_id": "2961f1f53cb0445985864a13d09cda19",
+      "task_id": "CUSTOM_01",
+      "title": "电梯方向保持与满载屏蔽目标调度",
+      "model": "deepseek-v4.1-flash-1017",
+      "thinking": "service_default",
+      "status": "compile_passed",
+      "compile_results": [
+        {
+          "revision": 0,
+          "status": "compile_passed",
+          "errors": 0,
+          "warnings": 0,
+          "source_sha256": "d9c735cda577166428dfec1f7640427c162c36d4b2c7e7a802081975af03fe40"
+        }
+      ],
+      "model_calls": 1,
+      "token_usage": {
+        "prompt_tokens": 1684,
+        "completion_tokens": 5104,
+        "total_tokens": 6788,
+        "cost": 0.0,
+        "usage_calls": 1,
+        "complete": true
+      },
+      "seconds": 75.726,
+      "final_errors": 0,
+      "final_warnings": 0,
+      "behavior_tested": false
+    }
+  ],
+  "service_failures": [
+    {
+      "run_id": "b805d7eb23324002b6d55ddb50efeaad",
+      "model": "dsv4.1-flash-1017",
+      "status": "error",
+      "message": "模型服务 HTTP 503: {\"error\":{\"code\":\"model_not_found\",\"message\":\"分组 default 下模型 dsv4.1-flash-1017 无可用渠道（distributor） (request id: 20261101140256898643663c14228f5qRwvbBJm)\",\"type\":\"dmx_api_error\"}}",
+      "seconds": 3.497,
+      "token_usage": "unknown_no_usage_returned"
+    },
+    {
+      "run_id": "12b4716af1644961ab08620aa19433f1",
+      "model": "qwen3.8-flash",
+      "status": "error",
+      "message": "模型连接失败: The read operation timed out",
+      "seconds": 180.042,
+      "token_usage": "unknown_no_usage_returned"
+    }
+  ],
+  "template_unchanged": true,
+  "fault_injection": false,
+  "human_source_edits": false,
+  "step8": {
+    "status": "complete",
+    "required_distinct_tasks": "2..3",
+    "distinct_task_count": 3,
+    "task_ids": [
+      "CUSTOM_01",
+      "PUBLIC_01",
+      "PUBLIC_02"
+    ],
+    "successful_runs": 4,
+    "automatic_repair_evidence": "qwen/receipt.json",
+    "scope": "generation_and_real_TIA_compilation; behavior not tested"
+  }
+}

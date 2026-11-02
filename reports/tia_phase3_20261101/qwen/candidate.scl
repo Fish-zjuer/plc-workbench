@@ -1,0 +1,80 @@
+﻿FUNCTION_BLOCK "EdgeDetection"
+VAR_INPUT
+    value : DWORD;
+END_VAR
+VAR_OUTPUT
+    hasChanged : BOOL;
+    hasRisingEdges : BOOL;
+    risingBits : DWORD;
+    noOfRisingBits : USINT;
+    hasFallingEdges : BOOL;
+    fallingBits : DWORD;
+    noOfFallingBits : USINT;
+END_VAR
+VAR
+    prevValue : DWORD;
+    initialized : BOOL := FALSE;
+    tempMask : DWORD;
+    i : INT;
+    bitVal : DWORD;
+END_VAR
+BEGIN
+    IF NOT #initialized THEN
+        #prevValue := #value;
+        #initialized := TRUE;
+        #hasChanged := FALSE;
+        #risingBits := DWORD#16#0;
+        #fallingBits := DWORD#16#0;
+        #noOfRisingBits := 0;
+        #noOfFallingBits := 0;
+        #hasRisingEdges := FALSE;
+        #hasFallingEdges := FALSE;
+    ELSE
+        // Calculate Rising Edges: Bits that are 1 now but were 0 before
+        // rising = value & ~prevValue
+        // In SCL for DWORD, we can use bitwise operations.
+        
+        // To avoid potential issues with 'NOT' on DWORD types in some compiler versions,
+        // we calculate masks using XOR and AND.
+        // Actually, simple bitwise AND with inverted mask is best.
+        // If 'NOT' fails on DWORD, we can use: 
+        // risingBits = value AND (prevValue XOR 16#FFFFFFFF)
+        
+        #tempMask := #prevValue XOR DWORD#16#FFFFFFFF;
+        #risingBits := #value AND #tempMask;
+        
+        #tempMask := #value XOR DWORD#16#FFFFFFFF;
+        #fallingBits := #prevValue AND #tempMask;
+        
+        // Check if changed
+        #hasChanged := (#value <> #prevValue);
+        
+        // Count Rising Bits (Popcount)
+        #noOfRisingBits := 0;
+        FOR #i := 0 TO 31 DO
+            // Extract bit i
+            // SHL requires typed constants or variables matching the type of IN
+            #bitVal := SHL(IN := DWORD#16#1, N := #i);
+            IF (#risingBits AND #bitVal) <> DWORD#16#0 THEN
+                #noOfRisingBits := #noOfRisingBits + 1;
+            END_IF;
+        END_FOR;
+        
+        // Count Falling Bits (Popcount)
+        #noOfFallingBits := 0;
+        FOR #i := 0 TO 31 DO
+            // Extract bit i
+            #bitVal := SHL(IN := DWORD#16#1, N := #i);
+            IF (#fallingBits AND #bitVal) <> DWORD#16#0 THEN
+                #noOfFallingBits := #noOfFallingBits + 1;
+            END_IF;
+        END_FOR;
+        
+        // Set Flags
+        #hasRisingEdges := (#risingBits <> DWORD#16#0);
+        #hasFallingEdges := (#fallingBits <> DWORD#16#0);
+        
+        // Update Previous Value for next cycle
+        #prevValue := #value;
+    END_IF;
+END_FUNCTION_BLOCK
