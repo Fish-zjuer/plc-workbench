@@ -1,0 +1,68 @@
+﻿FUNCTION_BLOCK "EdgeDetection"
+VAR_INPUT
+    value : DWORD;
+END_VAR
+VAR_OUTPUT
+    hasChanged : BOOL;
+    hasRisingEdges : BOOL;
+    risingBits : DWORD;
+    noOfRisingBits : USINT;
+    hasFallingEdges : BOOL;
+    fallingBits : DWORD;
+    noOfFallingBits : USINT;
+END_VAR
+VAR
+    prevValue : DWORD;
+    initialized : BOOL := FALSE;
+    tempMask : DWORD;
+    i : INT;
+END_VAR
+BEGIN
+    IF NOT #initialized THEN
+        #prevValue := #value;
+        #initialized := TRUE;
+        #hasChanged := FALSE;
+        #risingBits := 16#0;
+        #fallingBits := 16#0;
+        #noOfRisingBits := 0;
+        #noOfFallingBits := 0;
+        #hasRisingEdges := FALSE;
+        #hasFallingEdges := FALSE;
+    ELSE
+        // Calculate Rising Edges: Bits that are 1 now but were 0 before
+        // rising = value & ~prevValue
+        #tempMask := #value AND NOT #prevValue;
+        #risingBits := #tempMask;
+        
+        // Calculate Falling Edges: Bits that were 1 before but are 0 now
+        // falling = prevValue & ~value
+        #tempMask := #prevValue AND NOT #value;
+        #fallingBits := #tempMask;
+        
+        // Check if changed
+        #hasChanged := (#value <> #prevValue);
+        
+        // Count Rising Bits (Popcount)
+        #noOfRisingBits := 0;
+        FOR #i := 0 TO 31 DO
+            IF (#risingBits AND SHL(16#1, #i)) <> 16#0 THEN
+                #noOfRisingBits := #noOfRisingBits + 1;
+            END_IF;
+        END_FOR;
+        
+        // Count Falling Bits (Popcount)
+        #noOfFallingBits := 0;
+        FOR #i := 0 TO 31 DO
+            IF (#fallingBits AND SHL(16#1, #i)) <> 16#0 THEN
+                #noOfFallingBits := #noOfFallingBits + 1;
+            END_IF;
+        END_FOR;
+        
+        // Set Flags
+        #hasRisingEdges := (#risingBits <> 16#0);
+        #hasFallingEdges := (#fallingBits <> 16#0);
+        
+        // Update Previous Value for next cycle
+        #prevValue := #value;
+    END_IF;
+END_FUNCTION_BLOCK

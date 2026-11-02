@@ -1,0 +1,92 @@
+﻿FUNCTION_BLOCK "Q01"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+    bottleSensor : BOOL;
+    cleaningConfirmButton : BOOL;
+    fillingConfirmButton : BOOL;
+    cappingConfirmButton : BOOL;
+    packingConfirmButton : BOOL;
+    finishedButton : BOOL;
+END_VAR
+VAR_OUTPUT
+    Pump_Motor : BOOL;
+    Filling_Valve : BOOL;
+    Capping_Machine : BOOL;
+    Packing_Machine : BOOL;
+    Completion_Light : BOOL;
+END_VAR
+VAR
+    stage : INT := 0;
+    prevCleaningConfirmButton : BOOL;
+    prevFillingConfirmButton : BOOL;
+    prevCappingConfirmButton : BOOL;
+    prevPackingConfirmButton : BOOL;
+    prevFinishedButton : BOOL;
+END_VAR
+VAR_TEMP
+    cleaningConfirmEdge : BOOL;
+    fillingConfirmEdge : BOOL;
+    cappingConfirmEdge : BOOL;
+    packingConfirmEdge : BOOL;
+    finishedEdge : BOOL;
+END_VAR
+BEGIN
+    #cleaningConfirmEdge := #cleaningConfirmButton AND NOT #prevCleaningConfirmButton;
+    #fillingConfirmEdge := #fillingConfirmButton AND NOT #prevFillingConfirmButton;
+    #cappingConfirmEdge := #cappingConfirmButton AND NOT #prevCappingConfirmButton;
+    #packingConfirmEdge := #packingConfirmButton AND NOT #prevPackingConfirmButton;
+    #finishedEdge := #finishedButton AND NOT #prevFinishedButton;
+
+    #prevCleaningConfirmButton := #cleaningConfirmButton;
+    #prevFillingConfirmButton := #fillingConfirmButton;
+    #prevCappingConfirmButton := #cappingConfirmButton;
+    #prevPackingConfirmButton := #packingConfirmButton;
+    #prevFinishedButton := #finishedButton;
+
+    #Pump_Motor := FALSE;
+    #Filling_Valve := FALSE;
+    #Capping_Machine := FALSE;
+    #Packing_Machine := FALSE;
+    #Completion_Light := FALSE;
+
+    CASE #stage OF
+        0:
+            IF #bottleSensor THEN
+                #stage := 10;
+            END_IF;
+
+        10:
+            #Pump_Motor := TRUE;
+            IF #cleaningConfirmEdge THEN
+                #stage := 20;
+            END_IF;
+
+        20:
+            #Filling_Valve := TRUE;
+            IF #fillingConfirmEdge THEN
+                #stage := 30;
+            END_IF;
+
+        30:
+            #Capping_Machine := TRUE;
+            IF #cappingConfirmEdge THEN
+                #stage := 40;
+            END_IF;
+
+        40:
+            #Packing_Machine := TRUE;
+            IF #packingConfirmEdge THEN
+                #stage := 50;
+            END_IF;
+
+        50:
+            #Completion_Light := TRUE;
+            IF #finishedEdge THEN
+                #stage := 0;
+            END_IF;
+
+        ELSE
+            #stage := 0;
+    END_CASE;
+END_FUNCTION_BLOCK
