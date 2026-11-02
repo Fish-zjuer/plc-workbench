@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import threading
+import time
 import unittest
 import urllib.request
 import urllib.error
@@ -146,6 +147,92 @@ class WebTests(unittest.TestCase):
             answer=ChatProvider(cfg).complete([{'role':'user','content':'hi'}])
             self.assertEqual(answer['usage']['total_tokens'],4)
             self.assertTrue(local.requests[0]['body']['stream_options']['include_usage'])
+
+    def test_tia_config_and_async_compile_are_independent_of_model(self):
+        exe=self.app.home/'TiaBridge.exe';exe.write_bytes(b'fixture')
+        template=self.app.home/'template.ap21';template.write_bytes(b'fixture')
+        cfg={'executable':str(exe),'template_project':str(template),'timeout_seconds':30}
+        self.assertEqual(json.loads(self.request('/api/tia/config',cfg))['status'],'configured_not_probed')
+        result={'status':'compile_passed','target_compile':'passed','behavior_tested':False}
+        code='FUNCTION_BLOCK "x"\nBEGIN\nEND_FUNCTION_BLOCK'
+        with patch('plc_agent.web.tia_workflow.compile_candidate',return_value=result) as compile_candidate:
+            ident=json.loads(self.request('/api/runs',{'task_id':'PUBLIC_02','action':'tia','target':'tia','code':code}))['id']
+            for _ in range(100):
+                job=json.loads(self.request('/api/runs/'+ident))
+                if job['status'] not in ('queued','running'):break
+                time.sleep(.01)
+            self.assertEqual(job['status'],'compile_passed')
+            self.assertEqual(job['code'],code)
+            self.assertFalse(job['receipt']['behavior_tested'])
+            self.assertEqual(compile_candidate.call_args[0][0].suffix,'.scl')
+            self.assertEqual(job['receipt']['metrics_summary']['target_platform'],'tia')
+            self.assertEqual(job['receipt']['metrics_summary']['codesys_compile'],'not_executed')
+            folder=Path(job['output_path'])
+            self.assertEqual((folder/'final.scl').read_text(encoding='utf-8-sig'),code)
+            self.assertFalse((folder/'final.st').exists())
+            self.assertTrue((folder/'SUMMARY.md').is_file())
+            self.assertTrue((folder/'run.log').is_file())
+            self.assertNotIn('code',self.app.runs()[0])
+            self.assertEqual(Workbench(self.app.home).read_job(ident)['code'],code)
+        with self.assertRaises(urllib.error.HTTPError):
+            self.request('/api/runs',{'task_id':'PUBLIC_02','action':'check','target':'tia','code':code})
+
+    def test_tia_probe_uses_async_job_and_can_be_read_without_task(self):
+        exe=self.app.home/'TiaBridge.exe';exe.write_bytes(b'fixture')
+        template=self.app.home/'template.ap21';template.write_bytes(b'fixture')
+        self.request('/api/tia/config',{'executable':str(exe),'template_project':str(template)})
+        with patch('plc_agent.tia_cli.probe',return_value={'status':'probe_passed','behavior_tested':False}):
+            ident=json.loads(self.request('/api/tia/probe',{}))['id']
+            for _ in range(100):
+                job=json.loads(self.request('/api/runs/'+ident))
+                if job['status'] not in ('queued','running'):break
+                time.sleep(.01)
+        self.assertEqual(job['task_id'],'TIA_PROBE')
+        self.assertEqual(job['status'],'probe_passed')
+        self.assertTrue((Path(job['output_path'])/'run.log').is_file())
+
+    def test_tia_settings_load_without_running_other_platform_checks(self):
+        with patch('plc_agent.web.preflight',side_effect=AssertionError('No preflight during TIA form load')):
+            state=json.loads(self.request('/api/tia/config'))
+        self.assertEqual(state['configuration'],{})
+        self.assertFalse(state['saved'])
+        self.assertEqual(state['config_file'],'agent_data/tia.json')
+
+    def test_codesys_single_task_retains_unified_trial_and_formal_configuration(self):
+        from plc_agent.campaign import Trial
+        code='FUNCTION_BLOCK Fixture\nEND_FUNCTION_BLOCK'
+        from plc_agent.plcverif_backend import configuration
+        expected_formal=configuration(self.app.home)
+        with patch('plc_agent.web.codesys.validate_config'), \
+             patch('plc_agent.web.codesys.load_config',return_value={'fixture':'codesys'}), \
+             patch.object(Trial,'check',return_value={'status':'pass','target_compile':'passed'}) as check:
+            ident=json.loads(self.request('/api/runs',{'task_id':'PUBLIC_02','action':'check','code':code}))['id']
+            for _ in range(100):
+                job=json.loads(self.request('/api/runs/'+ident))
+                if job['status'] not in ('queued','running'):break
+                time.sleep(.01)
+            self.assertEqual(job['status'],'pass')
+            trial=self.app.jobs[ident]['provider']
+            self.assertIsInstance(trial,Trial)
+            self.assertEqual(trial.formal_config,expected_formal)
+            check.assert_called_once_with(code)
+            self.assertEqual(job['receipt']['metrics_summary']['codesys_compile'],'passed')
+            self.assertEqual((Path(job['output_path'])/'final.st').read_text(encoding='utf-8'),code)
+
+    def test_tia_generation_applies_per_run_inference_without_changing_saved_config(self):
+        exe=self.app.home/'TiaBridge.exe';exe.write_bytes(b'fixture')
+        template=self.app.home/'template.ap21';template.write_bytes(b'fixture')
+        self.request('/api/tia/config',{'executable':str(exe),'template_project':str(template)})
+        with patch('plc_agent.web.tia_workflow.run',return_value={'status':'compile_passed'}) as run:
+            ident=json.loads(self.request('/api/runs',{'task_id':'PUBLIC_02','action':'tia_generate',
+                'model':'qwen3.8-flash','model_settings':{'mode':'off'}}))['id']
+            for _ in range(100):
+                job=json.loads(self.request('/api/runs/'+ident))
+                if job['status'] not in ('queued','running'):break
+                time.sleep(.01)
+            self.assertEqual(job['status'],'compile_passed')
+            self.assertEqual(run.call_args[0][3].extra_body,{'enable_thinking':False})
+            self.assertEqual(self.app.config().extra_body,{})
 
 if __name__=='__main__': unittest.main()
 

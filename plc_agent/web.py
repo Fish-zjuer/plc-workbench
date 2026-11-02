@@ -13,10 +13,11 @@ from plc_agent import dataset
 from plc_agent import dataset_workflow
 from plc_agent.bank32_v6 import normalize_v6
 from plc_agent.config import ModelConfig, STATE_ROOT, ROOT
-from plc_agent.provider import ChatProvider
+from plc_agent.provider import ChatProvider, Cancelled
 from plc_agent.imported_bank import ImportedBank
 from plc_agent.campaign import Campaigns, Trial, preflight, campaign_inputs
 from plc_agent import codesys
+from plc_agent import tia, tia_workflow
 from plc_agent.codesys_dataset import compile_dataset
 from plc_agent.storage import atomic_json, read_json
 from plc_agent.run_output import output_root, finish, event, reserve_run, valid_run_id, details_path, trial_path, log_path
@@ -91,9 +92,15 @@ class Workbench:
             value['receipt'] = read_json(directory/'receipt.json')
             if not job: value['status'] = value['receipt']['status']
         if not detail:return value
-        if (directory/'candidate.st').exists(): value['code'] = (directory/'candidate.st').read_text(encoding='utf-8')
-        value['versions'] = [{'name': '提交 '+f.parent.name, 'code': f.read_text(encoding='utf-8')}
-                             for f in sorted((directory/'submissions').glob('*/candidate.st'),key=lambda p:int(p.parent.name))]
+        extension = '.scl' if value.get('target') == 'tia' else '.st'
+        source = directory/('candidate'+extension)
+        if source.exists(): value['code'] = source.read_text(encoding='utf-8-sig')
+        if extension == '.scl':
+            versions = sorted(directory.glob('proposal_*.scl'))
+            value['versions'] = [{'name': f.name, 'code': f.read_text(encoding='utf-8-sig')} for f in versions]
+        else:
+            value['versions'] = [{'name': '提交 '+f.parent.name, 'code': f.read_text(encoding='utf-8-sig')}
+                                 for f in sorted((directory/'submissions').glob('*/candidate.st'),key=lambda p:int(p.parent.name))]
         return value
 
     def read_trial(self,data):
@@ -116,31 +123,45 @@ class Workbench:
     def start(self, data):
         task = self.bank.load(data['task_id'])
         action = data.get('action', 'generate')
-        if action not in ('generate', 'check', 'codesys'): raise ValueError('Unknown action')
+        if action not in ('generate', 'check', 'codesys', 'tia_generate', 'tia'): raise ValueError('Unknown action')
+        target = 'tia' if action in ('tia_generate', 'tia') else data.get('target', 'codesys')
+        if target not in ('tia', 'codesys'): raise ValueError('Unknown platform')
+        if target == 'tia' and action == 'check': raise ValueError('SCL 请使用 TIA 编译；本地 ST 检查器不支持 Siemens 方言')
+        if target == 'tia' and action == 'generate': action = 'tia_generate'
+        if target == 'tia' and action == 'codesys': action = 'tia'
         use_vendor=data.get('codesys',True)
         if type(use_vendor) is not bool:raise ValueError('codesys must be boolean')
-        vendor=codesys.load_config(self.home) if use_vendor or action=='codesys' else None
+        vendor_config = dict(tia.load_config(self.home)) if target == 'tia' else None
+        if vendor_config is not None: tia.validate_config(vendor_config)
+        vendor=codesys.load_config(self.home) if target != 'tia' and (use_vendor or action=='codesys') else None
         if vendor is not None:codesys.validate_config(vendor)
-        else:
+        elif target != 'tia':
             from plc_agent.local_test_support import backend as local_backend
             local_backend()
         code = data.get('code', '')
         if not isinstance(code, str) or len(code) > 200000: raise ValueError('ST source too large')
         cfg = self.config()
         if data.get('model'): cfg = replace(cfg, model=data['model'])
-        if action == 'generate': cfg.validate()
+        if 'model_settings' in data:
+            from plc_agent.inference import inference_config
+            cfg = inference_config(cfg, cfg.model, data['model_settings'])
+        if action in ('generate', 'tia_generate'): cfg.validate()
         with self.lock:
             if self.campaigns.active: raise ValueError('批量实验运行中，请等待结束')
             if any(j['view']['status'] in ('queued', 'running') for j in self.jobs.values()):
                 raise ValueError('A task is already running; stop it or wait')
             path=reserve_run(self.root,task.get('original_id',task['id']).split('__')[-1]);ident=path.name
             directory=path/'details';directory.mkdir()
-            source = directory/'candidate.st'
-            if code.strip(): source.write_text(code, encoding='utf-8')
-            from plc_agent.plcverif_backend import configuration
-            trial=Trial(directory,task,cfg,vendor,threading.Event(),formal_config=configuration(self.home))
-            provider = trial
-            view = {'id': ident, 'task_id': task['id'], 'model': cfg.model, 'status': 'queued', 'logs': []}
+            source = directory/('candidate.scl' if target == 'tia' else 'candidate.st')
+            if code.strip(): source.write_text(code, encoding='utf-8-sig' if target == 'tia' else 'utf-8')
+            trial = None
+            if target == 'tia':
+                provider = ChatProvider(cfg)
+            else:
+                from plc_agent.plcverif_backend import configuration
+                trial=Trial(directory,task,cfg,vendor,threading.Event(),formal_config=configuration(self.home))
+                provider = trial
+            view = {'id': ident, 'task_id': task['id'], 'model': cfg.model, 'target': target, 'status': 'queued', 'logs': []}
             atomic_json(directory/'run.json', view)
             atomic_json(directory/'task_snapshot.json', task)
             job = {'view': view, 'provider': provider}
@@ -148,7 +169,15 @@ class Workbench:
         def worker():
             view['status'] = 'running'
             try:
-                if action == 'generate':
+                if action == 'tia_generate':
+                    result = tia_workflow.run(task, source, directory, cfg, vendor_config=vendor_config, provider=provider,
+                                              notify=lambda message:event(directory,'progress',message=str(message)))
+                elif action == 'tia':
+                    compiled = tia_workflow.compile_candidate(source, task, vendor_config, provider.cancel_event, directory/'compile')
+                    result = {**compiled, 'task_id': task['id'], 'model': cfg.model, 'target': 'tia',
+                              'dialect': 'siemens_scl', 'final_evaluation': compiled, 'behavior_tested': False,
+                              'model_calls': 0, 'ltl_status': 'not_executed'}
+                elif action == 'generate':
                     dataset_workflow.normalize_source = normalize_v6
                     result = dataset_workflow.run(task['id'], source, directory, cfg, provider=provider,
                                                   max_revisions=6, review=False, task_override=task,
@@ -166,12 +195,15 @@ class Workbench:
                     result=trial.receipt(checked['status'],{'final_evaluation':checked,
                         'target_compile':checked.get('target_compile','not_executed'),
                         'formal_verification':checked.get('formal_verification'),'ltl_status':checked.get('ltl_status','not_executed')})
-                view['status'] = result['status']
             except Exception as exc:
-                failure = getattr(exc, 'result', {'status': 'interrupted' if trial.stop.is_set() else 'error', 'message': str(exc).replace(cfg.api_key, '[redacted]') if cfg.api_key else str(exc)})
-                result=trial.receipt(failure['status'],{'final_evaluation':failure,'message':failure.get('message','')})
-                view['status'] = result.get('status', 'error')
+                failure = getattr(exc, 'result', {'status': 'interrupted' if isinstance(exc, Cancelled) or provider.cancel_event.is_set() else 'error', 'message': str(exc).replace(cfg.api_key, '[redacted]') if cfg.api_key else str(exc)})
+                if trial is not None:
+                    result=trial.receipt(failure['status'],{'final_evaluation':failure,'message':failure.get('message','')})
+                else:
+                    result={**failure, 'task_id': task['id'], 'model': cfg.model, 'target': 'tia',
+                            'behavior_tested': False, 'final_evaluation': failure}
             finish(directory,result,task)
+            view['status'] = result.get('status', 'error')
             atomic_json(directory/'run.json', view)
         thread=threading.Thread(target=worker,daemon=True);job['thread']=thread;thread.start()
         return {'id':ident}
@@ -180,6 +212,32 @@ class Workbench:
         if not self.root.exists(): return []
         return [self.read_job(p.name,detail=False) for p in sorted(self.root.iterdir(), key=lambda p:p.stat().st_mtime, reverse=True)
                 if p.is_dir() and (details_path(p)/'run.json').exists() and not (p/'hidden.json').exists()][:100]
+
+    def start_tia_probe(self):
+        from plc_agent.tia_cli import probe
+        config = dict(tia.load_config(self.home))
+        tia.validate_config(config)
+        with self.lock:
+            if self.busy(): raise ValueError('请等待当前任务结束再验证 TIA 编译器')
+            path = reserve_run(self.root, 'TIA_PROBE'); ident = path.name
+            directory = path/'details'; directory.mkdir()
+            provider = ChatProvider(self.config())
+            view = {'id': ident, 'task_id': 'TIA_PROBE', 'model': '', 'target': 'tia', 'status': 'queued', 'logs': []}
+            job = {'view': view, 'provider': provider}; self.jobs[ident] = job
+            atomic_json(directory/'run.json', view)
+        def worker():
+            view['status'] = 'running'
+            event(directory, 'progress', message='TIA 正负对照编译中；每次使用独立工程副本')
+            try:
+                result = probe(config, directory, provider.cancel_event)
+            except Exception as exc:
+                result = {'status': 'interrupted' if isinstance(exc, Cancelled) else 'error', 'message': str(exc)}
+            result.update(task_id='TIA_PROBE', model='', target='tia', behavior_tested=False)
+            finish(directory, result)
+            view['status'] = result['status']
+            atomic_json(directory/'run.json', view)
+        thread = threading.Thread(target=worker, daemon=True); job['thread'] = thread; thread.start()
+        return {'id': ident}
 
     def clear_records(self):
         # Hide completed history; retain all source, receipts and evidence on disk.
@@ -237,6 +295,9 @@ def make_handler(app):
                     cfg=codesys.load_config(app.home)
                     return self.send_json({'configuration':cfg,'saved':(app.home/'codesys.json').is_file(),
                                            'config_file':'agent_data/codesys.json'})
+                if self.path == '/api/tia/config':
+                    return self.send_json({**tia.doctor(app.home), 'saved':(app.home/'tia.json').is_file(),
+                                           'config_file':'agent_data/tia.json'})
                 if self.path == '/api/tasks': return self.send_json({'schema':'plc-workbench-catalog-v1','tasks':[]})
                 if self.path.startswith('/api/tasks/'):
                     return self.send_json(app.bank.load(self.path.rsplit('/',1)[1]))
@@ -250,7 +311,7 @@ def make_handler(app):
                 if self.path == '/api/environment':
                     from plc_probe.config import toolchain_dir
                     from plc_agent.plcverif_backend import environment
-                    return self.send_json({'codesys':codesys.load_config(app.home), 'preflight':preflight(app.home), 'local_backend':str(toolchain_dir()),
+                    return self.send_json({'tia':tia.doctor(app.home), 'codesys':codesys.load_config(app.home), 'preflight':preflight(app.home), 'local_backend':str(toolchain_dir()),
                                             'formal':environment(app.home),'formal_status':environment(app.home)['status']})
                 if self.path == '/api/campaigns': return self.send_json(app.campaigns.list())
                 if self.path.startswith('/api/campaigns/'):
@@ -281,6 +342,12 @@ def make_handler(app):
                     if app.campaigns.active or any(j['view']['status'] in ('queued','running') for j in app.jobs.values()):
                         raise ValueError('任务运行期间不能修改模型配置')
                     result = app.save_config(data)
+                elif self.path == '/api/tia/config':
+                    if app.busy(): raise ValueError('任务运行期间不能修改 TIA 配置')
+                    tia.validate_config(data)
+                    atomic_json(app.home/'tia.json', data)
+                    result = tia.doctor(app.home)
+                elif self.path == '/api/tia/probe': result = app.start_tia_probe()
                 elif self.path == '/api/codesys/config':
                     if app.campaigns.active:raise ValueError('冻结实验运行期间不能修改 CODESYS 配置')
                     codesys.validate_config(data)

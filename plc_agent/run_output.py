@@ -16,7 +16,9 @@ STATUS_LABELS={'pass':'测试通过','finite_pass':'功能测试通过','compile
  'bounded_pass':'在扫描上界内通过','bounded_inconclusive':'未得到确定结论','unsupported':'当前不支持','unsupported_model':'缺少验证模型',
  'not_executed':'未执行','not_started':'尚未开始','timeout':'超时','interrupted':'已取消','tool_error':'工具错误',
  'agent_error':'模型或流程错误','task_error':'任务错误','invalid_candidate':'源码不符合要求','missing_dependency':'缺少依赖',
- 'no_progress':'修改无进展','revision_limit':'达到版本上限','model_call_limit':'达到请求上限'}
+ 'no_progress':'修改无进展','revision_limit':'达到版本上限','model_call_limit':'达到请求上限',
+ 'compile_passed':'目标编译通过','compile_failed':'目标编译失败','generation_failed':'生成块失败',
+ 'probe_passed':'编译器正负对照通过','probe_failed':'编译器正负对照失败'}
 
 def status_label(value):return STATUS_LABELS.get(value,value or '未记录')
 
@@ -111,7 +113,9 @@ def metrics(result, task=None):
     cases=summary.get('scenarios')
     failed=summary.get('failed')
     total=len(task.get('scenarios',[])) if task is not None else cases
-    return {'codesys_compile':result.get('target_compile','not_executed'),
+    return {'target_platform':result.get('target','codesys'),
+            'target_compile':result.get('target_compile','not_executed'),
+            'codesys_compile':result.get('target_compile','not_executed') if result.get('target')!='tia' else 'not_executed',
             'test_cases_total':total,'test_cases_executed':cases or 0,
             'test_cases_not_executed':max(0,(total or 0)-(cases or 0)),
             'test_cases_passed':cases-failed if cases is not None and failed is not None else None,
@@ -139,7 +143,9 @@ def metrics(result, task=None):
 def finish(directory, receipt, task=None):
     directory=Path(directory)
     visible=directory.parent if directory.name=='details' else directory
-    result=receipt.get('final_evaluation') or receipt
+    result={**(receipt.get('final_evaluation') or receipt),
+            'target':receipt.get('target',(receipt.get('final_evaluation') or receipt).get('target','codesys'))}
+    suffix='.scl' if result['target']=='tia' else '.st'
     receipt['metrics_summary']=metrics(result,task)
     receipt['output_path']=str(visible.resolve())
     event(directory,'finished',status=receipt.get('status'),metrics=receipt['metrics_summary'],
@@ -149,13 +155,13 @@ def finish(directory, receipt, task=None):
     m=receipt['metrics_summary']
     lines=['# 运行结果',f"题目：{receipt.get('task_id','').split('__')[-1]}",f"模型：{receipt.get('model','未记录')}",
            f"状态：{status_label(receipt.get('status'))}（{receipt.get('status')}）",f"原因 / 说明：{failure_reason(receipt)}",'',
-           f"编译：{m['codesys_compile']}",f"功能测试：{m['test_cases_passed'] if m['test_cases_passed'] is not None else '未执行'} / {m['test_cases_total'] if m['test_cases_total'] is not None else '未提供'}",
+           f"编译（{'TIA Portal' if result['target']=='tia' else 'CODESYS'}）：{m['target_compile']}",f"功能测试：{m['test_cases_passed'] if m['test_cases_passed'] is not None else '未执行'} / {m['test_cases_total'] if m['test_cases_total'] is not None else '未提供'}",
            f"形式化：{status_label(m['formal_status'])}；界内通过 {m['formal_properties_verified']} / {m['formal_properties_total']}；扫描上界 {m['formal_bound'] if m['formal_bound'] is not None else '未执行'}",
            f"模型请求：{receipt.get('model_calls',0)}；耗时：{receipt.get('seconds','未记录')} 秒",'',
-           'final.st：最终代码。run.log：按时间记录的生成、修改与检查过程。',
+           f'final{suffix}：最终代码。run.log：按时间记录的生成、修改与检查过程。',
            'details/：完整JSON结论、逐次请求、各版源码及验证工具证据。' if directory.name=='details' else '完整结论见 receipt.json，指标见 metrics.json，各版代码见 submissions/。',
            '形式化结论仅针对记录的扫描上界和假设，不代表无限扫描证明。']
     (visible/'SUMMARY.md').write_text('\n'.join(lines),encoding='utf-8')
-    if directory.name=='details' and (directory/'candidate.st').exists():
-        (visible/'final.st').write_bytes((directory/'candidate.st').read_bytes())
+    if directory.name=='details' and (directory/('candidate'+suffix)).exists():
+        (visible/('final'+suffix)).write_bytes((directory/('candidate'+suffix)).read_bytes())
     return receipt
