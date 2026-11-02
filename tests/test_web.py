@@ -209,5 +209,16 @@ class WebTests(unittest.TestCase):
             self.assertEqual(run.call_args[0][3].extra_body,{'enable_thinking':False})
             self.assertEqual(self.app.config().extra_body,{})
 
+    def test_application_entry_preserves_default_web_and_platform_commands(self):
+        from plc_agent.__main__ import main
+        cases=[([], 'plc_agent.web.main', ['--port','18765','--open-browser']),
+               (['web','--port','12345'], 'plc_agent.web.main', ['--port','12345']),
+               (['codesys','doctor'], 'plc_agent.codesys_cli.main', ['doctor']),
+               (['tia','doctor'], 'plc_agent.tia_cli.main', ['doctor'])]
+        for arguments,target,forwarded in cases:
+            with self.subTest(arguments=arguments), patch('sys.argv',['plc_agent',*arguments]), patch(target,return_value=17) as entry:
+                self.assertEqual(main(),17)
+                entry.assert_called_once_with(forwarded)
+
 if __name__=='__main__': unittest.main()
 
