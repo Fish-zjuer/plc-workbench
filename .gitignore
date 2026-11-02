@@ -1,3 +1,4 @@
+# Local runtime state, credentials, full TIA project copies and raw run logs.
 # Private configuration and installed runtimes
 /agent_data/
 /.venv/
@@ -52,3 +53,16 @@ Thumbs.db
 
 # Keep optional_local_tests/ and plc_agent/legacy/ as source code.
 # They are removable source directories, not generated runtime output.
+
+# TIA bridge build output and Visual Studio per-user state.
+/integrations/tia_bridge/**/bin/
+/integrations/tia_bridge/**/obj/
+/integrations/tia_bridge/**/.vs/
+/integrations/tia_bridge/**/*.user
+/integrations/tia_bridge/**/*.suo
+/integrations/tia_bridge/**/*.userosscache
+/integrations/tia_bridge/**/*.sln.docstates
+
+# Optional ad-hoc TIA evidence directories; the curated acceptance report stays tracked.
+/reports/tia_runs/
+/reports/tia_checks/
