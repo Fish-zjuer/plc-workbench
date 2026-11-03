@@ -230,6 +230,7 @@ class WebTests(unittest.TestCase):
             self.assertEqual((Path(job['output_path'])/'final.st').read_text(encoding='utf-8'),code)
 
     def test_tia_generation_applies_per_run_inference_without_changing_saved_config(self):
+        self.request('/api/config',{'base_url':'https://example.test/v1','model':'fixture-model'})
         exe=self.app.home/'TiaBridge.exe';exe.write_bytes(b'fixture')
         template=self.app.home/'template.ap21';template.write_bytes(b'fixture')
         self.request('/api/tia/config',{'executable':str(exe),'template_project':str(template)})
