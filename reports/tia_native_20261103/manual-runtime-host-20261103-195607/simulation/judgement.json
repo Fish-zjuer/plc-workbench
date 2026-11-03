@@ -1,0 +1,1313 @@
+{
+  "status": "pass",
+  "task_id": "CUSTOM_09",
+  "source_sha256": "34b89c353ce7145fc470d67f034fc553d6304dadf71b5de9b362d3be5ddd3321",
+  "dataset_sha256": "f768af3132563715c25519a881f52cea6082aa8a21708a3b05529acca83c62f8",
+  "execution_fingerprint": {
+    "bridge_sha256": "3c7ee94367b61fb433d19d89450cd2a7d332e7c085d4798c4a0fb56be4921d23",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "b93c6ff08a62f669ec78de5a7dfd01609ab62f10b8cf15892cb844e7adbd227c",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "df794ebaf060b8b556626b2dca26fcd2f2219af9f92d8ba9dd1a197ab2b66877"
+  },
+  "cases": [
+    {
+      "name": "16-A：维护及重新标定",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 0.0,
+            "CalibReq": 1.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 0.0,
+            "CalibReq": 1.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 0.0,
+            "CalibReq": 1.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态0_输入000",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 0.0,
+            "CalibReq": 1.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态0_输入001",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 0.0,
+            "CalibReq": 1.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态0_输入010",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态0_输入011",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态0_输入100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态0_输入101",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态0_输入110",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态0_输入111",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态1_输入000",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态1_输入001",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态1_输入010",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态1_输入011",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态1_输入100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态1_输入101",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态1_输入110",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态1_输入111",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 1.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态2_输入000",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 0.0,
+            "CalibReq": 1.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态2_输入001",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 0.0,
+            "CalibReq": 1.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态2_输入010",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 0.0,
+            "CalibReq": 1.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态2_输入011",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 0.0,
+            "CalibReq": 1.0,
+            "MaintLamp": 0.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态2_输入100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态2_输入101",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态2_输入110",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "状态2_输入111",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "State": 2.0,
+            "CalibReq": 0.0,
+            "MaintLamp": 1.0,
+            "MeasurePermit": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 25,
+    "scans": 48,
+    "assertions": 192,
+    "failed": 0
+  },
+  "target_compile": "passed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\.tmp-tests\\tia-stable-rerun-20261103\\manual-runtime-host-20261103-195607\\submissions\\1\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "behavior_tested": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\.tmp-tests\\tia-stable-rerun-20261103\\manual-runtime-host-20261103-195607\\submissions\\1\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    11,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0"
+}

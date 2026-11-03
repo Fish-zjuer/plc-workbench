@@ -21,10 +21,16 @@ TIA 的单题入口、CLI 完整检查及 2×2 批量实验均使用现有 Trial
 
 ## 本机配置与使用
 
-1. 构建 `integrations/tia_bridge/TiaBridge.csproj`，使用本机 Openness V21 的 `net48` API 目录。
+1. 构建 `integrations/tia_bridge/TiaBridge.csproj`，使用本机 Openness V21 的 `net48` API 目录。构建会同时生成独立的 `TiaRuntime.exe`，部署时与 Bridge 放在同一目录；仅编译不需要启动该运行器。
 2. 在“模型与环境”填写 Bridge、编译模板及可选 Openness 目录。
 3. 原生仿真还需要已授权的 PLCSIM Advanced x64 API DLL，以及专用 S7-1500 `.ap21` 仿真模板。当前 S7-1200 模板仅用于编译。新 EXE 的 Openness 访问确认由使用者手动处理。
 4. 形式化工具继续使用共用的 `formal_config.json`。本机已解压的 PLCverif/Java/CBMC 位于忽略目录 `.runtime`，不随代码提交。
+
+Bridge 默认创建无界面 TIA 会话，结束时通过 Dispose 关闭自身创建的 Portal。需要交互演示或诊断时，可设置 `TIA_BRIDGE_WITH_UI=1`；图形模式断开连接后会保留界面，使用者需关闭已完成的会话。
+
+原生执行分为两个进程：`TiaBridge.exe` 完成工程编译与虚拟卡导出并关闭 TIA，随后启动不引用 `Siemens.Engineering` 的 `TiaRuntime.exe`，由它负责 PLCSIM 注册、上电、执行、采样与清理。`prepared_card.json` 绑定源码、组合测试驱动、Bridge、运行器及虚拟卡文件哈希；运行器拒绝不匹配的交接，Python 在结束时再次检查运行环境是否变化。该隔离便于诊断，不能单凭进程拆分声称上电稳定性已经解决。
+
+原生实例按仿真模板 CPU 的实际订货号注册，上电最多等待 180 秒。试用许可的 21 天提示需要使用者手动点击 OK；这与 Openness 访问授权不同。上电前、成功后及失败时的状态、许可、CPU 类型和耗时记录在 `simulator_runtime.json`，不会把启动超时当作候选逻辑错误交给模型修复。原生执行仍需保留启动、工程准备及测试的总时间预算。
 
 ```powershell
 # 现有 SCL，使用相同阶段门禁检查；不调用模型
@@ -43,7 +49,7 @@ python -m plc_agent tia run PUBLIC_02 --compile-only
 
 已验证 Bridge 能通过本机 Openness V21 编译；PUBLIC_02 与 CUSTOM_01 的测试驱动能被真实 TIA 编译。单元与服务测试检查平台路由、相同预算/版本限制、四组调度、文件类型、结果统计和共享形式化调用。
 
-**原生仿真尚未验收**：本机仍缺 PLCSIM Advanced 和匹配的 S7-1500 模板。当前不能声称行为测试覆盖已经与 CODESYS 相同。大型驱动还需在实际 CPU 的存储容量内验证。
+本机已安装 PLCSIM Advanced V8，并配置匹配的 CPU 1511-1 PN / V2.9 专用模板。CUSTOM_09 的正例已完成真实原生仿真和共享有界形式化，负例被真实行为测试检出；模型生成代码完成两次完整重跑，模型修复版在独立运行器上完成三轮同源码完整检查，每轮 192 项行为断言和 10 项有界形式化属性通过。连续启动与自动修复的最新进度及限制见 [TIA_NATIVE_ENVIRONMENT.md](TIA_NATIVE_ENVIRONMENT.md)。当前不能由单题验收推导全部题型与 CODESYS 覆盖相同；大型驱动仍需在实际 CPU 的存储容量内验证。
 
 上一轮独立形式化扩展及其 2026-11-03 证据已退出本次改动，保存在本机 `.tmp-tests/tia-scope-backup`。其中 PUBLIC_02 的移位模型存在空函数问题，先前的通过数和反例数不得作为有效结论使用。2026-11-01 的原始编译验收报告及哈希保持不变。
 

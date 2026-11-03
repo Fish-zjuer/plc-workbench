@@ -1,0 +1,26 @@
+FUNCTION_BLOCK "FB_SpectrometerQualification"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+    Maintenance : BOOL;
+    CalibDone : BOOL;
+    MeasureReq : BOOL;
+END_VAR
+VAR_OUTPUT
+    State : USINT := 0;
+    CalibReq : BOOL := TRUE;
+    MaintLamp : BOOL := FALSE;
+    MeasurePermit : BOOL := FALSE;
+END_VAR
+BEGIN
+    IF #Maintenance THEN
+        #State := 2;
+    ELSIF #State = 2 THEN
+        #State := 1;
+    ELSIF (#State = 0) AND #CalibDone THEN
+        #State := 1;
+    END_IF;
+    #CalibReq := #State = 0;
+    #MaintLamp := #State = 2;
+    #MeasurePermit := #MeasureReq AND (#State = 1);
+END_FUNCTION_BLOCK
