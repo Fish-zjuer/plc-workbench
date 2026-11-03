@@ -1,0 +1,1 @@
+These exact historical weak-model ST/contract snapshots are regression fixtures, not model evaluation results. Restored from R8 commit 7885ef3c153d53846fed07a1388ec5ecdde385d3. No keys, sessions or runtime caches are included.

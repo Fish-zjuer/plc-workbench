@@ -1,0 +1,299 @@
+{
+  "schema": "plc-task-v1",
+  "title": "中断后重新计时的启动延时",
+  "block": "RestartDelay",
+  "target": "portable",
+  "requirements": [
+    {
+      "id": "R1",
+      "text": "running becomes TRUE only after request TRUE and inhibit FALSE remain continuously eligible for delay. A TON starts elapsed=0 on its first eligible invocation."
+    },
+    {
+      "id": "R2",
+      "text": "request FALSE or inhibit TRUE immediately sets running FALSE and resets the elapsed waiting time."
+    },
+    {
+      "id": "R3",
+      "text": "After interruption, recovery must wait the full delay again, even when request was held TRUE. At exactly delay elapsed running is TRUE."
+    }
+  ],
+  "inputs": {
+    "request": "BOOL",
+    "inhibit": "BOOL",
+    "delay": "TIME"
+  },
+  "outputs": {
+    "running": "BOOL"
+  },
+  "scenarios": [
+    {
+      "name": "threshold_and_restart",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 20
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 19,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 20
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 20
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 21,
+          "inputs": {
+            "request": true,
+            "inhibit": true,
+            "delay": 20
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 20
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 49,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 20
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 20
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 51,
+          "inputs": {
+            "request": false,
+            "inhibit": false,
+            "delay": 20
+          },
+          "expect": {
+            "running": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "request_interruption",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": false,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "request": false,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 209,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 100
+          },
+          "expect": {
+            "running": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "zero_delay_first_eligible_and_recovery",
+      "covers": [
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "request": true,
+            "inhibit": true,
+            "delay": 0
+          },
+          "expect": {
+            "running": false
+          }
+        },
+        {
+          "time_ms": 2,
+          "inputs": {
+            "request": true,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": true
+          }
+        },
+        {
+          "time_ms": 3,
+          "inputs": {
+            "request": false,
+            "inhibit": false,
+            "delay": 0
+          },
+          "expect": {
+            "running": false
+          }
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "id": "P_OFF",
+      "requirement": "R2",
+      "when": {
+        "inputs.request": false
+      },
+      "then": {
+        "outputs.running": false
+      }
+    },
+    {
+      "id": "P_INHIBIT",
+      "requirement": "R2",
+      "when": {
+        "inputs.inhibit": true
+      },
+      "then": {
+        "outputs.running": false
+      }
+    },
+    {
+      "id": "P_ZERO",
+      "requirement": "R3",
+      "when": {
+        "inputs.request": true,
+        "inputs.inhibit": false,
+        "inputs.delay": 0
+      },
+      "then": {
+        "outputs.running": true
+      }
+    }
+  ],
+  "assumptions": [
+    "delay is constant during each eligible waiting interval; inputs may change between scans."
+  ],
+  "questions": [],
+  "executor": "offline",
+  "inouts": {},
+  "tolerance": 1e-06
+}

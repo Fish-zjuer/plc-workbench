@@ -72,13 +72,12 @@ def preflight(home=STATE_ROOT, require_vendor=True):
     errors=[]
     try: cfg.validate()
     except ValueError as exc: errors.append(str(exc))
-    if not cfg.api_key: errors.append('请先配置 DMXAPI Key')
     cli=codex_path(); version=None
     if cli:
         try: version=subprocess.check_output(cli_command(cli)+['--version'],text=True,timeout=10).strip()
         except (OSError,ValueError,subprocess.SubprocessError) as exc: errors.append('Codex CLI version check failed: '+str(exc))
     else: errors.append('未找到实验用 Codex CLI；设置 PLC_CODEX_CLI 为支持 Chat Completions 的 Codex 0.80.0 路径')
-    if version and version!='codex-cli 0.80.0': errors.append('此 DMXAPI Chat 适配固定 Codex 0.80.0；当前为 '+version)
+    if version and version!='codex-cli 0.80.0': errors.append('此 Chat Completions 适配固定 Codex 0.80.0；当前为 '+version)
     vendor=codesys.load_config(Path(home))
     if require_vendor:
         try: codesys.validate_config(vendor)
@@ -203,7 +202,7 @@ def run_self(trial):
 
 
 class Relay:
-    """The CLI sees a local temporary token; the real DMXAPI key stays in the host."""
+    """The CLI sees a local temporary token; the real provider key stays in the host."""
     def __init__(self,trial):
         self.trial=trial; token=uuid.uuid4().hex;self.token=token
         class Handler(BaseHTTPRequestHandler):
@@ -250,7 +249,7 @@ def run_codex(trial,cli):
     (workspace/'requirements.json').write_text(json.dumps(packet,ensure_ascii=False,indent=2),encoding='utf-8')
     with Relay(trial) as relay:
         port=relay.server.server_port
-        (home/'config.toml').write_text('model = '+json.dumps(trial.cfg.model)+'\nmodel_provider = "experiment"\napproval_policy = "never"\nsandbox_mode = "workspace-write"\n[model_providers.experiment]\nname = "DMXAPI metered Chat relay"\nbase_url = "http://127.0.0.1:'+str(port)+'/v1"\nenv_key = "PLC_BENCHMARK_TOKEN"\nwire_api = "chat"\nrequest_max_retries = 0\nstream_max_retries = 0\n',encoding='utf-8')
+        (home/'config.toml').write_text('model = '+json.dumps(trial.cfg.model)+'\nmodel_provider = "experiment"\napproval_policy = "never"\nsandbox_mode = "workspace-write"\n[model_providers.experiment]\nname = "Metered Chat Completions relay"\nbase_url = "http://127.0.0.1:'+str(port)+'/v1"\nenv_key = "PLC_BENCHMARK_TOKEN"\nwire_api = "chat"\nrequest_max_retries = 0\nstream_max_retries = 0\n',encoding='utf-8')
         checker="""import json, pathlib, urllib.request
 p=pathlib.Path('candidate.st')
 req=urllib.request.Request(URL,data=json.dumps({'code':p.read_text(encoding='utf-8-sig')}).encode(),headers={'Content-Type':'application/json','Authorization':'Bearer '+TOKEN},method='POST')
@@ -372,7 +371,7 @@ class Campaigns:
         if ready['errors']:raise ValueError('\n'.join(ready['errors']))
         bank=ImportedBank(self.home);tasks=[bank.load(ident) for ident in ids]
         cfg=ModelConfig.load(self.home)
-        if cfg.base_url.rstrip('/')!='https://www.dmxapi.cn/v1':raise ValueError('批量实验需要配置 DMXAPI 接口地址')
+        cfg.validate()
         with self.lock:
             if self.active:raise ValueError('已有批量实验在运行或暂停')
             path=reserve_run(self.root);ident=path.name

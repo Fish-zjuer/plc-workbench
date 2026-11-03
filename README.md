@@ -38,7 +38,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup-reproduction
 
 打开网页左侧 **模型与环境**。
 
-**模型配置：** 网页使用DMXAPI的Chat Completions兼容接口。配置API Key及服务支持的模型ID后保存，可通过“测试连接”验证接口。连接测试会产生模型请求，计入服务用量。配置由界面保存；程序不自动加载 `.env` 文件。
+**模型配置：** 网页使用可自定义 Base URL 的 Chat Completions 兼容接口，可连接 DeepSeek、DMXAPI、其他兼容服务或本地模型。填写服务地址、API Key及准确模型ID后保存，可通过“测试连接”验证接口。连接测试会产生模型请求，计入服务用量。配置由界面保存；程序不自动加载 `.env` 文件。
 
 API密钥保存在本机 `agent_data/private/`，该目录不纳入源码分发。网页结果接口不返回完整密钥。
 
@@ -134,3 +134,9 @@ API密钥保存在本机 `agent_data/private/`，该目录不纳入源码分发�
 ## 代码与入口整理
 
 日常只需执行 `start.cmd`；查看结果直接打开 `outputs/`，不需要另运行 cmd 文件。主命令入口只保留网页与 CODESYS 环境工具。历史终端和旧批测代码已归入 `plc_agent/legacy/`，本地专用编译器、驱动与补丁集中在 `optional_local_tests/`。后者提交前可以整体删除。目录分工与保留理由见 [代码导读](docs/CODE_GUIDE.md)。
+
+## 2026-11-03 整合检查
+
+本版以 agent-codesys-cbmc@0cdaaae 为基础，包含 bank32-v6 与形式化修复分支。恢复自定义 Base URL，保留现有服务参数，切换服务不会沿用旧密钥；补全可复现的测试夹具。当前电脑仍缺 CODESYS、PLCverif 与 CBMC，不将源代码接入当作厂商或完整形式化实测。详细记录见 [整合报告](docs/INTEGRATION_20261103.md)。
+
+不用模型重放32份保存候选（需本地备用后端）：`python scripts/check_saved_candidates.py`；开发回归：`python -m unittest discover -s tests -v`。历史终端命令在 `python -m plc_agent.legacy` 下，网页仍由 start.cmd 启动。

@@ -33,21 +33,27 @@ class Workbench:
         self.lock = threading.Lock()
 
     def config(self):
-        cfg = ModelConfig.load(self.home)
-        return cfg if cfg.base_url else ModelConfig.dmxapi()
+        return ModelConfig.load(self.home)
 
     def public_config(self):
         cfg = self.config()
         return {**cfg.public(), 'has_api_key': bool(cfg.api_key)}
 
     def save_config(self, data):
+        if not isinstance(data,dict):raise ValueError('Model configuration must be an object')
         old = self.config()
         # Keys remain on the server and are never returned by this API.
-        cfg = ModelConfig.dmxapi(model=data.get('model', '').strip(),
-                                comparison_model=data.get('comparison_model',old.comparison_model).strip(),
-                                api_key=data.get('api_key') or (old.api_key if old.base_url.rstrip('/') == 'https://www.dmxapi.cn/v1' else ''),
-                                stream=bool(data.get('stream', False)),
-                                timeout=180, context_window=128000, max_output_tokens=16384)
+        for key in ('base_url','model','comparison_model','api_key'):
+            if key in data and not isinstance(data[key],str):raise ValueError(key+' must be text')
+        for key in ('stream','clear_api_key'):
+            if key in data and type(data[key]) is not bool:raise ValueError(key+' must be boolean')
+        base=data.get('base_url',old.base_url).strip()
+        same_endpoint=base.rstrip('/')==old.base_url.rstrip('/')
+        key='' if data.get('clear_api_key') else data.get('api_key') or (old.api_key if same_endpoint else '')
+        cfg=replace(old,base_url=base,model=data.get('model',old.model).strip(),
+                    comparison_model=data.get('comparison_model',old.comparison_model).strip(),
+                    api_key=key,key_env=old.key_env if same_endpoint else 'PLC_AGENT_API_KEY',
+                    stream=data.get('stream',old.stream))
         cfg.validate()
         cfg.save(self.home)
         return self.public_config()
@@ -272,7 +278,8 @@ def make_handler(app):
                 if self.path == '/api/trial':return self.send_json(app.read_trial(data))
                 if self.path == '/api/campaign-preflight':return self.send_json(app.campaign_preflight(data))
                 if self.path == '/api/config':
-                    if app.campaigns.active: raise ValueError('冻结实验运行期间不能修改配置')
+                    if app.campaigns.active or any(j['view']['status'] in ('queued','running') for j in app.jobs.values()):
+                        raise ValueError('任务运行期间不能修改模型配置')
                     result = app.save_config(data)
                 elif self.path == '/api/codesys/config':
                     if app.campaigns.active:raise ValueError('冻结实验运行期间不能修改 CODESYS 配置')
