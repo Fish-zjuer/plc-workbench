@@ -220,7 +220,9 @@ def _verify_cbmc(work,adapter,cfg,report,deadline,cancel_event):
     if not model_path.is_file() or not cfa_path.is_file():
         details=(work/'plcverif.log').read_text(encoding='utf-8',errors='replace')
         raise Unsupported('PLCverif could not build a structured C model: '+details[-4500:])
+    transform_started=time.monotonic()
     checked,changes=checked_model(model_path.read_text(encoding='utf-8'),adapter,cfa_path)
+    report['model_transform_seconds']=round(time.monotonic()-transform_started,3)
     (work/'checked.i').write_text(checked,encoding='utf-8')
     report.update(arithmetic_model='IEEE binary32/binary64; CFA-typed literals; round to nearest even',
                   float_literal_adaptations=changes,model_generation_condition_used_for_verdict=False,
@@ -233,8 +235,11 @@ def _verify_cbmc(work,adapter,cfg,report,deadline,cancel_event):
     while not _engine_slots.acquire(timeout=.1):
         if cancel_event is not None and cancel_event.is_set():raise Cancelled('Formal verification cancelled')
         if time.monotonic()>=deadline:raise TimeoutError('Formal engine queue exceeded time budget')
+    cbmc_started=time.monotonic()
     try:code=_run(command,work,work/'cbmc.json',deadline,cancel_event,cfg.get('memory_limit_mb',768))
-    finally:_engine_slots.release()
+    finally:
+        report['cbmc_seconds']=round(time.monotonic()-cbmc_started,3)
+        _engine_slots.release()
     # 10 means at least one failed assertion. The domain witness intentionally
     # fails on a reachable valid trace, so only per-property results are verdicts.
     if code not in (0,10):raise Unsupported('CBMC failed with exit code '+str(code)+'; see cbmc.json')
@@ -266,6 +271,22 @@ def verify(task,source,directory,*,timeout_seconds=None,cancel_event=None,config
         deadline=started+max(0,allowed)
         spec=task.get('ltl',{})
         if isinstance(spec,dict) and not isinstance(spec.get('execution',{}),dict):raise Unsupported('ltl.execution must be an object')
+        period=cfg.get('scan_period_ms',10);bound=cfg['bound']
+        report['time_coverage']={'scan_samples':bound,'scan_period_ms':period,
+                                 'first_sample_offset_ms':period,
+                                 'last_sample_offset_ms':bound*period,
+                                 'maximum_elapsed_between_samples_ms':max(0,bound-1)*period}
+        execution=spec.get('execution',{}) if isinstance(spec,dict) else {}
+        bindings=execution.get('bindings',{}) if isinstance(execution,dict) else {}
+        thresholds=[]
+        if isinstance(bindings,dict):
+            for name,expression in bindings.items():
+                if not isinstance(expression,str):continue
+                for match in re.finditer(r'PVL_NowMs\s*-\s*PVL_StartMs\s*>=\s*(\d+)',expression,re.I):
+                    threshold=int(match.group(1));minimum=(threshold+period-1)//period+1
+                    thresholds.append({'binding':name,'threshold_ms':threshold,
+                                       'minimum_scan_bound':minimum,'covered':bound>=minimum})
+        if thresholds:report['time_coverage']['observer_thresholds']=thresholds
         if isinstance(spec,dict) and spec.get('execution',{}).get('requires_model'):
             report['properties']=[{**p,'status':'unsupported_model','message':spec['execution']['requires_model']} for p in declared]
             raise Unsupported(spec['execution']['requires_model'])
@@ -285,7 +306,7 @@ def verify(task,source,directory,*,timeout_seconds=None,cancel_event=None,config
             report['arithmetic_model']='IEEE floating-point required; nuXmv bridge uses an experimental fixed-point abstraction'
             raise Unsupported('REAL/LREAL cannot be reported as verified through the current PLCverif-to-nuXmv fixed-point translation. An IEEE floating-point backend/model is required.')
         from plc_agent.plcverif_st import adapt
-        derived,changes=adapt(original.decode('utf-8-sig'))
+        derived,changes=adapt(original.decode('utf-8-sig'),cfg.get('scan_period_ms',10),task['block'])
         report['source_adaptations']=changes
         instrumented=adapter.instrument(derived)
         report['instrumented_sha256']=hashlib.sha256(instrumented.encode()).hexdigest()
@@ -307,11 +328,14 @@ def verify(task,source,directory,*,timeout_seconds=None,cancel_event=None,config
             while not _model_lock.acquire(timeout=.1):
                 if cancel_event is not None and cancel_event.is_set():raise Cancelled('Formal verification cancelled')
                 if time.monotonic()>=deadline:raise TimeoutError('Formal model queue exceeded time budget')
+            plcverif_started=time.monotonic()
             try:
                 _run([cfg['plcverif'],'--launcher.suppressErrors','-vm',cfg['java'],str(work/'model.vc3'),
                       '-vmargs','-Xss5m','-Xmx384m','-Dfile.encoding=UTF-8','-Dstdout.encoding=UTF-8','-Dstderr.encoding=UTF-8',
                       '--enable-native-access=ALL-UNNAMED'],Path(cfg['plcverif']).parent,work/'plcverif.log',deadline,cancel_event,cfg.get('memory_limit_mb',768))
-            finally:_model_lock.release()
+            finally:
+                report['plcverif_seconds']=round(time.monotonic()-plcverif_started,3)
+                _model_lock.release()
             if engine=='cbmc':
                 _verify_cbmc(work,adapter,cfg,report,deadline,cancel_event)
                 return report

@@ -55,13 +55,24 @@ def monitor(adapter):
             if isinstance(child,tuple):add(child)
         ids[node]=len(nodes);nodes.append(node);return ids[node]
     supported=[p for p in adapter.properties if p.get('ast')]
-    for prop in supported:add(prop['ast'])
+    # G(atom) is exactly a conjunction of the sampled atom over the finite
+    # prefix.  Accumulate it online instead of materializing N history and
+    # syntax-node arrays.  This preserves the LTLf formula and every CBMC
+    # safety check while avoiding hundreds of redundant array bounds checks.
+    invariants=[p for p in supported if p['ast'][0]=='G' and p['ast'][1][0]=='atom']
+    temporal=[p for p in supported if p not in invariants]
+    for prop in temporal:add(prop['ast'])
     declarations=['int pvl_tick;','bool pvl_domain = true;']
-    for name in adapter.atoms.values():declarations.append(f'bool pvl_history_{name}[{bound}];')
+    temporal_atoms={node[1] for node in nodes if node[0]=='atom'}
+    for name in temporal_atoms:declarations.append(f'bool pvl_history_{name}[{bound}];')
+    for prop in invariants:declarations.append(f'bool pvl_invariant_{prop["id"]} = true;')
     for i in range(len(nodes)):declarations.append(f'bool pvl_node_{i}[{bound+1}];')
-    sample=[f'pvl_history_{name}[pvl_tick] = instance.{name};' for name in adapter.atoms.values()]
+    sample=[f'pvl_history_{name}[pvl_tick] = instance.{name};' for name in temporal_atoms]
+    sample += [f'pvl_invariant_{prop["id"]} = pvl_invariant_{prop["id"]} && instance.{prop["ast"][1][1]};'
+               for prop in invariants]
     if adapter.assumptions:sample.append('pvl_domain = pvl_domain && instance.PVL_Domain;')
-    end=['__CPROVER_assert(!pvl_domain, "PVL:DOMAIN_WITNESS");']
+    end=[]
+    if adapter.assumptions:end.append('__CPROVER_assert(!pvl_domain, "PVL:DOMAIN_WITNESS");')
     def ref(node,t):return f'pvl_node_{ids[node]}[{t}]'
     for i,node in enumerate(nodes):end.append(f'pvl_node_{i}[{bound}] = '+('true' if node[0]=='G' else 'false')+';')
     for t in range(bound-1,-1,-1):
@@ -80,7 +91,11 @@ def monitor(adapter):
                 value=f'(!{a} || {b})' if op=='->' else f'({a} '+{'&':'&&','&&':'&&','|':'||','||':'||','<->':'==' }[op]+f' {b})'
             else:raise Unsupported('Unsupported temporal Boolean operator: '+op)
             end.append(cur+' = '+value+';')
-    for prop in supported:
+    for prop in invariants:
+        label='PVL:LTL:'+prop['id']
+        end.append('__CPROVER_assert(!pvl_domain || pvl_invariant_'+prop['id']+', '+json.dumps(label)+');')
+        prop['model_formula']=label
+    for prop in temporal:
         label='PVL:LTL:'+prop['id']
         end.append('__CPROVER_assert(!pvl_domain || '+ref(prop['ast'],0)+', '+json.dumps(label)+');')
         prop['model_formula']=label
@@ -156,8 +171,10 @@ def results(console,report,adapter):
     guards=[r for r in rows if not r.get('description','').startswith('PVL:')]
     bad_guards=[r for r in guards if r.get('status')!='SUCCESS']
     report['model_checks']=guards
-    valid_domain=len(witness)==1 and witness[0].get('status')=='FAILURE'
+    valid_domain=(not adapter.assumptions) or (len(witness)==1 and witness[0].get('status')=='FAILURE')
     report['valid_domain_witness']=valid_domain
+    report['valid_domain_basis']=('unrestricted_input_domain' if not adapter.assumptions else
+                                  'cbmc_counterexample_to_empty_domain_assertion')
     report['unwind_complete']=not any('unwind' in r.get('property','').lower() for r in bad_guards)
     counterexamples={}
     for prop in adapter.properties:
