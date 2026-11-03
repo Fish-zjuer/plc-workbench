@@ -67,7 +67,8 @@ class Workbench:
             for ident in ids:self.bank.load(ident)
         except (ValueError,KeyError,OSError) as exc:
             return {'status':'setup_required','errors':[str(exc)],'model_calls':0}
-        ready=preflight(self.home,vendor)
+        target=data.get('target','codesys')
+        ready=preflight(self.home,vendor,**({'target':target} if target!='codesys' else {}))
         return {**ready,'models':models,'model_settings':settings,
                 'task_count':len(ids),'total':4*len(ids),'concurrency':concurrency,
                 'effective_concurrency':min(concurrency,4*len(ids)),
@@ -96,8 +97,8 @@ class Workbench:
         source = directory/('candidate'+extension)
         if source.exists(): value['code'] = source.read_text(encoding='utf-8-sig')
         if extension == '.scl':
-            versions = sorted(directory.glob('proposal_*.scl'))
-            value['versions'] = [{'name': f.name, 'code': f.read_text(encoding='utf-8-sig')} for f in versions]
+            versions = sorted((directory/'submissions').glob('*/candidate.scl'),key=lambda p:int(p.parent.name)) or sorted(directory.glob('proposal_*.scl'))
+            value['versions'] = [{'name': ('提交 '+f.parent.name) if f.name=='candidate.scl' else f.name, 'code': f.read_text(encoding='utf-8-sig')} for f in versions]
         else:
             value['versions'] = [{'name': '提交 '+f.parent.name, 'code': f.read_text(encoding='utf-8-sig')}
                                  for f in sorted((directory/'submissions').glob('*/candidate.st'),key=lambda p:int(p.parent.name))]
@@ -112,21 +113,23 @@ class Workbench:
         path=trial_path(self.campaigns.root/record['id'],record,framework,model,index)
         directory=details_path(path)
         receipt=read_json(directory/'receipt.json')
+        suffix='.scl' if receipt.get('target')=='tia' else '.st'
         log=(path/'run.log').read_text(encoding='utf-8') if (path/'run.log').exists() else ''
         return {'status':receipt['status'],'receipt':receipt,'output_path':str(path.resolve()),
                 'task_id':receipt['task_id'],'model':receipt['model'],
                 'task':read_json(directory/'task_snapshot.json') if (directory/'task_snapshot.json').exists() else read_json(details_path(self.campaigns.root/record['id'])/'tasks.json')[index],
-                'code':(directory/'candidate.st').read_text(encoding='utf-8') if (directory/'candidate.st').exists() else '',
-                'versions':[{'name':'提交 '+p.parent.name,'code':p.read_text(encoding='utf-8')} for p in sorted((directory/'submissions').glob('*/candidate.st'),key=lambda p:int(p.parent.name))],
+                'target':receipt.get('target','codesys'),
+                'code':(directory/('candidate'+suffix)).read_text(encoding='utf-8-sig') if (directory/('candidate'+suffix)).exists() else '',
+                'versions':[{'name':'提交 '+p.parent.name,'code':p.read_text(encoding='utf-8-sig')} for p in sorted((directory/'submissions').glob('*/candidate'+suffix),key=lambda p:int(p.parent.name))],
                 'logs':[line[:8000] for line in log.splitlines()[-150:]],'full_log':log if data.get('include_log') else None}
 
     def start(self, data):
         task = self.bank.load(data['task_id'])
         action = data.get('action', 'generate')
-        if action not in ('generate', 'check', 'codesys', 'tia_generate', 'tia'): raise ValueError('Unknown action')
-        target = 'tia' if action in ('tia_generate', 'tia') else data.get('target', 'codesys')
+        if action not in ('generate', 'check', 'codesys', 'tia_generate', 'tia', 'tia_check'): raise ValueError('Unknown action')
+        target = 'tia' if action in ('tia_generate', 'tia', 'tia_check') else data.get('target', 'codesys')
         if target not in ('tia', 'codesys'): raise ValueError('Unknown platform')
-        if target == 'tia' and action == 'check': raise ValueError('SCL 请使用 TIA 编译；本地 ST 检查器不支持 Siemens 方言')
+        if target == 'tia' and action == 'check': action = 'tia_check'
         if target == 'tia' and action == 'generate': action = 'tia_generate'
         if target == 'tia' and action == 'codesys': action = 'tia'
         use_vendor=data.get('codesys',True)
@@ -154,13 +157,10 @@ class Workbench:
             directory=path/'details';directory.mkdir()
             source = directory/('candidate.scl' if target == 'tia' else 'candidate.st')
             if code.strip(): source.write_text(code, encoding='utf-8-sig' if target == 'tia' else 'utf-8')
-            trial = None
-            if target == 'tia':
-                provider = ChatProvider(cfg)
-            else:
-                from plc_agent.plcverif_backend import configuration
-                trial=Trial(directory,task,cfg,vendor,threading.Event(),formal_config=configuration(self.home))
-                provider = trial
+            from plc_agent.plcverif_backend import configuration
+            trial=Trial(directory,task,cfg,vendor_config if target=='tia' else vendor,threading.Event(),
+                        formal_config=configuration(self.home),target=target)
+            provider = trial
             view = {'id': ident, 'task_id': task['id'], 'model': cfg.model, 'target': target, 'status': 'queued', 'logs': []}
             atomic_json(directory/'run.json', view)
             atomic_json(directory/'task_snapshot.json', task)
@@ -170,8 +170,14 @@ class Workbench:
             view['status'] = 'running'
             try:
                 if action == 'tia_generate':
-                    result = tia_workflow.run(task, source, directory, cfg, vendor_config=vendor_config, provider=provider,
-                                              notify=lambda message:event(directory,'progress',message=str(message)))
+                    from plc_agent.campaign import run_self
+                    result=run_self(trial)
+                elif action == 'tia_check':
+                    checked=trial.check(source.read_text(encoding='utf-8-sig'))
+                    result=trial.receipt(checked['status'],{'final_evaluation':checked,
+                        'target_compile':checked.get('target_compile','not_executed'),
+                        'behavior_tested':checked.get('behavior_tested',False),
+                        'formal_verification':checked.get('formal_verification'),'ltl_status':checked.get('ltl_status','not_executed')})
                 elif action == 'tia':
                     compiled = tia_workflow.compile_candidate(source, task, vendor_config, provider.cancel_event, directory/'compile')
                     result = {**compiled, 'task_id': task['id'], 'model': cfg.model, 'target': 'tia',

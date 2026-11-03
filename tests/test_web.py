@@ -174,8 +174,18 @@ class WebTests(unittest.TestCase):
             self.assertTrue((folder/'run.log').is_file())
             self.assertNotIn('code',self.app.runs()[0])
             self.assertEqual(Workbench(self.app.home).read_job(ident)['code'],code)
-        with self.assertRaises(urllib.error.HTTPError):
-            self.request('/api/runs',{'task_id':'PUBLIC_02','action':'check','target':'tia','code':code})
+        checked={**result,'status':'pass','behavior_tested':True,
+                 'formal_verification':{'status':'bounded_pass','properties':[]}}
+        with patch('plc_agent.web.tia_workflow.evaluate_candidate',return_value=checked) as evaluate:
+            ident=json.loads(self.request('/api/runs',{'task_id':'PUBLIC_02','action':'check','target':'tia','code':code}))['id']
+            for _ in range(100):
+                job=json.loads(self.request('/api/runs/'+ident))
+                if job['status'] not in ('queued','running'):break
+                time.sleep(.01)
+            self.assertEqual(job['status'],'pass')
+            self.assertTrue(job['receipt']['behavior_tested'])
+            self.assertEqual(job['receipt']['metrics_summary']['formal_status'],'bounded_pass')
+            self.assertEqual(evaluate.call_args.kwargs['formal_config']['engine'],'cbmc')
 
     def test_tia_probe_uses_async_job_and_can_be_read_without_task(self):
         exe=self.app.home/'TiaBridge.exe';exe.write_bytes(b'fixture')

@@ -18,7 +18,10 @@ STATUS_LABELS={'pass':'测试通过','finite_pass':'功能测试通过','compile
  'agent_error':'模型或流程错误','task_error':'任务错误','invalid_candidate':'源码不符合要求','missing_dependency':'缺少依赖',
  'no_progress':'修改无进展','revision_limit':'达到版本上限','model_call_limit':'达到请求上限',
  'compile_passed':'目标编译通过','compile_failed':'目标编译失败','generation_failed':'生成块失败',
- 'probe_passed':'编译器正负对照通过','probe_failed':'编译器正负对照失败'}
+ 'probe_passed':'编译器正负对照通过','probe_failed':'编译器正负对照失败',
+ 'behavior_not_configured':'原生仿真未配置','behavior_not_supported':'当前行为模型不支持',
+ 'simulation_error':'仿真执行错误','harness_error':'测试驱动错误','bridge_protocol_error':'Bridge 协议错误',
+ 'formal_probe_passed':'形式化对照符合预期','formal_probe_failed':'形式化对照未通过'}
 
 def status_label(value):return STATUS_LABELS.get(value,value or '未记录')
 
@@ -66,7 +69,7 @@ def write_campaign_summary(path,record):
     path=Path(path)
     states={'running':'运行中','pausing':'正在暂停，等待当前任务结束','paused':'已暂停，可继续','stopping':'正在结束','interrupted':'已结束，未完成任务取消','completed':'已完成','error':'运行出错'}
     lines=['# 批量实验',f"开始时间：{record.get('started_at',record['id'])}",
-           f"状态：{states.get(record['status'],record['status'])}",
+           f"状态：{states.get(record['status'],record['status'])}",f"目标平台：{record.get('target','codesys')}",
            f"已结束任务：{record.get('completed',0)}/{record['total']}（包括通过、失败和取消）",
            f"模型 A：{record['models'][0]}；模型 B：{record['models'][1]}",
            f"同时运行任务数：{record.get('concurrency',1)}",'',
@@ -75,7 +78,7 @@ def write_campaign_summary(path,record):
            '| 框架 / 模型 | 已结束 | 编译通过 | 功能任务通过 | 测试场景通过 | 有界LTL性质通过 |',
            '|---|---:|---:|---:|---:|---:|']
     for row in record.get('summary',[]):
-        lines.append(f"| {row['framework']} / {row['model']} | {row['completed']} | {row.get('codesys_compiled',0)} | {row.get('passed',0)} | {row.get('test_cases_passed',0)}/{row.get('test_cases_total',0)} | {row.get('formal_properties_verified',0)}/{row.get('formal_properties_total',0)} |")
+        lines.append(f"| {row['framework']} / {row['model']} | {row['completed']} | {row.get('target_compiled',row.get('codesys_compiled',0))} | {row.get('passed',0)} | {row.get('test_cases_passed',0)}/{row.get('test_cases_total',0)} | {row.get('formal_properties_verified',0)}/{row.get('formal_properties_total',0)} |")
     if record.get('message'):lines+=['',record['message']]
     lines+=['','功能测试通过与形式化通过分别统计。LTL结论仅针对记录的扫描上界和假设。']
     (path/'SUMMARY.md').write_text('\n'.join(lines),encoding='utf-8')
@@ -112,6 +115,8 @@ def metrics(result, task=None):
     summary=result.get('summary') or {}
     cases=summary.get('scenarios')
     failed=summary.get('failed')
+    if result.get('test_backend')=='tia' and result.get('behavior_tested') is False:
+        cases=failed=None  # Invalid native timing/transport cannot count as test passes.
     total=len(task.get('scenarios',[])) if task is not None else cases
     return {'target_platform':result.get('target','codesys'),
             'target_compile':result.get('target_compile','not_executed'),
