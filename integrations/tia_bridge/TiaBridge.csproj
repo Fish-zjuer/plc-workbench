@@ -9,6 +9,8 @@
     <OpennessDir Condition="'$(OpennessDir)' == ''">$(ProgramFiles)\Siemens\Automation\Portal V21\PublicAPI\V21\net48</OpennessDir>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="runtime/**/*.cs" />
+    <ProjectReference Include="runtime/TiaRuntime.csproj" ReferenceOutputAssembly="false" />
     <Reference Include="Siemens.Engineering.Base">
       <HintPath>$(OpennessDir)\Siemens.Engineering.Base.dll</HintPath>
       <Private>False</Private>
@@ -19,4 +21,11 @@
     </Reference>
     <Reference Include="System.Web.Extensions" />
   </ItemGroup>
+  <Target Name="CopyRuntimeHost" AfterTargets="Build">
+    <ItemGroup>
+      <RuntimeHostFiles Include="$(MSBuildThisFileDirectory)runtime/bin/$(Configuration)/net48/TiaRuntime.exe" />
+      <RuntimeHostFiles Include="$(MSBuildThisFileDirectory)runtime/bin/$(Configuration)/net48/TiaRuntime.exe.config" Condition="Exists('$(MSBuildThisFileDirectory)runtime/bin/$(Configuration)/net48/TiaRuntime.exe.config')" />
+    </ItemGroup>
+    <Copy SourceFiles="@(RuntimeHostFiles)" DestinationFolder="$(OutDir)" />
+  </Target>
 </Project>

@@ -21,6 +21,7 @@ class VerificationTests(unittest.TestCase):
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
         template=self.root/'template';template.mkdir();(template/'p.ap21').write_bytes(b'project')
         exe=self.root/'bridge.exe';exe.write_bytes(b'fixture')
+        (self.root/'TiaRuntime.exe').write_bytes(b'runtime-fixture')
         api=self.root/'Siemens.Simatic.Simulation.Runtime.Api.x64.dll';api.write_bytes(b'fixture')
         self.config={'executable':str(exe),'template_project':str(template/'p.ap21'),
                      'simulation_api':str(api),'simulation_timeout_seconds':600}
@@ -75,6 +76,13 @@ class VerificationTests(unittest.TestCase):
         from plc_agent.run_output import metrics
         self.assertIsNone(metrics(result,self.task)['test_cases_passed'])
 
+    def test_insufficient_total_timeout_stops_before_starting_owned_simulator(self):
+        with patch('plc_agent.tia.simulate_scl') as simulate, self.assertRaises(BackendError) as error:
+            tia_tests.evaluate(self.source,self.task,{**self.config,'simulation_timeout_seconds':150},
+                               directory=self.root/'short-timeout')
+        self.assertEqual(error.exception.result['status'],'behavior_not_supported')
+        simulate.assert_not_called()
+
     def test_simulator_request_excludes_expected_and_uses_disposable_project(self):
         plan=tia_tests.harness(self.task)
         def launch(command,stdout,stderr,shell):
@@ -90,6 +98,40 @@ class VerificationTests(unittest.TestCase):
             result=tia.simulate_scl(self.source,plan,self.config,directory=self.root/'boundary')
         self.assertEqual(result['status'],'simulation_completed')
         self.assertEqual(Path(self.config['template_project']).read_bytes(),b'project')
+
+    def test_runtime_host_change_invalidates_native_evidence(self):
+        def launch(command,stdout,stderr,shell):
+            request=json.loads(Path(command[2]).read_text(encoding='utf-8'))
+            self.assertEqual(request['execution_fingerprint']['runtime_host_sha256'],
+                             hashlib.sha256(b'runtime-fixture').hexdigest())
+            (self.root/'TiaRuntime.exe').write_bytes(b'changed-runtime')
+            stdout.write(('WB_RESULT_JSON='+json.dumps(self.response())+'\n').encode());stdout.flush()
+            class Process:
+                returncode=0
+                def poll(self):return 0
+            return Process()
+        with patch('plc_agent.tia.subprocess.Popen',side_effect=launch):
+            result=tia.simulate_scl(self.source,tia_tests.harness(self.task),self.config,
+                                    directory=self.root/'changed-host')
+        self.assertEqual(result['status'],'stale_evidence')
+
+    def test_startup_timeout_keeps_vendor_failure_and_explains_conditional_trial_recovery(self):
+        failure='PowerOn(UInt32): Error Code: -11, Timeout'
+        def launch(command,stdout,stderr,shell):
+            stdout.write(('WB_RESULT_JSON='+json.dumps({'status':'simulation_error','message':failure})+'\n').encode())
+            stdout.flush()
+            class Process:
+                returncode=2
+                def poll(self):return 0
+            return Process()
+        with patch('plc_agent.tia.subprocess.Popen',side_effect=launch) as native:
+            result=tia.simulate_scl(self.source,tia_tests.harness(self.task),self.config,
+                                    directory=self.root/'startup-timeout')
+        self.assertEqual(result['status'],'simulation_error')
+        self.assertTrue(result['message'].startswith(failure))
+        self.assertIn('若出现',result['recovery_hint'])
+        self.assertIn('OK',result['recovery_hint'])
+        native.assert_called_once()
 
     def test_missing_simulator_uses_same_formal_stage_gate_as_codesys(self):
         compiled={'status':'compile_passed','target_compile':'passed'}

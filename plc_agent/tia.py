@@ -186,7 +186,9 @@ def simulation_environment(config):
 
 def discover_simulation_api():
     roots = [Path(os.environ.get('ProgramFiles', 'C:/Program Files'))/'Siemens/Automation',
-             Path(os.environ.get('ProgramFiles(x86)', 'C:/Program Files (x86)'))/'Siemens/Automation']
+             Path(os.environ.get('ProgramFiles(x86)', 'C:/Program Files (x86)'))/'Siemens/Automation',
+             Path(os.environ.get('CommonProgramFiles', 'C:/Program Files/Common Files'))/'Siemens',
+             Path(os.environ.get('CommonProgramFiles(x86)', 'C:/Program Files (x86)/Common Files'))/'Siemens']
     return next((str(p) for root in roots for p in sorted(root.glob('PLCSIMADV*/API/**/Siemens.Simatic.Simulation.Runtime.Api.x64.dll'))), '')
 
 
@@ -201,7 +203,11 @@ def validate_simulation_config(config):
     seconds = config.get('simulation_timeout_seconds', 600)
     if type(seconds) is not int or not 150 <= seconds <= 7200:
         raise ValueError('simulation_timeout_seconds must be 150..7200')
-    return {**config, 'simulation_api': str(Path(api).resolve()), 'simulation_template_project': str(Path(template).resolve())}
+    runtime_host = Path(config['executable']).resolve().with_name('TiaRuntime.exe')
+    if not runtime_host.is_file():
+        raise ValueError('Rebuild TiaBridge with its separate TiaRuntime.exe simulation host')
+    return {**config, 'simulation_api': str(Path(api).resolve()), 'simulation_template_project': str(Path(template).resolve()),
+            'simulation_runtime_host': str(runtime_host)}
 
 
 def _stop_simulation(process, directory, config):
@@ -214,7 +220,7 @@ def _stop_simulation(process, directory, config):
     if manifest.is_file() and not (directory/'simulator_closed.json').is_file():
         with (directory/'cleanup.txt').open('ab') as log:
             try:
-                completed = subprocess.run([config['executable'], '--cleanup-simulator', str(manifest)],
+                completed = subprocess.run([config['simulation_runtime_host'], '--cleanup-simulator', str(manifest)],
                     stdout=log, stderr=log, shell=False, timeout=60, **_bridge_environment(config))
                 atomic_json(directory/'cleanup.json', {'returncode': completed.returncode, 'attempted': True})
             except (OSError, subprocess.SubprocessError) as exc:
@@ -234,10 +240,11 @@ def simulate_scl(source, plan, config, *, directory, cancel_event=None):
     template = Path(config['simulation_template_project'])
     if directory.is_relative_to(template.parent): raise ValueError('Simulation evidence must be outside the template project')
     identity = {'bridge_sha256': sha256(config['executable']), 'template_sha256': sha256(template),
+                'runtime_host_sha256': sha256(config['simulation_runtime_host']),
                 'simulation_api_sha256': sha256(config['simulation_api']), 'adapter_sha256': sha256(__file__)}
     project = directory/'project'
     shutil.copytree(template.parent, project, ignore=shutil.ignore_patterns('*.lck', '*.lock'))
-    staged = directory/'input.scl'; staged.write_text(data.decode('utf-8-sig')+'\n'+plan['harness_source'], encoding='utf-8-sig')
+    staged = directory/'input.scl'; staged.write_bytes((data.decode('utf-8-sig')+'\n'+plan['harness_source']).encode('utf-8-sig'))
     request = {'schema': 'tia-simulation-v1', 'project': str(project/template.name), 'source': str(staged),
                'source_sha256': hashlib.sha256(data).hexdigest(), 'simulation_api': config['simulation_api'],
                'output_names': plan['output_names'], 'output_types': plan['output_types'], 'row_count': plan['row_count'],
@@ -272,8 +279,18 @@ def simulate_scl(source, plan, config, *, directory, cancel_event=None):
                 raise ValueError('Native execution evidence missing')
         except (ValueError, TypeError) as exc:
             result = {'status': 'bridge_protocol_error', 'message': str(exc)}
-    if source.read_bytes()!=data or any(sha256(config[k])!=identity[h] for k,h in [('executable','bridge_sha256'), ('simulation_template_project','template_sha256'), ('simulation_api','simulation_api_sha256')]):
+    if source.read_bytes()!=data or any(sha256(config[k])!=identity[h] for k,h in [('executable','bridge_sha256'), ('simulation_runtime_host','runtime_host_sha256'), ('simulation_template_project','template_sha256'), ('simulation_api','simulation_api_sha256')]):
         result = {'status': 'stale_evidence', 'message': 'Source or simulation environment changed'}
+    message = str(result.get('message', ''))
+    if result.get('status') == 'simulation_error' and 'PowerOn' in message and (
+            'Error Code: -11,' in message or 'PowerOn: Timeout' in message):
+        # Siemens' trial confirmation has its own deadline; a larger PowerOn
+        # firmware timeout does not remove the need to acknowledge the notice.
+        # Keep the vendor error and verdict, and do not retry or repair source.
+        result['recovery_hint'] = ('PLCSIM 上电超时。若出现 21 天试用提示，请在新一轮启动时及时点击 OK；'
+            '该提示有独立确认期限，增大 PowerOn 等待参数不能替代确认。'
+            '确认后重跑同一份代码；若没有提示，继续检查 simulator_runtime.json 中的状态和许可。')
+        result['message'] = message+'\n'+result['recovery_hint']
     result.update(source_sha256=hashlib.sha256(data).hexdigest(), execution_fingerprint=identity,
                   evidence_path=str(directory), test_backend='tia', seconds=round(time.monotonic()-started,3))
     atomic_json(directory/'result.json', result)

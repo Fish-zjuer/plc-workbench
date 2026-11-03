@@ -39,7 +39,12 @@ BEGIN
 END_DATA_BLOCK
 
 ORGANIZATION_BLOCK "Main"
+{ S7_Optimized_Access := 'TRUE' }
 VERSION : 0.1
+VAR_INPUT
+    Initial_Call : BOOL;
+    Remanence : BOOL;
+END_VAR
 BEGIN
     "WB_TestHarness_DB"();
 END_ORGANIZATION_BLOCK
@@ -58,7 +63,9 @@ def evaluate(source, task, config, cancel_event=None, *, directory=None):
     try: tia.validate_simulation_config(config)
     except ValueError as exc:
         raise BackendError({'status': 'behavior_not_configured', 'test_backend': 'tia', 'message': str(exc)}) from exc
-    if plan['simulation_timeout_seconds']+120 > config.get('simulation_timeout_seconds', 600):
+    # Reserve the bridge's 180-second startup window plus project setup time;
+    # an outer timeout must not kill PLCSIM while PowerOn is still pending.
+    if plan['simulation_timeout_seconds']+240 > config.get('simulation_timeout_seconds', 600):
         raise BackendError({'status': 'behavior_not_supported', 'test_backend': 'tia',
                             'message': 'Increase the Siemens simulation timeout for this native-clock scenario.'})
     directory = Path(directory or source.parent/'tia_simulation')

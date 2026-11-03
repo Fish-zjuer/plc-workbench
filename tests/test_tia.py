@@ -44,6 +44,14 @@ class TiaTests(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
+    def test_discovers_x64_api_in_v8_common_files_installation(self):
+        api=self.root/'Common Files'/'Siemens'/'PLCSIMADV'/'API'/'8.0'/'Siemens.Simatic.Simulation.Runtime.Api.x64.dll'
+        api.parent.mkdir(parents=True);api.write_bytes(b'fixture')
+        with patch.dict('os.environ',{'ProgramFiles':str(self.root/'PF'),
+                'ProgramFiles(x86)':str(self.root/'PF86'),'CommonProgramFiles':str(self.root/'CF'),
+                'CommonProgramFiles(x86)':str(self.root/'Common Files')}):
+            self.assertEqual(tia.discover_simulation_api(),str(api))
+
     def test_protocol_rejects_missing_duplicate_malformed_and_false_success(self):
         valid = 'WB_RESULT_JSON='+json.dumps({'status': 'compile_passed', 'errors': 0})
         self.assertEqual(tia.parse_result('\ufeff'+valid, 0)['status'], 'compile_passed')

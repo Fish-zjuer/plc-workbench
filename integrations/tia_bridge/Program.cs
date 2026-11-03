@@ -48,8 +48,10 @@ internal static class Program
         }
         try
         {
+            if (args[0] == "--list-simulation-cpus") return SimulationTemplate.List(args[1]);
+            if (args[0] == "--create-simulation-template") return SimulationTemplate.Create(Path.GetFullPath(args[1]));
             if (args[0] == "--simulate") return new SimulationJob().Run(Path.GetFullPath(args[1]));
-            if (args[0] == "--cleanup-simulator") return SimulationJob.Cleanup(Path.GetFullPath(args[1]));
+            if (args[0] == "--run-simulation-card" || args[0] == "--cleanup-simulator") return RuntimeWorker.Run(args[0], args[1]);
             return new CompileJob().Run(Path.GetFullPath(args[0]), Path.GetFullPath(args[1]));
         }
         catch (Exception error)
@@ -69,11 +71,12 @@ internal sealed class CompileJob
         if (!File.Exists(sclFile) || !sclFile.EndsWith(".scl", StringComparison.OrdinalIgnoreCase))
             throw new FileNotFoundException("SCL source not found", sclFile);
 
-        using (var portal = new TiaPortal(TiaPortalMode.WithUserInterface))
+        using (var portal = TiaSession.Start())
         {
             Project project = null;
             try
             {
+                Console.Error.WriteLine("Opening disposable TIA compilation project");
                 project = portal.Projects.Open(new FileInfo(projectFile));
                 PlcSoftware plc = FindPlcSoftware(project);
                 if (plc == null)
@@ -84,6 +87,7 @@ internal sealed class CompileJob
                 // the dedicated test project may be overwritten on generation.
                 string sourceName = "WB_" + Guid.NewGuid().ToString("N").Substring(0, 8);
                 var external = plc.ExternalSourceGroup.ExternalSources.CreateFromFile(sourceName, sclFile);
+                Console.Error.WriteLine("Generating candidate blocks");
                 try
                 {
                     external.GenerateBlocksFromSource();
@@ -99,6 +103,7 @@ internal sealed class CompileJob
                     return 1;
                 }
 
+                Console.Error.WriteLine("Compiling candidate PLC software");
                 ICompilable compiler = plc.GetService<ICompilable>();
                 if (compiler == null)
                     throw new InvalidOperationException("PLC compile service unavailable");
@@ -126,7 +131,7 @@ internal sealed class CompileJob
         }
     }
 
-    private static void CollectMessages(CompilerResultMessageComposition list, List<object> output)
+    internal static void CollectMessages(CompilerResultMessageComposition list, List<object> output)
     {
         foreach (CompilerResultMessage item in list)
         {
