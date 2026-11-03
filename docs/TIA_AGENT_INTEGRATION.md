@@ -1,5 +1,7 @@
 # 阶段三：Python Agent 接入 TIA Portal V21
 
+> 2026-11-03 已在同一分支扩展行为测试执行器与有界形式化入口，见 [TIA_VERIFICATION.md](TIA_VERIFICATION.md)。本文的“仅编译”结论描述原阶段三验收及当前单独编译模式；旧实验证据保持不变。网页生成/检查和 CLI `run` 现在默认启用完整检查，CLI 可用 `--compile-only` 复现原编译模式。
+
 开发分支：`feat/tia-agent-integration`，最初基于 `bank32-v6`，2026-11-02 已 rebase 到队友最新提交 `ad3fa44`。
 
 实现路径：题库快照 → 模型生成 Siemens SCL → 固定接口检查 → Python 调用 C# Bridge → 外部源导入/生成块 → TIA 编译 → 原始诊断反馈给模型 → 重编译。
