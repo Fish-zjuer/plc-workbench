@@ -102,8 +102,30 @@ def monitor(adapter):
     return '\n'.join(declarations), '\n'.join(sample), '\n'.join(end)
 
 
+def order_structs(model):
+    """Repair exporter declaration order without changing fields or types."""
+    if '// Struct definitions' not in model or '// Global variables' not in model:
+        return model
+    head,tail=model.split('// Struct definitions',1)
+    section,rest=tail.split('// Global variables',1)
+    blocks=list(re.finditer(r'typedef\s+struct\s*\{([^{}]*)\}\s*(\w+)\s*;',section,re.S))
+    remaining=re.sub(r'typedef\s+struct\s*\{[^{}]*\}\s*\w+\s*;','',section,flags=re.S)
+    if remaining.strip():raise Unsupported('Unknown C struct declaration format')
+    pending={b[2]:b for b in blocks}
+    if len(pending)!=len(blocks):raise Unsupported('Duplicate exported struct typedef')
+    ordered=[]
+    while pending:
+        ready=[name for name,b in pending.items() if not (set(re.findall(r'\b\w+\b',b[1])) & set(pending))]
+        if not ready:raise Unsupported('Cyclic exported value-struct dependencies')
+        for name in ready:ordered.append(pending.pop(name)[0])
+    return head+'// Struct definitions\n'+'\n\n'.join(ordered)+'\n\n// Global variables'+rest
+
+
 def checked_model(model,adapter,cfa):
+    model=order_structs(model)
     model,float_changes=typed_floats(model,cfa)
+    if adapter.reference_observer is not None:
+        model=adapter.reference_observer.instrument(model,adapter)
     declaration,sample,finish=monitor(adapter)
     # Restrict modifications to the exact generated VerificationLoop definition.
     signature='void VerificationLoop() {'
@@ -144,6 +166,8 @@ void assert(bool value) { __CPROVER_assert(value, "PLC assertion"); }
 
 def scan_trace(trace,adapter):
     ports={p['name'] for p in adapter.task['interface']};values={};scans=[]
+    if adapter.reference_plan:
+        ports.update(obj['name'] for obj in adapter.reference_plan['contract']['objects'])
     for step in trace:
         if step.get('stepType')!='assignment':continue
         lhs=step.get('lhs','');value=step.get('value',{}).get('data')

@@ -22,6 +22,7 @@
 | `dataset_formal.py` | 所有题目的统一LTL入口、编译/测试与形式化结论分离 |
 | `ltl_adapter.py` | 统一读入公式、采样语义、观察器及模型包装 |
 | `plcverif_backend.py`、`plcverif_st.py`、`cbmc_model.py` | 工具配置、有限语法适配、PLCverif建模、CBMC检查、有限LTL监视器、超时及证据保存 |
+| `plcverif_references.py`、`reference_observers.py` | 调用方存储/共享引用、DINT下标适配、08逐通道帧条件、18独立队列、具体形状与值域证据 |
 
 单题：网页 → dataset_workflow → Trial → evaluate_candidate。批量：Campaigns → self/Codex → 同一套 Trial 和 evaluate_candidate。
 

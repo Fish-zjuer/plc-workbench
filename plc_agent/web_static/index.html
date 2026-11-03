@@ -44,6 +44,7 @@
         <label>每版验证超时（秒）<input id="formalTimeout" type="number" min="1" max="1800" value="120"><span class="field-hint">默认 120 秒，计入整题时间预算。</span></label>
         <label>规约采样周期（毫秒）<input id="formalPeriod" type="number" min="1" max="60000" value="10"><span class="field-hint">默认 10 毫秒，用于时序规约的周期模型。</span></label>
         <label>程序内部循环展开上限<input id="formalUnwind" type="number" min="2" max="4096" value="256"><span class="field-hint">默认 256，展开不足不会计为通过。</span></label>
+        <label>08 题数值覆盖范围<select id="formalReferenceDomain"><option value="ieee">宽范围 IEEE 浮点值域</option><option value="boundary">边界值域（不覆盖全部浮点数）</option></select><span class="field-hint">宽范围可能超时；边界值域仅检查结果中列出的数值组合。两种结论分别记录。</span></label>
       </div></details>
       <div class="configuration-actions"><button id="saveFormal" class="primary">保存形式化配置</button><button id="detectFormal">读取并检查路径</button><span class="save-destination">保存到 formal_config.json</span></div>
       <p id="formalStatus" class="settings-status" role="status"></p>

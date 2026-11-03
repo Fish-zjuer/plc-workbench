@@ -19,7 +19,7 @@ from plc_agent.storage import atomic_json
 
 _model_lock=threading.Lock()
 _engine_slots=threading.Semaphore(2)
-DEFAULTS={'engine':'cbmc','bound':20,'timeout_seconds':120,'scan_period_ms':10,'memory_limit_mb':768,'unwind':256}
+DEFAULTS={'engine':'cbmc','bound':20,'timeout_seconds':120,'scan_period_ms':10,'memory_limit_mb':768,'unwind':256,'reference_numeric_domain':'ieee'}
 
 
 def _windows_job(proc,memory_limit_mb,seconds):
@@ -98,6 +98,7 @@ def validate(cfg):
     if type(cfg.get('scan_period_ms',10)) is not int or not 1<=cfg.get('scan_period_ms',10)<=60000:raise ValueError('Scan period must be 1..60000 ms')
     if type(cfg.get('memory_limit_mb',768)) is not int or not 128<=cfg.get('memory_limit_mb',768)<=4096:raise ValueError('Tool memory limit must be 128..4096 MB')
     if cfg.get('engine','nuxmv') not in ('cbmc','nuxmv'):raise ValueError('Unknown formal engine')
+    if cfg.get('reference_numeric_domain','ieee') not in ('ieee','boundary'):raise ValueError('Unknown reference numeric domain')
     if type(cfg.get('unwind',256)) is not int or not 2<=cfg.get('unwind',256)<=4096:raise ValueError('Loop unwind must be 2..4096')
     for name in ('plcverif','java',cfg.get('engine','nuxmv')):
         if not isinstance(cfg.get(name),str) or not Path(cfg[name]).is_file():raise ValueError('Missing executable: '+name)
@@ -120,14 +121,14 @@ def environment(home=STATE_ROOT):
         validate(cfg)
         return {**cfg,'status':'tools_ready','config_file':public_path,'saved':Path(path).is_file(),'missing_tools':[],
                 'message':'已找到所需工具；这只确认文件存在，尚未执行验证。','scope':'Executables found; this is not a claim of full dataset/model compatibility.',
-                'unsupported_models':['unbound open-array callers','CODESYS VARIANT reference/aliasing','mixed-width float literals and REAL math calls requiring a typed exporter'],
+                'unsupported_models':['open-array callers without a configured storage contract','vendor-native VARIANT APIs outside the local PV1 contract','mixed-width float literals and REAL math calls requiring a typed exporter'],
                 'floating_point_reference':'https://plcverif-oss.gitlab.io/plcverif-docs/library/backends/Cbmc.html'}
     except (ValueError,OSError) as exc:return {**DEFAULTS,'status':'not_configured','config_file':public_path,'message':str(exc)}
 
 
 def save_configuration(value,home=STATE_ROOT):
     cfg=configuration(home)
-    cfg.update({k:v for k,v in value.items() if k in ('engine','bound','timeout_seconds','scan_period_ms','memory_limit_mb','unwind','plcverif','java','nuxmv','cbmc')})
+    cfg.update({k:v for k,v in value.items() if k in ('engine','bound','timeout_seconds','scan_period_ms','memory_limit_mb','unwind','plcverif','java','nuxmv','cbmc','reference_numeric_domain')})
     for name in TOOL_LABELS:
         if not isinstance(cfg.get(name,''),str):raise ValueError(TOOL_LABELS[name]+' 路径必须是文本')
         raw=cfg.get(name,'').strip()
@@ -231,6 +232,20 @@ def _verify_cbmc(work,adapter,cfg,report,deadline,cancel_event):
              '--no-standard-checks','--bounds-check','--pointer-check','--div-by-zero-check',
              '--undefined-shift-check','--signed-overflow-check','--unwinding-assertions',
              '--json-ui','--trace']
+    if adapter.reference_observer is not None:
+        # Keep source-loop unwinding assertions, but avoid expanding a
+        # one-channel symbolic floating-point loop hundreds of times. A
+        # candidate needing more iterations is inconclusive, never a pass.
+        case=adapter.reference_observer
+        limit=(max(case.shape['analog_length'],case.shape['channel_length'])+1 if case.kind=='analog'
+               else case.shape['capacity']+1)
+        limit=min(report['unwind'],limit)
+        loop_log=work/'cbmc-loops.log'
+        code=_run([cfg['cbmc'],'checked.i','--winx64','--show-loops'],work,loop_log,deadline,cancel_event,cfg.get('memory_limit_mb',768))
+        if code!=0:raise Unsupported('CBMC could not inspect reference candidate loops; see cbmc-loops.log')
+        loops=re.findall(r'Loop (PVL_Harness\.\d+):',loop_log.read_text(encoding='utf-8',errors='replace'))
+        report['reference_loop_unwind']={name:limit for name in loops}
+        if loops:command+=['--unwindset',','.join(name+':'+str(limit) for name in loops)]
     atomic_json(work/'cbmc-command.json',command)
     while not _engine_slots.acquire(timeout=.1):
         if cancel_event is not None and cancel_event.is_set():raise Cancelled('Formal verification cancelled')
@@ -246,7 +261,7 @@ def _verify_cbmc(work,adapter,cfg,report,deadline,cancel_event):
     atomic_json(work/'counterexamples.json',results((work/'cbmc.json').read_text(encoding='utf-8',errors='replace'),report,adapter))
 
 
-def verify(task,source,directory,*,timeout_seconds=None,cancel_event=None,config=None):
+def _verify_one(task,source,directory,*,timeout_seconds=None,cancel_event=None,config=None,reference_observer=None):
     started=time.monotonic();directory=Path(directory);directory.mkdir(parents=True,exist_ok=True)
     original=Path(source).read_bytes()
     try:declared=properties(task.get('ltl',{}))
@@ -267,6 +282,7 @@ def verify(task,source,directory,*,timeout_seconds=None,cancel_event=None,config
     try:
         if cancel_event is not None and cancel_event.is_set():raise Cancelled('Formal verification cancelled')
         validate(cfg)
+        if reference_observer is not None:reference_observer.validate_source(original.decode('utf-8-sig'))
         allowed=min(cfg['timeout_seconds'],timeout_seconds if timeout_seconds is not None else cfg['timeout_seconds'])
         deadline=started+max(0,allowed)
         spec=task.get('ltl',{})
@@ -290,7 +306,14 @@ def verify(task,source,directory,*,timeout_seconds=None,cancel_event=None,config
         if isinstance(spec,dict) and spec.get('execution',{}).get('requires_model'):
             report['properties']=[{**p,'status':'unsupported_model','message':spec['execution']['requires_model']} for p in declared]
             raise Unsupported(spec['execution']['requires_model'])
-        adapter=Adapter(task,cfg['bound'],cfg.get('scan_period_ms',10)).prepare()
+        adapter=Adapter(task,cfg['bound'],cfg.get('scan_period_ms',10),reference_observer).prepare()
+        if reference_observer is not None:
+            report['reference_observer']=reference_observer.evidence()
+        if adapter.reference_plan:
+            report['reference_model']={
+                'extension':'bound-storage-v1',
+                'contract':adapter.reference_plan['contract'],
+                'scope':'Fixed type/bounds/associations only; caller storage starts at PLCverif defaults unless explicitly initialized by observer entry. PV1 helpers are a local contract, not a vendor VARIANT ABI.'}
         report['properties']=adapter.properties
         supported=[p for p in adapter.properties if p.get('ast')]
         report.update(mapped_assertions_total=len(supported),assumptions=adapter.assumptions,
@@ -306,7 +329,8 @@ def verify(task,source,directory,*,timeout_seconds=None,cancel_event=None,config
             report['arithmetic_model']='IEEE floating-point required; nuXmv bridge uses an experimental fixed-point abstraction'
             raise Unsupported('REAL/LREAL cannot be reported as verified through the current PLCverif-to-nuXmv fixed-point translation. An IEEE floating-point backend/model is required.')
         from plc_agent.plcverif_st import adapt
-        derived,changes=adapt(original.decode('utf-8-sig'),cfg.get('scan_period_ms',10),task['block'])
+        model_source=(reference_observer.prefix if reference_observer is not None else '')+original.decode('utf-8-sig')
+        derived,changes=adapt(model_source,cfg.get('scan_period_ms',10),task['block'])
         report['source_adaptations']=changes
         instrumented=adapter.instrument(derived)
         report['instrumented_sha256']=hashlib.sha256(instrumented.encode()).hexdigest()
@@ -427,3 +451,78 @@ def verify(task,source,directory,*,timeout_seconds=None,cancel_event=None,config
         report['seconds']=round(time.monotonic()-started,3)
         atomic_json(directory/'formal.json',report)
     return report
+
+
+def verify(task,source,directory,*,timeout_seconds=None,cancel_event=None,config=None):
+    """Use a common time budget for every concrete reference storage case."""
+    cfg=config or configuration()
+    execution=task.get('ltl',{}).get('execution',{}) if isinstance(task.get('ltl'),dict) else {}
+    if task.get('original_id',task.get('id')) not in ('PUBLIC_08','PUBLIC_18') or not execution.get('requires_model') or cfg.get('engine')!='cbmc':
+        return _verify_one(task,source,directory,timeout_seconds=timeout_seconds,cancel_event=cancel_event,config=cfg)
+    from plc_agent.reference_observers import cases
+    try:
+        validate(cfg)
+        suite=cases(task,cfg.get('reference_numeric_domain','ieee'))
+    except (Unsupported,ValueError):
+        return _verify_one(task,source,directory,timeout_seconds=timeout_seconds,cancel_event=cancel_event,config=cfg)
+    started=time.monotonic();directory=Path(directory);directory.mkdir(parents=True,exist_ok=True)
+    original=Path(source).read_bytes()
+    total=min(cfg['timeout_seconds'],timeout_seconds if timeout_seconds is not None else cfg['timeout_seconds'])
+    reports=[]
+    for case in suite:
+        if cancel_event is not None and cancel_event.is_set():raise Cancelled('Formal verification cancelled')
+        remaining=total-(time.monotonic()-started)
+        if remaining<=0:break
+        report=_verify_one(case.task,source,directory/case.name,timeout_seconds=remaining,
+                           cancel_event=cancel_event,config=cfg,reference_observer=case)
+        reports.append(report)
+        if report['status'] in ('counterexample','stale_source','not_configured','timeout'):break
+    declared=properties(task['ltl']);aggregate=[]
+    for prop in declared:
+        rows=[next(p for p in r['properties'] if p['id']==prop['id']) for r in reports]
+        failure=next((p for p in rows if p['status']=='counterexample'),None)
+        if failure is not None:
+            row={**prop,**failure}
+            row['case']=suite[rows.index(failure)].name
+        elif len(rows)==len(suite) and all(p['status']=='bounded_pass' for p in rows):
+            row={**prop,'status':'bounded_pass'}
+        else:
+            state=next((s for s in ('stale_source','timeout','tool_error','bounded_inconclusive','unsupported_model')
+                        if any(p['status']==s for p in rows)),None)
+            if state is None:
+                state='timeout' if time.monotonic()-started>=total or any(r['status']=='timeout' for r in reports) else 'not_executed'
+            row={**prop,'status':state,'message':'Not every declared reference case returned a verified result.'}
+        aggregate.append(row)
+    states={p['status'] for p in aggregate}
+    status=next((s for s in ('stale_source','counterexample','timeout','tool_error','bounded_inconclusive','unsupported_model') if s in states),
+                'bounded_pass' if states=={'bounded_pass'} else 'partial')
+    if status=='unsupported_model':status='unsupported'
+    if Path(source).read_bytes()!=original:
+        status='stale_source'
+        for p in aggregate:p['status']='stale_source'
+    result={
+        'status':status,'backend':'plcverif+cbmc','policy':'automatic','task_id':task['id'],
+        'dataset_sha256':task.get('dataset_sha256'),'source_sha256':hashlib.sha256(original).hexdigest(),
+        'model_calls':0,'bound':cfg['bound'],'scan_period_ms':cfg.get('scan_period_ms',10),
+        'timeout_seconds':total,'seconds':round(time.monotonic()-started,3),
+        'unwind':max(cfg.get('unwind',256),cfg['bound']+1),
+        'unwind_complete':len(reports)==len(suite) and all(r.get('unwind_complete') is True for r in reports),
+        'valid_domain_witness':len(reports)==len(suite) and all(r.get('valid_domain_witness') is True for r in reports),
+        'declared_ltl_total':len(declared),'properties':aggregate,
+        'mapped_assertions_total':min((r.get('mapped_assertions_total',0) for r in reports),default=0),'proved_property_ids':[],'full_ltl_proved':False,
+        'bounded_verified_property_ids':[p['id'] for p in aggregate if p['status']=='bounded_pass'],
+        'bounded_all_properties_verified':bool(aggregate) and all(p['status']=='bounded_pass' for p in aggregate),
+        'reference_cases_total':len(suite),'reference_cases_executed':len(reports),
+        'reference_numeric_domain':cfg.get('reference_numeric_domain','ieee'),
+        'reference_cases':[{'name':case.name,**case.evidence(),
+                            'status':reports[i]['status'] if i<len(reports) else 'not_executed',
+                            'loop_unwind':reports[i].get('reference_loop_unwind') if i<len(reports) else None,
+                            'minimum_scans_for_full_rejection':2*case.shape['capacity']+1 if case.kind=='fifo' else None,
+                            'evidence_path':str((directory/case.name).resolve())} for i,case in enumerate(suite)],
+        'scope':'Bounded verification for the listed concrete array shapes/types and explicit input domains; no claim for arbitrary sizes, infinite scans or a vendor VARIANT ABI.',
+        'sampling':'After each candidate invocation; independent observer supplies caller data and evaluates original course requirements.',
+        'message':'Reference case verification completed; a pass requires every property in every listed case.',
+        'evidence_path':str(directory.resolve())}
+    atomic_json(directory/'formal.json',result)
+    atomic_json(directory/'counterexamples.json',{p['id']:p['counterexample'] for p in aggregate if 'counterexample' in p})
+    return result

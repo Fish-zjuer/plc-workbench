@@ -81,11 +81,11 @@ $('#campaignConcurrency').addEventListener('input',updateCampaignCount);$('#camp
 
 bind('#downloadLog',async()=>{if(!selected)throw Error('请先选择运行记录');let text;if(selected.trial_address)text=(await api('trial',{...selected.trial_address,include_log:true})).full_log;else if(selected.id)text=(await api('run-log/'+selected.id)).text;else throw Error('该历史记录没有详细日志');download(text||'', 'run.log')});
 
-function fillFormalSettings(cfg){for(const [id,key] of [['formalPlcverif','plcverif'],['formalJava','java'],['formalCbmc','cbmc']]){const value=typeof cfg[key]==='string'?cfg[key]:'';$('#'+id).value=value;const origin=cfg.path_sources?.[key]||(value?(cfg.saved?'saved':'auto'):'missing');$('#'+id+'Source').textContent=origin==='saved'?'来源：本机已保存配置':origin==='auto'?'来源：本机自动查找，确认后请保存':'尚未找到，请填写本机路径';}$('#formalBound').value=cfg.bound??20;$('#formalTimeout').value=cfg.timeout_seconds??120;$('#formalPeriod').value=cfg.scan_period_ms??10;$('#formalUnwind').value=cfg.unwind??256;$('#formalConfigState').textContent=cfg.status==='tools_ready'?(cfg.saved?'路径已保存':'已找到，待保存'):'待补充路径';$('#formalStatus').textContent=cfg.message||'请填写工具路径并保存。';}
+function fillFormalSettings(cfg){for(const [id,key] of [['formalPlcverif','plcverif'],['formalJava','java'],['formalCbmc','cbmc']]){const value=typeof cfg[key]==='string'?cfg[key]:'';$('#'+id).value=value;const origin=cfg.path_sources?.[key]||(value?(cfg.saved?'saved':'auto'):'missing');$('#'+id+'Source').textContent=origin==='saved'?'来源：本机已保存配置':origin==='auto'?'来源：本机自动查找，确认后请保存':'尚未找到，请填写本机路径';}$('#formalBound').value=cfg.bound??20;$('#formalTimeout').value=cfg.timeout_seconds??120;$('#formalPeriod').value=cfg.scan_period_ms??10;$('#formalUnwind').value=cfg.unwind??256;$('#formalReferenceDomain').value=cfg.reference_numeric_domain??'ieee';$('#formalConfigState').textContent=cfg.status==='tools_ready'?(cfg.saved?'路径已保存':'已找到，待保存'):'待补充路径';$('#formalStatus').textContent=cfg.message||'请填写工具路径并保存。';}
 
 async function loadFormalSettings(){fillFormalSettings(await api('formal/config'))}
 bind('#detectFormal',loadFormalSettings);
-bind('#saveFormal',async()=>{const cfg=await api('formal/config',{engine:'cbmc',plcverif:$('#formalPlcverif').value.trim(),java:$('#formalJava').value.trim(),cbmc:$('#formalCbmc').value.trim(),bound:Number($('#formalBound').value),timeout_seconds:Number($('#formalTimeout').value),scan_period_ms:Number($('#formalPeriod').value),unwind:Number($('#formalUnwind').value)});fillFormalSettings(cfg);$('#formalStatus').textContent='形式化工具路径和验证参数已保存。实际验证结果会在运行题目后记录。';notice('形式化配置已保存。');});
+bind('#saveFormal',async()=>{const cfg=await api('formal/config',{engine:'cbmc',plcverif:$('#formalPlcverif').value.trim(),java:$('#formalJava').value.trim(),cbmc:$('#formalCbmc').value.trim(),bound:Number($('#formalBound').value),timeout_seconds:Number($('#formalTimeout').value),scan_period_ms:Number($('#formalPeriod').value),unwind:Number($('#formalUnwind').value),reference_numeric_domain:$('#formalReferenceDomain').value});fillFormalSettings(cfg);$('#formalStatus').textContent='形式化工具路径和验证参数已保存。实际验证结果会在运行题目后记录。';notice('形式化配置已保存。');});
 
 bind('#shutdownServer',async()=>{await api('shutdown',{});clearInterval(campaignTimer);clearInterval(poller);notice('网页服务已关闭，历史记录保留。下次运行 start.cmd 后可以查看。');});
 
@@ -93,6 +93,6 @@ for(const id of ['formalPlcverif','formalJava','formalCbmc'])$('#'+id).addEventL
 for(const [id,hint] of [['codesysExe','codesysExeSource'],['codesysTemplate','codesysTemplateSource']])$('#'+id).addEventListener('input',()=>{$('#'+hint).textContent='已修改，尚未保存';$('#codesysConfigState').textContent='有未保存修改'});
 
 for(const id of ['codesysProfile','codesysTimeout'])$('#'+id).addEventListener('input',()=>$('#codesysConfigState').textContent='有未保存修改');
-for(const id of ['formalBound','formalTimeout','formalPeriod','formalUnwind'])$('#'+id).addEventListener('input',()=>$('#formalConfigState').textContent='有未保存修改');
+for(const id of ['formalBound','formalTimeout','formalPeriod','formalUnwind','formalReferenceDomain'])$('#'+id).addEventListener('input',()=>$('#formalConfigState').textContent='有未保存修改');
 for(const id of ['model','comparisonModel','key'])$('#'+id).addEventListener('input',()=>$('#modelConfigState').textContent='有未保存修改');
 $('#stream').addEventListener('change',()=>$('#modelConfigState').textContent='有未保存修改');

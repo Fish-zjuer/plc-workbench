@@ -83,18 +83,33 @@ def observers(task):
 
 
 class Adapter:
-    def __init__(self,task,bound,scan_period_ms=10):
+    def __init__(self,task,bound,scan_period_ms=10,reference_observer=None):
         spec=task.get('ltl',{})
         if isinstance(spec,str):spec={'text':spec}
         if not isinstance(spec,dict):raise Unsupported('Invalid LTL specification')
         self.task={**task,'ltl':spec};self.bound=bound;self.scan_period_ms=scan_period_ms
         self.defs,self.declarations,self.before,self.after,self.assumptions=observers(self.task)
         self.entry=spec.get('execution',{}).get('entry',[])
+        self.reference_observer=reference_observer
+        if reference_observer is not None:
+            # The C observer constrains the domain before the candidate runs;
+            # request an actual N-scan reachability witness from CBMC.
+            self.assumptions.append('TRUE')
+        from plc_agent.plcverif_references import configuration
+        self.reference_plan=configuration(self.task)
+        if self.reference_plan:
+            existing={line.split(':')[0].strip().lower() for line in self.declarations}
+            storage=self.reference_plan['declarations']
+            if any(line.split(':')[0].strip().lower() in existing for line in storage):
+                raise Unsupported('Reference storage collides with observer declarations')
+            self.declarations+=storage
         self.call_defs={parse(k):(k,v) for k,v in self.defs.items() if '(' in k}
         self.names={p['name'].lower():p['name'] for p in task['interface']}
         self.names.update({'pvl_nowms':'PVL_NowMs','pvl_dtms':'PVL_DtMs'})
         for line in self.declarations:
             self.names[line.split(':')[0].strip().lower()]=line.split(':')[0].strip()
+        if self.reference_plan:
+            self.names.update({name:ref['target'] for name,ref in self.reference_plan['bindings'].items()})
         self.atoms={};self.properties=[]
 
     def expand(self,node,seen=()):
@@ -141,6 +156,15 @@ class Adapter:
         return (node[0],*(self.abstract(x) if isinstance(x,tuple) else x for x in node[1:]))
 
     def prepare(self):
+        if self.reference_observer is not None:
+            for i,prop in enumerate(properties(self.task['ltl'])):
+                oracle='PVL_Oracle'+str(i);atom='PVL_A'+str(i)
+                self.declarations.append(oracle+' : BOOL;')
+                self.atoms[oracle]=atom
+                self.properties.append({**prop,'status':'not_executed','ast':('G',('atom',atom)),
+                                        'temporal_boundary_sensitive':False,
+                                        'observer_mapping':'Reviewed per-invocation predicate; see reference_observer evidence'})
+            return self
         for prop in properties(self.task.get('ltl',{})):
             result={'id':prop['id'],'formula':prop['formula'],'status':'not_executed'}
             old=dict(self.atoms)
@@ -175,12 +199,20 @@ class Adapter:
         # The supplied candidate's executable statements remain byte-for-byte intact.
         decl=['FUNCTION_BLOCK PVL_Harness']
         for direction,kind in [('Input','VAR_INPUT'),('Input/Output','VAR_INPUT'),('Output','VAR_OUTPUT')]:
+            if direction=='Input/Output' and self.reference_plan:continue
             ports=[p for p in self.task['interface'] if p['direction']==direction]
             if ports:decl += [kind]+[p['name']+' : '+p['type']+';' for p in ports]+['END_VAR']
         ds=['PVL_Uut : '+self.task['block']+';']+self.declarations+['PVL_Scan : DINT := 0;', 'PVL_Active : BOOL;', 'PVL_Done : BOOL;',f'PVL_DtMs : DINT := {self.scan_period_ms};',f'PVL_NowMs : DINT := -{self.scan_period_ms};']+[v+' : BOOL;' for v in self.atoms.values()]
         if self.assumptions:ds+=['PVL_Domain : BOOL := TRUE;']
         decl+=['VAR']+ds+['END_VAR']
-        body=['PVL_NowMs := PVL_NowMs + PVL_DtMs;']+list(self.entry)+['PVL_Uut('+', '.join(p['name']+' := '+p['name'] for p in self.task['interface'] if p['direction']!='Output')+');']
+        if self.reference_plan:
+            from plc_agent.plcverif_references import inline
+            source,call=inline(source,self.task,self.reference_plan)
+        else:
+            if any(p['direction']=='Input/Output' for p in self.task['interface']):
+                raise Unsupported('IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled')
+            call=['PVL_Uut('+', '.join(p['name']+' := '+p['name'] for p in self.task['interface'] if p['direction']!='Output')+');']
+        body=['PVL_NowMs := PVL_NowMs + PVL_DtMs;']+list(self.entry)+call
         body += [p['name']+' := PVL_Uut.'+p['name']+';' for p in self.task['interface'] if p['direction']=='Output']
         body+=self.before
         body+=[f'IF PVL_Scan <= {self.bound} THEN PVL_Scan := PVL_Scan + 1; END_IF;',

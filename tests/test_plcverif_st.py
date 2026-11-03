@@ -165,7 +165,7 @@ END_FUNCTION_BLOCK
         with self.assertRaisesRegex(ValueError, 'only exact inside'):
             adapt(source, entry_block='Main')
 
-    def test_public08_keeps_all_properties_unsupported_without_tool_execution(self):
+    def test_public08_missing_channel_schema_is_rejected_without_tool_execution(self):
         source = '''FUNCTION_BLOCK Q08
 VAR_INPUT count : DINT; END_VAR
 VAR_IN_OUT
@@ -192,11 +192,12 @@ END_FUNCTION_BLOCK
             self.assertFalse((root / 'result' / 'plcverif.log').exists())
             self.assertFalse((root / 'result' / 'cbmc.json').exists())
 
-    def test_public18_keeps_all_properties_unsupported_without_tool_execution(self):
+    def test_public18_unmodeled_vendor_api_is_rejected_without_tool_execution(self):
         source = '''FUNCTION_BLOCK Q18
 VAR_INPUT enqueue : BOOL; dequeue : BOOL; reset : BOOL; END_VAR
 VAR_OUTPUT elementCount : DINT; status : WORD; END_VAR
 VAR_IN_OUT item : VARIANT; buffer : VARIANT; END_VAR
+elementCount := CountOfElements(buffer);
 END_FUNCTION_BLOCK
 '''
         with TemporaryDirectory(dir='.') as temporary:
@@ -211,7 +212,7 @@ END_FUNCTION_BLOCK
             result = verify(load('PUBLIC_18'), candidate, root / 'result',
                             config={**DEFAULTS, **tools})
             self.assertEqual(result['status'], 'unsupported')
-            self.assertEqual(result['mapped_assertions_total'], 0)
+            self.assertEqual(result['mapped_assertions_total'], 9)
             self.assertEqual(len(result['properties']), 9)
             self.assertEqual({p['status'] for p in result['properties']}, {'unsupported_model'})
             self.assertFalse((root / 'result' / 'plcverif.log').exists())
