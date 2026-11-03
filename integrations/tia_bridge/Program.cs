@@ -48,6 +48,8 @@ internal static class Program
         }
         try
         {
+            if (args[0] == "--simulate") return new SimulationJob().Run(Path.GetFullPath(args[1]));
+            if (args[0] == "--cleanup-simulator") return SimulationJob.Cleanup(Path.GetFullPath(args[1]));
             return new CompileJob().Run(Path.GetFullPath(args[0]), Path.GetFullPath(args[1]));
         }
         catch (Exception error)
@@ -141,8 +143,15 @@ internal sealed class CompileJob
     }
 
     // The device traversal is based on Siemens' official V21 example program.
-    private static PlcSoftware FindPlcSoftware(Project project)
+    internal static PlcSoftware FindPlcSoftware(Project project)
     {
+        DeviceItem cpu;
+        return FindPlcSoftware(project, out cpu);
+    }
+
+    internal static PlcSoftware FindPlcSoftware(Project project, out DeviceItem cpu)
+    {
+        cpu = null;
         foreach (Device device in project.Devices)
         {
             var queue = new Queue<HardwareObject>();
@@ -156,7 +165,7 @@ internal sealed class CompileJob
                     {
                         var container = item.GetService<SoftwareContainer>();
                         var plc = container == null ? null : container.Software as PlcSoftware;
-                        if (plc != null) return plc;
+                        if (plc != null) { cpu = item; return plc; }
                     }
                     queue.Enqueue(item);
                 }

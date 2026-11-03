@@ -2,7 +2,7 @@
 from pathlib import Path
 
 
-def attach(result, task, source, directory, *, cancel_event=None, timeout_seconds=None, config=None):
+def attach(result, task, source, directory, *, cancel_event=None, timeout_seconds=None, config=None, verifier=None):
     """保留独立编译/测试结论；源模型反例须复核，不能当作已在CODESYS复现。"""
     import hashlib
     from plc_agent.storage import atomic_json
@@ -35,7 +35,7 @@ def attach(result, task, source, directory, *, cancel_event=None, timeout_second
                 'full_ltl_proved':False,'message':'Repair compilation or functional tests before formal verification.'}
         atomic_json(directory/'formal.json',report)
     else:
-        report=plcverif_backend.verify(task,source,directory,cancel_event=cancel_event,timeout_seconds=timeout_seconds,config=config)
+        report=(verifier or plcverif_backend.verify)(task,source,directory,cancel_event=cancel_event,timeout_seconds=timeout_seconds,config=config)
     event(directory.parent,'formal_result',status=report['status'],backend=report.get('backend'),bound=report.get('bound'),
           unwind=report.get('unwind'),unwind_complete=report.get('unwind_complete'),
           valid_domain_witness=report.get('valid_domain_witness'),
