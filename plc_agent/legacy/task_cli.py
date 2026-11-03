@@ -51,7 +51,7 @@ def main(argv=None):
             item.add_argument("--source");item.add_argument("--max-revisions",type=int,choices=range(1,6),default=3)
     args=parser.parse_args(argv)
     try:
-        from plc_agent.__main__ import select_session
+        from plc_agent.legacy.__main__ import select_session
         from plc_agent.config import ModelConfig
         cfg=ModelConfig.load()
         session=select_session(args.project,args.session,args.new,cfg.model)

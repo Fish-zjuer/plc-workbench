@@ -28,5 +28,5 @@ try {
         & npm.cmd install --prefix (Join-Path $taskRoot '.runtime/codex-0.80') --no-audit --no-fund '@openai/codex@0.80.0'
         if ($LASTEXITCODE -ne 0) { throw 'Codex CLI installation failed' }
     }
-    Write-Host 'Ready. Configure DMXAPI and CODESYS in the web UI. Optional local tests are installed only with -WithOptionalLocalTests.'
+    Write-Host 'Ready. Configure a Chat Completions model service and CODESYS in the web UI. Optional local tests are installed only with -WithOptionalLocalTests.'
 } finally { Pop-Location }

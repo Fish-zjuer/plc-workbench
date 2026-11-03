@@ -71,6 +71,10 @@ def usage_totals(metrics):
             if isinstance(value,(int,float)):total[key]+=value
         cost=usage.get('cost')
         if isinstance(cost,(int,float)):total['cost']+=cost
+    costs=[(m.get('usage') or {}).get('cost') for m in metrics]
+    total['cost_complete']=all(type(c) in (int,float) for c in costs)
+    total['recorded_cost']=total['cost']
+    if not total['cost_complete']:total['cost']=None
     return total
 
 def run(task_id,source,directory,config,*,seed=None,max_revisions=3,review=True,notify=print,provider=None,task_override=None,evaluator=None):

@@ -45,6 +45,7 @@ class WorkerTests(unittest.TestCase):
                     calls.append(('read',name))
                     if read_error:raise RuntimeError('fixture monitoring unavailable')
                     return 'TRUE' if name.endswith('WB_Done') or 'Out0' in name else 'FALSE'
+                def read_values(self,names):return [self.read_value(name) for name in names]
             engine=NS(projects=NS(open=lambda path:project),system=system,
                 online=NS(create_online_application=lambda app:Connection()),
                 OnlineChangeOption=NS(Never='Never'),ResetOption=NS(Cold='Cold'),Severity=NS(Error='Error'))

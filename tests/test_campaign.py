@@ -79,7 +79,9 @@ class CampaignTests(unittest.TestCase):
         self.assertFalse(runner.root.exists())
     def test_four_way_visits_every_pair_with_same_hash(self):
         runner=campaign.Campaigns(self.path)
-        self.cfg.save(self.path)
+        # Neither framework nor the campaign runner may require one API vendor.
+        from dataclasses import replace
+        replace(self.cfg,base_url='http://localhost:9911/v1',api_key='').save(self.path)
         ready={'errors':[],'codesys':{},'codex_path':'fixture','codex_version':'codex-cli 0.80.0'}
         seen=[]
         def fake(t,*args):

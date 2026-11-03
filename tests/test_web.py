@@ -31,10 +31,10 @@ class WebTests(unittest.TestCase):
         with urllib.request.urlopen(req) as r: return r.read().decode('utf-8-sig')
     def test_config_keeps_key_server_side(self):
         with patch.dict('os.environ',{'DMXAPI_API_KEY':''}):
-            result=self.request('/api/config',{'model':'exact/model-id','api_key':'test-secret','stream':False})
+            result=self.request('/api/config',{'base_url':'https://example.test/v1','model':'exact/model-id','api_key':'test-secret','stream':False})
             self.assertNotIn('test-secret', result)
             cfg=self.app.config()
-            self.assertEqual(cfg.endpoint,'https://www.dmxapi.cn/v1/chat/completions')
+            self.assertEqual(cfg.endpoint,'https://example.test/v1/chat/completions')
             self.assertFalse(cfg.stream)
             self.assertEqual(cfg.api_key,'test-secret')
             self.assertEqual(cfg.extra_body,{})
@@ -50,8 +50,28 @@ class WebTests(unittest.TestCase):
     def test_no_cross_provider_key_reuse(self):
         ModelConfig(base_url='https://example.test/v1',model='old',api_key='other-secret').save(self.app.home)
         with patch.dict('os.environ',{'DMXAPI_API_KEY':''}):
-            self.app.save_config({'model':'new'})
+            self.app.save_config({'base_url':'https://different.test/v1','model':'new'})
             self.assertEqual(self.app.config().api_key,'')
+            self.assertEqual(self.app.config().base_url,'https://different.test/v1')
+    def test_generic_provider_roundtrip_preserves_transport_and_context_settings(self):
+        cfg=ModelConfig(base_url='http://localhost:9988/v1',model='local',api_key='',timeout=120,
+                        context_window=64000,max_output_tokens=16000,extra_body={'temperature':.2})
+        cfg.save(self.app.home)
+        value=json.loads(self.request('/api/config',{'model':'renamed','stream':True}))
+        self.assertFalse(value['has_api_key'])
+        saved=self.app.config()
+        self.assertEqual((saved.base_url,saved.timeout,saved.context_window,saved.max_output_tokens),(cfg.base_url,120,64000,16000))
+        self.assertEqual(saved.extra_body,{'temperature':.2})
+        self.assertTrue(saved.stream)
+    def test_empty_service_and_wrong_boolean_do_not_mutate_saved_config(self):
+        self.assertEqual(self.app.config().base_url,'')
+        for data in ({'model':'m'},{'base_url':'https://example.test/v1','model':'m','stream':'false'}):
+            with self.assertRaises(urllib.error.HTTPError):self.request('/api/config',data)
+        self.assertFalse((self.app.home/'config.json').exists())
+    def test_model_configuration_is_frozen_during_single_run(self):
+        self.app.jobs['fixture']={'view':{'status':'running'}}
+        with self.assertRaises(urllib.error.HTTPError):self.request('/api/config',{'base_url':'https://example.test/v1','model':'m'})
+        self.assertFalse((self.app.home/'config.json').exists())
     def test_ui_and_bank(self):
         self.assertIn('PLC Workbench',self.request('/'))
         tasks=json.loads(self.request('/api/tasks'))['tasks']
@@ -105,6 +125,11 @@ class WebTests(unittest.TestCase):
         self.assertFalse(usage_totals([{'usage':{}}])['complete'])
         totals=usage_totals([{'usage':{'prompt_tokens':3,'completion_tokens':4,'total_tokens':7}}])
         self.assertTrue(totals['complete']); self.assertEqual(totals['total_tokens'],7)
+        self.assertIsNone(totals['cost']);self.assertFalse(totals['cost_complete'])
+        free=usage_totals([{'usage':{'total_tokens':1,'cost':0}}])
+        self.assertEqual(free['cost'],0);self.assertTrue(free['cost_complete'])
+        partial=usage_totals([{'usage':{'cost':.12}},{'usage':{}}])
+        self.assertIsNone(partial['cost']);self.assertEqual(partial['recorded_cost'],.12)
     def test_shutdown_refuses_active_work_and_can_close_idle_service(self):
         self.app.campaigns.active['fixture']=threading.Event()
         with self.assertRaises(urllib.error.HTTPError) as rejected:self.request('/api/shutdown',{})

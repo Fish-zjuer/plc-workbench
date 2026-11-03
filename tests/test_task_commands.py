@@ -17,7 +17,7 @@ class TaskCommandTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=cache_dir()) as folder:
             env=dict(os.environ,PLC_AGENT_HOME=folder)
             def command(*args):
-                run=subprocess.run([sys.executable,"-m","plc_agent","task",*args],cwd=ROOT,env=env,
+                run=subprocess.run([sys.executable,"-m","plc_agent.legacy","task",*args],cwd=ROOT,env=env,
                                    capture_output=True,text=True,encoding="utf-8",timeout=30)
                 self.assertEqual(run.returncode,0,run.stderr)
                 return json.loads(run.stdout)
