@@ -1,0 +1,29 @@
+FUNCTION_BLOCK "Q05"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      Gap_Exceeded : BOOL;
+      Weld_E_Stop_NC : BOOL;
+      DebounceTime : TIME;
+   END_VAR
+   VAR_OUTPUT
+      Operator_Alert : BOOL;
+      Weld_Soft_Start_Active : BOOL;
+   END_VAR
+   VAR
+      initTimer : TON_TIME;
+      debounceTimer : TON_TIME;
+      initializing : BOOL;
+      gapReady : BOOL;
+   END_VAR
+BEGIN
+   #initTimer.TON(IN := TRUE, PT := T#5s);
+   #initializing := NOT #initTimer.Q;
+
+   #debounceTimer.TON(IN := #Gap_Exceeded AND #Weld_E_Stop_NC AND NOT #initializing,
+                      PT := #DebounceTime);
+   #gapReady := #debounceTimer.Q;
+
+   #Weld_Soft_Start_Active := #initializing;
+   #Operator_Alert := (NOT #initializing) AND #Weld_E_Stop_NC AND #gapReady;
+END_FUNCTION_BLOCK

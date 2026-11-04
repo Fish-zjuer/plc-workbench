@@ -1,0 +1,14 @@
+FUNCTION_BLOCK "Edge"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_OUTPUT checksum : DWORD; END_VAR
+VAR mask : DWORD; bitIndex : INT; END_VAR
+BEGIN
+
+#checksum := DWORD#0;
+FOR #bitIndex := 0 TO 31 DO
+    #mask := SHL(IN := DWORD#1, N := #bitIndex);
+    #checksum := #checksum OR #mask;
+END_FOR;
+
+END_FUNCTION_BLOCK

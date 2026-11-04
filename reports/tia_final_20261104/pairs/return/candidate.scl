@@ -1,0 +1,12 @@
+FUNCTION_BLOCK "Demo"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT x : DINT; END_VAR
+VAR_OUTPUT y : DINT; END_VAR
+VAR_IN_OUT a : ARRAY[*] OF DINT; b : DINT; END_VAR
+VAR copyDone : BOOL; idx : DINT; END_VAR
+BEGIN
+
+#y := #x; IF #x = 0 THEN RETURN; END_IF; #a[-3] := #x;
+
+END_FUNCTION_BLOCK

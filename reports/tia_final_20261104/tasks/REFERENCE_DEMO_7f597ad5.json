@@ -1,0 +1,49 @@
+{
+  "id": "REFERENCE_DEMO",
+  "block": "Demo",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "x",
+      "type": "DINT"
+    },
+    {
+      "direction": "Output",
+      "name": "y",
+      "type": "DINT"
+    },
+    {
+      "direction": "Input/Output",
+      "name": "a",
+      "type": "ARRAY[*] OF DINT"
+    },
+    {
+      "direction": "Input/Output",
+      "name": "b",
+      "type": "DINT"
+    }
+  ],
+  "ltl": {
+    "properties": [
+      {
+        "id": "P1",
+        "formula": "G(y = x)"
+      }
+    ],
+    "execution": {
+      "reference_model": {
+        "version": 1,
+        "objects": [
+          {
+            "name": "PVL_Store_Data",
+            "type": "ARRAY[-3..1] OF DINT"
+          }
+        ],
+        "bindings": {
+          "a": "PVL_Store_Data",
+          "b": "PVL_Store_Data[-3]"
+        }
+      }
+    }
+  }
+}
