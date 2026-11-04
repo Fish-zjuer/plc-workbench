@@ -12,6 +12,11 @@ from plc_agent.ltl_adapter import property_count
 _lock=threading.RLock()
 LOCAL_TIME=timezone(timedelta(hours=8))
 STATUS_LABELS={'pass':'测试通过','finite_pass':'功能测试通过','compiled_without_tests':'仅编译通过，未提供测试',
+ 'review_no_findings':'审查未发现新问题','review_questions':'需求疑问待澄清',
+ 'review_disagreement':'审查反例待人工复核','review_non_deterministic':'审查重放不一致',
+ 'review_tool_error':'审查重放工具异常','review_unsupported':'审查接口尚不支持',
+ 'review_model_error':'审查模型请求失败',
+ 'review_invalid':'审查输出无效','review_not_executed':'审查未执行',
  'compile_error':'编译失败','fail':'功能测试失败','runtime_error':'程序执行失败','formal_blocked':'形式化反例待复核',
  'bounded_pass':'在扫描上界内通过','bounded_inconclusive':'未得到确定结论','unsupported':'当前不支持','unsupported_model':'缺少验证模型',
  'not_executed':'未执行','not_started':'尚未开始','timeout':'超时','interrupted':'已取消','tool_error':'工具错误',
@@ -156,6 +161,13 @@ def finish(directory, receipt, task=None):
            'details/：完整JSON结论、逐次请求、各版源码及验证工具证据。' if directory.name=='details' else '完整结论见 receipt.json，指标见 metrics.json，各版代码见 submissions/。',
            '形式化结论仅针对记录的扫描上界和假设，不代表无限扫描证明。']
     (visible/'SUMMARY.md').write_text('\n'.join(lines),encoding='utf-8')
+    if receipt.get('review'):
+        review=receipt['review']
+        with (visible/'SUMMARY.md').open('a',encoding='utf-8') as stream:
+            stream.write('\n\n## 独立对抗审查\n\n'+status_label(review['status'])+'\n\n'
+                +review.get('summary',review.get('message',''))+'\n\n'
+                +'\n'.join('- 待澄清：'+q for q in review.get('questions',[]))
+                +'\n\n模型预期是待复核建议；两次重放与模型预期不一致仍须人工核对需求。未发现问题不是正确性证明。\n')
     if directory.name=='details' and (directory/'candidate.st').exists():
         (visible/'final.st').write_bytes((directory/'candidate.st').read_bytes())
     return receipt

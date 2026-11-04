@@ -116,7 +116,7 @@ class Workbench:
     def start(self, data):
         task = self.bank.load(data['task_id'])
         action = data.get('action', 'generate')
-        if action not in ('generate', 'check', 'codesys'): raise ValueError('Unknown action')
+        if action not in ('generate', 'check', 'codesys', 'review'): raise ValueError('Unknown action')
         use_vendor=data.get('codesys',True)
         if type(use_vendor) is not bool:raise ValueError('codesys must be boolean')
         vendor=codesys.load_config(self.home) if use_vendor or action=='codesys' else None
@@ -126,9 +126,15 @@ class Workbench:
             local_backend()
         code = data.get('code', '')
         if not isinstance(code, str) or len(code) > 200000: raise ValueError('ST source too large')
+        if action == 'review' and not code.strip(): raise ValueError('请先生成或粘贴要审查的 ST 源码')
         cfg = self.config()
         if data.get('model'): cfg = replace(cfg, model=data['model'])
-        if action == 'generate': cfg.validate()
+        if action == 'review':
+            reviewer = data.get('review_model', cfg.review_model or cfg.model)
+            if not isinstance(reviewer, str) or not reviewer.strip() or len(reviewer) > 200:
+                raise ValueError('请填写有效的审查模型 ID')
+            cfg = replace(cfg, model=reviewer.strip())
+        if action in ('generate', 'review'): cfg.validate()
         with self.lock:
             if self.campaigns.active: raise ValueError('批量实验运行中，请等待结束')
             if any(j['view']['status'] in ('queued', 'running') for j in self.jobs.values()):
@@ -140,7 +146,7 @@ class Workbench:
             from plc_agent.plcverif_backend import configuration
             trial=Trial(directory,task,cfg,vendor,threading.Event(),formal_config=configuration(self.home))
             provider = trial
-            view = {'id': ident, 'task_id': task['id'], 'model': cfg.model, 'status': 'queued', 'logs': []}
+            view = {'id': ident, 'task_id': task['id'], 'model': cfg.model, 'action': action, 'status': 'queued', 'logs': []}
             atomic_json(directory/'run.json', view)
             atomic_json(directory/'task_snapshot.json', task)
             job = {'view': view, 'provider': provider}
@@ -157,6 +163,20 @@ class Workbench:
                     result=trial.receipt(result['status'],{'final_evaluation':result.get('final_evaluation'),
                         'target_compile':result.get('target_compile','not_executed'),
                         'formal_verification':result.get('formal_verification'),'ltl_status':result.get('ltl_status','not_executed')})
+                elif action == 'review':
+                    from plc_agent.adversarial_review import run as review_source, functional_replay
+                    checked = trial.check(source.read_text(encoding='utf-8'))
+                    if checked['status'] in ('pass', 'fail', 'formal_blocked', 'compiled_without_tests'):
+                        review = review_source(task, source, directory/'review', trial,
+                            lambda candidate, proposed: functional_replay(candidate, proposed, vendor, trial.stop),
+                            backend='codesys' if vendor is not None else 'optional_local')
+                    else:
+                        review = {'status': 'review_not_executed', 'message': '先处理编译或执行环境问题，再进行模型审查。'}
+                    result = trial.receipt(review['status'], {'action': 'review', 'review': review,
+                        'final_evaluation': checked, 'target_compile': checked.get('target_compile', 'not_executed'),
+                        'formal_verification': checked.get('formal_verification'),
+                        'ltl_status': checked.get('ltl_status', 'not_executed'), 'message': review.get('message', review.get('summary', ''))})
+                    event(directory, 'review_finished', review=review)
                 elif action == 'codesys':
                     compiled=compile_dataset(source, task, codesys.load_config(self.home), provider.cancel_event)
                     result=trial.receipt(compiled['status'],{'final_evaluation':compiled,

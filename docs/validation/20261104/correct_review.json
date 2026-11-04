@@ -1,0 +1,738 @@
+{
+  "schema": "plc-adversarial-review-v1",
+  "status": "review_questions",
+  "source_sha256": "4d77a38e301198696eead9008961a48eb0a94ecc220fd65c7e82aed612c65832",
+  "dataset_sha256": "f768af3132563715c25519a881f52cea6082aa8a21708a3b05529acca83c62f8",
+  "test_backend": "optional_local",
+  "limits": {
+    "scenarios": 3,
+    "scans_per_scenario": 8,
+    "horizon_ms": 60000
+  },
+  "expected_authority": "advisory_model_claim_only",
+  "formal_status": "not_executed",
+  "summary": "代码与明确需求一致：初始值正确；Maintenance 优先置 2；离开维护时先用预扫描态 2→0，不因 CalibDone=TRUE 跳过 0；0→1 仅在 CalibDone=TRUE；1 保持；每次调用仅一次迁移；CalibReq/MaintLamp/MeasurePermit 组合逻辑符合要求。未发现反例。",
+  "questions": [
+    "需求1“Initially State=0, CalibReq=TRUE”是否要求上电首次扫描即使 CalibDone=TRUE、Maintenance=FALSE 也必须保持在 0（等待校准）一个扫描周期，而不允许同一首次调用按预扫描态 0 迁移到 1？代码允许首次调用即 0→1，此点语义存在歧义。"
+  ],
+  "proposals": [
+    {
+      "name": "维护结束不能跳过等待校准态（同调用 CalibDone=TRUE）",
+      "basis": "需求2/4：“A pre-scan State of 2 must first move to 0, even if CalibDone=TRUE on the same call”；“maintenance-exit scan cannot skip state 0”。",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "等待校准态需 CalibDone 才进入就绪",
+      "basis": "需求2：“A pre-scan State of 0 moves to 1 only when CalibDone=TRUE, otherwise remains 0”；需求3：MeasurePermit=MeasureReq AND State=1。",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "维护优先且测量许可仅在就绪且请求时有效",
+      "basis": "需求2：“Maintenance=TRUE has priority and moves every state to 2”；需求3：CalibReq/MaintLamp/MeasurePermit 与 State 的对应关系。",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": false,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        }
+      ]
+    }
+  ],
+  "scope": "Repeated execution can confirm a disagreement with model expectations; human review of the cited requirement is still required. No-finding is not correctness proof.",
+  "proposal_sha256": "ea28bdd606c746e31c4286d26411da6407f6d14dfcb87a679bb07fa294ca5769",
+  "replays": [
+    {
+      "status": "pass",
+      "task_id": "CUSTOM_09",
+      "source_sha256": "4d77a38e301198696eead9008961a48eb0a94ecc220fd65c7e82aed612c65832",
+      "dataset_sha256": "f768af3132563715c25519a881f52cea6082aa8a21708a3b05529acca83c62f8",
+      "execution_fingerprint": "64e7402ffe01f23fca0a718caf1439d80dcb44e337c57a0f0c0fb61f5bde8282",
+      "cases": [
+        {
+          "name": "维护结束不能跳过等待校准态（同调用 CalibDone=TRUE）",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Maintenance": true,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 2,
+                "CalibReq": false,
+                "MaintLamp": true,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 2.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 1.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 0.0,
+                "CalibReq": 1.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": true
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 1.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "等待校准态需 CalibDone 才进入就绪",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": false,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 0.0,
+                "CalibReq": 1.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": false,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 0.0,
+                "CalibReq": 1.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": false
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": true
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 1.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "维护优先且测量许可仅在就绪且请求时有效",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": false
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Maintenance": true,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 2,
+                "CalibReq": false,
+                "MaintLamp": true,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 2.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 1.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Maintenance": true,
+                "CalibDone": false,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 2,
+                "CalibReq": false,
+                "MaintLamp": true,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 2.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 1.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": false,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 0.0,
+                "CalibReq": 1.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "scenarios": 3,
+        "scans": 11,
+        "assertions": 44,
+        "failed": 0
+      },
+      "target_compile": "not_executed",
+      "ltl_status": "requirements_only_not_executed",
+      "test_backend": "optional_local",
+      "scope": "Optional local STruC++ finite tests; not CODESYS runtime verification."
+    },
+    {
+      "status": "pass",
+      "task_id": "CUSTOM_09",
+      "source_sha256": "4d77a38e301198696eead9008961a48eb0a94ecc220fd65c7e82aed612c65832",
+      "dataset_sha256": "f768af3132563715c25519a881f52cea6082aa8a21708a3b05529acca83c62f8",
+      "execution_fingerprint": "64e7402ffe01f23fca0a718caf1439d80dcb44e337c57a0f0c0fb61f5bde8282",
+      "cases": [
+        {
+          "name": "维护结束不能跳过等待校准态（同调用 CalibDone=TRUE）",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Maintenance": true,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 2,
+                "CalibReq": false,
+                "MaintLamp": true,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 2.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 1.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 0.0,
+                "CalibReq": 1.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": true
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 1.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "等待校准态需 CalibDone 才进入就绪",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": false,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 0.0,
+                "CalibReq": 1.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": false,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 0.0,
+                "CalibReq": 1.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": false
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": true
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 1.0
+              },
+              "violations": []
+            }
+          ]
+        },
+        {
+          "name": "维护优先且测量许可仅在就绪且请求时有效",
+          "status": "pass",
+          "first_failure": null,
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": false
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 10,
+              "inputs": {
+                "Maintenance": true,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 2,
+                "CalibReq": false,
+                "MaintLamp": true,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 2.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 1.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 20,
+              "inputs": {
+                "Maintenance": true,
+                "CalibDone": false,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 2,
+                "CalibReq": false,
+                "MaintLamp": true,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 2.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 1.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 30,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": false,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 0.0,
+                "CalibReq": 1.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "scenarios": 3,
+        "scans": 11,
+        "assertions": 44,
+        "failed": 0
+      },
+      "target_compile": "not_executed",
+      "ltl_status": "requirements_only_not_executed",
+      "test_backend": "optional_local",
+      "scope": "Optional local STruC++ finite tests; not CODESYS runtime verification."
+    }
+  ]
+}
