@@ -1,0 +1,168 @@
+{
+  "id": "PUBLIC_18",
+  "title": "FIFO First-In-First-Out Queue",
+  "block": "Q18",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "enqueue",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "dequeue",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Input",
+      "name": "reset",
+      "type": "BOOL"
+    },
+    {
+      "direction": "Output",
+      "name": "elementCount",
+      "type": "DINT"
+    },
+    {
+      "direction": "Output",
+      "name": "status",
+      "type": "WORD"
+    },
+    {
+      "direction": "Input/Output",
+      "name": "item",
+      "type": "VARIANT"
+    },
+    {
+      "direction": "Input/Output",
+      "name": "buffer",
+      "type": "VARIANT"
+    }
+  ],
+  "ltl": {
+    "id": "PUBLIC_18",
+    "title": "Q18 VARIANT FIFO",
+    "definitions_and_rules_markdown": "## Q18 VARIANT FIFO\n\n容量C由关联数组的实际长度确定，item与buffer元素同型，实例期间buffer关联不变；enqueue与dequeue不能同拍请求。独立数学队列Q初始化为空，保存入队时的值副本，输入观察器检测上升沿。`queueAfterAppend/PopOK`为按FIFO更新Q并正确读写item；物理环形索引是实现细节，不要求固定head/tail布局。\n\n```text\nG(initial -> queueEmpty)\nG(reset -> queueEmpty & elementCountZero & statusZero)\nG(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)\nG(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)\nG(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)\nG(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)\nG(!reset & idleRequest -> queueHeld & statusZero)\nG(countMatchesQueue)\nG(countWithinCapacity)\n```\n\nreset优先，不要求清零物理存储；countMatchesQueue为elementCount=len(Q)，范围0..C。当前CODESYS目标缺少已验证VARIANT适配器，四组统一记platform_blocked，保留在20题分母；R4泛型引用测试不能代替厂商VARIANT编译证据。\n\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> queueEmpty)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(!reset & idleRequest -> queueHeld & statusZero)"
+      },
+      {
+        "id": "P08",
+        "formula": "G(countMatchesQueue)"
+      },
+      {
+        "id": "P09",
+        "formula": "G(countWithinCapacity)"
+      }
+    ],
+    "status": "specification_not_proved",
+    "semantics": {
+      "logic": "LTLf",
+      "sampling": "after_function_block_call",
+      "bound": "configured_per_run",
+      "R1": "current_or_next_scan",
+      "future_at_horizon": "strong finite semantics; failed future obligations are inconclusive",
+      "initialization": "declared candidate and independent observer initial state"
+    },
+    "execution": {
+      "bindings": {},
+      "declarations": [],
+      "before": [],
+      "after": [],
+      "assumptions": [],
+      "requires_model": "CODESYS VARIANT references require a concrete type/capacity and a supported aliasing model."
+    }
+  },
+  "dataset_sha256": "1ab175c699767932b2c24250ccf47001b003636febddce3df6012f5b407b204d",
+  "adapter_format": "fifo_reference_rows",
+  "snapshot_format": "formal-contract-v1",
+  "behavior_inputs_source": "datasets/course32.json",
+  "scenarios": [
+    {
+      "name": "dint_capacity_1",
+      "kind": "dint",
+      "capacity": 1
+    },
+    {
+      "name": "dint_capacity_2",
+      "kind": "dint",
+      "capacity": 2
+    },
+    {
+      "name": "dint_capacity_7",
+      "kind": "dint",
+      "capacity": 7
+    },
+    {
+      "name": "real_capacity_1",
+      "kind": "real",
+      "capacity": 1
+    },
+    {
+      "name": "real_capacity_2",
+      "kind": "real",
+      "capacity": 2
+    },
+    {
+      "name": "real_capacity_7",
+      "kind": "real",
+      "capacity": 7
+    },
+    {
+      "name": "record_capacity_1",
+      "kind": "record",
+      "capacity": 1
+    },
+    {
+      "name": "record_capacity_2",
+      "kind": "record",
+      "capacity": 2
+    },
+    {
+      "name": "record_capacity_7",
+      "kind": "record",
+      "capacity": 7
+    },
+    {
+      "name": "bool_capacity_1",
+      "kind": "bool",
+      "capacity": 1
+    },
+    {
+      "name": "bool_capacity_2",
+      "kind": "bool",
+      "capacity": 2
+    },
+    {
+      "name": "bool_capacity_7",
+      "kind": "bool",
+      "capacity": 7
+    }
+  ]
+}

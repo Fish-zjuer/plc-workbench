@@ -1,3 +1,14 @@
 # Preserve exact bytes of the current bank and provenance.
 datasets/*.json -text
 datasets/sources/*.json -text
+
+# Preserve exact bytes of frozen datasets and original delivery evidence.
+datasets/importable/*.json -text
+datasets/standalone32/PUBLIC_*.json -text
+datasets/standalone32/CUSTOM_*.json -text
+datasets/standalone32/manifest.json -text
+datasets/standalone32/source_archives.json -text
+datasets/team_delivery_20261030/** -text
+
+# Preserve exact bytes of final TIA sources/results for SHA256 verification.
+reports/tia_final_20261104/** -text whitespace=-trailing-space,cr-at-eol

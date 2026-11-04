@@ -1,0 +1,112 @@
+{
+  "id": "PUBLIC_08",
+  "title": "Analog Batch Processing",
+  "block": "Q08",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "count",
+      "type": "DINT"
+    },
+    {
+      "direction": "Input/Output",
+      "name": "analogValues",
+      "type": "ARRAY[*] OF INT"
+    },
+    {
+      "direction": "Input/Output",
+      "name": "channels",
+      "type": "ARRAY[*] OF ST_AnalogChannel"
+    }
+  ],
+  "ltl": {
+    "id": "PUBLIC_08",
+    "title": "Q08 模拟量批处理",
+    "definitions_and_rules_markdown": "## Q08 模拟量批处理\n\n调用方保证0<=count<=两个数组长度的较小值。第k个元素配对各自lowerBound+k。FB只能写被处理通道的retVal/outputValue；原始值、配置、未处理通道保持。禁用通道不执行转换。\n\n```text\nG(rawArrayPreserved)\nG(channelConfigPreserved)\nG(unprocessedChannelsPreserved)\nG(enabledInvalidMode -> channelError8001)\nG(enabledInvalidLimits -> channelError8002)\nG(enabledValidMode0 -> linearScalingOK)\nG(enabledValidMode1 -> standardTemperatureOK)\nG(enabledValidMode2 -> climaticTemperatureOK)\n```\n\n对所有处理通道逐项展开：单极性缩放loLIM+raw*(hiLIM-loLIM)/27648；双极性为loLIM+(raw+27648)*(hiLIM-loLIM)/55296；温度分别raw/10、raw/100。模式不在0/1/2时报8001，hiLIM<=loLIM时报8002。两种错误同时发生时的优先级、禁用时输出值和超量程钳位未由题面完整规定，应单列假设，不能无条件作为模型缺陷。\n\n",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(rawArrayPreserved)"
+      },
+      {
+        "id": "P02",
+        "formula": "G(channelConfigPreserved)"
+      },
+      {
+        "id": "P03",
+        "formula": "G(unprocessedChannelsPreserved)"
+      },
+      {
+        "id": "P04",
+        "formula": "G(enabledInvalidMode -> channelError8001)"
+      },
+      {
+        "id": "P05",
+        "formula": "G(enabledInvalidLimits -> channelError8002)"
+      },
+      {
+        "id": "P06",
+        "formula": "G(enabledValidMode0 -> linearScalingOK)"
+      },
+      {
+        "id": "P07",
+        "formula": "G(enabledValidMode1 -> standardTemperatureOK)"
+      },
+      {
+        "id": "P08",
+        "formula": "G(enabledValidMode2 -> climaticTemperatureOK)"
+      }
+    ],
+    "status": "specification_not_proved",
+    "semantics": {
+      "logic": "LTLf",
+      "sampling": "after_function_block_call",
+      "bound": "configured_per_run",
+      "R1": "current_or_next_scan",
+      "future_at_horizon": "strong finite semantics; failed future obligations are inconclusive",
+      "initialization": "declared candidate and independent observer initial state"
+    },
+    "execution": {
+      "bindings": {},
+      "declarations": [],
+      "before": [],
+      "after": [],
+      "assumptions": [],
+      "requires_model": "CODESYS open arrays with arbitrary bounds and structured IN_OUT channels require a supported caller/storage model."
+    }
+  },
+  "dataset_sha256": "4ba1b366c86b5598d4383bf93ce8c15942c14d369f7525502768ff6c47de8f3f",
+  "adapter_format": "analog_reference_rows",
+  "snapshot_format": "formal-contract-v1",
+  "behavior_inputs_source": "datasets/course32.json",
+  "scenarios": [
+    {
+      "name": "bounds_-5_4_lengths_1_1",
+      "analog_length": 1,
+      "analog_lower": -5,
+      "channel_length": 1,
+      "channel_lower": 4
+    },
+    {
+      "name": "bounds_7_-8_lengths_3_5",
+      "analog_length": 3,
+      "analog_lower": 7,
+      "channel_length": 5,
+      "channel_lower": -8
+    },
+    {
+      "name": "bounds_-4_20_lengths_7_4",
+      "analog_length": 7,
+      "analog_lower": -4,
+      "channel_length": 4,
+      "channel_lower": 20
+    },
+    {
+      "name": "bounds_0_-15_lengths_8_8",
+      "analog_length": 8,
+      "analog_lower": 0,
+      "channel_length": 8,
+      "channel_lower": -15
+    }
+  ]
+}

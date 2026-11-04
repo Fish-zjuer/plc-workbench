@@ -1,0 +1,62 @@
+{
+  "id": "REFERENCE_DEMO",
+  "block": "Demo",
+  "interface": [
+    {
+      "direction": "Input",
+      "name": "x",
+      "type": "DINT"
+    },
+    {
+      "direction": "Output",
+      "name": "y",
+      "type": "DINT"
+    },
+    {
+      "direction": "Input/Output",
+      "name": "a",
+      "type": "VARIANT"
+    },
+    {
+      "direction": "Input/Output",
+      "name": "b",
+      "type": "VARIANT"
+    }
+  ],
+  "ltl": {
+    "properties": [
+      {
+        "id": "P1",
+        "formula": "G((PVL_Store_Item = x) & (PVL_Destination = x))"
+      }
+    ],
+    "execution": {
+      "reference_model": {
+        "version": 1,
+        "objects": [
+          {
+            "name": "PVL_Store_Data",
+            "type": "ARRAY[-3..1] OF DINT"
+          },
+          {
+            "name": "PVL_Store_Item",
+            "type": "DINT"
+          }
+        ],
+        "bindings": {
+          "a": "PVL_Store_Data",
+          "b": "PVL_Store_Item"
+        }
+      },
+      "entry": [
+        "PVL_Store_Item := x;"
+      ],
+      "declarations": [
+        "PVL_Destination : DINT;"
+      ],
+      "before": [
+        "PVL_Destination := PVL_Store_Data[1];"
+      ]
+    }
+  }
+}

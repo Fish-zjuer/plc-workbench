@@ -1,0 +1,27 @@
+{
+  "id": "SHL_PATTERN",
+  "block": "Edge",
+  "interface": [
+    {
+      "direction": "Output",
+      "name": "checksum",
+      "type": "DWORD"
+    }
+  ],
+  "ltl": {
+    "properties": [
+      {
+        "id": "all_bits",
+        "formula": "G(allBits)"
+      }
+    ],
+    "execution": {
+      "declarations": [
+        "PVL_AllBits : DWORD := DWORD#16#FFFFFFFF;"
+      ],
+      "bindings": {
+        "allBits": "checksum = PVL_AllBits"
+      }
+    }
+  }
+}
