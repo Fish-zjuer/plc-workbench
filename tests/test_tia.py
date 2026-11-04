@@ -31,6 +31,9 @@ class FakeProvider:
 
 class TiaTests(unittest.TestCase):
     def setUp(self):
+        # Process/protocol fixtures must not reserve the real machine's TIA
+        # lease. The OS lock itself has a separate cross-process test.
+        lease=patch('plc_agent.tia.vendor_lease');lease.start();self.addCleanup(lease.stop)
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
         template = self.root/'template'
@@ -104,6 +107,25 @@ class TiaTests(unittest.TestCase):
             with self.assertRaises(ValueError): tia_workflow.validate_scl(code, TASK)
         string_task = {**TASK, 'interface': [{**p, 'type': 'STRING(12)'} if p['name']=='Motor' else p for p in TASK['interface']]}
         tia_workflow.validate_scl(self.code.replace('Motor : Bool','Motor : STRING[12]'),string_task)
+
+    def test_quoted_udt_spelling_keeps_frozen_type_bounds_and_direction(self):
+        task = {'block':'Pumps', 'interface':[
+            {'direction':'Input/Output','name':'pumpGroup','type':'ARRAY[1..5] OF ST_Pump'}]}
+        code = '''FUNCTION_BLOCK "Pumps"
+VAR_IN_OUT
+    pumpGroup : ARRAY[1..5] OF "ST_Pump";
+END_VAR
+BEGIN
+    #pumpGroup[1].RunComd := FALSE;
+END_FUNCTION_BLOCK
+'''
+        tia_workflow.validate_scl(code, task)
+        tia_workflow.validate_scl(code.replace('"ST_Pump"','ST_Pump'), task)
+        for changed in (code.replace('"ST_Pump"','"OtherPump"'),
+                        code.replace('[1..5]','[0..4]'),
+                        code.replace('VAR_IN_OUT','VAR_INPUT')):
+            with self.assertRaises(ValueError):
+                tia_workflow.validate_scl(changed, task)
 
     def test_real_diagnostic_flows_to_repair_without_expected_data(self):
         bad = self.code.replace('#Motor := TRUE', '#Undefined := TRUE')

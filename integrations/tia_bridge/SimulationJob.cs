@@ -27,7 +27,7 @@ internal sealed class SimulationJob
     private static void Emit(object value) { Console.WriteLine("WB_RESULT_JSON=" + new JavaScriptSerializer { MaxJsonLength = 64 * 1024 * 1024 }.Serialize(value)); }
     private void CheckCancel() { if (File.Exists(Path.Combine(evidence, "cancel.signal"))) throw new OperationCanceledException("Simulation cancelled"); }
 
-    public int Run(string requestPath)
+    public int Run(string requestPath, bool prepareOnly = false)
     {
         var request = json.Deserialize<Dictionary<string, object>>(File.ReadAllText(requestPath));
         if ((string)request["schema"] != "tia-simulation-v1") throw new InvalidDataException("Unknown simulation protocol");
@@ -40,8 +40,9 @@ internal sealed class SimulationJob
         {
             Console.Error.WriteLine("Opening disposable S7-1500 simulation project");
             CheckCancel();
-            using (var portal = TiaSession.Start())
+            using (var portal = TiaSession.Start(evidence))
             {
+                BridgeProgress.Record(evidence, "opening_simulation_project");
                 var project = portal.Projects.Open(new FileInfo((string)request["project"]));
                 try
                 {
@@ -67,6 +68,7 @@ internal sealed class SimulationJob
                     if (obs.Any(b => b.Number != 1)) throw new InvalidOperationException("Simulation template must contain only the cyclic OB1");
                     foreach (var ob in obs) ob.Delete();
                     Console.Error.WriteLine("Generating candidate and native test harness");
+                    BridgeProgress.Record(evidence, "generating_test_harness");
                     var ext = plc.ExternalSourceGroup.ExternalSources.CreateFromFile("WB_Test", (string)request["source"]);
                     try { ext.GenerateBlocksFromSource(); }
                     catch (EngineeringTargetInvocationException error)
@@ -74,6 +76,7 @@ internal sealed class SimulationJob
                         Emit(new { status = "harness_error", message = error.ToString(), phase = "generate_test_harness" }); return 2;
                     }
                     Console.Error.WriteLine("Compiling simulation CPU hardware configuration");
+                    BridgeProgress.Record(evidence, "compiling_simulation_hardware");
                     var hardwareCompiler = cpu.GetService<ICompilable>();
                     if (hardwareCompiler == null) throw new InvalidOperationException("CPU has no hardware compile service");
                     var hardware = hardwareCompiler.Compile();
@@ -81,6 +84,7 @@ internal sealed class SimulationJob
                     CompileJob.CollectMessages(hardware.Messages, hardwareDiagnostics);
                     File.WriteAllText(Path.Combine(evidence, "hardware_compile.json"), json.Serialize(new { errors = hardware.ErrorCount, warnings = hardware.WarningCount, state = hardware.State.ToString(), diagnostics = hardwareDiagnostics }));
                     if (hardware.ErrorCount != 0) throw new InvalidOperationException("Simulation template hardware compilation failed; inspect hardware_compile.json");
+                    BridgeProgress.Record(evidence, "compiling_test_harness");
                     var compiled = plc.GetService<ICompilable>().Compile();
                     var diagnostics = new List<object>();
                     CompileJob.CollectMessages(compiled.Messages, diagnostics);
@@ -89,6 +93,7 @@ internal sealed class SimulationJob
                     CheckCancel();
                     var downloader = cpu.GetService<DownloadProvider>();
                     Console.Error.WriteLine("Exporting virtual memory card for owned simulator");
+                    BridgeProgress.Record(evidence, "exporting_virtual_card");
                     if (downloader == null) throw new InvalidOperationException("CPU has no virtual-memory-card download service");
                     var download = downloader.Download(new DirectoryInfo(card), ConfigureDownload);
                     var downloadDiagnostics = new List<object>();
@@ -108,7 +113,14 @@ internal sealed class SimulationJob
                 runtime_host_sha256 = SimulationCardJob.FileHash(RuntimeWorker.Executable),
                 cpu_order_number = cpuArticle, card_sha256 = SimulationCardJob.HashTree(card)
             }));
+            if (prepareOnly)
+            {
+                BridgeProgress.Record(evidence, "card_prepared");
+                Emit(new { status = "simulation_prepared", phase = "card_prepared", source_sha256 = request["source_sha256"] });
+                return 0;
+            }
             Console.Error.WriteLine("Starting separate PLCSIM runtime host without Openness references");
+            BridgeProgress.Record(evidence, "starting_runtime_host");
             return RuntimeWorker.Run("--run-simulation-card", requestPath);
         }
         catch (Exception error)

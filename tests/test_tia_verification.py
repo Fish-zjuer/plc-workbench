@@ -18,6 +18,7 @@ from tests.test_tia import FakeProvider, SAMPLE, TASK
 
 class VerificationTests(unittest.TestCase):
     def setUp(self):
+        lease=patch('plc_agent.tia.vendor_lease');lease.start();self.addCleanup(lease.stop)
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
         template=self.root/'template';template.mkdir();(template/'p.ap21').write_bytes(b'project')
         exe=self.root/'bridge.exe';exe.write_bytes(b'fixture')
@@ -55,12 +56,79 @@ class VerificationTests(unittest.TestCase):
                 'actual_rows':rows or [{'Motor':True},{'Motor':False}],
                 'actual_scan_times_ms':times or [0,10],'execution_fingerprint':{'fixture':True}}
 
+    def prepare_receipt(self, command, stdout):
+        req=json.loads(Path(command[2]).read_text(encoding='utf-8'))
+        identity=req['execution_fingerprint']
+        manifest={'schema':'tia-prepared-card-v1','source_sha256':req['source_sha256'],
+                  'source_bundle_sha256':tia.sha256(req['source']),
+                  'bridge_sha256':identity['bridge_sha256'],'runtime_host_sha256':identity['runtime_host_sha256']}
+        Path(req['evidence_directory'],'prepared_card.json').write_text(json.dumps(manifest),encoding='utf-8')
+        stdout.write(b'WB_RESULT_JSON={"status":"simulation_prepared"}\n');stdout.flush()
+
     def test_native_rows_use_shared_predicates_and_keep_wrong_output_as_failure(self):
         for values,status in [([{'Motor':True},{'Motor':False}],'pass'),([{'Motor':True},{'Motor':True}],'fail')]:
             with patch('plc_agent.tia.simulate_scl',return_value=self.response(values)):
                 result=tia_tests.evaluate(self.source,self.task,self.config,directory=self.root/status)
             self.assertEqual(result['status'],status);self.assertTrue(result['behavior_tested'])
             self.assertEqual(result['summary']['scans'],2);self.assertEqual(result['test_backend'],'tia')
+
+    def analog_response(self, task, plan):
+        case = task['scenarios'][0]
+        rows = []
+        for row in case['rows']:
+            values = [*row['raw'], *[v for record in row['expected'] for v in record]]
+            rows.append({name: bool(value) if dtype=='BOOL' else value
+                         for name, dtype, value in zip(plan['output_names'], plan['output_types'], values)})
+        return {'status':'simulation_completed','simulation':True,'actual_rows':rows,
+                'actual_scan_times_ms':[0]*len(rows),'execution_fingerprint':{'bridge':'same'},
+                'cpu_order_number':'CPU1511','source_sha256':hashlib.sha256(self.source.read_bytes()).hexdigest()}
+
+    def test_open_array_default_batches_all_frozen_rows_then_judges_once(self):
+        task = dataset.load('PUBLIC_08')
+        original = deepcopy(task)
+        plans = [tia_tests.harness({**task,'scenarios':[case]}) for case in task['scenarios']]
+        responses = [self.analog_response({**task,'scenarios':[case]},plan)
+                     for case,plan in zip(task['scenarios'],plans)]
+        for negative in (False, True):
+            actual = deepcopy(responses)
+            if negative: actual[3]['actual_rows'][0]['channel7.outputValue'] += 100
+            directory = self.root/('analog_negative' if negative else 'analog_positive')
+            with patch('plc_agent.tia.simulate_scl',side_effect=actual) as simulate, \
+                 patch('plc_agent.tia_tests.time.monotonic',side_effect=[0,1,70,140,210]), \
+                 patch('plc_agent.tia_tests.dataset.judge_output',wraps=dataset.judge_output) as judge:
+                result = tia_tests.evaluate(self.source,task,self.config,directory=directory)
+            self.assertEqual(result['status'],'fail' if negative else 'pass')
+            self.assertEqual(result['summary']['scans'],320)
+            self.assertEqual(result['summary']['scenarios'],4)
+            judge.assert_called_once()
+            self.assertEqual(task,original)
+            self.assertEqual([c.args[1]['row_count'] for c in simulate.call_args_list],[80]*4)
+            self.assertEqual([c.args[2]['simulation_timeout_seconds'] for c in simulate.call_args_list],[599,530,460,390])
+            self.assertEqual([c.kwargs['deadline'] for c in simulate.call_args_list],[600]*4)
+            self.assertEqual([c.args[1]['harness_source'] for c in simulate.call_args_list],
+                             [p['harness_source'] for p in plans])
+            manifest=json.loads((directory/'batch_manifest.json').read_text())
+            self.assertEqual([b['row_offset'] for b in manifest['batches']],[0,80,160,240])
+            self.assertEqual(manifest['status'],'simulation_completed')
+
+    def test_open_array_incomplete_or_changed_batch_never_reaches_judge(self):
+        task=dataset.load('PUBLIC_08')
+        plan=tia_tests.harness({**task,'scenarios':[task['scenarios'][0]]})
+        first=self.analog_response({**task,'scenarios':[task['scenarios'][0]]},plan)
+        second_task={**task,'scenarios':[task['scenarios'][1]]}
+        second=self.analog_response(second_task,tia_tests.harness(second_task))
+        changed=deepcopy(second);changed['execution_fingerprint']={'bridge':'changed'}
+        wrong_source=deepcopy(second);wrong_source['source_sha256']='changed-candidate'
+        incomplete=deepcopy(second);incomplete['actual_rows'].pop()
+        for index, response in enumerate(({'status':'simulation_error','message':'vendor failed'},changed,wrong_source,incomplete)):
+            with patch('plc_agent.tia.simulate_scl',side_effect=[first,response]) as simulate, \
+                 patch('plc_agent.tia_tests.dataset.judge_output') as judge, self.assertRaises(BackendError):
+                tia_tests.evaluate(self.source,task,self.config,directory=self.root/f'partial_{index}')
+            self.assertEqual(simulate.call_count,2);judge.assert_not_called()
+        with patch('plc_agent.tia.simulate_scl') as simulate, \
+             patch('plc_agent.tia_tests.time.monotonic',side_effect=[0,500]), self.assertRaises(BackendError):
+            tia_tests.evaluate(self.source,task,self.config,directory=self.root/'exhausted')
+        simulate.assert_not_called()
 
     def test_incomplete_or_false_native_results_never_pass(self):
         for response in [self.response([{'Motor':True}]),self.response([{'Motor':True},{'Motor':1}]),
@@ -83,16 +151,27 @@ class VerificationTests(unittest.TestCase):
         self.assertEqual(error.exception.result['status'],'behavior_not_supported')
         simulate.assert_not_called()
 
+    def test_absolute_batch_deadline_stops_before_any_vendor_process(self):
+        with patch('plc_agent.tia.subprocess.Popen') as launch:
+            result=tia.simulate_scl(self.source,tia_tests.harness(self.task),self.config,
+                                    directory=self.root/'expired',deadline=0)
+        self.assertEqual(result['status'],'timeout')
+        launch.assert_not_called()
+
     def test_simulator_request_excludes_expected_and_uses_disposable_project(self):
         plan=tia_tests.harness(self.task)
+        bridge_exited=[]
         def launch(command,stdout,stderr,shell):
-            self.assertFalse(shell);self.assertEqual(command[1],'--simulate')
+            self.assertFalse(shell)
             req=json.loads(Path(command[2]).read_text(encoding='utf-8'))
             self.assertNotIn('expected',json.dumps(req));self.assertNotEqual(req['project'],self.config['template_project'])
-            receipt=self.response();stdout.write(('WB_RESULT_JSON='+json.dumps(receipt)+'\n').encode());stdout.flush()
+            if command[1]=='--prepare-simulation':self.prepare_receipt(command,stdout)
+            else:
+                self.assertEqual(command[1],'--run-simulation-card');self.assertTrue(bridge_exited)
+                receipt=self.response();stdout.write(('WB_RESULT_JSON='+json.dumps(receipt)+'\n').encode());stdout.flush()
             class Process:
                 returncode=0
-                def poll(self):return 0
+                def poll(self):bridge_exited.append(True);return 0
             return Process()
         with patch('plc_agent.tia.subprocess.Popen',side_effect=launch):
             result=tia.simulate_scl(self.source,plan,self.config,directory=self.root/'boundary')
@@ -105,7 +184,7 @@ class VerificationTests(unittest.TestCase):
             self.assertEqual(request['execution_fingerprint']['runtime_host_sha256'],
                              hashlib.sha256(b'runtime-fixture').hexdigest())
             (self.root/'TiaRuntime.exe').write_bytes(b'changed-runtime')
-            stdout.write(('WB_RESULT_JSON='+json.dumps(self.response())+'\n').encode());stdout.flush()
+            self.prepare_receipt(command,stdout)
             class Process:
                 returncode=0
                 def poll(self):return 0
@@ -118,10 +197,13 @@ class VerificationTests(unittest.TestCase):
     def test_startup_timeout_keeps_vendor_failure_and_explains_conditional_trial_recovery(self):
         failure='PowerOn(UInt32): Error Code: -11, Timeout'
         def launch(command,stdout,stderr,shell):
-            stdout.write(('WB_RESULT_JSON='+json.dumps({'status':'simulation_error','message':failure})+'\n').encode())
-            stdout.flush()
+            prepare=command[1]=='--prepare-simulation'
+            if prepare:self.prepare_receipt(command,stdout)
+            else:
+                stdout.write(('WB_RESULT_JSON='+json.dumps({'status':'simulation_error','message':failure})+'\n').encode())
+                stdout.flush()
             class Process:
-                returncode=2
+                returncode=0 if prepare else 2
                 def poll(self):return 0
             return Process()
         with patch('plc_agent.tia.subprocess.Popen',side_effect=launch) as native:
@@ -131,7 +213,19 @@ class VerificationTests(unittest.TestCase):
         self.assertTrue(result['message'].startswith(failure))
         self.assertIn('若出现',result['recovery_hint'])
         self.assertIn('OK',result['recovery_hint'])
-        native.assert_called_once()
+        self.assertEqual(native.call_count,2)
+
+    def test_prepared_status_without_bound_manifest_never_starts_runtime(self):
+        def launch(command,stdout,stderr,shell):
+            self.assertEqual(command[1],'--prepare-simulation')
+            stdout.write(b'WB_RESULT_JSON={"status":"simulation_prepared"}\n');stdout.flush()
+            class Process:
+                returncode=0
+                def poll(self):return 0
+            return Process()
+        with patch('plc_agent.tia.subprocess.Popen',side_effect=launch) as native:
+            result=tia.simulate_scl(self.source,tia_tests.harness(self.task),self.config,directory=self.root/'missing-handoff')
+        self.assertEqual(result['status'],'bridge_protocol_error');native.assert_called_once()
 
     def test_missing_simulator_uses_same_formal_stage_gate_as_codesys(self):
         compiled={'status':'compile_passed','target_compile':'passed'}

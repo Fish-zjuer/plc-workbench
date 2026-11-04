@@ -41,6 +41,9 @@ def author_input(task, code='', failure=None):
 
 
 def _dtype(value):
+    # Siemens permits simple symbolic UDT names both quoted and unquoted.
+    # Bounds and actual type names still belong to the frozen signature.
+    value = re.sub(r'"([A-Za-z_]\w*)"', r'\1', value)
     value = re.sub(r'\s+', '', value).upper()
     return re.sub(r'STRING\((\d+)\)', r'STRING[\1]', value)
 

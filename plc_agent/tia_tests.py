@@ -1,8 +1,10 @@
 """Siemens native behavior tests; scenario predicates are shared with CODESYS."""
 import hashlib
+import json
 import math
 from pathlib import Path
 import re
+import time
 
 from . import dataset, tia
 from .behavior_plan import harness as scenario_plan
@@ -53,10 +55,108 @@ END_ORGANIZATION_BLOCK
             'clock': 'PLCSIM Advanced native', 'semantics': 'One FB call per supplied row; isolated instance per scenario'}
 
 
+def _native_rows(response, plan):
+    raw = response['actual_rows']; names = plan['output_names']; types = plan['output_types']
+    if len(raw) != plan['row_count']:
+        raise BackendError({'status': 'protocol_error', 'message': 'Wrong Siemens simulation row count'})
+    for row in raw:
+        if not isinstance(row, dict) or set(row) != set(names):
+            raise BackendError({'status': 'protocol_error', 'message': 'Wrong Siemens simulation output columns'})
+        for name, dtype in zip(names, types):
+            value = row[name]
+            if dtype == 'BOOL':
+                if type(value) is not bool:
+                    raise BackendError({'status': 'protocol_error', 'message': 'Expected native BOOL'})
+            elif type(value) not in (int, float) or not math.isfinite(value):
+                raise BackendError({'status': 'protocol_error', 'message': 'Expected finite native number'})
+    measured = response['actual_scan_times_ms']
+    if len(measured) != len(raw) or any(type(t) is not int or t < 0 for t in measured):
+        raise BackendError({'status': 'protocol_error', 'message': 'Missing Siemens scan timestamps'})
+    return raw
+
+
+def _simulate(source, task, plan, config, directory, cancel_event):
+    # Open-array scenarios have different caller-owned shapes and independent
+    # FB instances. Build one complete scenario per card instead of unrolling
+    # every shape into a single oversized CPU1511 program. Never split a trace.
+    if task['adapter_format'] != 'analog_reference_rows' or len(task['scenarios']) < 2:
+        return tia.simulate_scl(source, plan, config, directory=directory, cancel_event=cancel_event)
+    directory.mkdir(parents=True, exist_ok=True)
+    original = source.read_bytes()
+    deadline = time.monotonic()+config.get('simulation_timeout_seconds', 600)
+    manifest = {'schema': 'tia-scenario-batches-v1', 'source_sha256': hashlib.sha256(original).hexdigest(),
+                'dataset_sha256': task.get('dataset_sha256'), 'row_count': plan['row_count'],
+                'scenario_count': len(task['scenarios']), 'batches': [], 'status': 'running'}
+    rows = []; measured = []; identity = None; cpu = None
+    for index, case in enumerate(task['scenarios']):
+        if source.read_bytes() != original:
+            raise BackendError({'status': 'stale_evidence', 'message': 'SCL changed between Siemens scenario batches'})
+        remaining = int(deadline-time.monotonic())
+        batch_task = {**task, 'scenarios': [case]}
+        batch_plan = harness(batch_task)
+        entry = {'index': index, 'name': case['name'], 'row_offset': len(rows),
+                 'row_count': batch_plan['row_count'], 'output_names': batch_plan['output_names'],
+                 'scenario_sha256': hashlib.sha256(json.dumps(case, sort_keys=True).encode()).hexdigest(),
+                 'evidence_path': str(directory/f'scenario_{index+1:02d}')}
+        manifest['batches'].append(entry)
+        atomic_json(directory/'batch_manifest.json', manifest)
+        if remaining < batch_plan['simulation_timeout_seconds']+240:
+            response = {'status': 'timeout', 'phase': 'scenario_batch',
+                        'message': 'Shared Siemens simulation budget exhausted before next complete scenario'}
+        else:
+            response = tia.simulate_scl(source, batch_plan, {**config, 'simulation_timeout_seconds': remaining},
+                                       directory=Path(entry['evidence_path']), cancel_event=cancel_event, deadline=deadline)
+        entry['status'] = response['status']
+        if response['status'] != 'simulation_completed':
+            manifest['status'] = response['status']
+            atomic_json(directory/'batch_manifest.json', manifest)
+            result = {**response, 'scenario_batch_index': index, 'batch_manifest': str(directory/'batch_manifest.json')}
+            atomic_json(directory/'result.json', result)
+            return result
+        try:
+            raw = _native_rows(response, batch_plan)
+            if response.get('source_sha256') != manifest['source_sha256']:
+                raise BackendError({'status': 'stale_evidence', 'message': 'Siemens scenario batch used a different candidate source'})
+            if identity is not None and (response['execution_fingerprint'] != identity or response.get('cpu_order_number') != cpu):
+                raise BackendError({'status': 'stale_evidence', 'message': 'Siemens runtime identity changed between scenario batches'})
+        except BackendError as exc:
+            entry['status'] = manifest['status'] = exc.result['status']
+            atomic_json(directory/'batch_manifest.json', manifest)
+            atomic_json(directory/'result.json', exc.result)
+            raise
+        identity = response['execution_fingerprint']; cpu = response.get('cpu_order_number')
+        # Rectangular transport padding only; padding is discarded before the
+        # original full-task predicate sees any value. Validate each native row
+        # against its actual shape before adding transport-only zeros.
+        rows.extend({name: row.get(name, False if dtype == 'BOOL' else 0)
+                     for name, dtype in zip(plan['output_names'], plan['output_types'])} for row in raw)
+        measured.extend(response['actual_scan_times_ms'])
+        atomic_json(directory/'batch_manifest.json', manifest)
+    manifest['status'] = 'simulation_completed'
+    atomic_json(directory/'batch_manifest.json', manifest)
+    fingerprint = {**identity, 'scenario_batches_sha256': tia.sha256(directory/'batch_manifest.json')}
+    result = {'status': 'simulation_completed', 'simulation': True,
+              'actual_rows': rows, 'actual_scan_times_ms': measured, 'execution_fingerprint': fingerprint,
+              'cpu_order_number': cpu, 'source_sha256': manifest['source_sha256'],
+              'test_backend': 'tia', 'batch_manifest': str(directory/'batch_manifest.json')}
+    atomic_json(directory/'result.json', result)
+    return result
+
+
 def evaluate(source, task, config, cancel_event=None, *, directory=None):
     source = Path(source); data = source.read_bytes()
-    if re.search(r'\b(?:WB_TestHarness(?:_DB)?|ORGANIZATION_BLOCK|DATA_BLOCK|PROGRAM)\b', mask_noncode(data.decode('utf-8-sig').replace('"', ' ')), re.I):
+    if re.search(r'\b(?:WB_TestHarness(?:_DB)?|ORGANIZATION_BLOCK|PROGRAM)\b', mask_noncode(data.decode('utf-8-sig').replace('"', ' ')), re.I):
         raise BackendError({'status': 'behavior_not_supported', 'message': 'WB_TestHarness and test OB/DBs are reserved for the Siemens harness', 'test_backend': 'tia'})
+    if re.search(r'\bDATA_BLOCK\b', mask_noncode(data.decode('utf-8-sig')), re.I):
+        # Independent scenario UUTs must not acquire hidden shared mutable DB
+        # state. Admit only the closed, immutable DB subset checked by the TIA
+        # adapter; execute the original source unchanged in native simulation.
+        from .tia_formal import adapt
+        from .ltl_adapter import Unsupported
+        try: adapt(data.decode('utf-8-sig'), block=task['block'])
+        except (Unsupported, ValueError) as exc:
+            raise BackendError({'status':'behavior_not_supported','test_backend':'tia',
+                                'message':'External DB dependency: '+str(exc)}) from exc
     try: plan = harness(task)
     except ValueError as exc:
         raise BackendError({'status': 'behavior_not_supported', 'test_backend': 'tia', 'message': str(exc)}) from exc
@@ -69,26 +169,19 @@ def evaluate(source, task, config, cancel_event=None, *, directory=None):
         raise BackendError({'status': 'behavior_not_supported', 'test_backend': 'tia',
                             'message': 'Increase the Siemens simulation timeout for this native-clock scenario.'})
     directory = Path(directory or source.parent/'tia_simulation')
-    response = tia.simulate_scl(source, plan, config, directory=directory, cancel_event=cancel_event)
+    response = _simulate(source, task, plan, config, directory, cancel_event)
     if response['status'] != 'simulation_completed':
         raise BackendError(response)
     if source.read_bytes() != data:
         raise BackendError({'status': 'stale_evidence', 'message': 'SCL changed during simulation'})
-    raw = response['actual_rows']; names = plan['output_names']; types = plan['output_types']
-    if len(raw) != plan['row_count']:
-        raise BackendError({'status': 'protocol_error', 'message': 'Wrong Siemens simulation row count'})
+    raw = _native_rows(response, plan); names = plan['output_names']; types = plan['output_types']
     lines = []
     for row in raw:
-        if not isinstance(row, dict) or set(row) != set(names):
-            raise BackendError({'status': 'protocol_error', 'message': 'Wrong Siemens simulation output columns'})
         values = []
         for name, dtype in zip(names, types):
             value = row[name]
             if dtype == 'BOOL':
-                if type(value) is not bool: raise BackendError({'status': 'protocol_error', 'message': 'Expected native BOOL'})
                 value = int(value)
-            elif type(value) not in (int, float) or not math.isfinite(value):
-                raise BackendError({'status': 'protocol_error', 'message': 'Expected finite native number'})
             values.append(str(value))
         lines.append(' '.join(values))
     if task['adapter_format'] == 'analog_reference_rows':

@@ -49,6 +49,7 @@ internal sealed class SimulationCardJob
         object instance = null;
         string cpuArticle = (string)prepared["cpu_order_number"];
         string powerOnStatus = "not_executed";
+        string phase = "registering_instance";
         var startup = Stopwatch.StartNew();
         try
         {
@@ -57,6 +58,7 @@ internal sealed class SimulationCardJob
             Console.Error.WriteLine("Starting owned PLCSIM instance: " + instanceName);
             File.WriteAllText(Path.Combine(evidence, "simulator.json"), json.Serialize(new { owned_by = "plc-workbench", instance_name = instanceName, simulation_api = request["simulation_api"], memory_card = card }));
             startup.Restart();
+            phase = "power_on";
             SaveRuntime(api, instance, "power_on_pending", powerOnStatus, startup.Elapsed.TotalSeconds);
             // This bounds firmware startup; the trial confirmation retains its
             // independent vendor deadline and still requires manual action.
@@ -66,8 +68,11 @@ internal sealed class SimulationCardJob
             if (!new[] { "Stop", "Run", "Freeze", "Hold" }.Contains(readyState))
                 throw new InvalidOperationException("PLCSIM did not reach a ready state: " + readyState);
             CheckCancel();
+            phase = "starting_cpu";
             api.Invoke(instance, "UpdateTagList");
             api.Invoke(instance, "Run", (uint)60000);
+            phase = "running_test";
+            SaveRuntime(api, instance, phase, powerOnStatus, startup.Elapsed.TotalSeconds);
             string db = (string)request["result_db"];
             var timer = Stopwatch.StartNew();
             double timeout = Convert.ToDouble(request["simulation_timeout_seconds"], CultureInfo.InvariantCulture);
@@ -78,6 +83,8 @@ internal sealed class SimulationCardJob
                 Thread.Sleep(20);
             }
             var names = ((IEnumerable)request["output_names"]).Cast<string>().ToArray();
+            phase = "sampling_outputs";
+            SaveRuntime(api, instance, phase, powerOnStatus, startup.Elapsed.TotalSeconds);
             var types = ((IEnumerable)request["output_types"]).Cast<string>().ToArray();
             int count = Convert.ToInt32(request["row_count"], CultureInfo.InvariantCulture);
             var rows = new List<object>(); var times = new List<int>();
@@ -87,6 +94,7 @@ internal sealed class SimulationCardJob
                 for (int c = 0; c < names.Length; c++) row[names[c]] = api.Read(instance, db + ".WB_Out" + c + "[" + r + "]", types[c]);
                 rows.Add(row); times.Add((int)api.Invoke(instance, "ReadInt32", db + ".WB_ActualMs[" + r + "]"));
             }
+            phase = "cleanup";
             api.Shutdown(instance); instance = null;
             File.WriteAllText(Path.Combine(evidence, "simulator_closed.json"), json.Serialize(new { instance_name = instanceName, powered_off = true, unregistered = true }));
             Emit(new { status = "simulation_completed", simulation = true, instance_name = instanceName, cpu_order_number = cpuArticle, power_on_status = powerOnStatus,
@@ -96,7 +104,7 @@ internal sealed class SimulationCardJob
         catch (Exception error)
         {
             if (instance != null) SaveRuntime(api, instance, "failed", powerOnStatus, startup.Elapsed.TotalSeconds, error);
-            Emit(new { status = "simulation_error", message = error.ToString(), instance_name = instanceName }); return 2;
+            Emit(new { status = "simulation_error", phase, message = error.ToString(), instance_name = instanceName }); return 2;
         }
         finally
         {

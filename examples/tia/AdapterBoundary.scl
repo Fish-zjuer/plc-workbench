@@ -1,0 +1,56 @@
+// Adapter acceptance fixture, authored for testing; not a model-generated course solution.
+TYPE "WB_AdapterWork"
+VERSION : 0.1
+STRUCT
+    value : DINT;
+    flags : ARRAY[0..1] OF BOOL;
+END_STRUCT;
+END_TYPE
+
+DATA_BLOCK "WB_AdapterLimits"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR
+    threshold : DINT := 7;
+END_VAR
+BEGIN
+END_DATA_BLOCK
+
+FUNCTION "WB_AdapterDouble" : DINT
+VERSION : 0.1
+VAR_INPUT
+    value : DINT;
+END_VAR
+VAR_TEMP
+    copy : DINT;
+END_VAR
+BEGIN
+    #copy := #value;
+    #WB_AdapterDouble := #copy + #copy;
+END_FUNCTION
+
+FUNCTION_BLOCK "WB_AdapterBoundary"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+    X : SINT;
+    Enable : BOOL;
+END_VAR
+VAR_OUTPUT
+    Y : DINT;
+END_VAR
+VAR_TEMP
+    buf : ARRAY[0..1] OF DINT;
+    work : "WB_AdapterWork";
+END_VAR
+BEGIN
+    #buf[0] := #X;
+    #buf[1] := "WB_AdapterDouble"(value := #buf[0]);
+    #work.value := #buf[1];
+    #work.flags[0] := #Enable;
+    #work.flags[1] := FALSE;
+    IF #work.flags[0] THEN
+        #work.value := #work.value + "WB_AdapterLimits".threshold;
+    END_IF;
+    #Y := #work.value;
+END_FUNCTION_BLOCK

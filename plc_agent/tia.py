@@ -15,6 +15,7 @@ from functools import wraps
 from .config import STATE_ROOT
 from .provider import Cancelled
 from .storage import atomic_json, read_json
+from .tia_runtime import vendor_lease, VendorBusy, infrastructure_details
 
 PREFIX = 'WB_RESULT_JSON='
 SCOPE = 'Vendor compilation only; no simulation, behavior test or PLC download'
@@ -25,17 +26,29 @@ def _serialized(operation):
     """Batch model requests may overlap; local TIA sessions are serialized."""
     @wraps(operation)
     def invoke(*args,**kwargs):
+        config=kwargs.get('config') or (args[2] if operation.__name__=='simulate_scl' and len(args)>2 else args[1] if len(args)>1 else None) or load_config()
+        absolute_deadline=kwargs.get('deadline')
+        def queue_budget():
+            limit=config.get('timeout_seconds',300)
+            return min(limit,max(0,absolute_deadline-time.monotonic())) if absolute_deadline is not None else limit
+        cancel=kwargs.get('cancel_event')
         owned=_vendor_slot.acquire(blocking=False)
         if not owned:
             started=time.monotonic();cancel=kwargs.get('cancel_event')
             config=kwargs.get('config') or (args[2] if operation.__name__=='simulate_scl' and len(args)>2 else args[1] if len(args)>1 else None) or load_config()
             while not owned:
                 if cancel and cancel.is_set():raise Cancelled('TIA queue cancelled')
-                if time.monotonic()-started>config.get('timeout_seconds',300):
+                if time.monotonic()-started>config.get('timeout_seconds',300) or queue_budget()<=0:
                     return {'status':'backend_busy','target_compile':'not_executed','behavior_tested':False,
                             'message':'Local TIA session queue timed out; reduce vendor concurrency.'}
                 owned=_vendor_slot.acquire(timeout=.1)
-        try:return operation(*args,**kwargs)
+        try:
+            try:
+                with vendor_lease(queue_budget(),cancel):
+                    return operation(*args,**kwargs)
+            except VendorBusy as exc:
+                return {'status':'backend_busy','target_compile':'not_executed','behavior_tested':False,
+                        'phase':'vendor_queue','failure_kind':'vendor_busy','message':str(exc)}
         finally:_vendor_slot.release()
     return invoke
 
@@ -167,6 +180,7 @@ def compile_scl(source, config=None, *, directory=None, cancel_event=None):
         result = parse_result((directory/'stdout.txt').read_text(encoding='utf-8-sig', errors='replace'), process.returncode)
     if source.read_bytes() != data or sha256(template) != identity['template_sha256'] or sha256(config['executable']) != identity['bridge_sha256']:
         result = {'status': 'stale_evidence', 'message': 'Source, template or bridge changed during compilation'}
+    result = infrastructure_details(result, directory)
     result = {**result, 'source_sha256': source_hash, 'execution_fingerprint': identity,
               'target_compile': 'passed' if result['status'] == 'compile_passed' else
                                 'failed' if result['status'] in ('compile_failed', 'generation_failed') else 'not_executed',
@@ -227,8 +241,44 @@ def _stop_simulation(process, directory, config):
                 atomic_json(directory/'cleanup.json', {'attempted': True, 'message': str(exc)})
 
 
+def _simulation_process(command, directory, config, deadline, cancel_event, *, prepare=False):
+    prefix='prepare-' if prepare else ''
+    stdout_path=directory/(prefix+'stdout.txt')
+    with stdout_path.open('wb') as out, (directory/(prefix+'stderr.txt')).open('wb') as err:
+        if cancel_event and cancel_event.is_set(): raise Cancelled('TIA simulation cancelled')
+        if time.monotonic()>=deadline:
+            return {'status':'timeout','phase':'prepare_card' if prepare else 'starting_runtime_host',
+                    'message':'Siemens simulation budget exhausted before starting next process'}
+        process=subprocess.Popen(command,stdout=out,stderr=err,shell=False,**_bridge_environment(config))
+        try:
+            while process.poll() is None:
+                if cancel_event and cancel_event.wait(.2): raise Cancelled('TIA simulation cancelled')
+                if not cancel_event: time.sleep(.2)
+                if time.monotonic()>=deadline:
+                    _stop_simulation(process,directory,config)
+                    return {'status':'timeout','message':'Siemens simulation timeout; inspect stage and runtime evidence'}
+        except BaseException:
+            _stop_simulation(process,directory,config)
+            atomic_json(directory/'result.json',{'status':'interrupted','behavior_tested':False})
+            raise
+    lines=[line.lstrip('\ufeff')[len(PREFIX):] for line in stdout_path.read_text(encoding='utf-8-sig',errors='replace').splitlines()
+           if line.lstrip('\ufeff').startswith(PREFIX)]
+    try:
+        if len(lines)!=1: raise ValueError('Expected one simulation receipt per process; rebuild TiaBridge/TiaRuntime')
+        result=json.loads(lines[0]); success='simulation_prepared' if prepare else 'simulation_completed'
+        if not isinstance(result,dict) or result.get('status') not in (success,'simulation_error','behavior_not_supported','bridge_error','harness_error'):
+            raise ValueError('Unknown simulation stage status')
+        if process.returncode!=(0 if result['status']==success else 2): raise ValueError('Simulation exit code contradicts receipt')
+        if result['status']=='simulation_completed' and (result.get('simulation') is not True or
+                not isinstance(result.get('actual_rows'),list) or not isinstance(result.get('actual_scan_times_ms'),list) or not result.get('instance_name')):
+            raise ValueError('Native execution evidence missing')
+        return result
+    except (ValueError,TypeError) as exc:
+        return {'status':'bridge_protocol_error','message':str(exc)}
+
+
 @_serialized
-def simulate_scl(source, plan, config, *, directory, cancel_event=None):
+def simulate_scl(source, plan, config, *, directory, cancel_event=None, deadline=None):
     """Execute the native bridge protocol on a fresh project and owned simulator.
 
     The bridge exports a virtual memory card; no physical PLC endpoint is used.
@@ -253,44 +303,36 @@ def simulate_scl(source, plan, config, *, directory, cancel_event=None):
     atomic_json(directory/'request.json', request)
     started = time.monotonic()
     if cancel_event and cancel_event.is_set(): raise Cancelled('TIA simulation cancelled')
-    result = None
-    with (directory/'stdout.txt').open('wb') as out, (directory/'stderr.txt').open('wb') as err:
-        process = subprocess.Popen([str(Path(config['executable']).resolve()), '--simulate', str(directory/'request.json')], stdout=out, stderr=err, shell=False, **_bridge_environment(config))
+    deadline = min(deadline,started+config.get('simulation_timeout_seconds',600)) if deadline is not None else started+config.get('simulation_timeout_seconds',600)
+    prepared = _simulation_process([str(Path(config['executable']).resolve()), '--prepare-simulation', str(directory/'request.json')],
+                                   directory, config, deadline, cancel_event, prepare=True)
+    atomic_json(directory/'prepare-result.json', prepared)
+    result = prepared
+    if prepared['status'] == 'simulation_prepared':
+        # A receipt is not enough: bind the handed-off card to this exact source,
+        # test driver and executables before starting any native runtime.
         try:
-            while process.poll() is None:
-                if cancel_event and cancel_event.wait(.2): raise Cancelled('TIA simulation cancelled')
-                if not cancel_event: time.sleep(.2)
-                if time.monotonic()-started > config.get('simulation_timeout_seconds', 600):
-                    result = {'status': 'timeout', 'message': 'Siemens simulation timeout; inspect simulator.json for the owned instance name'}
-                    _stop_simulation(process, directory, config); break
-        except BaseException:
-            _stop_simulation(process, directory, config)
-            atomic_json(directory/'result.json', {'status': 'interrupted', 'behavior_tested': False})
-            raise
-    if result is None:
-        lines = [s.lstrip('\ufeff')[len(PREFIX):] for s in (directory/'stdout.txt').read_text(encoding='utf-8-sig', errors='replace').splitlines() if s.lstrip('\ufeff').startswith(PREFIX)]
-        try:
-            if len(lines) != 1: raise ValueError('Expected one simulation receipt; rebuild TiaBridge with simulation support')
-            result = json.loads(lines[0])
-            if not isinstance(result, dict) or result.get('status') not in ('simulation_completed', 'simulation_error', 'behavior_not_supported', 'bridge_error', 'harness_error'):
-                raise ValueError('Unknown simulation bridge status')
-            if process.returncode != (0 if result['status']=='simulation_completed' else 2): raise ValueError('Simulation exit code contradicts receipt')
-            if result['status']=='simulation_completed' and (result.get('simulation') is not True or not isinstance(result.get('actual_rows'), list) or not isinstance(result.get('actual_scan_times_ms'), list) or not result.get('instance_name')):
-                raise ValueError('Native execution evidence missing')
-        except (ValueError, TypeError) as exc:
-            result = {'status': 'bridge_protocol_error', 'message': str(exc)}
+            card = read_json(directory/'prepared_card.json')
+            valid = (card.get('schema')=='tia-prepared-card-v1' and
+                     card.get('source_sha256')==request['source_sha256'] and
+                     card.get('source_bundle_sha256')==sha256(staged) and
+                     card.get('bridge_sha256')==identity['bridge_sha256'] and
+                     card.get('runtime_host_sha256')==identity['runtime_host_sha256'])
+        except (ValueError, OSError, AttributeError): valid=False
+        if not valid:
+            result={'status':'bridge_protocol_error','phase':'card_handoff',
+                    'message':'Prepared card identity is missing or does not match the source/driver/bridge/runtime'}
+        elif source.read_bytes()!=data or any(sha256(config[k])!=identity[h] for k,h in [
+                ('executable','bridge_sha256'),('simulation_runtime_host','runtime_host_sha256')]):
+            result={'status':'stale_evidence','phase':'card_handoff','message':'Source or executables changed before runtime startup'}
+        else:
+            # _simulation_process has observed the Bridge exit. The process that
+            # loaded Openness is gone before Python starts the API-only worker.
+            result=_simulation_process([config['simulation_runtime_host'],'--run-simulation-card',str(directory/'request.json')],
+                                       directory, config, deadline, cancel_event)
     if source.read_bytes()!=data or any(sha256(config[k])!=identity[h] for k,h in [('executable','bridge_sha256'), ('simulation_runtime_host','runtime_host_sha256'), ('simulation_template_project','template_sha256'), ('simulation_api','simulation_api_sha256')]):
         result = {'status': 'stale_evidence', 'message': 'Source or simulation environment changed'}
-    message = str(result.get('message', ''))
-    if result.get('status') == 'simulation_error' and 'PowerOn' in message and (
-            'Error Code: -11,' in message or 'PowerOn: Timeout' in message):
-        # Siemens' trial confirmation has its own deadline; a larger PowerOn
-        # firmware timeout does not remove the need to acknowledge the notice.
-        # Keep the vendor error and verdict, and do not retry or repair source.
-        result['recovery_hint'] = ('PLCSIM 上电超时。若出现 21 天试用提示，请在新一轮启动时及时点击 OK；'
-            '该提示有独立确认期限，增大 PowerOn 等待参数不能替代确认。'
-            '确认后重跑同一份代码；若没有提示，继续检查 simulator_runtime.json 中的状态和许可。')
-        result['message'] = message+'\n'+result['recovery_hint']
+    result = infrastructure_details(result, directory)
     result.update(source_sha256=hashlib.sha256(data).hexdigest(), execution_fingerprint=identity,
                   evidence_path=str(directory), test_backend='tia', seconds=round(time.monotonic()-started,3))
     atomic_json(directory/'result.json', result)

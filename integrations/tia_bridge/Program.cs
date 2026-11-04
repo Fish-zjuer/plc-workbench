@@ -51,6 +51,7 @@ internal static class Program
             if (args[0] == "--list-simulation-cpus") return SimulationTemplate.List(args[1]);
             if (args[0] == "--create-simulation-template") return SimulationTemplate.Create(Path.GetFullPath(args[1]));
             if (args[0] == "--simulate") return new SimulationJob().Run(Path.GetFullPath(args[1]));
+            if (args[0] == "--prepare-simulation") return new SimulationJob().Run(Path.GetFullPath(args[1]), true);
             if (args[0] == "--run-simulation-card" || args[0] == "--cleanup-simulator") return RuntimeWorker.Run(args[0], args[1]);
             return new CompileJob().Run(Path.GetFullPath(args[0]), Path.GetFullPath(args[1]));
         }
@@ -71,12 +72,14 @@ internal sealed class CompileJob
         if (!File.Exists(sclFile) || !sclFile.EndsWith(".scl", StringComparison.OrdinalIgnoreCase))
             throw new FileNotFoundException("SCL source not found", sclFile);
 
-        using (var portal = TiaSession.Start())
+        string evidence = Path.GetDirectoryName(sclFile);
+        using (var portal = TiaSession.Start(evidence))
         {
             Project project = null;
             try
             {
                 Console.Error.WriteLine("Opening disposable TIA compilation project");
+                BridgeProgress.Record(evidence, "opening_compile_project");
                 project = portal.Projects.Open(new FileInfo(projectFile));
                 PlcSoftware plc = FindPlcSoftware(project);
                 if (plc == null)
@@ -88,6 +91,7 @@ internal sealed class CompileJob
                 string sourceName = "WB_" + Guid.NewGuid().ToString("N").Substring(0, 8);
                 var external = plc.ExternalSourceGroup.ExternalSources.CreateFromFile(sourceName, sclFile);
                 Console.Error.WriteLine("Generating candidate blocks");
+                BridgeProgress.Record(evidence, "generating_candidate");
                 try
                 {
                     external.GenerateBlocksFromSource();
@@ -104,6 +108,7 @@ internal sealed class CompileJob
                 }
 
                 Console.Error.WriteLine("Compiling candidate PLC software");
+                BridgeProgress.Record(evidence, "compiling_candidate");
                 ICompilable compiler = plc.GetService<ICompilable>();
                 if (compiler == null)
                     throw new InvalidOperationException("PLC compile service unavailable");
