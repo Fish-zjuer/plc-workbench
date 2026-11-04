@@ -130,6 +130,38 @@ class WebTests(unittest.TestCase):
         self.assertEqual(free['cost'],0);self.assertTrue(free['cost_complete'])
         partial=usage_totals([{'usage':{'cost':.12}},{'usage':{}}])
         self.assertIsNone(partial['cost']);self.assertEqual(partial['recorded_cost'],.12)
+    def test_review_http_keeps_baseline_metrics_and_persists_independent_result(self):
+        from plc_agent import dataset
+        task=dataset.load('CUSTOM_09')
+        ModelConfig(base_url='http://localhost:9911/v1',model='author').save(self.app.home)
+        source=(Path(__file__).parent/'fixtures/dataset_r8/tasks/CUSTOM_09/final.st').read_text(encoding='utf-8')
+        calls=[]
+        def answer(provider,messages,*args,**kwargs):
+            calls.append((provider.config.model,messages))
+            provider.metrics.append({'usage':{'total_tokens':10}})
+            return {'text':json.dumps({'summary':'No new justified counterexample','questions':['Unspecified failure policy'], 'scenarios':[]})}
+        checked={'status':'pass','summary':{'scenarios':25,'failed':0},'target_compile':'not_executed'}
+        with patch('plc_agent.local_test_support.backend'),patch('plc_agent.campaign.Trial.check',return_value=checked), \
+             patch.object(ChatProvider,'complete',answer),patch('plc_agent.dataset_workflow.run',side_effect=AssertionError('Review must not run the author')):
+            result=json.loads(self.request('/api/runs',{'task_id':task['id'],'action':'review',
+                'code':source,'codesys':False,'review_model':'independent-reviewer'}))
+            self.app.jobs[result['id']]['thread'].join(10)
+        detail=json.loads(self.request('/api/runs/'+result['id']))
+        self.assertEqual(detail['status'],'review_questions')
+        self.assertEqual(detail['receipt']['metrics_summary']['test_cases_passed'],25)
+        self.assertEqual(detail['receipt']['model_calls'],1)
+        self.assertEqual(detail['receipt']['review']['status'],'review_questions')
+        self.assertEqual(calls[0][0],'independent-reviewer');self.assertEqual(len(calls[0][1]),2)
+        self.assertEqual(detail['code'],source)
+        restarted=Workbench(self.app.home).read_job(result['id'])
+        self.assertEqual(restarted['receipt']['review'],detail['receipt']['review'])
+    def test_review_requires_source_and_valid_model_before_creating_job(self):
+        ModelConfig(base_url='http://localhost:9911/v1',model='author').save(self.app.home)
+        with patch('plc_agent.local_test_support.backend'),patch.object(ChatProvider,'complete') as complete:
+            for values in ({'code':''},{'code':'x','review_model':False}):
+                with self.assertRaises(urllib.error.HTTPError):
+                    self.request('/api/runs',{'task_id':'CUSTOM_09','action':'review','codesys':False,**values})
+        complete.assert_not_called();self.assertEqual(self.app.jobs,{})
     def test_shutdown_refuses_active_work_and_can_close_idle_service(self):
         self.app.campaigns.active['fixture']=threading.Event()
         with self.assertRaises(urllib.error.HTTPError) as rejected:self.request('/api/shutdown',{})

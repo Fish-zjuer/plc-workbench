@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-04",
+  "records": [
+    {
+      "label": "correct",
+      "id": "2026-11-04_22-00-05_CUSTOM_09",
+      "status": "review_questions",
+      "review_status": "review_questions",
+      "model": "deepseek-flash",
+      "model_calls": 1,
+      "usage": {
+        "prompt_tokens": 1449,
+        "completion_tokens": 2474,
+        "total_tokens": 3923,
+        "cost": null,
+        "usage_calls": 1,
+        "complete": true,
+        "cost_complete": false,
+        "recorded_cost": 0.0
+      },
+      "replays": 2,
+      "baseline": "pass",
+      "questions": [
+        "需求1“Initially State=0, CalibReq=TRUE”是否要求上电首次扫描即使 CalibDone=TRUE、Maintenance=FALSE 也必须保持在 0（等待校准）一个扫描周期，而不允许同一首次调用按预扫描态 0 迁移到 1？代码允许首次调用即 0→1，此点语义存在歧义。"
+      ],
+      "message": null,
+      "seconds": 19.25
+    },
+    {
+      "label": "mutant",
+      "id": "2026-11-04_22-00-25_CUSTOM_09",
+      "status": "review_disagreement",
+      "review_status": "review_disagreement",
+      "model": "deepseek-flash",
+      "model_calls": 1,
+      "usage": {
+        "prompt_tokens": 1449,
+        "completion_tokens": 1331,
+        "total_tokens": 2780,
+        "cost": null,
+        "usage_calls": 1,
+        "complete": true,
+        "cost_complete": false,
+        "recorded_cost": 0.0
+      },
+      "replays": 2,
+      "baseline": "fail",
+      "questions": [],
+      "message": null,
+      "seconds": 19.297
+    }
+  ],
+  "scope": "Two DeepSeek-flash HTTP review runs on correct and deliberately mutated CUSTOM_09 using optional local R4. The original supplied tests also reject the mutant. Not a held-out reviewer effectiveness estimate, not vendor or formal validation. The correct candidate has no failed proposed traces but includes a model-generated initialization question, not an accepted defect."
+}

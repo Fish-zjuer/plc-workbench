@@ -140,3 +140,8 @@ API密钥保存在本机 `agent_data/private/`，该目录不纳入源码分发�
 本版以 agent-codesys-cbmc@0cdaaae 为基础，包含 bank32-v6 与形式化修复分支。恢复自定义 Base URL，保留现有服务参数，切换服务不会沿用旧密钥；补全可复现的测试夹具。当前电脑仍缺 CODESYS、PLCverif 与 CBMC，不将源代码接入当作厂商或完整形式化实测。详细记录见 [整合报告](docs/INTEGRATION_20261103.md)。
 
 不用模型重放32份保存候选（需本地备用后端）：`python scripts/check_saved_candidates.py`；开发回归：`python -m unittest discover -s tests -v`。历史终端命令在 `python -m plc_agent.legacy` 下，网页仍由 start.cmd 启动。
+
+
+## 网页独立对抗审查（2026-11-04）
+
+工作台新增“对抗审查”按钮，可为当前 ST 指定同一服务的另一审查模型；模型建议的短轨迹由所选功能后端重放两次，需求疑问与正式测试结果分别保留。审查不自动修改代码或正式预期。编辑后需重新检查。使用方法、当前接口范围与真实 DeepSeek 正反例结果见 [审查说明](docs/WEB_ADVERSARIAL_REVIEW.md)。

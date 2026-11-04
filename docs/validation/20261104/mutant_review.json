@@ -1,0 +1,290 @@
+{
+  "schema": "plc-adversarial-review-v1",
+  "status": "review_disagreement",
+  "source_sha256": "7e8a3e2c0c08af20dcf7e843963d79e8b70102b329a2a4609b0f32288a67bcff",
+  "dataset_sha256": "f768af3132563715c25519a881f52cea6082aa8a21708a3b05529acca83c62f8",
+  "test_backend": "optional_local",
+  "limits": {
+    "scenarios": 3,
+    "scans_per_scenario": 8,
+    "horizon_ms": 60000
+  },
+  "expected_authority": "advisory_model_claim_only",
+  "formal_status": "not_executed",
+  "summary": "发现明确反例：维护结束扫描时，代码将 State=2 直接更新为 1，而需求要求必须先回到 0（等待校准），即使 CalibDone=TRUE；因此 CalibReq 和 MeasurePermit 也会错误。",
+  "questions": [],
+  "proposals": [
+    {
+      "name": "维护结束后首次扫描不得跳过等待校准状态",
+      "basis": "需求2：With Maintenance=FALSE, a pre-scan State of 2 must first move to 0, even if CalibDone=TRUE on the same call. 需求3：CalibReq is TRUE exactly when updated State is 0; MeasurePermit equals current MeasureReq AND updated State=1.",
+      "trace": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Maintenance": true,
+            "CalibDone": false,
+            "MeasureReq": false
+          },
+          "expected": {
+            "State": 2,
+            "CalibReq": false,
+            "MaintLamp": true,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 1000,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 0,
+            "CalibReq": true,
+            "MaintLamp": false,
+            "MeasurePermit": false
+          }
+        },
+        {
+          "time_ms": 2000,
+          "inputs": {
+            "Maintenance": false,
+            "CalibDone": true,
+            "MeasureReq": true
+          },
+          "expected": {
+            "State": 1,
+            "CalibReq": false,
+            "MaintLamp": false,
+            "MeasurePermit": true
+          }
+        }
+      ]
+    }
+  ],
+  "scope": "Repeated execution can confirm a disagreement with model expectations; human review of the cited requirement is still required. No-finding is not correctness proof.",
+  "proposal_sha256": "4892bba4baab78e57c725573557eb22b0ed7596bef67c82c8568beed2c95752f",
+  "replays": [
+    {
+      "status": "fail",
+      "task_id": "CUSTOM_09",
+      "source_sha256": "7e8a3e2c0c08af20dcf7e843963d79e8b70102b329a2a4609b0f32288a67bcff",
+      "dataset_sha256": "f768af3132563715c25519a881f52cea6082aa8a21708a3b05529acca83c62f8",
+      "execution_fingerprint": "64e7402ffe01f23fca0a718caf1439d80dcb44e337c57a0f0c0fb61f5bde8282",
+      "cases": [
+        {
+          "name": "维护结束后首次扫描不得跳过等待校准状态",
+          "status": "fail",
+          "first_failure": {
+            "scan": 1,
+            "output": "State",
+            "expected": 0,
+            "actual": 1.0
+          },
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Maintenance": true,
+                "CalibDone": false,
+                "MeasureReq": false
+              },
+              "expected": {
+                "State": 2,
+                "CalibReq": false,
+                "MaintLamp": true,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 2.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 1.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 1000,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 1.0
+              },
+              "violations": [
+                {
+                  "output": "State",
+                  "expected": 0,
+                  "actual": 1.0
+                },
+                {
+                  "output": "CalibReq",
+                  "expected": true,
+                  "actual": 0.0
+                },
+                {
+                  "output": "MeasurePermit",
+                  "expected": false,
+                  "actual": 1.0
+                }
+              ]
+            },
+            {
+              "time_ms": 2000,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": true
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 1.0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "scenarios": 1,
+        "scans": 3,
+        "assertions": 12,
+        "failed": 1
+      },
+      "target_compile": "not_executed",
+      "ltl_status": "requirements_only_not_executed",
+      "test_backend": "optional_local",
+      "scope": "Optional local STruC++ finite tests; not CODESYS runtime verification."
+    },
+    {
+      "status": "fail",
+      "task_id": "CUSTOM_09",
+      "source_sha256": "7e8a3e2c0c08af20dcf7e843963d79e8b70102b329a2a4609b0f32288a67bcff",
+      "dataset_sha256": "f768af3132563715c25519a881f52cea6082aa8a21708a3b05529acca83c62f8",
+      "execution_fingerprint": "64e7402ffe01f23fca0a718caf1439d80dcb44e337c57a0f0c0fb61f5bde8282",
+      "cases": [
+        {
+          "name": "维护结束后首次扫描不得跳过等待校准状态",
+          "status": "fail",
+          "first_failure": {
+            "scan": 1,
+            "output": "State",
+            "expected": 0,
+            "actual": 1.0
+          },
+          "rows": [
+            {
+              "time_ms": 0,
+              "inputs": {
+                "Maintenance": true,
+                "CalibDone": false,
+                "MeasureReq": false
+              },
+              "expected": {
+                "State": 2,
+                "CalibReq": false,
+                "MaintLamp": true,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 2.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 1.0,
+                "MeasurePermit": 0.0
+              },
+              "violations": []
+            },
+            {
+              "time_ms": 1000,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 0,
+                "CalibReq": true,
+                "MaintLamp": false,
+                "MeasurePermit": false
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 1.0
+              },
+              "violations": [
+                {
+                  "output": "State",
+                  "expected": 0,
+                  "actual": 1.0
+                },
+                {
+                  "output": "CalibReq",
+                  "expected": true,
+                  "actual": 0.0
+                },
+                {
+                  "output": "MeasurePermit",
+                  "expected": false,
+                  "actual": 1.0
+                }
+              ]
+            },
+            {
+              "time_ms": 2000,
+              "inputs": {
+                "Maintenance": false,
+                "CalibDone": true,
+                "MeasureReq": true
+              },
+              "expected": {
+                "State": 1,
+                "CalibReq": false,
+                "MaintLamp": false,
+                "MeasurePermit": true
+              },
+              "actual": {
+                "State": 1.0,
+                "CalibReq": 0.0,
+                "MaintLamp": 0.0,
+                "MeasurePermit": 1.0
+              },
+              "violations": []
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "scenarios": 1,
+        "scans": 3,
+        "assertions": 12,
+        "failed": 1
+      },
+      "target_compile": "not_executed",
+      "ltl_status": "requirements_only_not_executed",
+      "test_backend": "optional_local",
+      "scope": "Optional local STruC++ finite tests; not CODESYS runtime verification."
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-04",
+  "base_commit": "ea42b6ebcd41228d7c3e41ee526a9aafa9550751",
+  "branch": "feature-web-review-20261104",
+  "full_regression": {
+    "tests": 305,
+    "passed": 304,
+    "skipped": 1,
+    "seconds": 206.883,
+    "log_sha256": "349c63d3686a44ce8052cc4844f506797cd5ad65b96bfc3fcdcbcde336eed1d5"
+  },
+  "final_focused_regression": {
+    "tests": 24,
+    "passed": 24,
+    "scope": "Review module and HTTP boundary, including final provider-error preservation",
+    "log_sha256": "898206241d5f3fb07a3345f83d4fadaba3243b0d3b86a9f1f9e7ed003b2ae77e"
+  },
+  "live_model": {
+    "calls": 2,
+    "model": "deepseek-flash",
+    "tokens": 6703,
+    "test_backend": "optional_local R4",
+    "correct": "review_questions; all proposed traces passed",
+    "mutant": "review_disagreement; two identical replays; expected State=0, actual=1",
+    "cost": null
+  },
+  "final_saved_advice_replay": [
+    {
+      "label": "correct",
+      "status": "review_questions",
+      "source_sha256": "4d77a38e301198696eead9008961a48eb0a94ecc220fd65c7e82aed612c65832",
+      "model_calls": 0,
+      "replays": 2
+    },
+    {
+      "label": "mutant",
+      "status": "review_disagreement",
+      "source_sha256": "7e8a3e2c0c08af20dcf7e843963d79e8b70102b329a2a4609b0f32288a67bcff",
+      "model_calls": 0,
+      "replays": 2
+    }
+  ],
+  "ui": {
+    "review_history": "verified",
+    "code_edit_invalidates_display": "verified",
+    "review_button_and_model_input": "verified"
+  },
+  "limits": [
+    "The deliberately wrong candidate also fails original tests; no new-coverage or reviewer-accuracy claim.",
+    "CODESYS routing was checked with mocks; no local vendor installation.",
+    "No TIA runtime or full LTL verification executed.",
+    "Web plan mode, summary compression and batch review are still separate future work."
+  ]
+}
