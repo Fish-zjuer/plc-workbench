@@ -143,7 +143,7 @@ TIA 与 CODESYS 共用 Trial/Campaign、冻结题库、判卷器及 PLCverif/CBM
 
 - [最终结果](reports/tia_final_20261104/README.md)
 - [TIA 配置与使用](docs/TIA_VERIFICATION.md)
-- [基线兼容性与复现](docs/TIA_BASELINE_COMPATIBILITY.md)
-- [可选试用通知辅助工具](docs/TIA_TRIAL_ACK.md)
+- [基线兼容性与复现](docs/TIA_VERIFICATION.md#复现最终验收)
+- [可选试用通知辅助工具](docs/TIA_VERIFICATION.md#可选试用通知监听器)
 
 不用模型重放保存候选：`python scripts/check_tia_complex.py --output outputs/tia_replay_new`。基线形式化对照：`python scripts/check_tia_baseline.py --output outputs/tia_pairs_new`。

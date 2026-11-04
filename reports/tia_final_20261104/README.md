@@ -57,4 +57,4 @@ ST/SCL 每对使用同一任务快照、原规约、输入域、调用方存储�
 - `behavior/`：已通过的原生行为源码与结果。
 - `files.sha256.json`：本目录其他文件的校验和。
 
-复现入口见 [基线兼容性说明](../../docs/TIA_BASELINE_COMPATIBILITY.md)与 [TIA 使用说明](../../docs/TIA_VERIFICATION.md)。
+配置、适配边界与复现命令统一见 [TIA 使用说明](../../docs/TIA_VERIFICATION.md)。
