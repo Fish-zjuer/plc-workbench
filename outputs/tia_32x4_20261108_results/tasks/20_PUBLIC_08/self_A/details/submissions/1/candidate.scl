@@ -1,0 +1,63 @@
+FUNCTION_BLOCK "Q08"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    count : DINT;
+END_VAR
+
+VAR_IN_OUT
+    analogValues : ARRAY[*] OF INT;
+    channels : ARRAY[*] OF ST_AnalogChannel;
+END_VAR
+
+VAR_TEMP
+    i : DINT;
+    idxRaw : DINT;
+    idxCh : DINT;
+    rawInt : INT;
+    rawReal : REAL;
+    span : REAL;
+END_VAR
+
+BEGIN
+    #i := 0;
+    WHILE #i < #count DO
+        #idxRaw := LOWER_BOUND(ARR := #analogValues, DIM := 1) + #i;
+        #idxCh := LOWER_BOUND(ARR := #channels, DIM := 1) + #i;
+
+        #channels[#idxCh].retVal := 16#0000;
+
+        IF #channels[#idxCh].enable THEN
+            IF (#channels[#idxCh].measuringMode <> 0)
+                AND (#channels[#idxCh].measuringMode <> 1)
+                AND (#channels[#idxCh].measuringMode <> 2) THEN
+                #channels[#idxCh].retVal := 16#8001;
+            ELSIF #channels[#idxCh].hiLIM <= #channels[#idxCh].loLIM THEN
+                #channels[#idxCh].retVal := 16#8002;
+            ELSE
+                #rawInt := #analogValues[#idxRaw];
+                #rawReal := INT_TO_REAL(#rawInt);
+                #span := #channels[#idxCh].hiLIM - #channels[#idxCh].loLIM;
+
+                CASE #channels[#idxCh].measuringMode OF
+                    0:
+                        IF #channels[#idxCh].bipolar THEN
+                            #channels[#idxCh].outputValue := #channels[#idxCh].loLIM
+                                + (#rawReal + 27648.0) * #span / 55296.0;
+                        ELSE
+                            #channels[#idxCh].outputValue := #channels[#idxCh].loLIM
+                                + #rawReal * #span / 27648.0;
+                        END_IF;
+                    1:
+                        #channels[#idxCh].outputValue := #rawReal / 10.0;
+                    2:
+                        #channels[#idxCh].outputValue := #rawReal / 100.0;
+                END_CASE;
+                #channels[#idxCh].retVal := 16#0000;
+            END_IF;
+        END_IF;
+
+        #i := #i + 1;
+    END_WHILE;
+END_FUNCTION_BLOCK

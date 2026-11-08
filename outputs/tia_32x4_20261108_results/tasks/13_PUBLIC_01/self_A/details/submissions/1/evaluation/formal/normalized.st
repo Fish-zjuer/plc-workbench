@@ -1,0 +1,69 @@
+FUNCTION_BLOCK Q01
+
+VAR_INPUT
+   bottleSensor : BOOL;
+   cleaningConfirmButton : BOOL;
+   fillingConfirmButton : BOOL;
+   cappingConfirmButton : BOOL;
+   packingConfirmButton : BOOL;
+   finishedButton : BOOL;
+END_VAR
+
+VAR_OUTPUT
+   Pump_Motor : BOOL;
+   Filling_Valve : BOOL;
+   Capping_Machine : BOOL;
+   Packing_Machine : BOOL;
+   Completion_Light : BOOL;
+END_VAR
+
+VAR
+   stage : INT := 0;
+END_VAR
+
+     
+   // stage: 0=idle, 1=clean, 2=fill, 3=cap, 4=pack, 5=done
+
+   CASE stage OF
+      0: // idle
+         IF bottleSensor THEN
+            stage := 1;
+         END_IF;
+
+      1: // cleaning
+         IF cleaningConfirmButton THEN
+            stage := 2;
+         END_IF;
+
+      2: // filling
+         IF fillingConfirmButton THEN
+            stage := 3;
+         END_IF;
+
+      3: // capping
+         IF cappingConfirmButton THEN
+            stage := 4;
+         END_IF;
+
+      4: // packing
+         IF packingConfirmButton THEN
+            stage := 5;
+         END_IF;
+
+      5: // done
+         IF finishedButton THEN
+            stage := 0;
+         END_IF;
+
+      ELSE
+         stage := 0;
+   END_CASE;
+
+   // Outputs based on current stage (mutually exclusive)
+   Pump_Motor := (stage = 1);
+   Filling_Valve := (stage = 2);
+   Capping_Machine := (stage = 3);
+   Packing_Machine := (stage = 4);
+   Completion_Light := (stage = 5);
+
+END_FUNCTION_BLOCK

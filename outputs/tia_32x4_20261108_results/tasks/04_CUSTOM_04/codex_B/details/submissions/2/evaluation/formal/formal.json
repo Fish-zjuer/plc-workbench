@@ -1,0 +1,49 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "f180314091e607793e74ad250902d133016a46334cd11ce6aa10480f406cf5b1",
+  "declared_ltl_total": 7,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(Error <-> !valid)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(geometryMatch)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G((!valid) -> (MotorRPM=0 & !LimitHit & StoredLength=pre.length & Diameter=pre.diameter))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G((valid & init) -> (Diameter=InitialD & MotorRPM=0 & !LimitHit))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G((valid & !init) -> (LimitHit <-> (raw<0 | raw>Lmax)))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(0<=StoredLength & StoredLength<=Lmax & 76<=Diameter & Diameter<=140)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(-6000<=MotorRPM & MotorRPM<=6000)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

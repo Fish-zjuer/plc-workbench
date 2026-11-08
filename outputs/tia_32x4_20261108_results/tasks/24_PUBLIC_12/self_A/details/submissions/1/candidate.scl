@@ -1,0 +1,76 @@
+FUNCTION_BLOCK "Q12"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      THICKNESS_FAULT : BOOL;
+      THICKNESS_SIGNAL_VALID : BOOL;
+      CUTTING_RUN : BOOL;
+      FaultTimestamp : DINT;
+      CycleTime : TIME;
+   END_VAR 
+   VAR_OUTPUT 
+      THICKNESS_ALARM : BOOL;
+      Slab_Fault_Counter : UINT;
+      Slab_Runtime_Accumulator : LTIME;
+      Slab_Fault_History : ARRAY[0..4] OF DINT;
+   END_VAR 
+   VAR 
+      InitDone : BOOL;
+      PrevValidFault : BOOL;
+      HoldTimer : TON_TIME;
+      i : INT;
+   END_VAR 
+
+   BEGIN
+      // Power-up initialization
+      IF NOT #InitDone THEN
+         #InitDone := TRUE;
+         #Slab_Fault_Counter := 0;
+         #Slab_Runtime_Accumulator := LINT_TO_LTIME(0);
+         FOR #i := 0 TO 4 DO
+            #Slab_Fault_History[#i] := 0;
+         END_FOR;
+         #PrevValidFault := FALSE;
+         #THICKNESS_ALARM := FALSE;
+         #HoldTimer(IN := FALSE, PT := T#0ms);
+      END_IF;
+
+      // Valid fault definition
+      IF NOT #THICKNESS_SIGNAL_VALID THEN
+         // Signal invalid: switch off alarm and clear holding state
+         #THICKNESS_ALARM := FALSE;
+         #HoldTimer(IN := FALSE, PT := T#500ms);
+         #PrevValidFault := FALSE;
+      ELSE
+         // Rising edge of valid fault -> count and record history
+         IF #THICKNESS_FAULT AND NOT #PrevValidFault THEN
+            IF #Slab_Fault_Counter < 65535 THEN
+               #Slab_Fault_Counter := #Slab_Fault_Counter + 1;
+            END_IF;
+            FOR #i := 4 DOWNTO 1 DO
+               #Slab_Fault_History[#i] := #Slab_Fault_History[#i - 1];
+            END_FOR;
+            #Slab_Fault_History[0] := #FaultTimestamp;
+            // Restart hold timer for each triggered alarm
+            #HoldTimer(IN := FALSE, PT := T#500ms);
+         END_IF;
+         #PrevValidFault := #THICKNESS_FAULT;
+
+         // Alarm: active while fault present, or held for at least 500 ms after last trigger
+         IF #THICKNESS_FAULT THEN
+            #THICKNESS_ALARM := TRUE;
+            #HoldTimer(IN := TRUE, PT := T#500ms);
+         ELSE
+            #HoldTimer(IN := NOT #HoldTimer.Q, PT := T#500ms);
+            IF #HoldTimer.Q THEN
+               #THICKNESS_ALARM := FALSE;
+            END_IF;
+         END_IF;
+      END_IF;
+
+      // Runtime accumulation: only while cutting, valid signal, and no fault
+      IF #CUTTING_RUN AND #THICKNESS_SIGNAL_VALID AND NOT #THICKNESS_FAULT THEN
+         #Slab_Runtime_Accumulator := #Slab_Runtime_Accumulator + TIME_TO_LTIME(#CycleTime);
+      END_IF;
+
+   END_FUNCTION_BLOCK

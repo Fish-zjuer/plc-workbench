@@ -1,0 +1,121 @@
+FUNCTION_BLOCK "Q10"
+VERSION : 0.1
+VAR_INPUT
+    TemperatureSensorInput : REAL;
+    SetTemperature : REAL;
+END_VAR
+VAR_OUTPUT
+    CurrentTemperature : REAL;
+    SetTempDisplay : REAL;
+    HeaterStatus : BOOL;
+    OverheatProtection : BOOL;
+    HeaterOutput : BOOL;
+END_VAR
+VAR
+    timerHeat : TON_TIME;
+    timerCool : TON_TIME;
+    sensorFault : BOOL;
+    demand : BOOL;
+    protectionActive : BOOL; // Internal state to track if we are in the protection/cooling phase
+    initialScan : BOOL := TRUE; // To handle initialization warnings cleanly if needed, though static vars init to 0/FALSE
+END_VAR
+BEGIN
+    // 6. Provide status indication: Display current and set temperature
+    #CurrentTemperature := #TemperatureSensorInput;
+    #SetTempDisplay := #SetTemperature;
+
+    // 7. Sensor fault judgment: < 0 or > 100
+    IF (#TemperatureSensorInput < 0.0) OR (#TemperatureSensorInput > 100.0) THEN
+        #sensorFault := TRUE;
+    ELSE
+        #sensorFault := FALSE;
+    END_IF;
+
+    // 2. Compare actual vs set temperature
+    // If actual < set, we need heating (demand)
+    // Note: If equal, demand is false (heater off), which satisfies requirement 4 implicitly for >= case.
+    IF NOT #sensorFault AND (#TemperatureSensorInput < #SetTemperature) THEN
+        #demand := TRUE;
+    ELSE
+        #demand := FALSE;
+    END_IF;
+
+    // State Machine Logic for Overheating Protection
+    
+    // Default assumption: Heater is OFF unless conditions allow it and no protection is active.
+    #HeaterOutput := FALSE;
+
+    IF #sensorFault THEN
+        // Requirement 7: Turn off heater on fault. Reset protection state? 
+        // Usually, a fault overrides everything. We keep protectionActive as is or reset it?
+        // Spec says "must wait... before overheating protection can be lifted". 
+        // If fault occurs during cooling, heater stays off. 
+        // If fault clears, does protection resume? Yes, usually protection state persists until cooled.
+        // However, to be safe against logic loops, we just force output off.
+        #HeaterOutput := FALSE;
+        #OverheatProtection := #protectionActive; // Reflect internal state
+        
+        // Timers behavior during fault:
+        // Heat timer should stop counting if output is forced low. IN=FALSE resets it.
+        // Cool timer continues if protection is active, regardless of sensor fault? 
+        // Physically, if sensor fails, we don't know temp. But protection is about time since last overheat event.
+        // It is safer to let the cool timer run if protection was already triggered, so it lifts naturally after 3s.
+        #timerCool(IN := #protectionActive, PT := T#3s);
+        
+        // Check if cooling finished while in fault (or any other state where protectionActive is true)
+        IF #timerCool.Q AND #protectionActive THEN
+            #protectionActive := FALSE;
+        END_IF;
+        
+        #OverheatProtection := #protectionActive;
+        #HeaterStatus := FALSE;
+        RETURN;
+    END_IF;
+
+    // Normal Operation Path (No Sensor Fault)
+
+    // Step 1: Handle Cooling Timer
+    // The cooling timer runs ONLY when protection is active.
+    #timerCool(IN := #protectionActive, PT := T#3s);
+
+    // Step 2: Check if Protection should be released
+    // If protection is active AND cooling time has elapsed, release protection.
+    IF #protectionActive AND #timerCool.Q THEN
+        #protectionActive := FALSE;
+    END_IF;
+
+    // Update Output Status based on internal protection state
+    #OverheatProtection := #protectionActive;
+
+    // Step 3: Determine Heater Output Intent
+    // Heater ON only if: No Fault (already checked), Demand exists, AND Protection is NOT active.
+    IF #demand AND NOT #protectionActive THEN
+        #HeaterOutput := TRUE;
+    ELSE
+        #HeaterOutput := FALSE;
+    END_IF;
+
+    // Step 4: Handle Heating Duration Timer (Overrun Detection)
+    // This timer counts how long the heater HAS BEEN ON continuously.
+    // IN is connected to the calculated HeaterOutput.
+    #timerHeat(IN := #HeaterOutput, PT := T#5s);
+
+    // Step 5: Check for Overrun (>5s continuous heating)
+    // If the timer Q becomes TRUE, it means we have heated for >= 5s.
+    // Requirement 5: Trigger overheating protection, turn off heater, wait 3s.
+    IF #timerHeat.Q THEN
+        // Trigger Protection
+        #protectionActive := TRUE;
+        // Force Heater Off immediately for this scan cycle
+        #HeaterOutput := FALSE;
+        // Update Output Status
+        #OverheatProtection := TRUE;
+        
+        // Note: Once protectionActive is TRUE, the next scan will start the Cool Timer.
+        // The Heat Timer will also see IN=FALSE (since HeaterOutput is now FALSE) and reset itself.
+    END_IF;
+
+    // Final Status Indication
+    #HeaterStatus := #HeaterOutput;
+
+END_FUNCTION_BLOCK

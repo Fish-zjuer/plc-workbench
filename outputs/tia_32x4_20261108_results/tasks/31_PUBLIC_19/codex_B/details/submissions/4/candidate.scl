@@ -1,0 +1,206 @@
+FUNCTION_BLOCK "Q19"
+VERSION : 0.1
+VAR_INPUT
+    ManualMode : BOOL;
+    SingleStepMode : BOOL;
+    SingleCycleMode : BOOL;
+    ContinuousMode : BOOL;
+    EmergencyStop : BOOL;
+    Start : BOOL;
+    DownButton : BOOL;
+    UpButton : BOOL;
+    LeftButton : BOOL;
+    RightButton : BOOL;
+    GripButton : BOOL;
+    ReleaseButton : BOOL;
+    DownLimitSwitch : BOOL;
+    UpLimitSwitch : BOOL;
+    LeftLimitSwitch : BOOL;
+    RightLimitSwitch : BOOL;
+    GripLimitSwitch : BOOL;
+    ReleaseLimitSwitch : BOOL;
+END_VAR
+VAR_OUTPUT
+    MoveDown : BOOL;
+    MoveUp : BOOL;
+    MoveLeft : BOOL;
+    MoveRight : BOOL;
+    ActivateGrip : BOOL;
+    ActivateRelease : BOOL;
+END_VAR
+VAR
+    Step : INT := 0;
+    StartPrev : BOOL := FALSE;
+    StartRise : BOOL := FALSE;
+    AutoRun : BOOL := FALSE;
+    ManCmd : INT := 0;
+    CmdId : INT := 0;
+    ManLimit : BOOL := FALSE;
+    ActLimit : BOOL := FALSE;
+    CycleDone : BOOL := FALSE;
+END_VAR
+BEGIN
+    // ---- rising edge of the start button ----
+    #StartRise := #Start AND NOT #StartPrev;
+    #StartPrev := #Start;
+
+    // ---- action requested from the manual control panel ----
+    IF #DownButton THEN
+        #ManCmd := 1;
+    ELSIF #UpButton THEN
+        #ManCmd := 2;
+    ELSIF #LeftButton THEN
+        #ManCmd := 3;
+    ELSIF #RightButton THEN
+        #ManCmd := 4;
+    ELSIF #GripButton THEN
+        #ManCmd := 5;
+    ELSIF #ReleaseButton THEN
+        #ManCmd := 6;
+    ELSE
+        #ManCmd := 0;
+    END_IF;
+
+    // ---- in-position feedback of the manually requested action ----
+    CASE #ManCmd OF
+        1: #ManLimit := #DownLimitSwitch;
+        2: #ManLimit := #UpLimitSwitch;
+        3: #ManLimit := #LeftLimitSwitch;
+        4: #ManLimit := #RightLimitSwitch;
+        5: #ManLimit := #GripLimitSwitch;
+        6: #ManLimit := #ReleaseLimitSwitch;
+    ELSE
+        #ManLimit := TRUE;
+    END_CASE;
+
+    // ---- automatic sequence: a step is only entered when the action can still run ----
+    IF NOT #EmergencyStop THEN
+        // an emergency stop interrupts every action and the running sequence
+        #Step := 0;
+        #AutoRun := FALSE;
+        #CycleDone := FALSE;
+    ELSIF (#ManualMode OR #SingleStepMode OR #SingleCycleMode OR #ContinuousMode) THEN
+        IF #ManualMode THEN
+            // manual operation: the automatic program is idle
+            #Step := 0;
+            #AutoRun := FALSE;
+            #CycleDone := FALSE;
+        ELSE
+            CASE #Step OF
+                0, 9:
+                    // idle in the initial position or cycle completed
+                    IF #ManualMode THEN
+                        #Step := 0;
+                    ELSIF #SingleStepMode THEN
+                        // one confirmation per action
+                        IF #StartRise THEN
+                            #Step := 1;
+                        END_IF;
+                    ELSIF #SingleCycleMode THEN
+                        #CycleDone := (#Step >= 9);
+                        IF #StartRise THEN
+                            #Step := 1;
+                            #AutoRun := TRUE;
+                            #CycleDone := FALSE;
+                        END_IF;
+                    ELSE
+                        // continuous mode: the cycle restarts automatically
+                        IF #StartRise OR #AutoRun THEN
+                            #Step := 1;
+                            #AutoRun := TRUE;
+                        END_IF;
+                        #CycleDone := FALSE;
+                    END_IF;
+                1, 5:
+                    IF #DownLimitSwitch THEN
+                        #Step := #Step + 1;
+                    END_IF;
+                2:
+                    IF #GripLimitSwitch THEN
+                        #Step := #Step + 1;
+                    END_IF;
+                3, 7:
+                    IF #UpLimitSwitch THEN
+                        #Step := #Step + 1;
+                    END_IF;
+                4:
+                    IF #RightLimitSwitch THEN
+                        #Step := #Step + 1;
+                    END_IF;
+                6:
+                    IF #ReleaseLimitSwitch THEN
+                        #Step := #Step + 1;
+                    END_IF;
+                8:
+                    IF #LeftLimitSwitch THEN
+                        #Step := 9;
+                    END_IF;
+            ELSE
+                #Step := 0;
+            END_CASE;
+
+            IF #SingleStepMode AND (#Step >= 9) THEN
+                // single step waits for a new confirmation before a new action
+                #Step := 9;
+            END_IF;
+            IF #SingleCycleMode AND (#Step >= 9) THEN
+                #CycleDone := TRUE;
+                #AutoRun := FALSE;
+            END_IF;
+        END_IF;
+    ELSE
+        // no mode selected
+        #Step := 0;
+        #AutoRun := FALSE;
+        #CycleDone := FALSE;
+    END_IF;
+
+    // ---- automatic action belonging to the current step ----
+    CASE #Step OF
+        1: #CmdId := 1;    // down
+        2: #CmdId := 5;    // grip
+        3: #CmdId := 2;    // up
+        4: #CmdId := 4;    // right
+        5: #CmdId := 1;    // down
+        6: #CmdId := 6;    // release
+        7: #CmdId := 2;    // up
+        8: #CmdId := 3;    // left
+    ELSE
+        #CmdId := 0;       // idle / cycle completed
+    END_CASE;
+
+    CASE #CmdId OF
+        1: #ActLimit := #DownLimitSwitch;
+        2: #ActLimit := #UpLimitSwitch;
+        3: #ActLimit := #LeftLimitSwitch;
+        4: #ActLimit := #RightLimitSwitch;
+        5: #ActLimit := #GripLimitSwitch;
+        6: #ActLimit := #ReleaseLimitSwitch;
+    ELSE
+        #ActLimit := TRUE;
+    END_CASE;
+
+    // ---- output decoding ----
+    IF #ManualMode THEN
+        // manual action: commanded while the button is pressed and the position is not reached
+        IF (NOT #EmergencyStop) OR #ManLimit THEN
+            #ManCmd := 0;
+        END_IF;
+        #MoveDown := (#ManCmd = 1);
+        #MoveUp := (#ManCmd = 2);
+        #MoveLeft := (#ManCmd = 3);
+        #MoveRight := (#ManCmd = 4);
+        #ActivateGrip := (#ManCmd = 5);
+        #ActivateRelease := (#ManCmd = 6);
+    ELSE
+        IF (NOT #EmergencyStop) OR #ActLimit THEN
+            #CmdId := 0;
+        END_IF;
+        #MoveDown := (#CmdId = 1);
+        #MoveUp := (#CmdId = 2);
+        #MoveLeft := (#CmdId = 3);
+        #MoveRight := (#CmdId = 4);
+        #ActivateGrip := (#CmdId = 5);
+        #ActivateRelease := (#CmdId = 6);
+    END_IF;
+END_FUNCTION_BLOCK

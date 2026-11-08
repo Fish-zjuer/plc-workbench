@@ -1,0 +1,68 @@
+FUNCTION_BLOCK "Q13"
+VERSION : 0.1
+   VAR_INPUT
+      OCCUPANCY_DETECTED : Bool;
+      ENERGY_SAVING_MODE : Bool;
+      HVAC_MODE_SELECTOR : Int;
+   END_VAR
+   VAR_OUTPUT
+      SUPPLY_FAN_RUN : Bool;
+      TEMP_SETPOINT_ADJUST : Int;
+   END_VAR
+   VAR
+      delayTimer : TON;
+      eligible : Bool;
+      normalCalculation : Bool;
+      adjustValue : Int;
+      initialDone : Bool;
+   END_VAR
+BEGIN
+   IF NOT #initialDone THEN
+      #initialDone := TRUE;
+      #SUPPLY_FAN_RUN := FALSE;
+      #TEMP_SETPOINT_ADJUST := 0;
+   END_IF;
+
+   #eligible := #OCCUPANCY_DETECTED AND (#HVAC_MODE_SELECTOR <> 3);
+   #delayTimer(IN := #eligible, PT := T#30s);
+   #SUPPLY_FAN_RUN := #eligible AND #delayTimer.Q;
+
+   #normalCalculation := (#HVAC_MODE_SELECTOR >= 0) AND (#HVAC_MODE_SELECTOR <= 3);
+   #adjustValue := 0;
+   IF #normalCalculation THEN
+      CASE #HVAC_MODE_SELECTOR OF
+         0:
+            IF #OCCUPANCY_DETECTED THEN
+               #adjustValue := 0;
+            ELSIF #ENERGY_SAVING_MODE THEN
+               #adjustValue := 3;
+            ELSE
+               #adjustValue := 2;
+            END_IF;
+         1:
+            IF #OCCUPANCY_DETECTED THEN
+               #adjustValue := 0;
+            ELSE
+               #adjustValue := 1;
+            END_IF;
+         2:
+            IF #OCCUPANCY_DETECTED THEN
+               #adjustValue := 0;
+            ELSE
+               #adjustValue := 4;
+            END_IF;
+         3:
+            #adjustValue := 4;
+         ELSE
+            #adjustValue := 0;
+      END_CASE;
+   END_IF;
+
+   IF #adjustValue > 4 THEN
+      #adjustValue := 4;
+   ELSIF #adjustValue < -4 THEN
+      #adjustValue := -4;
+   END_IF;
+
+   #TEMP_SETPOINT_ADJUST := #adjustValue;
+END_FUNCTION_BLOCK

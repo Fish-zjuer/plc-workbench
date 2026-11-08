@@ -1,0 +1,49 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "e2d26e84fbde1c813b595f83f76f45f17213519f59e80f5b9b5aaa57e2ea8be6",
+  "declared_ltl_total": 7,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(initializing -> !Operator_Alert)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(initializing -> Weld_Soft_Start_Active)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(!initializing -> !Weld_Soft_Start_Active)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(!Weld_E_Stop_NC -> !Operator_Alert)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(!Gap_Exceeded -> !Operator_Alert)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(!initializing & Weld_E_Stop_NC & gapReady -> Operator_Alert)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(Operator_Alert -> !initializing & Weld_E_Stop_NC & gapReady)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

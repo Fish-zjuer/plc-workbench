@@ -1,0 +1,129 @@
+FUNCTION_BLOCK "IPv4Parser"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      ipText : STRING[254];
+   END_VAR
+   VAR_OUTPUT
+      ipValue : UDINT;
+   END_VAR
+   VAR_TEMP
+      sTemp : STRING[254];
+      lenTotal : INT;
+      lenCur : INT;
+      i : INT;
+      j : INT;
+      segCount : INT;
+      digitCount : INT;
+      segValue : INT;
+      ch : CHAR;
+      bInvalid : BOOL;
+      bDone : BOOL;
+      val32 : UDINT;
+   END_VAR
+BEGIN
+   // 初始化输出为 0，保证非法输入及 0.0.0.0 均为 0
+   #ipValue := 0;
+   #bInvalid := FALSE;
+   #segCount := 0;
+   #digitCount := 0;
+   #segValue := 0;
+   #val32 := 0;
+
+   // 复制输入字符串，避免直接操作接口字符串
+   #sTemp := #ipText;
+   #lenTotal := LEN(#sTemp);
+
+   // 四段十进制，最多 4*3 + 3 = 15 字符；超过 254 字符串本身不可能，
+   // 但空串或超长（>15）直接判非法
+   IF #lenTotal <= 0 OR #lenTotal > 15 THEN
+      #bInvalid := TRUE;
+   END_IF;
+
+   IF NOT #bInvalid THEN
+      // 逐字符解析
+      #bDone := FALSE;
+      #i := 1;
+      WHILE (#i <= #lenTotal) AND NOT #bDone DO
+         #ch := #sTemp[#i];
+
+         IF (#ch >= '0') AND (#ch <= '9') THEN
+            // 数字字符：累积段值
+            #digitCount := #digitCount + 1;
+            IF #digitCount > 3 THEN
+               // 单段超过 3 位数字，非法
+               #bInvalid := TRUE;
+               #bDone := TRUE;
+            ELSE
+               #segValue := #segValue * 10 + (CHAR_TO_INT(#ch) - CHAR_TO_INT('0'));
+               IF #segValue > 255 THEN
+                  // 段值超范围，非法（提前终止）
+                  #bInvalid := TRUE;
+                  #bDone := TRUE;
+               END_IF;
+            END_IF;
+
+         ELSIF #ch = '.' THEN
+            // 点分隔符：要求当前段非空
+            IF #digitCount = 0 THEN
+               #bInvalid := TRUE;
+               #bDone := TRUE;
+            ELSE
+               // 提交段值
+               CASE #segCount OF
+                  0: #val32 := #val32 OR (SHL(UDINT#0, 0)); // 占位，稍后统一计算
+               END_CASE;
+               // 记录段值到临时数组的替换：直接用变量累积
+               // 通过位移方式累加
+               CASE #segCount OF
+                  0: #val32 := SHL(INT_TO_UDINT(#segValue), 24);
+                  1: #val32 := #val32 OR SHL(INT_TO_UDINT(#segValue), 16);
+                  2: #val32 := #val32 OR SHL(INT_TO_UDINT(#segValue), 8);
+                  ELSE
+                     #bInvalid := TRUE;
+                     #bDone := TRUE;
+               END_CASE;
+               #segCount := #segCount + 1;
+               #segValue := 0;
+               #digitCount := 0;
+            END_IF;
+
+         ELSE
+            // 非数字非点字符，非法
+            #bInvalid := TRUE;
+            #bDone := TRUE;
+         END_IF;
+
+         #i := #i + 1;
+      END_WHILE;
+
+      // 处理最后一段（未遇到结尾点）
+      IF NOT #bInvalid THEN
+         IF #digitCount = 0 THEN
+            // 以点结尾或空段，非法
+            #bInvalid := TRUE;
+         ELSE
+            CASE #segCount OF
+               0: #val32 := SHL(INT_TO_UDINT(#segValue), 24);
+               1: #val32 := #val32 OR SHL(INT_TO_UDINT(#segValue), 16);
+               2: #val32 := #val32 OR SHL(INT_TO_UDINT(#segValue), 8);
+               3: #val32 := #val32 OR INT_TO_UDINT(#segValue);
+               ELSE
+                  #bInvalid := TRUE;
+            END_CASE;
+            #segCount := #segCount + 1;
+         END_IF;
+      END_IF;
+
+      // 必须恰好 4 段
+      IF #segCount <> 4 THEN
+         #bInvalid := TRUE;
+      END_IF;
+   END_IF;
+
+   IF #bInvalid THEN
+      #ipValue := 0;
+   ELSE
+      #ipValue := #val32;
+   END_IF;
+END_FUNCTION_BLOCK

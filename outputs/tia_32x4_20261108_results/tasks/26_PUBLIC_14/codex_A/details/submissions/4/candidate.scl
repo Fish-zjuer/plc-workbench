@@ -1,0 +1,87 @@
+FUNCTION_BLOCK "IPv4Parser"
+VERSION : 0.1
+
+VAR_INPUT
+    ipText : "STRING[254]";
+END_VAR
+
+VAR_OUTPUT
+    ipValue : UDINT;
+END_VAR
+
+VAR_TEMP
+    i : INT;
+    len : INT;
+    segNo : INT;
+    segVal : UDINT;
+    digitCnt : INT;
+    c : BYTE;
+    bad : BOOL;
+    v1 : UDINT;
+    v2 : UDINT;
+    v3 : UDINT;
+    v4 : UDINT;
+END_VAR
+
+BEGIN
+    #ipValue := 0;
+    #v1 := 0;
+    #v2 := 0;
+    #v3 := 0;
+    #v4 := 0;
+    #segNo := 1;
+    #segVal := 0;
+    #digitCnt := 0;
+    #bad := FALSE;
+    #len := LEN(#ipText);
+
+    IF #len = 0 OR #len > 15 THEN
+        #bad := TRUE;
+    END_IF;
+
+    IF NOT #bad THEN
+        FOR #i := 1 TO #len DO
+            #c := #ipText[#i];
+            IF #c >= 48 AND #c <= 57 THEN
+                #digitCnt := #digitCnt + 1;
+                IF #digitCnt > 3 THEN
+                    #bad := TRUE;
+                ELSE
+                    #segVal := #segVal * 10 + DINT_TO_UDINT(BYTE_TO_DINT(#c) - 48);
+                END_IF;
+            ELSIF #c = 46 THEN
+                IF #digitCnt = 0 OR #segVal > 255 THEN
+                    #bad := TRUE;
+                ELSE
+                    CASE #segNo OF
+                        1: #v1 := #segVal;
+                        2: #v2 := #segVal;
+                        3: #v3 := #segVal;
+                        ELSE
+                            #bad := TRUE;
+                    END_CASE;
+                    #segNo := #segNo + 1;
+                    #segVal := 0;
+                    #digitCnt := 0;
+                END_IF;
+            ELSE
+                #bad := TRUE;
+            END_IF;
+        END_FOR;
+    END_IF;
+
+    IF NOT #bad THEN
+        IF #digitCnt = 0 OR #segVal > 255 OR #segNo <> 4 THEN
+            #bad := TRUE;
+        ELSE
+            #v4 := #segVal;
+        END_IF;
+    END_IF;
+
+    IF NOT #bad THEN
+        #ipValue := SHL(UDINT#0, 0);
+        #ipValue := (#v1 * 16777216) + (#v2 * 65536) + (#v3 * 256) + #v4;
+    ELSE
+        #ipValue := 0;
+    END_IF;
+END_FUNCTION_BLOCK

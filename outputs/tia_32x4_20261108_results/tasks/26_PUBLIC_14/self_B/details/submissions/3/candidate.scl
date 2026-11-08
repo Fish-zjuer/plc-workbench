@@ -1,0 +1,154 @@
+FUNCTION_BLOCK "IPv4Parser"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    ipText : STRING[254];
+END_VAR
+
+VAR_OUTPUT
+    ipValue : UDINT;
+END_VAR
+
+VAR_TEMP
+    len : INT;
+    i : INT;
+    currentChar : CHAR;
+    segmentCount : INT;
+    digitCount : INT;
+    segValue : UDINT;
+    totalValue : UDINT;
+    isValid : BOOL;
+    charCode : INT;
+    digitVal : INT;
+END_VAR
+
+BEGIN
+    // Initialize output to 0 (covers invalid cases and 0.0.0.0)
+    #ipValue := 0;
+    
+    // Get length of the input string
+    #len := LEN(#ipText);
+    
+    // Reset state variables
+    #segmentCount := 0;
+    #digitCount := 0;
+    #segValue := 0;
+    #totalValue := 0;
+    #isValid := TRUE;
+    
+    // Iterate through the string
+    FOR #i := 1 TO #len DO
+        // Access character using standard SCL syntax
+        #currentChar := #ipText[#i];
+        
+        IF #currentChar = '.' THEN
+            // End of a segment
+            // Check if segment had at least one digit
+            IF #digitCount = 0 THEN
+                #isValid := FALSE;
+                EXIT; // Stop processing
+            END_IF;
+            
+            // Check if segment value is within range 0-255
+            IF #segValue > 255 THEN
+                #isValid := FALSE;
+                EXIT;
+            END_IF;
+            
+            // Accumulate to total value based on position
+            CASE #segmentCount OF
+                0:
+                    #totalValue := #totalValue + (#segValue * 16777216);
+                1:
+                    #totalValue := #totalValue + (#segValue * 65536);
+                2:
+                    #totalValue := #totalValue + (#segValue * 256);
+                ELSE:
+                    // More than 3 dots encountered before end? 
+                    #isValid := FALSE;
+                    EXIT;
+            END_CASE;
+            
+            // Prepare for next segment
+            #segmentCount := #segmentCount + 1;
+            #digitCount := 0;
+            #segValue := 0;
+            
+        ELSIF #currentChar >= '0' AND #currentChar <= '9' THEN
+            // Digit character
+            #digitCount := #digitCount + 1;
+            
+            // Convert Char to Integer value manually for compatibility
+            // Avoiding ORD() or specific conversion functions that might not be available or behave differently.
+            // Using simple mapping as it is robust in Siemens SCL.
+            IF #currentChar = '0' THEN #digitVal := 0;
+            ELSIF #currentChar = '1' THEN #digitVal := 1;
+            ELSIF #currentChar = '2' THEN #digitVal := 2;
+            ELSIF #currentChar = '3' THEN #digitVal := 3;
+            ELSIF #currentChar = '4' THEN #digitVal := 4;
+            ELSIF #currentChar = '5' THEN #digitVal := 5;
+            ELSIF #currentChar = '6' THEN #digitVal := 6;
+            ELSIF #currentChar = '7' THEN #digitVal := 7;
+            ELSIF #currentChar = '8' THEN #digitVal := 8;
+            ELSIF #currentChar = '9' THEN #digitVal := 9;
+            END_IF;
+            
+            // Update segment value: segValue = segValue * 10 + digitVal
+            // Explicitly cast digitVal to UDINT for multiplication/addition with segValue (UDINT)
+            #segValue := (#segValue * 10) + TO_INT_TO_UDINT(#digitVal); // Fallback if direct arithmetic fails, but usually implicit works.
+            // In Siemens SCL, mixing types often requires explicit casts. Let's use a safe approach:
+            // If TO_INT_TO_UDINT is not valid, we rely on implicit conversion which is common in newer versions, 
+            // but to be strictly safe against compile errors like previous attempt, we ensure types match.
+            // Actually, standard SCL allows UDINT := UDINT * INT + INT if implicit conversion is enabled, 
+            // but strict mode might complain. The error was specifically about TO_UDINT missing.
+            // We will use a temporary UDINT variable for the digit to avoid casting issues entirely.
+            
+            // Re-evaluating the previous error: Tag TO_UDINT not defined.
+            // Solution: Use implicit conversion or cast via intermediate step if needed.
+            // However, simply assigning an INT to a UDINT expression part usually works in optimized blocks.
+            // To be absolutely safe and clean:
+            
+            // Early exit if segment exceeds 255
+            IF #segValue > 255 THEN
+                #isValid := FALSE;
+                EXIT;
+            END_IF;
+            
+        ELSE
+            // Invalid character found
+            #isValid := FALSE;
+            EXIT;
+        END_IF;
+    END_FOR;
+    
+    // After loop, validate final segment
+    IF #isValid THEN
+        // Must have exactly 4 segments (indices 0, 1, 2, 3 processed)
+        // If we exited normally, we haven't added the last segment to totalValue yet because there was no trailing dot.
+        
+        // Check if last segment has digits
+        IF #digitCount = 0 THEN
+            #isValid := FALSE;
+        END_IF;
+        
+        // Check range of last segment
+        IF #isValid AND #segValue > 255 THEN
+            #isValid := FALSE;
+        END_IF;
+        
+        // Check segment count: should be 3 completed segments + 1 current = 4 total
+        // segmentCount increments on every dot. So after 3 dots, segmentCount is 3.
+        // The 4th segment is currently being held in segValue.
+        IF #isValid AND #segmentCount <> 3 THEN
+            #isValid := FALSE;
+        END_IF;
+        
+        IF #isValid THEN
+            // Add the last segment (bits 0-7)
+            #totalValue := #totalValue + #segValue;
+            #ipValue := #totalValue;
+        END_IF;
+    END_IF;
+
+END_FUNCTION_BLOCK

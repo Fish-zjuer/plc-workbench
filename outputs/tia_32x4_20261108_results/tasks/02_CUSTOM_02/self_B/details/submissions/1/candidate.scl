@@ -1,0 +1,101 @@
+FUNCTION_BLOCK "FB_HmiAccess"
+VAR_INPUT
+    SessionValid : BOOL;
+    Role : USINT;
+    Page : USINT;
+    WriteReq : BOOL;
+    WriteValue : LREAL;
+END_VAR
+VAR_OUTPUT
+    ViewAllowed : BOOL;
+    WriteAllowed : BOOL;
+    Accepted : BOOL;
+    Denied : BOOL;
+    ParamValue : LREAL;
+END_VAR
+VAR_IN_OUT
+END_VAR
+VAR
+    // Static variable to retain the last committed parameter value across scans
+    m_ParamValue : LREAL := 0.0;
+END_VAR
+VAR_TEMP
+    t_IsAuthorizedUser : BOOL;
+    t_CanViewPage : BOOL;
+    t_CanWriteParam : BOOL;
+    t_ValueInRange : BOOL;
+    t_AcceptRequest : BOOL;
+END_VAR
+VERSION : 0.1
+
+BEGIN
+    // Initialize outputs for current scan
+    #Accepted := FALSE;
+    #Denied := FALSE;
+
+    // Determine if the role is valid (1=user, 2=operator, 3=admin)
+    #t_IsAuthorizedUser := (#Role = 1) OR (#Role = 2) OR (#Role = 3);
+
+    // Calculate ViewAllowed based on requirements:
+    // Admin (3): Pages 1..4
+    // Operator (2): Pages 1, 2, 4
+    // User (1): Pages 1, 2
+    // Invalid roles or pages: False
+    
+    IF #SessionValid AND #t_IsAuthorizedUser THEN
+        CASE #Role OF
+            1: // User
+                #t_CanViewPage := (#Page = 1) OR (#Page = 2);
+            2: // Operator
+                #t_CanViewPage := (#Page = 1) OR (#Page = 2) OR (#Page = 4);
+            3: // Administrator
+                #t_CanViewPage := (#Page >= 1) AND (#Page <= 4);
+            ELSE
+                #t_CanViewPage := FALSE;
+        END_CASE;
+    ELSE
+        #t_CanViewPage := FALSE;
+    END_IF;
+
+    #ViewAllowed := #t_CanViewPage;
+
+    // Calculate WriteAllowed:
+    // TRUE only for Page 4 with valid session and Role 2 or 3
+    #t_CanWriteParam := #SessionValid AND ((#Role = 2) OR (#Role = 3)) AND (#Page = 4);
+    #WriteAllowed := #t_CanWriteParam;
+
+    // Handle Parameter Write Request
+    IF #WriteReq THEN
+        // Check if write is allowed by permission
+        IF #WriteAllowed THEN
+            // Check if value is in range [0, 100]
+            // Note: Requirement states all LREAL inputs are finite, so no explicit NaN/Inf check needed per spec, 
+            // but range check is mandatory.
+            #t_ValueInRange := (#WriteValue >= 0.0) AND (#WriteValue <= 100.0);
+            
+            IF #t_ValueInRange THEN
+                // Accept the write
+                #m_ParamValue := #WriteValue;
+                #Accepted := TRUE;
+                #Denied := FALSE;
+            ELSE
+                // Reject due to out-of-range value
+                #Accepted := FALSE;
+                #Denied := TRUE;
+                // ParamValue remains unchanged (handled by static var retention)
+            END_IF;
+        ELSE
+            // Reject due to insufficient permission
+            #Accepted := FALSE;
+            #Denied := TRUE;
+        END_IF;
+    ELSE
+        // No request made
+        #Accepted := FALSE;
+        #Denied := FALSE;
+    END_IF;
+
+    // Update output parameter with retained state
+    #ParamValue := #m_ParamValue;
+
+END_FUNCTION_BLOCK

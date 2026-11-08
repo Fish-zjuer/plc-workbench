@@ -1,0 +1,262 @@
+FUNCTION_BLOCK "Q15"
+
+VAR_INPUT
+    estop : BOOL; // FALSE: Emergency stop triggered, TRUE: Normal
+    opeMode : BOOL; // FALSE: Manual, TRUE: Auto
+    valveAStart : BOOL;
+    valveBStart : BOOL;
+    valveCStart : BOOL;
+    valveDStart : BOOL;
+    mixMotorStart : BOOL;
+    autoStart : BOOL;
+    processMode : BOOL;
+    levelSensor : INT;
+    mixMotorComplete : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    valveARun : BOOL;
+    valveBRun : BOOL;
+    valveCRun : BOOL;
+    valveDRun : BOOL;
+    mixMotorRun : BOOL;
+END_VAR
+
+VAR
+    // State Machine Variables
+    step : INT := 0; // 0: Idle, 1: Valve A, 2: Valve B, 3: Valve C/Mix, 4: Mix, 5: Valve D, 6: End/Reset
+    
+    // Edge Detection for Manual Mode
+    edge_valveA : R_TRIG;
+    edge_valveB : R_TRIG;
+    edge_valveC : R_TRIG;
+    edge_valveD : R_TRIG;
+    edge_mix : R_TRIG;
+    edge_auto : R_TRIG;
+    
+    // Previous mode to detect switch
+    prev_opeMode : BOOL := FALSE;
+END_VAR
+
+BEGIN
+    // 1. Emergency Stop Logic
+    // If estop is FALSE, all outputs must be off immediately.
+    IF NOT estop THEN
+        valveARun := FALSE;
+        valveBRun := FALSE;
+        valveCRun := FALSE;
+        valveDRun := FALSE;
+        mixMotorRun := FALSE;
+        step := 0; // Reset state machine
+        RETURN;
+    END_IF;
+
+    // 2. Mode Switching Logic
+    // When switching from Auto to Manual or vice versa, reset manual outputs if entering manual,
+    // or keep state if staying in same mode? 
+    // Requirement says: In manual mode, manually control... In automatic mode, implement logic...
+    // It implies independent operation. Usually, when switching modes, we might want to ensure safety.
+    // However, the prompt doesn't explicitly define behavior on mode switch other than the controls themselves.
+    // We will assume that entering Manual stops the Auto sequence (step=0) and resets outputs to allow manual toggle starting from OFF?
+    // Or does it preserve last state? "manually control the start/stop". Rising edge toggles.
+    // Let's assume on entry to Manual, we do not force outputs OFF unless Estop is active, but the Auto sequence stops.
+    // On entry to Auto, we should probably reset the sequence to Idle to avoid conflicting states.
+    
+    IF opeMode <> prev_opeMode THEN
+        IF opeMode THEN
+            // Entering Auto: Reset Step to Idle
+            step := 0;
+            // Optionally turn off manual overrides if they were left on? 
+            // The auto logic will overwrite these outputs anyway.
+        ELSE
+            // Entering Manual: Stop Auto Sequence
+            step := 0;
+            // Outputs retain their last value until manually toggled? 
+            // Standard practice: Often safe state or hold. Given "Rising edge toggles", 
+            // holding previous state is consistent with "Manual Control" taking over.
+        END_IF;
+        prev_opeMode := opeMode;
+    END_IF;
+
+    // 3. Manual Mode Logic
+    IF NOT opeMode THEN
+        // Update Edge Detectors
+        edge_valveA(CLK := valveAStart);
+        edge_valveB(CLK := valveBStart);
+        edge_valveC(CLK := valveCStart);
+        edge_valveD(CLK := valveDStart);
+        edge_mix(CLK := mixMotorStart);
+        
+        // Toggle outputs on rising edge
+        IF edge_valveA.Q THEN
+            valveARun := NOT valveARun;
+        END_IF;
+        
+        IF edge_valveB.Q THEN
+            valveBRun := NOT valveBRun;
+        END_IF;
+        
+        IF edge_valveC.Q THEN
+            valveCRun := NOT valveCRun;
+        END_IF;
+        
+        IF edge_valveD.Q THEN
+            valveDRun := NOT valveDRun;
+        END_IF;
+        
+        IF edge_mix.Q THEN
+            mixMotorRun := NOT mixMotorRun;
+        END_IF;
+        
+        // Ensure Auto Start button doesn't affect anything in manual mode
+        edge_auto(CLK := FALSE); 
+    END_IF;
+
+    // 4. Automatic Mode Logic
+    IF opeMode THEN
+        // Disable manual toggling by resetting edges or just ignoring them since we overwrite outputs below
+        // But we must update edges to prevent false triggers if we switch back? No, we only use them in manual block.
+        
+        // Auto Start Trigger
+        edge_auto(CLK := autoStart);
+        
+        // State Machine Execution
+        CASE step OF
+            0: // Idle
+                // Do nothing, wait for autoStart
+                IF edge_auto.Q THEN
+                    step := 1;
+                END_IF;
+                
+            1: // Open Valve A
+                valveARun := TRUE;
+                valveBRun := FALSE;
+                valveCRun := FALSE;
+                valveDRun := FALSE;
+                mixMotorRun := FALSE;
+                
+                IF levelSensor >= 50 THEN
+                    step := 2;
+                END_IF;
+                
+            2: // Close Valve A, Open Valve B
+                valveARun := FALSE;
+                valveBRun := TRUE;
+                valveCRun := FALSE;
+                valveDRun := FALSE;
+                mixMotorRun := FALSE;
+                
+                IF levelSensor >= 80 THEN
+                    IF processMode THEN
+                        step := 3; // Go to Valve C branch
+                    ELSE
+                        step := 4; // Go to Mix branch directly
+                    END_IF;
+                END_IF;
+                
+            3: // Close Valve B, Open Valve C (Process Mode = True)
+                valveARun := FALSE;
+                valveBRun := FALSE;
+                valveCRun := TRUE;
+                valveDRun := FALSE;
+                mixMotorRun := FALSE;
+                
+                IF levelSensor >= 100 THEN
+                    step := 4; // Move to Mixing
+                END_IF;
+                
+            4: // Close Valves, Start Mixing Motor
+                valveARun := FALSE;
+                valveBRun := FALSE;
+                valveCRun := FALSE;
+                valveDRun := FALSE;
+                mixMotorRun := TRUE;
+                
+                IF mixMotorComplete THEN
+                    step := 5;
+                END_IF;
+                
+            5: // Stop Mixing, Open Valve D
+                valveARun := FALSE;
+                valveBRun := FALSE;
+                valveCRun := FALSE;
+                valveDRun := TRUE;
+                mixMotorRun := FALSE;
+                
+                // Requirement: "open valve D, and the automatic process ends"
+                // How to end? Usually go back to Idle or require a reset.
+                // The LTL says "automatic process ends". 
+                // If we stay in step 5, Valve D remains open. 
+                // If we go to 0, Valve D closes. 
+                "Delivering them to the next process" implies D stays open during delivery.
+                "Automatic process ends" likely means the sequence completes.
+                Let's assume returning to Idle (Step 0) turns off D, signaling completion of this batch cycle.
+                OR, does it stay open? 
+                Looking at LTL P09: G(autoMix & mixMotorComplete -> R1(valveDActive)).
+                And the text: "open valve D, and the automatic process ends".
+                Typically, in PLC sequences, "End" returns to idle. 
+                I will set step to 0 after entering Step 5 to close everything, effectively ending the process.
+                Wait, if I go to 0 immediately, D opens for one scan then closes? That might be too short for delivery.
+                However, without a "Delivery Complete" sensor, we can't know when to close D.
+                Re-reading: "delivering them to the next process through valve D".
+                Maybe Step 5 holds D open until autoStart is pressed again? Or indefinitely?
+                Let's look at similar problems. Usually, the final step waits for a condition or goes to idle.
+                Since there is no input for "Delivery Done", and "process ends", I will interpret "ends" as returning to the initial state (Idle), which closes all valves. 
+                BUT, if it closes immediately, delivery doesn't happen.
+                Alternative interpretation: The state machine stays in Step 5 (D open) until the next `autoStart` or mode change?
+                Let's check the LTL properties again.
+                P09: G(autoMix & mixMotorComplete -> R1(valveDActive)). It doesn't say it MUST deactivate later.
+                However, standard sequential control often resets. 
+                Let's try: Enter Step 5, Turn on D. Next scan, if we remain in Step 5, D stays on.
+                To restart, user presses AutoStart. Does AutoStart work from Step 5? 
+                My code above checks `edge_auto.Q` only in Step 0.
+                If I stay in Step 5, I need a way to exit. 
+                Perhaps the requirement implies that once D is open, the specific *proportioning* task is done, but the physical delivery takes time? 
+                Without a timer or sensor, I cannot automate the closing of D.
+                Common pattern: Open D, wait for some fixed time? No timer input provided in requirements for delay.
+                Another pattern: Open D, and the system halts there. Pressing AutoStart again resets to Step 0? 
+                Let's modify Step 5 to allow transition to Step 0 on `autoStart` or just leave it open? 
+                Actually, looking at the interface, there is no "Stop" button for auto. 
+                I will make Step 5 transition to Step 0 (Idle) after one scan? No, that's bad for delivery.
+                I will keep Step 5 active (D Open) until `autoStart` is pressed again, which resets to Step 0? 
+                Or maybe `valveDStart` in manual mode handles it? 
+                Let's assume the process "ends" means the state machine goes to Idle (Step 0) and thus turns off D. 
+                This assumes the "delivery" is instantaneous or handled by downstream equipment sensing the flow, and the PLC just releases the valve. 
+                If I put `step := 0` inside Step 5, D opens for 1 scan then closes. 
+                If I don't, D stays open forever until mode change or estop. 
+                Let's look at the wording: "open valve D, and the automatic process ends".
+                In many educational PLC tasks, "End" means return to Start/Idle state. 
+                I will implement: Set `valveDRun := TRUE`, then immediately `step := 0`. 
+                Wait, if `step:=0`, then `valveDRun` will be overwritten by Step 0 logic (which sets it to FALSE).
+                So D pulses ON then OFF. 
+                Is there a better interpretation? 
+                Maybe Step 5 is "Wait for Delivery". But no sensor. 
+                Let's stick to the most logical finite state machine definition where "End" = Return to Initial State. 
+                If the pulse is too short, the user would have specified a timer. Since no timer is specified for delivery duration, returning to idle is the safest interpretation of "End". 
+                HOWEVER, usually you don't deliver material in 1ms. 
+                Let's re-read carefully: "delivering them ... through valve D". 
+                Maybe the state machine stays in Step 5, keeping D open, and requires an external action to reset? 
+                There is no reset button. 
+                Let's look at the `autoStart` usage. It starts the process. 
+                If I am in Step 5, and press `autoStart`, should it restart? 
+                I will add a check in Step 5: If `autoStart` rising edge occurs, go to Step 0 (and thus close D). 
+                This allows the operator to initiate a new batch, which implicitly closes the previous delivery valve. 
+                This seems like a reasonable operational model given the limited inputs.
+                
+                Revised Step 5:
+                valveARun := FALSE;
+                valveBRun := FALSE;
+                valveCRun := FALSE;
+                valveDRun := TRUE;
+                mixMotorRun := FALSE;
+                
+                IF edge_auto.Q THEN
+                    step := 0;
+                END_IF;
+
+            DEFAULT:
+                step := 0;
+        END_CASE;
+    END_IF;
+
+END_FUNCTION_BLOCK

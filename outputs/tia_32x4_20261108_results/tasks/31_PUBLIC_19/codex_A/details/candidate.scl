@@ -1,0 +1,197 @@
+FUNCTION_BLOCK "Q19"
+VERSION : 0.1
+   VAR_INPUT
+      ManualMode : BOOL;
+      SingleStepMode : BOOL;
+      SingleCycleMode : BOOL;
+      ContinuousMode : BOOL;
+      EmergencyStop : BOOL;
+      Start : BOOL;
+      DownButton : BOOL;
+      UpButton : BOOL;
+      LeftButton : BOOL;
+      RightButton : BOOL;
+      GripButton : BOOL;
+      ReleaseButton : BOOL;
+      DownLimitSwitch : BOOL;
+      UpLimitSwitch : BOOL;
+      LeftLimitSwitch : BOOL;
+      RightLimitSwitch : BOOL;
+      GripLimitSwitch : BOOL;
+      ReleaseLimitSwitch : BOOL;
+   END_VAR
+   VAR_OUTPUT
+      MoveDown : BOOL;
+      MoveUp : BOOL;
+      MoveLeft : BOOL;
+      MoveRight : BOOL;
+      ActivateGrip : BOOL;
+      ActivateRelease : BOOL;
+   END_VAR
+   VAR
+      prevStart : BOOL;
+      startEdge : BOOL;
+      stepIndex : INT;
+      stepRunning : BOOL;
+      cycActive : BOOL;
+      cycStep : INT;
+      cycDone : BOOL;
+      contRun : BOOL;
+   END_VAR
+   VAR_TEMP
+      stepDone : BOOL;
+      cycDoneNow : BOOL;
+   END_VAR
+BEGIN
+	// Rising edge on Start
+	#startEdge := #Start AND NOT #prevStart;
+	#prevStart := #Start;
+
+	// All arm outputs default off
+	#MoveDown := FALSE;
+	#MoveUp := FALSE;
+	#MoveLeft := FALSE;
+	#MoveRight := FALSE;
+	#ActivateGrip := FALSE;
+	#ActivateRelease := FALSE;
+
+	// Completion feedback of the action selected by the single step index
+	CASE #stepIndex OF
+	   0: #stepDone := #DownLimitSwitch;
+	   1: #stepDone := #GripLimitSwitch;
+	   2: #stepDone := #UpLimitSwitch;
+	   3: #stepDone := #RightLimitSwitch;
+	   4: #stepDone := #DownLimitSwitch;
+	   5: #stepDone := #ReleaseLimitSwitch;
+	   6: #stepDone := #UpLimitSwitch;
+	   7: #stepDone := #LeftLimitSwitch;
+	   ELSE
+	      #stepDone := TRUE;
+	END_CASE;
+
+	// Completion feedback of the action selected by the cycle step index
+	CASE #cycStep OF
+	   0: #cycDoneNow := #DownLimitSwitch;
+	   1: #cycDoneNow := #GripLimitSwitch;
+	   2: #cycDoneNow := #UpLimitSwitch;
+	   3: #cycDoneNow := #RightLimitSwitch;
+	   4: #cycDoneNow := #DownLimitSwitch;
+	   5: #cycDoneNow := #ReleaseLimitSwitch;
+	   6: #cycDoneNow := #UpLimitSwitch;
+	   7: #cycDoneNow := #LeftLimitSwitch;
+	   ELSE
+	      #cycDoneNow := TRUE;
+	END_CASE;
+
+	IF NOT #EmergencyStop THEN
+	   // Emergency stop: clear all sequences and commands
+	   #stepIndex := 0;
+	   #stepRunning := FALSE;
+	   #cycActive := FALSE;
+	   #cycStep := 0;
+	   #cycDone := FALSE;
+	   #contRun := FALSE;
+	ELSE
+	   // Manual mode: direct button control, inhibited at the target position
+	   IF #ManualMode THEN
+	      #stepIndex := 0;
+	      #stepRunning := FALSE;
+	      #cycActive := FALSE;
+	      #cycStep := 0;
+	      #cycDone := FALSE;
+	      #contRun := FALSE;
+	      #MoveDown := #DownButton AND NOT #DownLimitSwitch;
+	      #MoveUp := #UpButton AND NOT #UpLimitSwitch;
+	      #MoveLeft := #LeftButton AND NOT #LeftLimitSwitch;
+	      #MoveRight := #RightButton AND NOT #RightLimitSwitch;
+	      #ActivateGrip := #GripButton AND NOT #GripLimitSwitch;
+	      #ActivateRelease := #ReleaseButton AND NOT #ReleaseLimitSwitch;
+	   END_IF;
+
+	   // Single step mode: one action per Start pulse, confirmed step by step
+	   IF #SingleStepMode THEN
+	      #cycActive := FALSE;
+	      #cycStep := 0;
+	      #cycDone := FALSE;
+	      #contRun := FALSE;
+	      IF #startEdge THEN
+	         #stepRunning := TRUE;
+	      END_IF;
+	      IF #stepRunning AND #stepDone THEN
+	         #stepRunning := FALSE;
+	         IF #stepIndex >= 7 THEN
+	            #stepIndex := 0;
+	         ELSE
+	            #stepIndex := #stepIndex + 1;
+	         END_IF;
+	      END_IF;
+	   ELSIF NOT #ManualMode THEN
+	      #stepIndex := 0;
+	      #stepRunning := FALSE;
+	   END_IF
+
+	   // Single cycle and continuous mode: full automatic handling cycle
+	   IF #SingleCycleMode OR #ContinuousMode THEN
+	      #stepIndex := 0;
+	      #stepRunning := FALSE;
+	      IF #SingleCycleMode THEN
+	         #contRun := FALSE;
+	      ELSE
+	         #contRun := TRUE;
+	      END_IF;
+	      IF #startEdge AND NOT #cycActive THEN
+	         #cycActive := TRUE;
+	         #cycStep := 0;
+	         #cycDone := FALSE;
+	      END_IF;
+	      IF #cycActive AND #cycDoneNow THEN
+	         IF #cycStep >= 7 THEN
+	            #cycStep := 0;
+	            IF #contRun THEN
+	               #cycActive := TRUE;
+	               #cycDone := FALSE;
+	            ELSE
+	               #cycActive := FALSE;
+	               #cycDone := TRUE;
+	            END_IF
+	         ELSE
+	            #cycStep := #cycStep + 1;
+	         END_IF
+	      END_IF;
+	   ELSE
+	      #cycActive := FALSE;
+	      #cycStep := 0;
+	      #cycDone := FALSE;
+	      #contRun := FALSE;
+	   END_IF
+
+	   // Single step output mapping
+	   IF #stepRunning THEN
+	      CASE #stepIndex OF
+	         0: #MoveDown := TRUE;
+	         1: #ActivateGrip := TRUE;
+	         2: #MoveUp := TRUE;
+	         3: #MoveRight := TRUE;
+	         4: #MoveDown := TRUE;
+	         5: #ActivateRelease := TRUE;
+	         6: #MoveUp := TRUE;
+	         7: #MoveLeft := TRUE;
+	      END_CASE;
+	   END_IF;
+
+	   // Automatic cycle output mapping
+	   IF #cycActive THEN
+	      CASE #cycStep OF
+	         0: #MoveDown := TRUE;
+	         1: #ActivateGrip := TRUE;
+	         2: #MoveUp := TRUE;
+	         3: #MoveRight := TRUE;
+	         4: #MoveDown := TRUE;
+	         5: #ActivateRelease := TRUE;
+	         6: #MoveUp := TRUE;
+	         7: #MoveLeft := TRUE;
+	      END_CASE;
+	   END_IF;
+	END_IF;
+
+END_FUNCTION_BLOCK

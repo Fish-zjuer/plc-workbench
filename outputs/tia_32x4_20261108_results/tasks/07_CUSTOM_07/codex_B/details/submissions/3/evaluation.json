@@ -1,0 +1,779 @@
+{
+  "status": "pass",
+  "errors": 0,
+  "warnings": 0,
+  "state": "Success",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "Program blocks",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "FB_CrusherExtraction (FB2)",
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Compiling finished (errors: 0; warnings: 0)",
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "returncode": 0,
+  "source_sha256": "15a7b6be492649c94b69c563bbe5e4cc6c621fc745754ef62be205e546d4307b",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": true,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\07_CUSTOM_07\\codex_B\\details\\submissions\\3\\evaluation\\compile",
+  "seconds": 43.977,
+  "queue_seconds": 178.205,
+  "dataset_sha256": "a2cf1170e1c2a88c433b4a223a2c814fdedb67b1acd695655f7e3bb66cb1598c",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_07",
+  "cases": [
+    {
+      "name": "升负荷时抽尘先行",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 80,
+            "FeedActual": 20,
+            "ExtractionCapacity": 20
+          },
+          "expected": {
+            "FeedSP": 20,
+            "ExtractionSP": 80,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 80.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 80,
+            "FeedActual": 20,
+            "ExtractionCapacity": 60
+          },
+          "expected": {
+            "FeedSP": 60,
+            "ExtractionSP": 80
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 60.0,
+            "ExtractionSP": 80.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "降负荷时给料先降",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 20,
+            "FeedActual": 80,
+            "ExtractionCapacity": 80
+          },
+          "expected": {
+            "FeedSP": 20,
+            "ExtractionSP": 80
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 80.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 20,
+            "FeedActual": 20,
+            "ExtractionCapacity": 80
+          },
+          "expected": {
+            "FeedSP": 20,
+            "ExtractionSP": 20
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 20.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "上下边界与通道不相等",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 0,
+            "FeedActual": 100,
+            "ExtractionCapacity": 100
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 100
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 100.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 100,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 100
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 100.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "非法输入和撤销优先级",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 101,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "Error": true,
+            "FeedSP": 0,
+            "ExtractionSP": 0
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 101,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "Error": false,
+            "FeedSP": 0,
+            "ExtractionSP": 0
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "反馈交叉限幅_非法与停机优先",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 0,
+            "FeedActual": 100,
+            "ExtractionCapacity": 100
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 100,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 100.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 100,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 100,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 100.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50,
+            "FeedActual": 80,
+            "ExtractionCapacity": 20
+          },
+          "expected": {
+            "FeedSP": 20,
+            "ExtractionSP": 80,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 20.0,
+            "ExtractionSP": 80.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": -1,
+            "FeedActual": 50,
+            "ExtractionCapacity": 50
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Trip": false,
+            "FeedDemand": 50,
+            "FeedActual": 50,
+            "ExtractionCapacity": 101
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": 0,
+            "FeedActual": 100,
+            "ExtractionCapacity": 100
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": 100,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": 50,
+            "FeedActual": 80,
+            "ExtractionCapacity": 20
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": -1,
+            "FeedActual": 50,
+            "ExtractionCapacity": 50
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Enable": false,
+            "Trip": false,
+            "FeedDemand": 50,
+            "FeedActual": 50,
+            "ExtractionCapacity": 101
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 0,
+            "FeedActual": 100,
+            "ExtractionCapacity": 100
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 100,
+            "FeedActual": 0,
+            "ExtractionCapacity": 0
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 50,
+            "FeedActual": 80,
+            "ExtractionCapacity": 20
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": -1,
+            "FeedActual": 50,
+            "ExtractionCapacity": 50
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Enable": true,
+            "Trip": true,
+            "FeedDemand": 50,
+            "FeedActual": 50,
+            "ExtractionCapacity": 101
+          },
+          "expected": {
+            "FeedSP": 0,
+            "ExtractionSP": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "FeedSP": 0.0,
+            "ExtractionSP": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 5,
+    "scans": 23,
+    "assertions": 64,
+    "failed": 0
+  },
+  "ltl_status": "unsupported",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\07_CUSTOM_07\\codex_B\\details\\submissions\\3\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\07_CUSTOM_07\\codex_B\\details\\submissions\\3\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120,
+    130,
+    140
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0",
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "FB_CrusherExtraction (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "15a7b6be492649c94b69c563bbe5e4cc6c621fc745754ef62be205e546d4307b",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\07_CUSTOM_07\\codex_B\\details\\submissions\\3\\evaluation\\compile",
+    "seconds": 43.977,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "a2cf1170e1c2a88c433b4a223a2c814fdedb67b1acd695655f7e3bb66cb1598c"
+  },
+  "formal_verification": {
+    "status": "unsupported",
+    "backend": "plcverif+cbmc",
+    "policy": "automatic",
+    "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_07",
+    "dataset_sha256": "a2cf1170e1c2a88c433b4a223a2c814fdedb67b1acd695655f7e3bb66cb1598c",
+    "source_sha256": "15a7b6be492649c94b69c563bbe5e4cc6c621fc745754ef62be205e546d4307b",
+    "model_calls": 0,
+    "declared_ltl_total": 5,
+    "mapped_assertions_total": 5,
+    "proved_property_ids": [],
+    "full_ltl_proved": false,
+    "bounded_verified_property_ids": [],
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\07_CUSTOM_07\\codex_B\\details\\submissions\\3\\evaluation\\formal\\shared",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(!active -> (FeedSP=0 & ExtractionSP=0 & !Error))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T12:03:35.453343800Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (221 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_Active\n  -job.req.pattern_params.7 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P02",
+        "formula": "G((active & !valid) -> (FeedSP=0 & ExtractionSP=0 & Error))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T12:03:35.453343800Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (221 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_Active\n  -job.req.pattern_params.7 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P03",
+        "formula": "G((active & valid) -> (feedOK & extractionOK & !Error))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T12:03:35.453343800Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (221 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_Active\n  -job.req.pattern_params.7 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P04",
+        "formula": "G((active & valid) -> (FeedSP<=ExtractionCapacity & ExtractionSP>=FeedActual))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T12:03:35.453343800Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (221 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_Active\n  -job.req.pattern_params.7 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P05",
+        "formula": "G(0<=FeedSP & FeedSP<=100 & 0<=ExtractionSP & ExtractionSP<=100)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T12:03:35.453343800Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (221 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_Active\n  -job.req.pattern_params.7 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl\n\n\n== Executing Agents ==\n"
+      }
+    ],
+    "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+    "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+    "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+    "bound": 20,
+    "timeout_seconds": 120,
+    "scan_period_ms": 10,
+    "memory_limit_mb": 768,
+    "time_coverage": {
+      "scan_samples": 20,
+      "scan_period_ms": 10,
+      "first_sample_offset_ms": 10,
+      "last_sample_offset_ms": 200,
+      "maximum_elapsed_between_samples_ms": 190
+    },
+    "assumptions": [],
+    "observer_definitions": {
+      "active": "Enable & !Trip",
+      "valid": "0<=FeedDemand & FeedDemand<=100 & 0<=FeedActual & FeedActual<=100 & 0<=ExtractionCapacity & ExtractionCapacity<=100",
+      "feedOK": "FeedSP=min(FeedDemand,ExtractionCapacity)",
+      "extractionOK": "ExtractionSP=max(FeedDemand,FeedActual)"
+    },
+    "source_adaptations": [],
+    "instrumented_sha256": "4a19296718de606c951753d618949c7bb4c10174d79e77630046e44231c85a78",
+    "tool_sha256": {
+      "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+      "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+      "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+    },
+    "plcverif_seconds": 3.203,
+    "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T12:03:35.453343800Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (221 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl' contains the following errors: \n- no viable alternative at input ',' (80:285)\n- extraneous input 'ExtractionCapacity' expecting ')' (80:297)\n- no viable alternative at input ',' (80:348)\n- extraneous input 'FeedActual' expecting ')' (80:360)\n- mismatched input ')' expecting ';' (80:395).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_Active\n  -job.req.pattern_params.7 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_hsesko2a\\candidate.scl\n\n\n== Executing Agents ==\n",
+    "seconds": 3.285,
+    "model_source_sha256": "720048274cdf9a732cf6d539afdc4de94a539398610c9754be269bfa3df62b3c",
+    "platform_adaptations": [
+      {
+        "kind": "symbol_spelling",
+        "symbol": "FB_CrusherExtraction"
+      },
+      {
+        "kind": "pou_begin_delimiter",
+        "count": 1
+      }
+    ],
+    "source_dialect": "siemens_scl",
+    "platform_assumptions": []
+  },
+  "finite_test_status": "pass"
+}

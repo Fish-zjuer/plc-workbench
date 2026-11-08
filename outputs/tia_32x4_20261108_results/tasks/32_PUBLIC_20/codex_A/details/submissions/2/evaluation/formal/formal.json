@@ -1,0 +1,79 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "d0897a00f0bd4d3d59d1a9eb7d3dcf3ce22cfcffd0904df3f4131a462cf673b3",
+  "declared_ltl_total": 13,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(!(MotorForward & MotorReverse))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(manualForwardOnly -> MotorForward & !MotorReverse)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(manualReverseOnly -> MotorReverse & !MotorForward)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(autoIdle & SensorFeed -> R1(MotorForward))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(movingToWash & SensorWash -> R1(motorStopped))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(waitingWash & washComplete -> R1(MotorForward))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(movingToWeight & SensorWeight -> R1(motorStopped))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P08",
+      "formula": "G(waitingWeight & weightComplete & qualified -> R1(temperatureAndDepartureOK))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P09",
+      "formula": "G(waitingWeight & weightComplete & !qualified -> R1(kick))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P10",
+      "formula": "G(movingToFiring & SensorFiring -> R1(motorStopped))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P11",
+      "formula": "G(waitingFiring & firingComplete -> R1(MotorForward))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P12",
+      "formula": "G(movingToOutput & SensorOutput -> R1(motorStopped & CompletionLight))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P13",
+      "formula": "G(finishedProduct & !SensorOutput -> R1(!CompletionLight))",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

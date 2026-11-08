@@ -1,0 +1,93 @@
+FUNCTION_BLOCK "Q05"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+    Gap_Exceeded : BOOL;
+    Weld_E_Stop_NC : BOOL;
+    DebounceTime : TIME;
+END_VAR
+VAR_OUTPUT
+    Operator_Alert : BOOL;
+    Weld_Soft_Start_Active : BOOL;
+END_VAR
+VAR
+    tonInit : TON_TIME;
+    tonDebounce : TON_TIME;
+    bInitCompleted : BOOL; // Flag to track if initialization has finished once
+END_VAR
+VAR_TEMP
+    isInitializing : BOOL;
+    allowDebounce : BOOL;
+BEGIN
+    // 1. Initialization Logic (Power-up monitoring inhibition)
+    // The timer runs for 5 seconds. Once Q is true, we mark initialization as completed.
+    // We keep IN TRUE until the timer finishes to ensure it doesn't reset prematurely if logic changes,
+    // but effectively we just care about the 5s window from start.
+    
+    IF NOT #bInitCompleted THEN
+        #tonInit(IN := TRUE, PT := T#5s);
+        IF #tonInit.Q THEN
+            #bInitCompleted := TRUE;
+        END_IF;
+    ELSE
+        // After completion, keep IN FALSE to hold state or reset if needed, 
+        // but since we use bInitCompleted, we can stop feeding IN.
+        #tonInit(IN := FALSE, PT := T#5s);
+    END_IF;
+
+    // Determine if we are currently in the initialization phase
+    // Initializing is true if the timer hasn't finished yet (NOT Q) AND we haven't marked it complete.
+    // Actually, simpler: If bInitCompleted is false, we are initializing.
+    // But wait, at t=0, bInitCompleted is false, tonInit.Q is false -> Initializing.
+    // At t=5000, tonInit.Q becomes true. In that scan, bInitCompleted might still be false depending on order.
+    // Let's define isInitializing based on the timer output directly for robustness.
+    // Requirement: "Begin with a 5-second initialization inhibition period... Resume gap monitoring after initialization."
+    // So, while tonInit.Q is FALSE, we are initializing.
+    // However, once Q is TRUE, it stays TRUE. We need to know when the 5s period ENDS.
+    
+    #isInitializing := NOT #tonInit.Q;
+    
+    // Update static flag if initialization just finished
+    IF #isInitializing = FALSE AND NOT #bInitCompleted THEN
+         #bInitCompleted := TRUE;
+    END_IF;
+
+    // Output Weld_Soft_Start_Active: TRUE during initialization, FALSE otherwise
+    #Weld_Soft_Start_Active := #isInitializing;
+
+    // 2. Emergency Stop Priority
+    // If E-Stop is active (Weld_E_Stop_NC is FALSE), alarm must be FALSE and debounce cleared.
+    IF NOT #Weld_E_Stop_NC THEN
+        #Operator_Alert := FALSE;
+        // Force reset debounce timer by setting IN to FALSE
+        #tonDebounce(IN := FALSE, PT := #DebounceTime);
+        RETURN;
+    END_IF;
+
+    // 3. Normal Monitoring & Debounce Logic
+    // Debounce accumulates ONLY when:
+    // - Not initializing (!isInitializing)
+    // - E-Stop is inactive (checked above)
+    // - Gap_Exceeded is TRUE
+    
+    #allowDebounce := #Gap_Exceeded AND NOT #isInitializing;
+
+    // Call debounce timer
+    // If allowDebounce is FALSE (e.g., during init or gap not exceeded), IN is FALSE, resetting ET/Q.
+    // This satisfies requirement: "gap-signal debounce time does not accumulate" during init.
+    #tonDebounce(IN := #allowDebounce, PT := #DebounceTime);
+
+    // 4. Output Generation
+    // Operator_Alert is TRUE only if:
+    // - Not initializing
+    // - E-Stop is inactive
+    // - Debounce time has elapsed (tonDebounce.Q is TRUE)
+    // - Gap_Exceeded is currently TRUE (to ensure signal is still present)
+    
+    IF #tonDebounce.Q AND #Gap_Exceeded AND NOT #isInitializing THEN
+        #Operator_Alert := TRUE;
+    ELSE
+        #Operator_Alert := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

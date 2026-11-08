@@ -1,0 +1,44 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "23fc798fd86d7aea8c8b64645a26b6ecd27b524a9b17011109d5ee0094f4f51d",
+  "declared_ltl_total": 6,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(!validWindow -> windowError8200)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(validWindow -> normalStatus)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(validWindow & reset -> historyEmpty)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(validWindow & !reset & sample -> newHistoryOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(validWindow & !reset & !sample -> historyHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(validWindow & nonemptyHistory -> meanOK)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

@@ -1,0 +1,180 @@
+{
+  "status": "compile_failed",
+  "errors": 7,
+  "warnings": 4,
+  "state": "Error",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Error",
+      "description": "",
+      "errors": 7,
+      "warnings": 4
+    },
+    {
+      "path": "Program blocks",
+      "state": "Error",
+      "description": "",
+      "errors": 7,
+      "warnings": 4
+    },
+    {
+      "path": "FB_RollGeometry (FB2)",
+      "state": "Error",
+      "description": "",
+      "errors": 7,
+      "warnings": 4
+    },
+    {
+      "path": "3",
+      "state": "Error",
+      "description": "Semicolon missing.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "5",
+      "state": "Error",
+      "description": "Incomplete instruction.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "17",
+      "state": "Error",
+      "description": "Semicolon missing.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "23",
+      "state": "Warning",
+      "description": "The parameter '#StoredLength' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "33",
+      "state": "Warning",
+      "description": "The parameter '#StoredLength' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "35",
+      "state": "Warning",
+      "description": "The parameter '#StoredLength' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "36",
+      "state": "Error",
+      "description": "Semicolon missing.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "46",
+      "state": "Error",
+      "description": "Semicolon missing.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "47",
+      "state": "Warning",
+      "description": "The parameter '#StoredLength' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "53",
+      "state": "Error",
+      "description": "Semicolon missing.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "54",
+      "state": "Error",
+      "description": "Semicolon missing.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Error",
+      "description": "Compiling finished (errors: 7; warnings: 4)",
+      "errors": 1,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+  "returncode": 1,
+  "source_sha256": "71ecac2d76719c2200f63ce0bffe2a03466bffac1fc05c90dbf8e831ee200bbe",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "failed",
+  "behavior_tested": false,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\04_CUSTOM_04\\codex_B\\details\\submissions\\1\\evaluation\\compile",
+  "seconds": 35.394,
+  "queue_seconds": 261.816,
+  "dataset_sha256": "559aec50048e1ca03c8e575959ceab1f3edb46ba04ac16a061b2ff18562f15fa",
+  "target": "tia",
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "71ecac2d76719c2200f63ce0bffe2a03466bffac1fc05c90dbf8e831ee200bbe",
+    "declared_ltl_total": 7,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(Error <-> !valid)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(geometryMatch)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G((!valid) -> (MotorRPM=0 & !LimitHit & StoredLength=pre.length & Diameter=pre.diameter))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G((valid & init) -> (Diameter=InitialD & MotorRPM=0 & !LimitHit))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G((valid & !init) -> (LimitHit <-> (raw<0 | raw>Lmax)))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G(0<=StoredLength & StoredLength<=Lmax & 76<=Diameter & Diameter<=140)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(-6000<=MotorRPM & MotorRPM<=6000)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "compile_failed"
+}

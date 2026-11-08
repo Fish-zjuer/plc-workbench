@@ -1,0 +1,44 @@
+FUNCTION_BLOCK FB_CrusherExtraction
+
+VAR_INPUT
+    Enable : BOOL;
+    Trip : BOOL;
+    FeedDemand : LREAL;
+    FeedActual : LREAL;
+    ExtractionCapacity : LREAL;
+END_VAR
+
+VAR_OUTPUT
+    FeedSP : LREAL;
+    ExtractionSP : LREAL;
+    Error : BOOL;
+END_VAR
+
+VAR
+    InputsValid : BOOL;
+END_VAR
+VAR_INPUT
+WBTEMP_0 : BOOL;
+END_VAR
+
+
+     
+InputsValid := WBTEMP_0;
+    InputsValid := (FeedDemand >= 0.0) AND (FeedDemand <= 100.0)
+                 AND (FeedActual >= 0.0) AND (FeedActual <= 100.0)
+                 AND (ExtractionCapacity >= 0.0) AND (ExtractionCapacity <= 100.0);
+
+    IF Trip OR NOT Enable THEN
+        FeedSP := 0.0;
+        ExtractionSP := 0.0;
+        Error := FALSE;
+    ELSIF NOT InputsValid THEN
+        FeedSP := 0.0;
+        ExtractionSP := 0.0;
+        Error := TRUE;
+    ELSE
+        FeedSP := MIN(IN1 := FeedDemand, IN2 := ExtractionCapacity);
+        ExtractionSP := MAX(IN1 := FeedDemand, IN2 := FeedActual);
+        Error := FALSE;
+    END_IF;
+END_FUNCTION_BLOCK

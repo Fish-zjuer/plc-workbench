@@ -1,0 +1,54 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "c44f44bd3d69e86d618dbdb91b5ed19f17ee87cb1018785c008e683f8d9c10bf",
+  "declared_ltl_total": 8,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(pendingMatch)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(Dispatched <-> (!Cancel & request & canServe))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(RequestLamp <-> Pending)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(Cancel -> (!Pending & !Dispatched & !RequestLamp))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G((!Cancel & request & Busy) -> (Pending & !Dispatched))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(!request -> (!Pending & !Dispatched))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(!(Pending & Dispatched))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P08",
+      "formula": "A_service -> G(Pending -> F(Cancel | Dispatched))",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

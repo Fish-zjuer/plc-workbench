@@ -1,0 +1,120 @@
+TYPE "ST_AnalogChannel"
+VERSION : 0.1
+   STRUCT
+      enable : BOOL;
+      hiLIM : REAL;
+      loLIM : REAL;
+      bipolar : BOOL;
+      measuringMode : INT;
+      retVal : WORD;
+      outputValue : REAL;
+   END_STRUCT;
+END_TYPE
+
+FUNCTION_BLOCK "Q08"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+    count : DINT;
+END_VAR
+VAR_IN_OUT
+    analogValues : ARRAY[*] OF INT;
+    channels : ARRAY[*] OF ST_AnalogChannel;
+END_VAR
+VAR_TEMP
+    i : DINT;
+    idxAV : DINT;
+    idxCH : DINT;
+    rawVal : REAL;
+    loLim : REAL;
+    hiLim : REAL;
+    range : REAL;
+    bipolarFlag : BOOL;
+    mode : INT;
+    enableFlag : BOOL;
+    lbAV : DINT;
+    ubAV : DINT;
+    lbCH : DINT;
+    ubCH : DINT;
+END_VAR
+BEGIN
+    // Determine array bounds using native TIA Portal properties for VARIANT arrays
+    IF count <= 0 THEN
+        RETURN;
+    END_IF;
+
+    // Get lower and upper bounds for dimension 1
+    lbAV := #analogValues.LBound(1);
+    ubAV := #analogValues.UBound(1);
+    lbCH := #channels.LBound(1);
+    ubCH := #channels.UBound(1);
+
+    FOR i := 0 TO count - 1 DO
+        // Calculate indices relative to each array's own lower bound
+        idxAV := lbAV + i;
+        idxCH := lbCH + i;
+
+        // Bounds check (though caller guarantees count <= min length, safety first)
+        IF idxAV < lbAV OR idxAV > ubAV THEN
+            CONTINUE;
+        END_IF;
+        IF idxCH < lbCH OR idxCH > ubCH THEN
+            CONTINUE;
+        END_IF;
+
+        // Read configuration fields
+        #enableFlag := #channels[idxCH].enable;
+        #mode := #channels[idxCH].measuringMode;
+        #loLim := #channels[idxCH].loLIM;
+        #hiLim := #channels[idxCH].hiLIM;
+        #bipolarFlag := #channels[idxCH].bipolar;
+        
+        // Convert INT raw value to REAL for calculations
+        #rawVal := INT_TO_REAL(#analogValues[idxAV]);
+
+        // Skip disabled channels completely
+        IF NOT #enableFlag THEN
+            CONTINUE;
+        END_IF;
+
+        // Check Mode Validity First (Req 6)
+        IF (#mode <> 0) AND (#mode <> 1) AND (#mode <> 2) THEN
+            #channels[idxCH].retVal := 16#8001;
+            CONTINUE;
+        END_IF;
+
+        // Now Mode is valid (0, 1, or 2). Check Limits (Req 7).
+        // Note: Requirement 7 applies generally if limits are invalid.
+        IF #hiLim <= #loLim THEN
+            #channels[idxCH].retVal := 16#8002;
+            CONTINUE;
+        END_IF;
+
+        // Perform Conversion
+        CASE #mode OF
+            0: // Non-temperature linear scaling
+                #range := #hiLim - #loLim;
+                IF #bipolarFlag THEN
+                    // Map -27648..27648 to loLIM..hiLIM
+                    // Formula: loLIM + (raw + 27648) * (hiLIM - loLIM) / 55296
+                    #channels[idxCH].outputValue := #loLim + ((#rawVal + 27648.0) * #range) / 55296.0;
+                ELSE
+                    // Map 0..27648 to loLIM..hiLIM
+                    // Formula: loLIM + raw * (hiLIM - loLIM) / 27648
+                    #channels[idxCH].outputValue := #loLim + (#rawVal * #range) / 27648.0;
+                END_IF;
+                #channels[idxCH].retVal := 16#0000; // Success
+
+            1: // Standard-temperature conversion
+                // OutputValue is one tenth of raw analog value
+                #channels[idxCH].outputValue := #rawVal / 10.0;
+                #channels[idxCH].retVal := 16#0000; // Success
+
+            2: // Climatic-temperature conversion
+                // OutputValue is one hundredth of raw analog value
+                #channels[idxCH].outputValue := #rawVal / 100.0;
+                #channels[idxCH].retVal := 16#0000; // Success
+        END_CASE;
+
+    END_FOR;
+END_FUNCTION_BLOCK

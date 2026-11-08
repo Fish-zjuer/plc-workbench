@@ -1,0 +1,64 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "0c14ef1bf7efae44d1146a148ee9679f4cf312438b33a1232f9e4c352ad7df20",
+  "declared_ltl_total": 10,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(query & !exists -> error8001)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(query & exists -> queryResultMatches)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(add & exists -> error8002 & databaseHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(add & !exists & !free -> error8003 & databaseHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(add & !exists & free -> addedAtFirstFree & otherEntriesHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(delete & !exists -> error8004 & databaseHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(delete & exists -> matchingIDCleared & otherEntriesHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P08",
+      "formula": "G(modify & !exists -> error8005 & databaseHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P09",
+      "formula": "G(modify & exists -> matchingEntryReplaced & otherEntriesHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P10",
+      "formula": "G(nonzeroIDsUnique)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

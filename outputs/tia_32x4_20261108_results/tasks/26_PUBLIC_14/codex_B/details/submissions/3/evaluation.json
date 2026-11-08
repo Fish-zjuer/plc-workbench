@@ -1,0 +1,34 @@
+{
+  "status": "invalid_candidate",
+  "target_compile": "not_executed",
+  "message": "SCL changed the frozen dataset interface; expected [{\"direction\": \"Input\", \"name\": \"ipText\", \"type\": \"STRING(254)\"}, {\"direction\": \"Output\", \"name\": \"ipValue\", \"type\": \"UDINT\"}]",
+  "target": "tia",
+  "behavior_tested": false,
+  "queue_seconds": 106.198,
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "38e6e09f616c9dffed0555ee363f45026e0c13a303f0123593f7f557b9225b9c",
+    "declared_ltl_total": 2,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(validIPv4 -> parsedNetworkOrderOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!validIPv4 -> ipValueZero)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "invalid_candidate"
+}

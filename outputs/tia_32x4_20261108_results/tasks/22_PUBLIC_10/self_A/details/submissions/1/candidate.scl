@@ -1,0 +1,67 @@
+FUNCTION_BLOCK "Q10"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      TemperatureSensorInput : REAL;
+      SetTemperature : REAL;
+   END_VAR
+   VAR_OUTPUT
+      CurrentTemperature : REAL;
+      SetTempDisplay : REAL;
+      HeaterStatus : BOOL;
+      OverheatProtection : BOOL;
+      HeaterOutput : BOOL;
+   END_VAR
+   VAR
+      heaterTimer : TON_TIME;
+      coolTimer : TON_TIME;
+      protectionLatched : BOOL;
+      heatDemand : BOOL;
+   END_VAR
+
+BEGIN
+   // 温度显示
+   #CurrentTemperature := #TemperatureSensorInput;
+   #SetTempDisplay := #SetTemperature;
+
+   // 传感器故障判断
+   IF (#TemperatureSensorInput < 0.0) OR (#TemperatureSensorInput > 100.0) THEN
+      // 故障：关闭加热，连续加热计时清零
+      #heaterTimer.TON(IN := FALSE, PT := T#5s);
+      #heatDemand := FALSE;
+      #HeaterOutput := FALSE;
+   ELSE
+      // 有效传感器：判断是否低于设定值
+      #heatDemand := (#TemperatureSensorInput < #SetTemperature);
+
+      // 过热保护冷却等待计时（从实际进入保护时刻起算）
+      #coolTimer.TON(IN := #protectionLatched, PT := T#3s);
+
+      IF #protectionLatched THEN
+         // 保护中：强制关闭加热
+         #heaterTimer.TON(IN := FALSE, PT := T#5s);
+         #HeaterOutput := FALSE;
+         // 冷却等待满 3s 后解除保护
+         IF #coolTimer.Q THEN
+            #protectionLatched := FALSE;
+            #coolTimer.TON(IN := FALSE, PT := T#3s);
+         END_IF
+      ELSE
+         // 无保护：根据需求控制加热
+         #HeaterOutput := #heatDemand;
+         // 连续加热计时
+         #heaterTimer.TON(IN := #HeaterOutput, PT := T#5s);
+         // 连续加热超 5s 触发保护
+         IF #heaterTimer.Q THEN
+            #protectionLatched := TRUE;
+            #HeaterOutput := FALSE;
+            #heaterTimer.TON(IN := FALSE, PT := T#5s);
+            #coolTimer.TON(IN := TRUE, PT := T#3s);
+         END_IF;
+      END_IF;
+   END_IF;
+
+   // 状态输出
+   #OverheatProtection := #protectionLatched;
+   #HeaterStatus := #HeaterOutput;
+END_FUNCTION_BLOCK

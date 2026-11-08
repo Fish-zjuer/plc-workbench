@@ -1,0 +1,63 @@
+FUNCTION_BLOCK "Q04"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+   VISCOSITY_OK : BOOL;
+   PASTE_E_STOP_NC : BOOL;
+   DebounceTime : TIME;
+   CycleTime : TIME;
+END_VAR
+VAR_OUTPUT
+   VFD_RUN : BOOL;
+   PUMP_MAINT_DUE : BOOL;
+   PUMP_RUNTIME_ACC : LTIME;
+END_VAR
+VAR
+   debTimer : TON_TIME;
+   debounced : BOOL;
+   initDone : BOOL;
+   runtimeAccMs : LTIME;
+END_VAR
+BEGIN
+   // 上电初始化（仅首次调用）
+   IF NOT #initDone THEN
+      #initDone := TRUE;
+      #VFD_RUN := FALSE;
+      #runtimeAccMs := LTIME#0ms;
+      #PUMP_MAINT_DUE := FALSE;
+      #debounced := FALSE;
+   END_IF;
+
+   // 黏度消抖：连续有效 DebounceTime 后置位；输入 FALSE 立即失效
+   IF NOT #VISCOSITY_OK THEN
+      #debTimer.TON(IN := FALSE, PT := #DebounceTime);
+      #debounced := FALSE;
+   ELSE
+      #debTimer.TON(IN := TRUE, PT := #DebounceTime);
+      IF #debTimer.Q THEN
+         #debounced := TRUE;
+      END_IF;
+   END_IF;
+
+   // 急停优先：立即禁运行并清除不完整消抖计时
+   IF NOT #PASTE_E_STOP_NC THEN
+      #VFD_RUN := FALSE;
+      #debTimer.TON(IN := FALSE, PT := #DebounceTime);
+      #debounced := FALSE;
+   ELSE
+      #VFD_RUN := #debounced;
+   END_IF;
+
+   // 运行时间累加：仅运行且 CycleTime 为正时累加，停机保持
+   IF #VFD_RUN AND (#CycleTime > T#0ms) THEN
+      #runtimeAccMs := #runtimeAccMs + TIME_TO_LTIME(#CycleTime);
+   END_IF;
+   #PUMP_RUNTIME_ACC := #runtimeAccMs;
+
+   // 维护到期指示：达到 500 小时（不影响运行与安全许可）
+   IF #runtimeAccMs >= LTIME#500h THEN
+      #PUMP_MAINT_DUE := TRUE;
+   ELSE
+      #PUMP_MAINT_DUE := FALSE;
+   END_IF;
+END_FUNCTION_BLOCK

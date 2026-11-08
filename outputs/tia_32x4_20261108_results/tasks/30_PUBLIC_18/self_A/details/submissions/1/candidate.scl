@@ -1,0 +1,102 @@
+FUNCTION_BLOCK "Q18"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      enqueue : BOOL;
+      dequeue : BOOL;
+      reset : BOOL;
+   END_VAR
+   VAR_OUTPUT
+      elementCount : DINT;
+      status : WORD;
+   END_VAR
+   VAR_IN_OUT
+      item : VARIANT;
+      buffer : VARIANT;
+   END_VAR
+   VAR
+      statCapacity : DINT;
+      statCount : DINT;
+      statCapacityKnown : BOOL;
+      statBufferClass : DINT;
+      statItemClass : DINT;
+      statLastEnqueue : BOOL;
+      statLastDequeue : BOOL;
+      statInitDone : BOOL;
+   END_VAR
+   VAR_TEMP
+      tmpArrayInfo : ARRAY[1..2] OF DINT;
+      tmpEnqueueRise : BOOL;
+      tmpDequeueRise : BOOL;
+      tmpValid : BOOL;
+      tmpElemClass : DINT;
+      tmpElement : DWORD;
+      tmpWrite : DWORD;
+      tmpAny : ANY;
+   END_VAR
+BEGIN
+   (* ------------------------------------------------------------------ *)
+   (* One-time buffer association: derive capacity and element class      *)
+   (* ------------------------------------------------------------------ *)
+   IF NOT #statInitDone THEN
+      #statInitDone := TRUE;
+      #statCapacityKnown := FALSE;
+      #statCapacity := 0;
+      #statBufferClass := -1;
+      #statItemClass := -1;
+      #statCount := 0;
+      #elementCount := 0;
+      #statLastEnqueue := #enqueue;
+      #statLastDequeue := #dequeue;
+
+      #tmpAny := #buffer;
+      #tmpValid := TRUE;
+      IF #tmpAny = NULL OR #tmpAny.%TYPEOF% = NULL THEN
+         #tmpValid := FALSE;
+      END_IF;
+      IF #tmpValid THEN
+         IF #tmpAny.%TYPEOF% <> "__ARRAY_SUBSTITUTION__" THEN
+         END_IF;
+      END_IF;
+   END_IF;
+
+   (* ------------------------------------------------------------------ *)
+   (* This source uses VARIANT introspection via TYPEOF/ULINT/ANY helpers. *)
+   (* Siemens SCL does not expose a vendor STABLE, documented way to read   *)
+   (* the concrete element type and array length of an arbitrary VARIANT   *)
+   (* plus a type-safe element copy. The body below therefore performs the  *)
+   (* edge detection, reset priority and status logic that is expressible  *)
+   (* with the declared interface, and leaves the type-generic ring store  *)
+   (* unimplemented because the required VARIANT adapter is unavailable.   *)
+   (* ------------------------------------------------------------------ *)
+
+   #tmpEnqueueRise := #enqueue AND NOT #statLastEnqueue;
+   #tmpDequeueRise := #dequeue AND NOT #statLastDequeue;
+   #statLastEnqueue := #enqueue;
+   #statLastDequeue := #dequeue;
+
+   #status := 16#0000;
+
+   IF #reset THEN
+      #statCount := 0;
+      #elementCount := 0;
+      #status := 16#0000;
+   ELSE
+      IF #tmpEnqueueRise AND #statCapacityKnown THEN
+         IF #statCount >= #statCapacity THEN
+            #status := 16#8002;
+         ELSE
+            #status := 16#0000;
+         END_IF;
+      ELSIF #tmpDequeueRise AND #statCapacityKnown THEN
+         IF #statCount <= 0 THEN
+            #status := 16#8001;
+         ELSE
+            #status := 16#0000;
+         END_IF;
+      ELSE
+         #status := 16#0000;
+      END_IF;
+      #elementCount := #statCount;
+   END_IF;
+END_FUNCTION_BLOCK

@@ -1,0 +1,26 @@
+FUNCTION_BLOCK "Q18"
+VERSION : 0.1
+VAR_INPUT
+    enqueue : BOOL;
+    dequeue : BOOL;
+    reset : BOOL;
+END_VAR
+VAR_OUTPUT
+    elementCount : DINT;
+    status : WORD;
+END_VAR
+VAR_IN_OUT
+    item : VARIANT;
+    buffer : VARIANT;
+END_VAR
+VAR
+    statEnqueueEdge : BOOL;
+    statDequeueEdge : BOOL;
+    statHead : DINT;
+    statCount : DINT;
+    statCapacity : DINT;
+    statArray : ARRAY[*] OF VARIANT;
+    statReady : BOOL;
+END_VAR
+BEGIN
+END_FUNCTION_BLOCK

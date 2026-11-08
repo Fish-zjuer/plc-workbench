@@ -1,0 +1,69 @@
+TYPE ST_AnalogChannel
+  STRUCT
+    enable : BOOL;
+    measuringMode : INT;
+    bipolar : BOOL;
+    loLIM : REAL;
+    hiLIM : REAL;
+    retVal : WORD;
+    outputValue : REAL;
+  END_STRUCT
+END_TYPE
+
+FUNCTION_BLOCK "Q08"
+  VERSION : '0.1'
+
+  VAR_INPUT
+    count : DINT;
+  END_VAR
+
+  VAR_IN_OUT
+    analogValues : ARRAY[*] OF INT;
+    channels : ARRAY[*] OF ST_AnalogChannel;
+  END_VAR
+
+  VAR_TEMP
+    idx : DINT;
+    n : DINT;
+    raw : INT;
+    lo : REAL;
+    hi : REAL;
+    mode : INT;
+    bipolarMode : BOOL;
+  END_VAR
+
+BEGIN
+    // The caller guarantees 0 <= count <= min(length(analogValues), length(channels)).
+    n := count;
+    IF n < 0 THEN
+        n := 0;
+    END_IF;
+    FOR idx := 0 TO (n - 1) DO
+        IF channels[idx].enable THEN
+            mode := channels[idx].measuringMode;
+            lo := channels[idx].loLIM;
+            hi := channels[idx].hiLIM;
+            bipolarMode := channels[idx].bipolar;
+            raw := analogValues[idx];
+            IF (mode <> 0) AND (mode <> 1) AND (mode <> 2) THEN
+                channels[idx].retVal := WORD#16#8001;
+            ELSIF hi <= lo THEN
+                channels[idx].retVal := WORD#16#8002;
+            ELSE
+                channels[idx].retVal := WORD#0000;
+                CASE mode OF
+                    0:
+                        IF bipolarMode THEN
+                            channels[idx].outputValue := lo + (INT_TO_REAL(raw) + 27648.0) * (hi - lo) / 55296.0;
+                        ELSE
+                            channels[idx].outputValue := lo + INT_TO_REAL(raw) * (hi - lo) / 27648.0;
+                        END_IF;
+                    1:
+                        channels[idx].outputValue := INT_TO_REAL(raw) / 10.0;
+                    2:
+                        channels[idx].outputValue := INT_TO_REAL(raw) / 100.0;
+                END_CASE;
+            END_IF;
+        END_IF;
+    END_FOR;
+END_FUNCTION_BLOCK

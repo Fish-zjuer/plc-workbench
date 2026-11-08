@@ -1,0 +1,129 @@
+FUNCTION_BLOCK Q16
+
+   VAR_INPUT
+      processLength : USINT;
+      sensor1 : BOOL;
+      sensor2 : BOOL;
+      sensor3 : BOOL;
+      sensor4 : BOOL;
+      sensor5 : BOOL;
+      station1Start : BOOL;
+      station2Complete : BOOL;
+      station3Complete : BOOL;
+      station4Complete : BOOL;
+      processSequence : ARRAY[1 .. 8] OF USINT;
+   END_VAR
+   VAR_OUTPUT
+      conveyorLeft : BOOL;
+      conveyorRight : BOOL;
+   END_VAR
+   VAR
+      cursor : USINT;
+      currentStation : USINT;
+      targetStation : USINT;
+      moving : BOOL;
+      started : BOOL;
+   END_VAR
+   VAR
+      targetReached : BOOL;
+      targetComplete : BOOL;
+      startEdge : BOOL;
+      completeEdge : BOOL;
+      prevStart : BOOL;
+      prevComplete2 : BOOL;
+      prevComplete3 : BOOL;
+      prevComplete4 : BOOL;
+      anyComplete : BOOL;
+   END_VAR
+VAR_INPUT
+WBTEMP_0 : BOOL;
+WBTEMP_1 : BOOL;
+WBTEMP_2 : BOOL;
+WBTEMP_3 : BOOL;
+WBTEMP_4 : BOOL;
+WBTEMP_5 : BOOL;
+WBTEMP_6 : BOOL;
+WBTEMP_7 : BOOL;
+WBTEMP_8 : BOOL;
+END_VAR
+
+
+     
+targetReached := WBTEMP_0;
+targetComplete := WBTEMP_1;
+startEdge := WBTEMP_2;
+completeEdge := WBTEMP_3;
+prevStart := WBTEMP_4;
+prevComplete2 := WBTEMP_5;
+prevComplete3 := WBTEMP_6;
+prevComplete4 := WBTEMP_7;
+anyComplete := WBTEMP_8;
+
+   startEdge := station1Start AND NOT prevStart;
+   prevStart := station1Start;
+
+   completeEdge := (station2Complete AND NOT prevComplete2) OR
+                   (station3Complete AND NOT prevComplete3) OR
+                   (station4Complete AND NOT prevComplete4);
+   prevComplete2 := station2Complete;
+   prevComplete3 := station3Complete;
+   prevComplete4 := station4Complete;
+
+   conveyorLeft := FALSE;
+   conveyorRight := FALSE;
+   targetReached := FALSE;
+   targetComplete := FALSE;
+
+   IF NOT started THEN
+      cursor := 1;
+      currentStation := 1;
+      targetStation := processSequence[1];
+      IF sensor1 AND station1Start THEN
+         started := TRUE;
+      END_IF;
+   END_IF;
+
+   IF started THEN
+      CASE targetStation OF
+         2: targetReached := sensor2;
+         3: targetReached := sensor3;
+         4: targetReached := sensor4;
+         5: targetReached := sensor5;
+      ELSE
+         targetReached := FALSE;
+      END_CASE;
+
+      CASE targetStation OF
+         2: targetComplete := station2Complete;
+         3: targetComplete := station3Complete;
+         4: targetComplete := station4Complete;
+      ELSE
+         targetComplete := FALSE;
+      END_CASE;
+
+      IF targetStation > currentStation THEN
+         conveyorRight := TRUE;
+      ELSIF targetStation < currentStation THEN
+         conveyorLeft := TRUE;
+      END_IF;
+
+      IF targetReached THEN
+         conveyorLeft := FALSE;
+         conveyorRight := FALSE;
+         currentStation := targetStation;
+
+         IF targetStation = 5 THEN
+            started := FALSE;
+         ELSIF targetComplete THEN
+            cursor := cursor + 1;
+            IF cursor > 8 THEN
+               cursor := 8;
+            END_IF;
+            targetStation := processSequence[cursor];
+            targetComplete := FALSE;
+         END_IF;
+      END_IF;
+   END_IF;
+
+END_FUNCTION_BLOCK
+

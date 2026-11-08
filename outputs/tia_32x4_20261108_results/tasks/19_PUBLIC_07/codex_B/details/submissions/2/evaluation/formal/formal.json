@@ -1,0 +1,39 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "bd416b40ccdda173d0b20c948ffc3a55a48968bc82294a92ad1474b28f7df5f6",
+  "declared_ltl_total": 5,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(stop -> allPumpsOff)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(!enabled -> allPumpsOff)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(!mode & enabled -> manualSelectionOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(mode & enabled -> topThreeOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(configPreserved)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

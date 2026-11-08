@@ -1,0 +1,228 @@
+FUNCTION_BLOCK "Q19"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+   ManualMode : BOOL;
+   SingleStepMode : BOOL;
+   SingleCycleMode : BOOL;
+   ContinuousMode : BOOL;
+   EmergencyStop : BOOL;
+   Start : BOOL;
+   DownButton : BOOL;
+   UpButton : BOOL;
+   LeftButton : BOOL;
+   RightButton : BOOL;
+   GripButton : BOOL;
+   ReleaseButton : BOOL;
+   DownLimitSwitch : BOOL;
+   UpLimitSwitch : BOOL;
+   LeftLimitSwitch : BOOL;
+   RightLimitSwitch : BOOL;
+   GripLimitSwitch : BOOL;
+   ReleaseLimitSwitch : BOOL;
+END_VAR
+
+VAR_OUTPUT
+   MoveDown : BOOL;
+   MoveUp : BOOL;
+   MoveLeft : BOOL;
+   MoveRight : BOOL;
+   ActivateGrip : BOOL;
+   ActivateRelease : BOOL;
+END_VAR
+
+VAR
+   StartEdge : R_TRIG;
+   StepIndex : INT;
+   ActionActive : BOOL;
+   ExecAction : INT;
+   CycleRunning : BOOL;
+   StepDone : BOOL;
+   GripTimer : TON_TIME;
+   ReleaseTimer : TON_TIME;
+   GripDone : BOOL;
+   ReleaseDone : BOOL;
+END_VAR
+
+VAR_TEMP
+   StartRise : BOOL;
+   CurAction : INT;
+   DoAction : BOOL;
+END_VAR
+
+BEGIN
+   // 启动上升沿检测
+   #StartEdge(CLK := #Start);
+   #StartRise := #StartEdge.Q;
+
+   // 脉冲输出复位
+   #MoveDown := FALSE;
+   #MoveUp := FALSE;
+   #MoveLeft := FALSE;
+   #MoveRight := FALSE;
+   #ActivateGrip := FALSE;
+   #ActivateRelease := FALSE;
+
+   // 握紧/松开定时完成（模拟到位延时保持）
+   #GripTimer(IN := #ActionActive AND (#ExecAction = 2) AND #EmergencyStop,
+              PT := T#1s);
+   #GripDone := #GripTimer.Q OR #GripLimitSwitch;
+   #ReleaseTimer(IN := #ActionActive AND (#ExecAction = 6) AND #EmergencyStop,
+                 PT := T#1s);
+   #ReleaseDone := #ReleaseTimer.Q OR #ReleaseLimitSwitch;
+
+   // 急停：立即复位所有状态和输出
+   IF NOT #EmergencyStop THEN
+      #MoveDown := FALSE;
+      #MoveUp := FALSE;
+      #MoveLeft := FALSE;
+      #MoveRight := FALSE;
+      #ActivateGrip := FALSE;
+      #ActivateRelease := FALSE;
+      #ActionActive := FALSE;
+      #CycleRunning := FALSE;
+      #StepDone := FALSE;
+      #GripTimer(IN := FALSE, PT := T#1s);
+      #ReleaseTimer(IN := FALSE, PT := T#1s);
+      RETURN;
+   END_IF;
+
+   IF #ManualMode THEN
+      // 手动模式：按钮直接驱动，受对应限位约束
+      IF #DownButton AND NOT #DownLimitSwitch THEN
+         #MoveDown := TRUE;
+      END_IF;
+      IF #UpButton AND NOT #UpLimitSwitch THEN
+         #MoveUp := TRUE;
+      END_IF;
+      IF #LeftButton AND NOT #LeftLimitSwitch THEN
+         #MoveLeft := TRUE;
+      END_IF;
+      IF #RightButton AND NOT #RightLimitSwitch THEN
+         #MoveRight := TRUE;
+      END_IF;
+      IF #GripButton AND NOT #GripLimitSwitch THEN
+         #ActivateGrip := TRUE;
+      END_IF;
+      IF #ReleaseButton AND NOT #ReleaseLimitSwitch THEN
+         #ActivateRelease := TRUE;
+      END_IF;
+      // 手动模式清除自动状态
+      #ActionActive := FALSE;
+      #CycleRunning := FALSE;
+      #StepDone := FALSE;
+
+   ELSE
+      // 自动模式（单步/单周期/连续）
+
+      // 确定当前应执行的动作号（1..8）
+      #CurAction := #StepIndex + 1;
+
+      // 计算动作是否完成
+      #DoAction := FALSE;
+      IF #ActionActive THEN
+         CASE #CurAction OF
+            1: // Down
+               IF #DownLimitSwitch THEN
+                  #DoAction := TRUE;
+               ELSE
+                  #MoveDown := TRUE;
+               END_IF;
+            2: // Grip
+               IF #GripDone THEN
+                  #DoAction := TRUE;
+               ELSE
+                  #ActivateGrip := TRUE;
+               END_IF;
+            3: // Up
+               IF #UpLimitSwitch THEN
+                  #DoAction := TRUE;
+               ELSE
+                  #MoveUp := TRUE;
+               END_IF;
+            4: // Right
+               IF #RightLimitSwitch THEN
+                  #DoAction := TRUE;
+               ELSE
+                  #MoveRight := TRUE;
+               END_IF;
+            5: // Down
+               IF #DownLimitSwitch THEN
+                  #DoAction := TRUE;
+               ELSE
+                  #MoveDown := TRUE;
+               END_IF;
+            6: // Release
+               IF #ReleaseDone THEN
+                  #DoAction := TRUE;
+               ELSE
+                  #ActivateRelease := TRUE;
+               END_IF;
+            7: // Up
+               IF #UpLimitSwitch THEN
+                  #DoAction := TRUE;
+               ELSE
+                  #MoveUp := TRUE;
+               END_IF;
+            8: // Left
+               IF #LeftLimitSwitch THEN
+                  #DoAction := TRUE;
+               ELSE
+                  #MoveLeft := TRUE;
+               END_IF;
+         END_CASE;
+      END_IF;
+
+      // 动作完成处理
+      IF #ActionActive AND #DoAction THEN
+         #ActionActive := FALSE;
+         #StepDone := TRUE;
+         #StepIndex := #StepIndex + 1;
+         #GripTimer(IN := FALSE, PT := T#1s);
+         #ReleaseTimer(IN := FALSE, PT := T#1s);
+
+         // 到达循环末尾（第8步完成）
+         IF #StepIndex >= 8 THEN
+            #StepIndex := 0;
+            #StepDone := FALSE;
+            #CycleRunning := FALSE;
+            IF #ContinuousMode AND #Start THEN
+               // 连续模式自动重新开始
+               #CycleRunning := TRUE;
+               #ActionActive := TRUE;
+            END_IF;
+         END_IF;
+      END_IF;
+
+      // 单步模式：每次启动上升沿执行一个动作
+      IF #SingleStepMode THEN
+         IF #StartRise AND NOT #ActionActive THEN
+            IF #StepDone AND (#StepIndex < 8) THEN
+               #StepDone := FALSE;
+               #ActionActive := TRUE;
+            ELSIF NOT #StepDone AND NOT #CycleRunning AND (#StepIndex = 0) THEN
+               #ActionActive := TRUE;
+            ELSIF NOT #StepDone AND #CycleRunning THEN
+               #ActionActive := TRUE;
+               #CycleRunning := FALSE;
+            ELSIF NOT #StepDone AND (#StepIndex > 0) THEN
+               #ActionActive := TRUE;
+            END_IF;
+         END_IF;
+      // 单周期/连续模式：启动上升沿启动整个循环
+      ELSIF #SingleCycleMode OR #ContinuousMode THEN
+         IF #StartRise AND NOT #CycleRunning AND NOT #ActionActive AND NOT #StepDone THEN
+            #CycleRunning := TRUE;
+            #StepIndex := 0;
+            #ActionActive := TRUE;
+         END_IF;
+      END_IF;
+
+      // 连续模式循环结束后自动重启
+      IF #ContinuousMode AND NOT #CycleRunning AND NOT #ActionActive AND (#StepIndex = 0) THEN
+         // 保持在起点，等待启动
+      END_IF;
+   END_IF;
+
+END_FUNCTION_BLOCK

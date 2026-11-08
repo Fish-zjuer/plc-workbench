@@ -1,0 +1,64 @@
+FUNCTION_BLOCK "FB_GateTelemetry"
+VERSION : 0.1
+
+VAR_INPUT
+  Reset : BOOL;
+  FrameValid : BOOL;
+  FrameSeq : UDINT;
+  Ack : BOOL;
+  DtMs : UDINT;
+  TimeoutMs : UDINT;
+END_VAR
+
+VAR_OUTPUT
+  Fresh : BOOL;
+  AgeMs : UDINT;
+  CommFault : BOOL;
+  RemoteWritePermit : BOOL;
+  Error : BOOL;
+END_VAR
+
+VAR
+  HistKnown : BOOL;
+  HistSeq : UDINT;
+  AgeInt : UDINT;
+  FaultInt : BOOL;
+END_VAR
+
+BEGIN
+  #Fresh := FALSE;
+  #Error := FALSE;
+  IF #Reset THEN
+    #HistKnown := FALSE;
+    #HistSeq := 0;
+    #AgeInt := 0;
+    #FaultInt := TRUE;
+  ELSE
+    IF NOT (#DtMs >= 1 AND #DtMs <= 1000 AND #TimeoutMs >= 1 AND #TimeoutMs <= 60000) THEN
+      #FaultInt := TRUE;
+      #Error := TRUE;
+    ELSE
+      #Fresh := #FrameValid AND (NOT #HistKnown OR #FrameSeq <> #HistSeq);
+      IF #Fresh THEN
+        #HistKnown := TRUE;
+        #HistSeq := #FrameSeq;
+        #AgeInt := 0;
+      ELSE
+        IF #AgeInt > 60000 - #DtMs THEN
+          #AgeInt := 60000;
+        ELSE
+          #AgeInt := #AgeInt + #DtMs;
+        END_IF;
+      END_IF;
+      IF #Fresh AND #Ack THEN
+        #FaultInt := FALSE;
+      END_IF;
+      IF #AgeInt >= #TimeoutMs THEN
+        #FaultInt := TRUE;
+      END_IF;
+    END_IF;
+  END_IF;
+  #AgeMs := #AgeInt;
+  #CommFault := #FaultInt;
+  #RemoteWritePermit := NOT #Reset AND NOT #Error AND NOT #FaultInt AND #AgeInt < #TimeoutMs;
+END_FUNCTION_BLOCK

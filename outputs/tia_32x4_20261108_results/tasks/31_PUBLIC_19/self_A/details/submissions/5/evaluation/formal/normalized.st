@@ -1,0 +1,276 @@
+FUNCTION_BLOCK Q19
+
+VAR_INPUT
+   ManualMode : BOOL;
+   SingleStepMode : BOOL;
+   SingleCycleMode : BOOL;
+   ContinuousMode : BOOL;
+   EmergencyStop : BOOL;
+   Start : BOOL;
+   DownButton : BOOL;
+   UpButton : BOOL;
+   LeftButton : BOOL;
+   RightButton : BOOL;
+   GripButton : BOOL;
+   ReleaseButton : BOOL;
+   DownLimitSwitch : BOOL;
+   UpLimitSwitch : BOOL;
+   LeftLimitSwitch : BOOL;
+   RightLimitSwitch : BOOL;
+   GripLimitSwitch : BOOL;
+   ReleaseLimitSwitch : BOOL;
+END_VAR
+
+VAR_OUTPUT
+   MoveDown : BOOL;
+   MoveUp : BOOL;
+   MoveLeft : BOOL;
+   MoveRight : BOOL;
+   ActivateGrip : BOOL;
+   ActivateRelease : BOOL;
+END_VAR
+
+VAR
+   StartEdge : R_TRIG;
+   StepIndex : INT;
+   ActionActive : BOOL;
+   CycleRunning : BOOL;
+   StepDone : BOOL;
+   CycleDone : BOOL;
+END_VAR
+
+VAR
+   StartRise : BOOL;
+   CurAction : INT;
+   ActionFinished : BOOL;
+   ReqDown : BOOL;
+   ReqUp : BOOL;
+   ReqLeft : BOOL;
+   ReqRight : BOOL;
+   ReqGrip : BOOL;
+   ReqRelease : BOOL;
+END_VAR
+VAR_INPUT
+WBTEMP_0 : BOOL;
+WBTEMP_1 : INT;
+WBTEMP_2 : BOOL;
+WBTEMP_3 : BOOL;
+WBTEMP_4 : BOOL;
+WBTEMP_5 : BOOL;
+WBTEMP_6 : BOOL;
+WBTEMP_7 : BOOL;
+WBTEMP_8 : BOOL;
+END_VAR
+
+
+     
+StartRise := WBTEMP_0;
+CurAction := WBTEMP_1;
+ActionFinished := WBTEMP_2;
+ReqDown := WBTEMP_3;
+ReqUp := WBTEMP_4;
+ReqLeft := WBTEMP_5;
+ReqRight := WBTEMP_6;
+ReqGrip := WBTEMP_7;
+ReqRelease := WBTEMP_8;
+   // 启动上升沿检测
+   StartEdge(CLK := Start);
+   StartRise := StartEdge.Q;
+
+   // 所有命令默认复位
+   MoveDown := FALSE;
+   MoveUp := FALSE;
+   MoveLeft := FALSE;
+   MoveRight := FALSE;
+   ActivateGrip := FALSE;
+   ActivateRelease := FALSE;
+
+   ReqDown := FALSE;
+   ReqUp := FALSE;
+   ReqLeft := FALSE;
+   ReqRight := FALSE;
+   ReqGrip := FALSE;
+   ReqRelease := FALSE;
+
+   // ===== 急停：立即停止所有动作并清除自动状态 =====
+   IF NOT EmergencyStop THEN
+      ActionActive := FALSE;
+      CycleRunning := FALSE;
+      StepDone := FALSE;
+      CycleDone := FALSE;
+      StepIndex := 0;
+      RETURN;
+   END_IF;
+
+   IF ManualMode THEN
+      // ===== 手动模式：按钮直接驱动，受对应到位限位约束 =====
+      IF DownButton AND NOT DownLimitSwitch THEN
+         ReqDown := TRUE;
+      END_IF;
+      IF UpButton AND NOT UpLimitSwitch THEN
+         ReqUp := TRUE;
+      END_IF;
+      IF LeftButton AND NOT LeftLimitSwitch THEN
+         ReqLeft := TRUE;
+      END_IF;
+      IF RightButton AND NOT RightLimitSwitch THEN
+         ReqRight := TRUE;
+      END_IF;
+      IF GripButton AND NOT GripLimitSwitch THEN
+         ReqGrip := TRUE;
+      END_IF;
+      IF ReleaseButton AND NOT ReleaseLimitSwitch THEN
+         ReqRelease := TRUE;
+      END_IF;
+
+      // 手动模式清除自动状态
+      ActionActive := FALSE;
+      CycleRunning := FALSE;
+      StepDone := FALSE;
+      CycleDone := FALSE;
+      StepIndex := 0;
+   ELSE
+      // ===== 自动前检查：当前动作是否已完成 =====
+      ActionFinished := FALSE;
+      IF ActionActive THEN
+         CurAction := StepIndex + 1;
+         CASE CurAction OF
+            1: IF DownLimitSwitch THEN
+                  ActionFinished := TRUE;
+               END_IF;
+            2: IF GripLimitSwitch THEN
+                  ActionFinished := TRUE;
+               END_IF;
+            3: IF UpLimitSwitch THEN
+                  ActionFinished := TRUE;
+               END_IF;
+            4: IF RightLimitSwitch THEN
+                  ActionFinished := TRUE;
+               END_IF;
+            5: IF DownLimitSwitch THEN
+                  ActionFinished := TRUE;
+               END_IF;
+            6: IF ReleaseLimitSwitch THEN
+                  ActionFinished := TRUE;
+               END_IF;
+            7: IF UpLimitSwitch THEN
+                  ActionFinished := TRUE;
+               END_IF;
+            8: IF LeftLimitSwitch THEN
+                  ActionFinished := TRUE;
+               END_IF;
+            ELSE
+               ActionActive := FALSE;
+         END_CASE;
+      END_IF;
+
+      // ===== 动作完成处理，并推进到下一动作 =====
+      IF ActionActive AND ActionFinished THEN
+         IF StepIndex >= 7 THEN
+            // 第8步（Left）完成 -> 循环结束
+            StepIndex := 0;
+            StepDone := FALSE;
+            CycleRunning := FALSE;
+            CycleDone := TRUE;
+            ActionActive := FALSE;
+         ELSE
+            StepIndex := StepIndex + 1;
+            StepDone := TRUE;
+            CycleDone := FALSE;
+            // 单步模式：完成后停止，等待下一次启动确认
+            IF SingleStepMode THEN
+               ActionActive := FALSE;
+            ELSE
+               ActionActive := TRUE;
+            END_IF;
+         END_IF;
+      END_IF;
+
+      // ===== 模式处理与启动 =====
+      IF SingleStepMode THEN
+         // 单步：每次启动上升沿执行下一个动作
+         CycleRunning := FALSE;
+         IF StartRise AND NOT ActionActive THEN
+            ActionActive := TRUE;
+            StepDone := FALSE;
+            CycleDone := FALSE;
+         END_IF;
+      ELSIF SingleCycleMode THEN
+         // 单周期：启动上升沿启动整个循环，完成后停止
+         IF StartRise THEN
+            CycleDone := FALSE;
+         END_IF;
+         IF StartRise AND NOT ActionActive AND NOT CycleRunning THEN
+            StepIndex := 0;
+            ActionActive := TRUE;
+            CycleRunning := TRUE;
+            StepDone := FALSE;
+            CycleDone := FALSE;
+         END_IF;
+      ELSIF ContinuousMode THEN
+         // 连续：启动上升沿启动循环，结束后自动重启
+         IF StartRise AND NOT ActionActive AND NOT CycleRunning THEN
+            StepIndex := 0;
+            ActionActive := TRUE;
+            CycleRunning := TRUE;
+            StepDone := FALSE;
+            CycleDone := FALSE;
+         ELSIF CycleDone AND NOT ActionActive THEN
+            StepIndex := 0;
+            ActionActive := TRUE;
+            CycleRunning := TRUE;
+            StepDone := FALSE;
+            CycleDone := FALSE;
+         END_IF;
+      ELSE
+         // 无模式选择：清除自动状态
+         ActionActive := FALSE;
+         CycleRunning := FALSE;
+         StepDone := FALSE;
+         CycleDone := FALSE;
+         StepIndex := 0;
+      END_IF;
+
+      // ===== 自动模式：根据（推进后的）当前步骤输出命令 =====
+      IF ActionActive THEN
+         CurAction := StepIndex + 1;
+         CASE CurAction OF
+            1: IF NOT DownLimitSwitch THEN
+                  ReqDown := TRUE;
+               END_IF;
+            2: IF NOT GripLimitSwitch THEN
+                  ReqGrip := TRUE;
+               END_IF;
+            3: IF NOT UpLimitSwitch THEN
+                  ReqUp := TRUE;
+               END_IF;
+            4: IF NOT RightLimitSwitch THEN
+                  ReqRight := TRUE;
+               END_IF;
+            5: IF NOT DownLimitSwitch THEN
+                  ReqDown := TRUE;
+               END_IF;
+            6: IF NOT ReleaseLimitSwitch THEN
+                  ReqRelease := TRUE;
+               END_IF;
+            7: IF NOT UpLimitSwitch THEN
+                  ReqUp := TRUE;
+               END_IF;
+            8: IF NOT LeftLimitSwitch THEN
+                  ReqLeft := TRUE;
+               END_IF;
+            ELSE
+               ActionActive := FALSE;
+         END_CASE;
+      END_IF;
+   END_IF;
+
+   // ===== 输出映射 =====
+   MoveDown := ReqDown;
+   MoveUp := ReqUp;
+   MoveLeft := ReqLeft;
+   MoveRight := ReqRight;
+   ActivateGrip := ReqGrip;
+   ActivateRelease := ReqRelease;
+
+END_FUNCTION_BLOCK

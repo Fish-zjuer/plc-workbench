@@ -1,0 +1,450 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_16",
+  "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+  "source_sha256": "e3ab4ceef94a77af80339595f79e352ea201480348d383b94dc57f75432e791c",
+  "model_calls": 0,
+  "declared_ltl_total": 7,
+  "mapped_assertions_total": 7,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\codex_A\\details\\submissions\\2\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(!(conveyorLeft & conveyorRight))",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif could not build a structured C model:  declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092. [Control-flow declaration generation]\nError: The called unit '' is not a valid function or function block. Line: 217, offset: 7620. [Control-flow declaration generation]\nError: Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633. [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (659 ms): Successful\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 4, offset: 58.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 14, offset: 347.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 21, offset: 474.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 22, offset: 505.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 23, offset: 535.\n    - [Warning] Too deeply nested IF statement. Line: 119, offset: 3008.\n    - [Error] Invalid type conversion: USINT does not match the expected INT type.  Line: 122, offset: 3123.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 134, offset: 3299.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 144, offset: 3526.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 165, offset: 3892.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 166, offset: 3918.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 7620.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_A7\n  -job.req.pattern_params.9 = instance.PVL_A8\n  -job.req.pattern_params.10 = instance.PVL_Active\n  -job.req.pattern_params.11 = instance.PVL_Done\n  -job.req.pattern_params.12 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P02",
+      "formula": "G(routeStart -> R1(firstTargetSelected))",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": true,
+      "message": "PLCverif could not build a structured C model:  declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092. [Control-flow declaration generation]\nError: The called unit '' is not a valid function or function block. Line: 217, offset: 7620. [Control-flow declaration generation]\nError: Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633. [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (659 ms): Successful\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 4, offset: 58.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 14, offset: 347.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 21, offset: 474.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 22, offset: 505.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 23, offset: 535.\n    - [Warning] Too deeply nested IF statement. Line: 119, offset: 3008.\n    - [Error] Invalid type conversion: USINT does not match the expected INT type.  Line: 122, offset: 3123.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 134, offset: 3299.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 144, offset: 3526.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 165, offset: 3892.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 166, offset: 3918.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 7620.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_A7\n  -job.req.pattern_params.9 = instance.PVL_A8\n  -job.req.pattern_params.10 = instance.PVL_Active\n  -job.req.pattern_params.11 = instance.PVL_Done\n  -job.req.pattern_params.12 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P03",
+      "formula": "G(transporting & !targetReached -> directionOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif could not build a structured C model:  declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092. [Control-flow declaration generation]\nError: The called unit '' is not a valid function or function block. Line: 217, offset: 7620. [Control-flow declaration generation]\nError: Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633. [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (659 ms): Successful\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 4, offset: 58.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 14, offset: 347.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 21, offset: 474.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 22, offset: 505.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 23, offset: 535.\n    - [Warning] Too deeply nested IF statement. Line: 119, offset: 3008.\n    - [Error] Invalid type conversion: USINT does not match the expected INT type.  Line: 122, offset: 3123.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 134, offset: 3299.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 144, offset: 3526.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 165, offset: 3892.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 166, offset: 3918.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 7620.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_A7\n  -job.req.pattern_params.9 = instance.PVL_A8\n  -job.req.pattern_params.10 = instance.PVL_Active\n  -job.req.pattern_params.11 = instance.PVL_Done\n  -job.req.pattern_params.12 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P04",
+      "formula": "G(targetReached -> R1(conveyorStopped))",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": true,
+      "message": "PLCverif could not build a structured C model:  declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092. [Control-flow declaration generation]\nError: The called unit '' is not a valid function or function block. Line: 217, offset: 7620. [Control-flow declaration generation]\nError: Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633. [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (659 ms): Successful\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 4, offset: 58.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 14, offset: 347.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 21, offset: 474.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 22, offset: 505.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 23, offset: 535.\n    - [Warning] Too deeply nested IF statement. Line: 119, offset: 3008.\n    - [Error] Invalid type conversion: USINT does not match the expected INT type.  Line: 122, offset: 3123.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 134, offset: 3299.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 144, offset: 3526.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 165, offset: 3892.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 166, offset: 3918.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 7620.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_A7\n  -job.req.pattern_params.9 = instance.PVL_A8\n  -job.req.pattern_params.10 = instance.PVL_Active\n  -job.req.pattern_params.11 = instance.PVL_Done\n  -job.req.pattern_params.12 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P05",
+      "formula": "G(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif could not build a structured C model:  declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092. [Control-flow declaration generation]\nError: The called unit '' is not a valid function or function block. Line: 217, offset: 7620. [Control-flow declaration generation]\nError: Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633. [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (659 ms): Successful\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 4, offset: 58.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 14, offset: 347.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 21, offset: 474.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 22, offset: 505.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 23, offset: 535.\n    - [Warning] Too deeply nested IF statement. Line: 119, offset: 3008.\n    - [Error] Invalid type conversion: USINT does not match the expected INT type.  Line: 122, offset: 3123.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 134, offset: 3299.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 144, offset: 3526.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 165, offset: 3892.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 166, offset: 3918.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 7620.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_A7\n  -job.req.pattern_params.9 = instance.PVL_A8\n  -job.req.pattern_params.10 = instance.PVL_Active\n  -job.req.pattern_params.11 = instance.PVL_Done\n  -job.req.pattern_params.12 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P06",
+      "formula": "G(waitingProcessing & targetComplete -> R1(nextTargetSelected))",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": true,
+      "message": "PLCverif could not build a structured C model:  declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092. [Control-flow declaration generation]\nError: The called unit '' is not a valid function or function block. Line: 217, offset: 7620. [Control-flow declaration generation]\nError: Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633. [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (659 ms): Successful\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 4, offset: 58.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 14, offset: 347.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 21, offset: 474.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 22, offset: 505.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 23, offset: 535.\n    - [Warning] Too deeply nested IF statement. Line: 119, offset: 3008.\n    - [Error] Invalid type conversion: USINT does not match the expected INT type.  Line: 122, offset: 3123.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 134, offset: 3299.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 144, offset: 3526.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 165, offset: 3892.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 166, offset: 3918.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 7620.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_A7\n  -job.req.pattern_params.9 = instance.PVL_A8\n  -job.req.pattern_params.10 = instance.PVL_Active\n  -job.req.pattern_params.11 = instance.PVL_Done\n  -job.req.pattern_params.12 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P07",
+      "formula": "G(finalStationReached -> R1(conveyorStopped))",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": true,
+      "message": "PLCverif could not build a structured C model:  declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092. [Control-flow declaration generation]\nError: The called unit '' is not a valid function or function block. Line: 217, offset: 7620. [Control-flow declaration generation]\nError: Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633. [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (659 ms): Successful\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 4, offset: 58.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 14, offset: 347.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 21, offset: 474.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 22, offset: 505.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 23, offset: 535.\n    - [Warning] Too deeply nested IF statement. Line: 119, offset: 3008.\n    - [Error] Invalid type conversion: USINT does not match the expected INT type.  Line: 122, offset: 3123.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 134, offset: 3299.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 144, offset: 3526.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 165, offset: 3892.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 166, offset: 3918.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 7620.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_A7\n  -job.req.pattern_params.9 = instance.PVL_A8\n  -job.req.pattern_params.10 = instance.PVL_Active\n  -job.req.pattern_params.11 = instance.PVL_Done\n  -job.req.pattern_params.12 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\candidate.scl\n\n\n== Executing Agents ==\n"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [
+    "PVL_RouteOK"
+  ],
+  "observer_definitions": {
+    "routeStart": "PVL_PreStage=0 & sensor1 & station1Start",
+    "transporting": "PVL_PreStage=1",
+    "targetReached": "PVL_Reached",
+    "directionOK": "PVL_DirectionOK",
+    "conveyorStopped": "!conveyorLeft & !conveyorRight",
+    "waitingProcessing": "PVL_PreStage=2",
+    "targetComplete": "PVL_Complete",
+    "cursorHeld": "PVL_Cursor=PVL_PreCursor",
+    "firstTargetSelected": "PVL_DirectionOK",
+    "nextTargetSelected": "PVL_DirectionOK",
+    "finalStationReached": "PVL_PreStage=1 & PVL_Reached & PVL_PreTarget=5"
+  },
+  "source_adaptations": [],
+  "instrumented_sha256": "cb506f28747315e8f3bb4424975c2bf8b6d2abad04566a0447fef82148d9bf0d",
+  "tool_sha256": {
+    "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+    "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+    "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+  },
+  "plcverif_seconds": 3.67,
+  "message": "PLCverif could not build a structured C model:  declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071. [Control-flow declaration generation]\nWarning: Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092. [Control-flow declaration generation]\nError: The called unit '' is not a valid function or function block. Line: 217, offset: 7620. [Control-flow declaration generation]\nError: Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633. [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (659 ms): Successful\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 4, offset: 58.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 14, offset: 347.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 21, offset: 474.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 22, offset: 505.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 23, offset: 535.\n    - [Warning] Too deeply nested IF statement. Line: 119, offset: 3008.\n    - [Error] Invalid type conversion: USINT does not match the expected INT type.  Line: 122, offset: 3123.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 134, offset: 3299.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 144, offset: 3526.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 165, offset: 3892.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 166, offset: 3918.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 167, offset: 3947.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 172, offset: 4071.\n    - [Warning] Data type USINT is not supported in Step7v55 files. Line: 173, offset: 4092.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 7620.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 7633.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_A7\n  -job.req.pattern_params.9 = instance.PVL_A8\n  -job.req.pattern_params.10 = instance.PVL_Active\n  -job.req.pattern_params.11 = instance.PVL_Done\n  -job.req.pattern_params.12 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_8mosey_i\\candidate.scl\n\n\n== Executing Agents ==\n",
+  "seconds": 3.749,
+  "model_source_sha256": "32308616105bfe7e1a2ccce427a690bce2c0ced319997e3cfcd1514bc223df78",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q16"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station1Start"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station1Start"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station2Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevComplete2"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station3Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevComplete3"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station4Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevComplete4"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevComplete2"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station2Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevComplete3"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station3Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevComplete4"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station4Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetReached"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "started"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "processSequence"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor1"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station1Start"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "started"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "started"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetReached"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor2"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetReached"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor3"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetReached"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor4"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetReached"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor5"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetReached"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station2Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station3Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station4Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetReached"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "started"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "processSequence"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetComplete"
+    },
+    {
+      "kind": "range_token_spacing",
+      "count": 1
+    },
+    {
+      "kind": "fresh_temporary_inputs",
+      "interface_additions": [
+        {
+          "direction": "Input",
+          "name": "WBTEMP_0",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_1",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_2",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_3",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_4",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_5",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_6",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_7",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_8",
+          "type": "BOOL"
+        }
+      ],
+      "semantics": "Fresh independent scalar values at each entry FB call; exact fixed array/struct members, no zero or retained-state assumption"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

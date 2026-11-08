@@ -1,0 +1,73 @@
+FUNCTION_BLOCK "IPv4Parser"
+  VERSION : 0.1
+
+  VAR_INPUT
+    ipText : STRING(254);
+  END_VAR
+
+  VAR_OUTPUT
+    ipValue : UDINT;
+  END_VAR
+
+  VAR_TEMP
+    len      : INT;
+    idx      : INT;
+    seg      : INT;
+    digitCnt : INT;
+    segVal   : DINT;
+    acc      : UDINT;
+    ch       : CHAR;
+    ok       : BOOL;
+  END_VAR
+
+BEGIN
+    ok := TRUE;
+    acc := 0;
+    len := LEN(#ipText);
+    idx := 1;
+    seg := 0;
+
+    WHILE (seg < 4) AND ok DO
+        digitCnt := 0;
+        segVal := 0;
+
+        WHILE (idx <= len) DO
+            ch := #ipText[idx];
+            IF (ch >= '0') AND (ch <= '9') THEN
+                digitCnt := digitCnt + 1;
+                segVal := (segVal * 10) + (CHAR_TO_DINT(ch) - 48);
+                IF segVal > 255 THEN
+                    ok := FALSE;
+                END_IF;
+                idx := idx + 1;
+            ELSE
+                EXIT;
+            END_IF;
+        END_WHILE;
+
+        IF (digitCnt = 0) OR (segVal > 255) THEN
+            ok := FALSE;
+        END_IF;
+
+        IF ok AND (seg < 3) THEN
+            IF (idx <= len) AND (#ipText[idx] = '.') THEN
+                idx := idx + 1;
+            ELSE
+                ok := FALSE;
+            END_IF;
+        END_IF;
+
+        acc := (acc << 8) OR DWORD_TO_UDINT(INT_TO_DWORD(segVal));
+        seg := seg + 1;
+    END_WHILE;
+
+    IF (idx <= len) THEN
+        ok := FALSE;
+    END_IF;
+
+    IF ok THEN
+        #ipValue := acc;
+    ELSE
+        #ipValue := 0;
+    END_IF;
+END_FUNCTION_BLOCK

@@ -1,0 +1,144 @@
+FUNCTION_BLOCK Q11
+
+VAR_INPUT
+    Mode : BOOL;          // 0=Manual, 1=Automatic
+    ForwardButton : BOOL;
+    ReverseButton : BOOL;
+    SensorA : BOOL;
+    SensorB : BOOL;
+    SensorC : BOOL;
+    ButtonA : BOOL;
+    ButtonB : BOOL;
+    ButtonC : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    MotorForward : BOOL;
+    MotorReverse : BOOL;
+    CompletionLight : BOOL;
+END_VAR
+
+VAR
+    State : INT;          // Internal state: 0=Start/Idle, 1=MovingToB, 2=AtB_Waiting, 3=MovingToC, 4=AtC_Done
+    PrevButtonA : BOOL;
+    PrevButtonB : BOOL;
+    PrevButtonC : BOOL;
+    EdgeButtonA : BOOL;
+    EdgeButtonB : BOOL;
+    EdgeButtonC : BOOL;
+    ProductCompletedAtC : BOOL; // Static flag to hold completion status at Station C
+END_VAR
+
+     
+    // --- Edge Detection for Buttons ---
+    EdgeButtonA := ButtonA AND NOT PrevButtonA;
+    EdgeButtonB := ButtonB AND NOT PrevButtonB;
+    EdgeButtonC := ButtonC AND NOT PrevButtonC;
+
+    PrevButtonA := ButtonA;
+    PrevButtonB := ButtonB;
+    PrevButtonC := ButtonC;
+
+    // --- Mode Logic ---
+    IF Mode = FALSE THEN
+        // Manual Mode
+        // Interlock: Cannot be forward and reverse simultaneously
+        IF ForwardButton AND NOT ReverseButton THEN
+            MotorForward := TRUE;
+            MotorReverse := FALSE;
+        ELSIF ReverseButton AND NOT ForwardButton THEN
+            MotorForward := FALSE;
+            MotorReverse := TRUE;
+        ELSE
+            MotorForward := FALSE;
+            MotorReverse := FALSE;
+        END_IF;
+        
+        // In manual mode, completion light is off as per standard behavior unless specified otherwise.
+        // The spec implies CompletionLight is part of the Auto sequence logic.
+        CompletionLight := FALSE;
+        
+        // Reset internal state when in manual mode to ensure clean start upon switching back to auto?
+        // Spec doesn't strictly require this, but it's safer. However, keeping state might be desired if partial processing should continue.
+        // Given "Mode Switching" requirement doesn't specify persistence, we will leave State untouched or reset? 
+        // Let's assume standard practice: Manual operation overrides automatic sequencing logic outputs directly.
+        // We do not modify State here to allow resuming if that was intended, but usually manual/auto switches reset context.
+        // To be safe with LTL properties regarding specific states, we only drive outputs based on inputs in manual.
+        
+    ELSE
+        // Automatic Mode
+        CASE State OF
+            0:
+                // Start / Idle: Waiting for product at A and ButtonA
+                MotorForward := FALSE;
+                MotorReverse := FALSE;
+                CompletionLight := FALSE;
+                ProductCompletedAtC := FALSE; // Ensure clean state
+                
+                IF SensorA AND EdgeButtonA THEN
+                    State := 1; // Move to B
+                END_IF;
+
+            1:
+                // Moving to B
+                MotorForward := TRUE;
+                MotorReverse := FALSE;
+                
+                IF SensorB THEN
+                    MotorForward := FALSE; // Stop motor immediately upon arrival
+                    State := 2;           // Arrived at B
+                END_IF;
+
+            2:
+                // At B: Waiting for ButtonB
+                MotorForward := FALSE;
+                MotorReverse := FALSE;
+                
+                IF EdgeButtonB THEN
+                    State := 3; // Move to C
+                END_IF;
+
+            3:
+                // Moving to C
+                MotorForward := TRUE;
+                MotorReverse := FALSE;
+                
+                IF SensorC THEN
+                    MotorForward := FALSE; // Stop motor immediately upon arrival
+                    State := 4;           // Arrived at C
+                END_IF;
+
+            4:
+                // At C / Done: Waiting for ButtonC to confirm processing complete
+                MotorForward := FALSE;
+                MotorReverse := FALSE;
+                
+                // If ButtonC rising edge detected, mark product as completed
+                IF EdgeButtonC THEN
+                    ProductCompletedAtC := TRUE;
+                END_IF;
+                
+                // Update Light Output based on completion flag and sensor presence
+                IF ProductCompletedAtC AND SensorC THEN
+                    CompletionLight := TRUE;
+                ELSE
+                    CompletionLight := FALSE;
+                END_IF;
+
+                // Check for product removal (SensorC goes low)
+                IF NOT SensorC THEN
+                    CompletionLight := FALSE;
+                    ProductCompletedAtC := FALSE; // Reset flag
+                    State := 0; // Return to Idle for next cycle
+                END_IF;
+
+            ELSE
+                // Default case for any unexpected state values
+                State := 0;
+                MotorForward := FALSE;
+                MotorReverse := FALSE;
+                CompletionLight := FALSE;
+                ProductCompletedAtC := FALSE;
+        END_CASE;
+    END_IF;
+END_FUNCTION_BLOCK

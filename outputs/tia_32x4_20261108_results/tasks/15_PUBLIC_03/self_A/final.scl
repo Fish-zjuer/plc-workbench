@@ -1,0 +1,54 @@
+FUNCTION_BLOCK "Q03"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      Value : REAL;
+      hiLevel : REAL;
+      loLevel : REAL;
+      hystWindow : REAL;
+   END_VAR 
+   VAR_OUTPUT 
+      hiAlarm : BOOL;
+      loAlarm : BOOL;
+      error : BOOL;
+      status : WORD;
+   END_VAR 
+   VAR_TEMP 
+      valid : BOOL;
+   END_VAR 
+
+BEGIN
+   // Validity of configuration
+   #valid := FALSE;
+
+   IF #loLevel >= #hiLevel THEN
+      // Invalid limits: loLevel must be smaller than hiLevel
+      #error := TRUE;
+      #status := 16#8001;
+   ELSIF #hystWindow >= (#hiLevel - #loLevel) THEN
+      // Invalid hysteresis window relative to the deviation range
+      #error := TRUE;
+      #status := 16#8002;
+   ELSE
+      #valid := TRUE;
+      #error := FALSE;
+      #status := 16#0000;
+   END_IF;
+
+   IF #valid THEN
+      // High alarm with hysteresis
+      IF #Value > #hiLevel THEN
+         #hiAlarm := TRUE;
+      ELSIF #Value < (#hiLevel - #hystWindow) THEN
+         #hiAlarm := FALSE;
+      END_IF;
+
+      // Low alarm with hysteresis
+      IF #Value < #loLevel THEN
+         #loAlarm := TRUE;
+      ELSIF #Value > (#loLevel + #hystWindow) THEN
+         #loAlarm := FALSE;
+      END_IF;
+   END_IF;
+
+END_FUNCTION_BLOCK

@@ -1,0 +1,47 @@
+FUNCTION_BLOCK "BlowerControl"
+  VERSION : 0.1
+
+  VAR_INPUT
+    DO_LOW : BOOL;
+    AERATION_E_STOP_NC : BOOL;
+  END_VAR
+
+  VAR_OUTPUT
+    BLOWER_RUN : BOOL;
+    AERATION_BLOWER_CYCLE_COUNT : UINT;
+  END_VAR
+
+  VAR
+    eligible : BOOL;
+    timerRunning : BOOL;
+    elapsedMs : TIME;
+    runWasHigh : BOOL;
+  END_VAR
+
+BEGIN
+    eligible := #DO_LOW AND #AERATION_E_STOP_NC;
+
+    IF NOT #eligible THEN
+        #timerRunning := FALSE;
+        #elapsedMs := T#0s;
+        #BLOWER_RUN := FALSE;
+    ELSE
+        IF NOT #timerRunning THEN
+            #timerRunning := TRUE;
+            #elapsedMs := T#0s;
+        ELSE
+            #elapsedMs := TIME_ADD(IN1 := #elapsedMs, IN2 := T#10ms);
+        END_IF;
+
+        IF #elapsedMs >= T#5s THEN
+            #BLOWER_RUN := TRUE;
+        ELSE
+            #BLOWER_RUN := FALSE;
+        END_IF;
+    END_IF;
+
+    IF #BLOWER_RUN AND NOT #runWasHigh THEN
+        #AERATION_BLOWER_CYCLE_COUNT := #AERATION_BLOWER_CYCLE_COUNT + 1;
+    END_IF;
+    #runWasHigh := #BLOWER_RUN;
+END_FUNCTION_BLOCK

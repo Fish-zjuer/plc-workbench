@@ -1,0 +1,68 @@
+FUNCTION_BLOCK FB_CrusherExtraction
+VAR_INPUT
+    Enable : BOOL;
+    Trip : BOOL;
+    FeedDemand : LREAL;
+    FeedActual : LREAL;
+    ExtractionCapacity : LREAL;
+END_VAR
+VAR_OUTPUT
+    FeedSP : LREAL;
+    ExtractionSP : LREAL;
+    Error : BOOL;
+END_VAR
+VAR
+    bActive : BOOL;
+    bValid : BOOL;
+END_VAR
+VAR_INPUT
+WBTEMP_0 : BOOL;
+WBTEMP_1 : BOOL;
+END_VAR
+
+     
+bActive := WBTEMP_0;
+bValid := WBTEMP_1;
+    // Determine if the block is in a normal operating state (Enabled and not Tripped)
+    bActive := Enable AND NOT Trip;
+
+    IF NOT bActive THEN
+        // Requirement 4: Trip=TRUE or Enable=FALSE has priority.
+        // Set both setpoints to zero and Error=FALSE.
+        FeedSP := 0.0;
+        ExtractionSP := 0.0;
+        Error := FALSE;
+    ELSE
+        // Check for illegal inputs: any numeric value outside 0..100
+        // Using tolerance 1e-6 as per requirements, but standard range check suffices for logical validity
+        bValid := (FeedDemand >= 0.0 AND FeedDemand <= 100.0) AND
+                   (FeedActual >= 0.0 AND FeedActual <= 100.0) AND
+                   (ExtractionCapacity >= 0.0 AND ExtractionCapacity <= 100.0);
+
+        IF NOT bValid THEN
+            // Requirement 4: Illegal inputs set both setpoints to zero and Error=TRUE.
+            FeedSP := 0.0;
+            ExtractionSP := 0.0;
+            Error := TRUE;
+        ELSE
+            // Requirement 2: Compute separate feed and extraction setpoints.
+            // FeedSP = MIN(FeedDemand, ExtractionCapacity)
+            // ExtractionSP = MAX(FeedDemand, FeedActual)
+            
+            IF FeedDemand < ExtractionCapacity THEN
+                FeedSP := FeedDemand;
+            ELSE
+                FeedSP := ExtractionCapacity;
+            END_IF;
+
+            IF FeedDemand > FeedActual THEN
+                ExtractionSP := FeedDemand;
+            ELSE
+                ExtractionSP := FeedActual;
+            END_IF;
+
+            // Requirement 4: Legal computation clears Error.
+            Error := FALSE;
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

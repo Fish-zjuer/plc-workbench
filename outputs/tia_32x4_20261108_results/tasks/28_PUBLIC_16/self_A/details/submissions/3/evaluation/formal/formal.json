@@ -1,0 +1,751 @@
+{
+  "status": "tool_error",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_16",
+  "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+  "source_sha256": "65eb2e3f8d840cc5a406c687bcce465bb060a618d5bd33c9c24282dd4bf275b5",
+  "model_calls": 0,
+  "declared_ltl_total": 7,
+  "mapped_assertions_total": 7,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_A\\details\\submissions\\3\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(!(conveyorLeft & conveyorRight))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": false,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P02",
+      "formula": "G(routeStart -> R1(firstTargetSelected))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P03",
+      "formula": "G(transporting & !targetReached -> directionOK)",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": false,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P04",
+      "formula": "G(targetReached -> R1(conveyorStopped))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P05",
+      "formula": "G(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": false,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P06",
+      "formula": "G(waitingProcessing & targetComplete -> R1(nextTargetSelected))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P07",
+      "formula": "G(finalStationReached -> R1(conveyorStopped))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [
+    "PVL_RouteOK"
+  ],
+  "observer_definitions": {
+    "routeStart": "PVL_PreStage=0 & sensor1 & station1Start",
+    "transporting": "PVL_PreStage=1",
+    "targetReached": "PVL_Reached",
+    "directionOK": "PVL_DirectionOK",
+    "conveyorStopped": "!conveyorLeft & !conveyorRight",
+    "waitingProcessing": "PVL_PreStage=2",
+    "targetComplete": "PVL_Complete",
+    "cursorHeld": "PVL_Cursor=PVL_PreCursor",
+    "firstTargetSelected": "PVL_DirectionOK",
+    "nextTargetSelected": "PVL_DirectionOK",
+    "finalStationReached": "PVL_PreStage=1 & PVL_Reached & PVL_PreTarget=5"
+  },
+  "source_adaptations": [],
+  "instrumented_sha256": "c2668353cdae9422195fc62cb6026ca88984cf7211b137eca697ea48305b05c1",
+  "tool_sha256": {
+    "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+    "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+    "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+  },
+  "plcverif_seconds": 8.868,
+  "message": "[WinError 5] 拒绝访问。",
+  "seconds": 25.023,
+  "model_source_sha256": "d660cf16d2be6e6cffc1e72c514d2fe98180e7d6089323a0192ef6457a99b508",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q16"
+    },
+    {
+      "kind": "layout_attribute",
+      "attribute": "S7_Optimized_Access",
+      "reason": "No absolute memory, pointers or references admitted by this adapter"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "startEdge"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station1Start"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "lastStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "lastStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station1Start"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "completeEdge"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station2Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "lastComplete2"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station3Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "lastComplete3"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station4Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "lastComplete4"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "lastComplete2"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station2Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "lastComplete3"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station3Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "lastComplete4"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "station4Complete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "processLength"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "stationCount"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "processLength"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "stationCount"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "stationCount"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "processLength"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor1"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "startEdge"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "processSequence"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetValid"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "processSequence"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetValid"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetValid"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor1"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor2"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor3"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor4"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor5"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "completeEdge"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "stationCount"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetValid"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "processSequence"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetValid"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetValid"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "moveDir"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensor1"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cursor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "currentStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "targetStation"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "state"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorLeft"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "conveyorRight"
+    },
+    {
+      "kind": "range_token_spacing",
+      "count": 1
+    },
+    {
+      "kind": "fresh_temporary_inputs",
+      "interface_additions": [
+        {
+          "direction": "Input",
+          "name": "WBTEMP_0",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_1",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_2",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_3",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_4",
+          "type": "BOOL"
+        }
+      ],
+      "semantics": "Fresh independent scalar values at each entry FB call; exact fixed array/struct members, no zero or retained-state assumption"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

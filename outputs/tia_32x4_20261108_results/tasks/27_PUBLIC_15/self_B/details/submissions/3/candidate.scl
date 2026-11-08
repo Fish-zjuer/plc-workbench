@@ -1,0 +1,182 @@
+FUNCTION_BLOCK "Q15"
+
+VAR_INPUT
+    estop : BOOL; // FALSE: Emergency stop triggered, TRUE: Normal
+    opeMode : BOOL; // FALSE: Manual, TRUE: Auto
+    valveAStart : BOOL;
+    valveBStart : BOOL;
+    valveCStart : BOOL;
+    valveDStart : BOOL;
+    mixMotorStart : BOOL;
+    autoStart : BOOL;
+    processMode : BOOL;
+    levelSensor : INT;
+    mixMotorComplete : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    valveARun : BOOL;
+    valveBRun : BOOL;
+    valveCRun : BOOL;
+    valveDRun : BOOL;
+    mixMotorRun : BOOL;
+END_VAR
+
+VAR
+    // State Machine Variables
+    step : INT := 0; // 0: Idle, 1: Valve A, 2: Valve B, 3: Valve C, 4: Mix, 5: Valve D
+    
+    // Edge Detection for Manual Mode and Auto Start
+    edge_valveA : R_TRIG;
+    edge_valveB : R_TRIG;
+    edge_valveC : R_TRIG;
+    edge_valveD : R_TRIG;
+    edge_mix : R_TRIG;
+    edge_auto : R_TRIG;
+    
+    // Previous mode to detect switch
+    prev_opeMode : BOOL := FALSE;
+END_VAR
+
+BEGIN
+    // Initialize outputs to prevent uninitialized warnings if logic paths skip assignment
+    // Note: Actual values are overwritten by specific logic blocks below.
+    IF NOT estop THEN
+        valveARun := FALSE;
+        valveBRun := FALSE;
+        valveCRun := FALSE;
+        valveDRun := FALSE;
+        mixMotorRun := FALSE;
+        step := 0; // Reset state machine
+        RETURN;
+    END_IF;
+
+    // 2. Mode Switching Logic
+    IF opeMode <> prev_opeMode THEN
+        IF opeMode THEN
+            // Entering Auto: Reset Step to Idle
+            step := 0;
+        ELSE
+            // Entering Manual: Stop Auto Sequence
+            step := 0;
+            // Outputs retain their last value until manually toggled
+        END_IF;
+        prev_opeMode := opeMode;
+    END_IF;
+
+    // 3. Manual Mode Logic
+    IF NOT opeMode THEN
+        // Update Edge Detectors
+        edge_valveA(CLK := valveAStart);
+        edge_valveB(CLK := valveBStart);
+        edge_valveC(CLK := valveCStart);
+        edge_valveD(CLK := valveDStart);
+        edge_mix(CLK := mixMotorStart);
+        
+        // Toggle outputs on rising edge
+        IF edge_valveA.Q THEN
+            valveARun := NOT valveARun;
+        END_IF;
+        
+        IF edge_valveB.Q THEN
+            valveBRun := NOT valveBRun;
+        END_IF;
+        
+        IF edge_valveC.Q THEN
+            valveCRun := NOT valveCRun;
+        END_IF;
+        
+        IF edge_valveD.Q THEN
+            valveDRun := NOT valveDRun;
+        END_IF;
+        
+        IF edge_mix.Q THEN
+            mixMotorRun := NOT mixMotorRun;
+        END_IF;
+        
+        // Reset auto edge detector when in manual to prevent false trigger upon switching back
+        edge_auto(CLK := FALSE);
+    END_IF;
+
+    // 4. Automatic Mode Logic
+    IF opeMode THEN
+        // Update Auto Start Edge Detector
+        edge_auto(CLK := autoStart);
+        
+        // State Machine Execution
+        CASE step OF
+            0: // Idle
+                // Wait for autoStart
+                IF edge_auto.Q THEN
+                    step := 1;
+                END_IF;
+                
+            1: // Open Valve A
+                valveARun := TRUE;
+                valveBRun := FALSE;
+                valveCRun := FALSE;
+                valveDRun := FALSE;
+                mixMotorRun := FALSE;
+                
+                IF levelSensor >= 50 THEN
+                    step := 2;
+                END_IF;
+                
+            2: // Close Valve A, Open Valve B
+                valveARun := FALSE;
+                valveBRun := TRUE;
+                valveCRun := FALSE;
+                valveDRun := FALSE;
+                mixMotorRun := FALSE;
+                
+                IF levelSensor >= 80 THEN
+                    IF processMode THEN
+                        step := 3; // Go to Valve C branch
+                    ELSE
+                        step := 4; // Go to Mix branch directly
+                    END_IF;
+                END_IF;
+                
+            3: // Close Valve B, Open Valve C (Process Mode = True)
+                valveARun := FALSE;
+                valveBRun := FALSE;
+                valveCRun := TRUE;
+                valveDRun := FALSE;
+                mixMotorRun := FALSE;
+                
+                IF levelSensor >= 100 THEN
+                    step := 4; // Move to Mixing
+                END_IF;
+                
+            4: // Close Valves, Start Mixing Motor
+                valveARun := FALSE;
+                valveBRun := FALSE;
+                valveCRun := FALSE;
+                valveDRun := FALSE;
+                mixMotorRun := TRUE;
+                
+                IF mixMotorComplete THEN
+                    step := 5;
+                END_IF;
+                
+            5: // Stop Mixing, Open Valve D
+                valveARun := FALSE;
+                valveBRun := FALSE;
+                valveCRun := FALSE;
+                valveDRun := TRUE;
+                mixMotorRun := FALSE;
+                
+                // Requirement: "open valve D, and the automatic process ends"
+                // Interpretation: Hold D open until next cycle start or reset.
+                // To allow restarting the process, we check for autoStart here as well,
+                // effectively resetting the sequence if a new batch is requested.
+                IF edge_auto.Q THEN
+                    step := 0;
+                END_IF;
+
+            ELSE
+                step := 0;
+        END_CASE;
+    END_IF;
+
+END_FUNCTION_BLOCK

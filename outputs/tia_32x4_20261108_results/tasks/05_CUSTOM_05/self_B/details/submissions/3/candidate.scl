@@ -1,0 +1,140 @@
+FUNCTION_BLOCK "FB_InspectionCapture"
+VERSION : 0.1
+VAR_INPUT
+    Enable : BOOL;
+    Reset : BOOL;
+    DistanceMm : LREAL;
+    SpacingMm : LREAL;
+    CameraBusy : BOOL;
+END_VAR
+VAR_OUTPUT
+    CapturePulse : BOOL;
+    CaptureCount : UDINT;
+    MissedCount : UDINT;
+    Error : BOOL;
+END_VAR
+VAR
+    prevEnable : BOOL := FALSE;
+    origin : LREAL := 0.0;
+    latchedSpacing : LREAL := 0.0;
+    lastDistance : LREAL := 0.0;
+    previousCrossedCount : DINT := 0; // Store k as integer to avoid float precision issues in counting
+    initialized : BOOL := FALSE;
+END_VAR
+VAR_TEMP
+    isInitScan : BOOL;
+    validData : BOOL;
+    currentK : DINT;
+    d : DINT;
+    rawK : LREAL;
+END_VAR
+
+BEGIN
+    // Determine initialization condition: First call, Reset, or Rising Edge of Enable
+    IF NOT #initialized THEN
+        #isInitScan := TRUE;
+        #initialized := TRUE;
+    ELSIF #Reset OR (#Enable AND NOT #prevEnable) THEN
+        #isInitScan := TRUE;
+    ELSE
+        #isInitScan := FALSE;
+    END_IF;
+
+    // Validate inputs for initialization
+    // Requirements: DistanceMm >= 0, SpacingMm > 0, finite.
+    #validData := (#DistanceMm >= 0.0) AND (#SpacingMm > 0.0);
+
+    IF #isInitScan THEN
+        IF #validData THEN
+            // Latch origin and spacing
+            #origin := #DistanceMm;
+            #latchedSpacing := #SpacingMm;
+            #lastDistance := #DistanceMm;
+            #previousCrossedCount := 0;
+            
+            // Clear counters and error
+            #CaptureCount := 0;
+            #MissedCount := 0;
+            #CapturePulse := FALSE;
+            #Error := FALSE;
+        ELSE
+            // Invalid initialization data
+            #Error := TRUE;
+            #CapturePulse := FALSE;
+            // Counts and origin are preserved per Req 5
+        END_IF;
+    ELSE
+        // Non-initialization scan
+        IF NOT #Enable THEN
+            // Disabled: No capture, retain counts, retain error state
+            #CapturePulse := FALSE;
+            // Error remains latched if previously set
+        ELSIF #Error THEN
+            // Error latched from previous scans: Suppress captures, preserve state
+            #CapturePulse := FALSE;
+            // Do not update counts or origin
+        ELSE
+            // Valid enabled operation
+            // Check for runtime errors: Decrease below last valid position or invalid values
+            IF #DistanceMm < #lastDistance THEN
+                #Error := TRUE;
+                #CapturePulse := FALSE;
+                // Preserve counts and origin
+            ELSE
+                // Calculate k = FLOOR((DistanceMm - origin) / latched_spacing)
+                // Note: Division by zero is prevented because latchedSpacing > 0 was checked during init.
+                #rawK := (#DistanceMm - #origin) / #latchedSpacing;
+                
+                // Convert to integer using TRUNC (which truncates towards zero). 
+                // Since distance is non-decreasing and origin <= distance, rawK >= 0.
+                // TRUNC(2.9) -> 2. This matches FLOOR for positive numbers.
+                #currentK := TRUNC(#rawK);
+                
+                // Ensure currentK is not negative due to floating point noise near zero
+                IF #currentK < 0 THEN
+                    #currentK := 0;
+                END_IF;
+
+                #d := #currentK - #previousCrossedCount;
+                
+                IF #d <= 0 THEN
+                    // No new points crossed
+                    #CapturePulse := FALSE;
+                    // Update tracking variables
+                    #lastDistance := #DistanceMm;
+                    // previousCrossedCount stays same or updates to currentK if equal
+                    IF #currentK <> #previousCrossedCount THEN
+                         #previousCrossedCount := #currentK;
+                    END_IF;
+                ELSE
+                    // Points crossed (d > 0)
+                    IF #CameraBusy THEN
+                        // Busy: Emit no capture, add d to MissedCount
+                        #CapturePulse := FALSE;
+                        // Add d to MissedCount
+                        // Safe addition for UDINT
+                        IF #d > 0 THEN
+                            #MissedCount := #MissedCount + TO_UDINT(#d);
+                        END_IF;
+                    ELSE
+                        // Available: Emit one capture, increment CaptureCount once, add d-1 to MissedCount
+                        #CapturePulse := TRUE;
+                        #CaptureCount := #CaptureCount + 1;
+                        
+                        IF #d > 1 THEN
+                            #MissedCount := #MissedCount + TO_UDINT(#d - 1);
+                        END_IF;
+                    END_IF;
+                    
+                    // Update crossed-point count to k
+                    #previousCrossedCount := #currentK;
+                    #lastDistance := #DistanceMm;
+                END_IF;
+            END_IF;
+        END_IF;
+    END_IF;
+
+    // Update prevEnable for next scan edge detection
+    #prevEnable := #Enable;
+
+END_FUNCTION_BLOCK

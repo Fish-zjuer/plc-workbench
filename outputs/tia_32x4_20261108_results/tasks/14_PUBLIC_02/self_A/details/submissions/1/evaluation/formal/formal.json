@@ -1,0 +1,327 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_02",
+  "dataset_sha256": "599134f7c204840e338f9c107e583afdb936214dd66484482a036a339cba700e",
+  "source_sha256": "ee7a4bb25b2b8383615105647a916b5853ae3b21336591720a25bb5391cde825",
+  "model_calls": 0,
+  "declared_ltl_total": 7,
+  "mapped_assertions_total": 7,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\14_PUBLIC_02\\self_A\\details\\submissions\\1\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(historyReady -> risingBitsOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif cannot safely preserve SHL semantics; supported lowering is DWORD#1 shifted by an enclosing FOR 0 TO 31 variable"
+    },
+    {
+      "id": "P02",
+      "formula": "G(historyReady -> fallingBitsOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif cannot safely preserve SHL semantics; supported lowering is DWORD#1 shifted by an enclosing FOR 0 TO 31 variable"
+    },
+    {
+      "id": "P03",
+      "formula": "G(historyReady -> risingCountOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif cannot safely preserve SHL semantics; supported lowering is DWORD#1 shifted by an enclosing FOR 0 TO 31 variable"
+    },
+    {
+      "id": "P04",
+      "formula": "G(historyReady -> fallingCountOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif cannot safely preserve SHL semantics; supported lowering is DWORD#1 shifted by an enclosing FOR 0 TO 31 variable"
+    },
+    {
+      "id": "P05",
+      "formula": "G(historyReady -> changedFlagOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif cannot safely preserve SHL semantics; supported lowering is DWORD#1 shifted by an enclosing FOR 0 TO 31 variable"
+    },
+    {
+      "id": "P06",
+      "formula": "G(historyReady -> risingFlagOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif cannot safely preserve SHL semantics; supported lowering is DWORD#1 shifted by an enclosing FOR 0 TO 31 variable"
+    },
+    {
+      "id": "P07",
+      "formula": "G(historyReady -> fallingFlagOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif cannot safely preserve SHL semantics; supported lowering is DWORD#1 shifted by an enclosing FOR 0 TO 31 variable"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [],
+  "observer_definitions": {
+    "historyReady": "PVL_Ready",
+    "risingBitsOK": "risingBits=PVL_Rise",
+    "fallingBitsOK": "fallingBits=PVL_Fall",
+    "risingCountOK": "noOfRisingBits=PVL_RC",
+    "fallingCountOK": "noOfFallingBits=PVL_FC",
+    "changedFlagOK": "hasChanged=(value<>PVL_Prev)",
+    "risingFlagOK": "hasRisingEdges=(PVL_Rise<>0)",
+    "fallingFlagOK": "hasFallingEdges=(PVL_Fall<>0)"
+  },
+  "message": "PLCverif cannot safely preserve SHL semantics; supported lowering is DWORD#1 shifted by an enclosing FOR 0 TO 31 variable",
+  "seconds": 0.726,
+  "model_source_sha256": "7dca92ea4a07be6cd0ed9f3cf4d3e2d3a56b23b651b4300731ac98f44792182b",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "EdgeDetection"
+    },
+    {
+      "kind": "layout_attribute",
+      "attribute": "S7_Optimized_Access",
+      "reason": "No absolute memory, pointers or references admitted by this adapter"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "historyReady"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevValue"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "value"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "risingBits"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "fallingBits"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "noOfRisingBits"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "noOfFallingBits"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "hasChanged"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "hasRisingEdges"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "hasFallingEdges"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "historyReady"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "tmpRising"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "value"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevValue"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "tmpFalling"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevValue"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "value"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "risingBits"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "tmpRising"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "fallingBits"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "tmpFalling"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cntRise"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cntFall"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "tmpRising"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cntRise"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cntRise"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "tmpFalling"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cntFall"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cntFall"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "noOfRisingBits"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cntRise"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "noOfFallingBits"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "cntFall"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "hasChanged"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "value"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevValue"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "hasRisingEdges"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "tmpRising"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "hasFallingEdges"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "tmpFalling"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "prevValue"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "value"
+    },
+    {
+      "kind": "named_shift_arguments",
+      "count": 2,
+      "semantics": "Delegated to shared ST adapter"
+    },
+    {
+      "kind": "fresh_temporary_inputs",
+      "interface_additions": [
+        {
+          "direction": "Input",
+          "name": "WBTEMP_0",
+          "type": "DWORD"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_1",
+          "type": "DWORD"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_2",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_3",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_4",
+          "type": "INT"
+        }
+      ],
+      "semantics": "Fresh independent scalar values at each entry FB call; exact fixed array/struct members, no zero or retained-state assumption"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

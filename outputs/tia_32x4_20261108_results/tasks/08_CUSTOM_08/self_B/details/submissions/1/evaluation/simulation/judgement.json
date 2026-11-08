@@ -1,0 +1,447 @@
+{
+  "status": "pass",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_08",
+  "source_sha256": "a2e59373894ac6efc58dc4e89a59da76c7ff537123976b219a39d596b79a2d4e",
+  "dataset_sha256": "34c1c9582796b7fc6426300c1b009b3cdb69681a1465120e4d16ef4f67aca76f",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "cases": [
+    {
+      "name": "13-A：同步/传动比容差与有效性",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 1.0,
+            "SyncBad": 0.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "LeftSpeed10": 39,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 1.0,
+            "SyncBad": 0.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "LeftSpeed10": 41,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 1.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "LeftSpeed10": 41,
+            "RightSpeed10": 39,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 1.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "LeftSpeed10": 38,
+            "RightSpeed10": 38,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 1.0,
+            "SyncBad": 0.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "LeftSpeed10": 37,
+            "RightSpeed10": 38,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 1.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 0
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 0.0,
+            "Invalid": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "LeftSpeed10": 101,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 0.0,
+            "Invalid": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": -1,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 0.0,
+            "Invalid": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "LeftSpeed10": -32768,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 0.0,
+            "Invalid": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "同步边界_40_40_6",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 1.0,
+            "SyncBad": 0.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "同步边界_39_40_6",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 39,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 1.0,
+            "SyncBad": 0.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "同步边界_41_39_6",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 41,
+            "RightSpeed10": 39,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 1.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "同步边界_38_38_6",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 38,
+            "RightSpeed10": 38,
+            "ReferenceSpeed10": 6
+          },
+          "expected": {
+            "SyncOK": true,
+            "SyncBad": false,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 1.0,
+            "SyncBad": 0.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "同步边界_40_40_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 40,
+            "RightSpeed10": 40,
+            "ReferenceSpeed10": 0
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 0.0,
+            "Invalid": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "同步边界_-32768_32767_100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": -32768,
+            "RightSpeed10": 32767,
+            "ReferenceSpeed10": 100
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": false,
+            "Invalid": true
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 0.0,
+            "Invalid": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "同步边界_100_100_100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "LeftSpeed10": 100,
+            "RightSpeed10": 100,
+            "ReferenceSpeed10": 100
+          },
+          "expected": {
+            "SyncOK": false,
+            "SyncBad": true,
+            "Invalid": false
+          },
+          "phase": "test",
+          "actual": {
+            "SyncOK": 0.0,
+            "SyncBad": 1.0,
+            "Invalid": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 8,
+    "scans": 17,
+    "assertions": 51,
+    "failed": 0
+  },
+  "target_compile": "passed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\08_CUSTOM_08\\self_B\\details\\submissions\\1\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "behavior_tested": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\08_CUSTOM_08\\self_B\\details\\submissions\\1\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0"
+}

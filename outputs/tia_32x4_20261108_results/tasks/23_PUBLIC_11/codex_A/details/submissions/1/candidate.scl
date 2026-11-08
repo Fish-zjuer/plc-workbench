@@ -1,0 +1,72 @@
+FUNCTION_BLOCK "ProductionLine"
+VERSION : 0.1
+   VAR_INPUT
+      Mode : BOOL;
+      ForwardButton : BOOL;
+      ReverseButton : BOOL;
+      SensorA : BOOL;
+      SensorB : BOOL;
+      SensorC : BOOL;
+      ButtonA : BOOL;
+      ButtonB : BOOL;
+      ButtonC : BOOL;
+   END_VAR
+   VAR_OUTPUT
+      MotorForward : BOOL;
+      MotorReverse : BOOL;
+      CompletionLight : BOOL;
+   END_VAR
+   VAR
+      AutoRun : BOOL;
+      PrevButtonA : BOOL;
+      PrevButtonB : BOOL;
+      PrevButtonC : BOOL;
+      PrevSensorA : BOOL;
+      PrevSensorB : BOOL;
+      PrevSensorC : BOOL;
+   END_VAR
+BEGIN
+   IF (#Mode) THEN
+      IF NOT #PrevSensorA AND #SensorA THEN
+         #AutoRun := FALSE;
+      END_IF;
+      IF NOT #PrevSensorB AND #SensorB THEN
+         #AutoRun := FALSE;
+      END_IF;
+      IF NOT #PrevSensorC AND #SensorC THEN
+         #AutoRun := FALSE;
+      END_IF;
+      IF NOT #PrevButtonA AND #ButtonA AND #SensorA AND NOT #AutoRun THEN
+         #AutoRun := TRUE;
+      END_IF;
+      IF NOT #PrevButtonB AND #ButtonB AND #SensorB AND NOT #AutoRun THEN
+         #AutoRun := TRUE;
+      END_IF;
+      IF NOT #PrevButtonC AND #ButtonC AND #SensorC AND NOT #AutoRun THEN
+         #AutoRun := TRUE;
+      END_IF;
+      IF #AutoRun THEN
+         #MotorForward := TRUE;
+         #MotorReverse := FALSE;
+      ELSE
+         #MotorForward := FALSE;
+         #MotorReverse := FALSE;
+      END_IF;
+      IF #SensorC AND #AutoRun THEN
+         #CompletionLight := TRUE;
+      END_IF;
+      IF NOT #SensorC THEN
+         #CompletionLight := FALSE;
+      END_IF;
+   ELSE
+      #AutoRun := FALSE;
+      #MotorForward := #ForwardButton AND NOT #ReverseButton;
+      #MotorReverse := #ReverseButton AND NOT #ForwardButton;
+   END_IF;
+   #PrevButtonA := #ButtonA;
+   #PrevButtonB := #ButtonB;
+   #PrevButtonC := #ButtonC;
+   #PrevSensorA := #SensorA;
+   #PrevSensorB := #SensorB;
+   #PrevSensorC := #SensorC;
+END_FUNCTION_BLOCK

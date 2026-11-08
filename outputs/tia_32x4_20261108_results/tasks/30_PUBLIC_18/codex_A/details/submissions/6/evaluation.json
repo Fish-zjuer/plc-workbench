@@ -1,0 +1,176 @@
+{
+  "status": "compile_failed",
+  "errors": 8,
+  "warnings": 1,
+  "state": "Error",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Error",
+      "description": "",
+      "errors": 8,
+      "warnings": 1
+    },
+    {
+      "path": "Program blocks",
+      "state": "Error",
+      "description": "",
+      "errors": 8,
+      "warnings": 1
+    },
+    {
+      "path": "Q18 (FB2)",
+      "state": "Error",
+      "description": "",
+      "errors": 8,
+      "warnings": 1
+    },
+    {
+      "path": "2",
+      "state": "Warning",
+      "description": "The sign or the accuracy of the value may be lost.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "3",
+      "state": "Error",
+      "description": "The formal parameter 'In' is invalid.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "3",
+      "state": "Error",
+      "description": "The formal parameter 'Context' is invalid.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "3",
+      "state": "Error",
+      "description": "Parameters of the function or the function block do not match the transferred formal parameters.  ",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "3",
+      "state": "Error",
+      "description": "Parameters of the function or the function block do not match the transferred formal parameters.  ",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "4",
+      "state": "Error",
+      "description": "The formal parameter 'In' is invalid.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "4",
+      "state": "Error",
+      "description": "The formal parameter 'Context' is invalid.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "4",
+      "state": "Error",
+      "description": "Parameters of the function or the function block do not match the transferred formal parameters.  ",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "4",
+      "state": "Error",
+      "description": "Parameters of the function or the function block do not match the transferred formal parameters.  ",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Error",
+      "description": "Compiling finished (errors: 8; warnings: 1)",
+      "errors": 1,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+  "returncode": 1,
+  "source_sha256": "ada2618bfb4cb57129a7c93ed845172418af12786d52383abff25228456be875",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "failed",
+  "behavior_tested": false,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\codex_A\\details\\submissions\\6\\evaluation\\compile",
+  "seconds": 46.754,
+  "queue_seconds": 203.534,
+  "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af",
+  "target": "tia",
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "ada2618bfb4cb57129a7c93ed845172418af12786d52383abff25228456be875",
+    "declared_ltl_total": 9,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> queueEmpty)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P08",
+        "formula": "G(countMatchesQueue)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P09",
+        "formula": "G(countWithinCapacity)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "compile_failed"
+}

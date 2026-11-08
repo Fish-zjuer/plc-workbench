@@ -1,0 +1,95 @@
+FUNCTION_BLOCK "FB_GateTelemetry"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      Reset : BOOL;   // Reset monitoring state.
+      FrameValid : BOOL;   // A complete lower-level-validated frame arrived this scan.
+      FrameSeq : UDINT;   // UDINT sequence from the telemetry frame.
+      Ack : BOOL;   // Acknowledgement; effective only with a fresh frame.
+      DtMs : UDINT;   // Actual interval, 1..1000 ms.
+      TimeoutMs : UDINT;   // Timeout threshold, 1..60000 ms.
+   END_VAR
+
+   VAR_OUTPUT
+      Fresh : BOOL;   // A fresh frame was accepted this scan.
+      AgeMs : UDINT;   // Age in ms, saturating at 60000.
+      CommFault : BOOL;   // Latched communication fault.
+      RemoteWritePermit : BOOL;   // Communication permission for remote writes, not gate motion.
+      Error : BOOL;   // Illegal timing parameter.
+   END_VAR
+
+   VAR
+      lastSeq : UDINT;
+      hasLastFrame : BOOL;
+   END_VAR
+
+BEGIN
+    // Priority 1: Reset
+    IF #Reset THEN
+        #hasLastFrame := FALSE;
+        #lastSeq := 0;
+        #AgeMs := 0;
+        #CommFault := TRUE;
+        #RemoteWritePermit := FALSE;
+        #Fresh := FALSE;
+        #Error := FALSE;
+    ELSE
+        // Priority 2: Check Parameter Validity
+        // DtMs must be 1..1000, TimeoutMs must be 1..60000
+        IF (#DtMs < 1) OR (#DtMs > 1000) OR (#TimeoutMs < 1) OR (#TimeoutMs > 60000) THEN
+            #Error := TRUE;
+            #CommFault := TRUE;
+            #RemoteWritePermit := FALSE;
+            #Fresh := FALSE;
+            // Preserve sequence history (lastSeq, hasLastFrame) and AgeMs as per requirement 5
+            // Do not update AgeMs or Sequence on illegal parameters
+        ELSE
+            // Legal call: Clear Error
+            #Error := FALSE;
+            
+            // Requirement 3: Process freshness first
+            // Fresh is TRUE if FrameValid AND (no previous frame OR Seq differs)
+            #Fresh := FALSE;
+            IF #FrameValid THEN
+                IF NOT #hasLastFrame OR (#FrameSeq <> #lastSeq) THEN
+                    #Fresh := TRUE;
+                END_IF;
+            END_IF;
+            
+            IF #Fresh THEN
+                // Save new sequence and reset age
+                #lastSeq := #FrameSeq;
+                #hasLastFrame := TRUE;
+                #AgeMs := 0;
+            ELSE
+                // Not fresh: Increment age by DtMs, saturating at 60000
+                // Note: If FrameValid is false but we have a previous frame, it's just time passing.
+                // If FrameValid is true but seq same, it's a replay/old frame, time passes.
+                IF #AgeMs + #DtMs > 60000 THEN
+                    #AgeMs := 60000;
+                ELSE
+                    #AgeMs := #AgeMs + #DtMs;
+                END_IF;
+            END_IF;
+            
+            // Requirement 4: Fault Latching and Clearing
+            // Latch CommFault when AgeMs >= TimeoutMs
+            IF #AgeMs >= #TimeoutMs THEN
+                #CommFault := TRUE;
+            END_IF;
+            
+            // Clear CommFault ONLY if Fresh AND Ack
+            IF #Fresh AND #Ack THEN
+                #CommFault := FALSE;
+            END_IF;
+            
+            // Calculate RemoteWritePermit
+            // Permit = NOT CommFault AND AgeMs < TimeoutMs
+            IF NOT #CommFault AND (#AgeMs < #TimeoutMs) THEN
+                #RemoteWritePermit := TRUE;
+            ELSE
+                #RemoteWritePermit := FALSE;
+            END_IF;
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

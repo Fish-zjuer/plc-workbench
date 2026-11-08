@@ -1,0 +1,136 @@
+FUNCTION_BLOCK "FB_ElevatorTarget"
+  VERSION : 0.1
+
+  VAR_INPUT
+    Enable : BOOL;
+    CurrentFloor : INT;
+    Direction : INT;
+    FullLoad : BOOL;
+    CabReq : ARRAY[1..6] OF BOOL;
+    HallReq : ARRAY[1..6] OF BOOL;
+  END_VAR
+
+  VAR_OUTPUT
+    HasTarget : BOOL;
+    TargetFloor : INT;
+    NextDirection : INT;
+  END_VAR
+
+  VAR_TEMP
+    i : INT;
+    f : INT;
+    best : INT;
+    dist : INT;
+    upFound : BOOL;
+    downFound : BOOL;
+    sideFound : BOOL;
+    eligible : ARRAY[1..6] OF BOOL;
+  END_VAR
+
+BEGIN
+    #f := #CurrentFloor;
+    IF (#f < 1) OR (#f > 6) THEN
+        IF #f < 1 THEN
+            #f := 1;
+        ELSE
+            #f := 6;
+        END_IF;
+    END_IF;
+
+    FOR #i := 1 TO 6 DO
+        #eligible[#i] := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+    END_FOR;
+
+    #HasTarget := FALSE;
+    #TargetFloor := #CurrentFloor;
+    #NextDirection := 0;
+    #upFound := FALSE;
+    #downFound := FALSE;
+    #sideFound := FALSE;
+    #best := 0;
+
+    IF #Enable THEN
+        IF #eligible[#f] THEN
+            #HasTarget := TRUE;
+            #TargetFloor := #f;
+            #NextDirection := 0;
+        ELSE
+            IF #Direction >= 0 THEN
+                FOR #i := (#f + 1) TO 6 DO
+                    IF #eligible[#i] THEN
+                        #TargetFloor := #i;
+                        #upFound := TRUE;
+                        EXIT;
+                    END_IF;
+                END_FOR;
+            END_IF;
+            IF #Direction <= 0 THEN
+                FOR #i := (#f - 1) TO 1 BY -1 DO
+                    IF #eligible[#i] THEN
+                        #TargetFloor := #i;
+                        #downFound := TRUE;
+                        EXIT;
+                    END_IF;
+                END_FOR;
+            END_IF;
+
+            IF #Direction = 1 THEN
+                IF #upFound THEN
+                    #HasTarget := TRUE;
+                ELSE
+                    FOR #i := 1 TO (#f - 1) DO
+                        IF #eligible[#i] THEN
+                            #best := #i;
+                        END_IF;
+                    END_FOR;
+                    IF #best <> 0 THEN
+                        #TargetFloor := #best;
+                        #HasTarget := TRUE;
+                    END_IF;
+                END_IF;
+            ELSIF #Direction = -1 THEN
+                IF #downFound THEN
+                    #HasTarget := TRUE;
+                ELSE
+                    FOR #i := 6 TO (#f + 1) BY -1 DO
+                        IF #eligible[#i] THEN
+                            #best := #i;
+                        END_IF;
+                    END_FOR;
+                    IF #best <> 0 THEN
+                        #TargetFloor := #best;
+                        #HasTarget := TRUE;
+                    END_IF;
+                END_IF;
+            ELSE
+                #dist := 7;
+                FOR #i := 1 TO 6 DO
+                    IF #eligible[#i] AND (#i <> #f) THEN
+                        IF ABS(#i - #f) < #dist THEN
+                            #dist := ABS(#i - #f);
+                            #best := #i;
+                            #sideFound := TRUE;
+                        END_IF;
+                    END_IF;
+                END_FOR;
+                IF #sideFound THEN
+                    #HasTarget := TRUE;
+                    #TargetFloor := #best;
+                END_IF;
+            END_IF;
+        END_IF;
+    END_IF;
+
+    IF #HasTarget THEN
+        IF #TargetFloor > #f THEN
+            #NextDirection := 1;
+        ELSIF #TargetFloor < #f THEN
+            #NextDirection := -1;
+        ELSE
+            #NextDirection := 0;
+        END_IF;
+    ELSE
+        #TargetFloor := #CurrentFloor;
+        #NextDirection := 0;
+    END_IF;
+END_FUNCTION_BLOCK

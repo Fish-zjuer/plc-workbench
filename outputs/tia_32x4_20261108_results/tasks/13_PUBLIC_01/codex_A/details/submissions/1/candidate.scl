@@ -1,0 +1,41 @@
+FUNCTION_BLOCK "FillingLine"
+VERSION : 0.1
+   VAR_INPUT
+      bottleSensor : BOOL;
+      cleaningConfirmButton : BOOL;
+      fillingConfirmButton : BOOL;
+      cappingConfirmButton : BOOL;
+      packingConfirmButton : BOOL;
+      finishedButton : BOOL;
+   END_VAR
+   VAR_OUTPUT
+      Pump_Motor : BOOL;
+      Filling_Valve : BOOL;
+      Capping_Machine : BOOL;
+      Packing_Machine : BOOL;
+      Completion_Light : BOOL;
+   END_VAR
+   VAR
+      stage : Int;
+   END_VAR
+BEGIN
+   IF #stage = 0 AND #bottleSensor THEN
+      #stage := 1;
+   ELSIF #stage = 1 AND #cleaningConfirmButton THEN
+      #stage := 2;
+   ELSIF #stage = 2 AND #fillingConfirmButton THEN
+      #stage := 3;
+   ELSIF #stage = 3 AND #cappingConfirmButton THEN
+      #stage := 4;
+   ELSIF #stage = 4 AND #packingConfirmButton THEN
+      #stage := 5;
+   ELSIF #stage = 5 AND #finishedButton THEN
+      #stage := 0;
+   END_IF;
+
+   #Pump_Motor := (#stage = 1);
+   #Filling_Valve := (#stage = 2);
+   #Capping_Machine := (#stage = 3);
+   #Packing_Machine := (#stage = 4);
+   #Completion_Light := (#stage = 5);
+END_FUNCTION_BLOCK

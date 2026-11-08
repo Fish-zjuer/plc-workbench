@@ -1,0 +1,124 @@
+{
+  "status": "compile_failed",
+  "errors": 1,
+  "warnings": 2,
+  "state": "Error",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Error",
+      "description": "",
+      "errors": 1,
+      "warnings": 2
+    },
+    {
+      "path": "Program blocks",
+      "state": "Error",
+      "description": "",
+      "errors": 1,
+      "warnings": 2
+    },
+    {
+      "path": "FB_CompressorPressure (FB2)",
+      "state": "Error",
+      "description": "",
+      "errors": 1,
+      "warnings": 2
+    },
+    {
+      "path": "46",
+      "state": "Warning",
+      "description": "The parameter '#Integral' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "63",
+      "state": "Error",
+      "description": "Compound part of instruction expected.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "71",
+      "state": "Warning",
+      "description": "The parameter '#Integral' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": null,
+      "state": "Error",
+      "description": "Compiling finished (errors: 1; warnings: 2)",
+      "errors": 1,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+  "returncode": 1,
+  "source_sha256": "9c9fa7b319a1c71ebc8891fa011530a415bae3cbcbc1b87dd768e707142199b3",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "failed",
+  "behavior_tested": false,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\06_CUSTOM_06\\self_B\\details\\submissions\\2\\evaluation\\compile",
+  "seconds": 41.346,
+  "queue_seconds": 265.802,
+  "dataset_sha256": "11a0649695908d3f197a7cf6754a2b1041bb71495ae78270b53cfe9e42f19f10",
+  "target": "tia",
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "9c9fa7b319a1c71ebc8891fa011530a415bae3cbcbc1b87dd768e707142199b3",
+    "declared_ltl_total": 7,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(pressureMatch)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(Reset -> (Integral=0 & CapacityPct=0 & !Saturated & !Error))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G((!Reset & !Enable) -> (Integral=pre.I & CapacityPct=0 & !Saturated & !Error))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G((!Reset & Enable & !valid) -> (Integral=pre.I & CapacityPct=0 & !Saturated & Error))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G((!Reset & Enable & valid & reject) -> (Integral=pre.I))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G((!Reset & Enable & valid) -> (Saturated <-> (U<0 | U>100)))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(0<=CapacityPct & CapacityPct<=100)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "compile_failed"
+}

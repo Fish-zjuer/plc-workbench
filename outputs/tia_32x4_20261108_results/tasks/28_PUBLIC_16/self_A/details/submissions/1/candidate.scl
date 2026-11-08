@@ -1,0 +1,201 @@
+FUNCTION_BLOCK "Q16"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    processLength : USINT;
+    sensor1 : BOOL;
+    sensor2 : BOOL;
+    sensor3 : BOOL;
+    sensor4 : BOOL;
+    sensor5 : BOOL;
+    station1Start : BOOL;
+    station2Complete : BOOL;
+    station3Complete : BOOL;
+    station4Complete : BOOL;
+    processSequence : ARRAY[1..8] OF USINT;
+END_VAR
+
+VAR_OUTPUT
+    conveyorLeft : BOOL;
+    conveyorRight : BOOL;
+END_VAR
+
+VAR
+    state : INT;
+    cursor : INT;
+    currentStation : INT;
+    targetStation : INT;
+    lastStart : BOOL;
+    lastComplete2 : BOOL;
+    lastComplete3 : BOOL;
+    lastComplete4 : BOOL;
+    moveDir : INT;
+END_VAR
+
+VAR_TEMP
+    i : INT;
+    s1 : BOOL;
+    s2 : BOOL;
+    s3 : BOOL;
+    s4 : BOOL;
+    s5 : BOOL;
+    completeSignal : BOOL;
+    startEdge : BOOL;
+    completeEdge : BOOL;
+    targetSensor : BOOL;
+    stationCount : INT;
+    tempSeq : ARRAY[1..8] OF USINT;
+END_VAR
+
+BEGIN
+    // 初始状态
+    IF (#state = 0) THEN
+        #state := 0;
+        #cursor := 1;
+        #currentStation := 1;
+        #targetStation := 1;
+        #lastStart := FALSE;
+        #lastComplete2 := FALSE;
+        #lastComplete3 := FALSE;
+        #lastComplete4 := FALSE;
+        #moveDir := 0;
+    END_IF;
+
+    // 传感器读入
+    #s1 := #sensor1;
+    #s2 := #sensor2;
+    #s3 := #sensor3;
+    #s4 := #sensor4;
+    #s5 := #sensor5;
+
+    // 启动脉冲
+    #startEdge := #station1Start AND NOT #lastStart;
+    #lastStart := #station1Start;
+
+    // 完成信号边沿
+    #completeEdge := (#station2Complete AND NOT #lastComplete2)
+                     OR (#station3Complete AND NOT #lastComplete3)
+                     OR (#station4Complete AND NOT #lastComplete4);
+    #lastComplete2 := #station2Complete;
+    #lastComplete3 := #station3Complete;
+    #lastComplete4 := #station4Complete;
+
+    // 序列长度限幅
+    IF (#processLength < 1) THEN
+        #stationCount := 1;
+    ELSIF (#processLength > 8) THEN
+        #stationCount := 8;
+    ELSE
+        #stationCount := USINT_TO_INT(#processLength);
+    END_IF;
+
+    // 状态机
+    CASE #state OF
+        0:  // 空闲，等待1#站有料且按下启动
+            #conveyorLeft := FALSE;
+            #conveyorRight := FALSE;
+            #moveDir := 0;
+            IF #s1 AND #startEdge THEN
+                #cursor := 1;
+                #currentStation := 1;
+                #targetStation := USINT_TO_INT(#processSequence[1]);
+                #state := 10;
+            END_IF;
+
+        10: // 计算方向并开始运输
+            #targetStation := USINT_TO_INT(#processSequence[#cursor]);
+            IF (#targetStation > #currentStation) THEN
+                #moveDir := 1;
+            ELSIF (#targetStation < #currentStation) THEN
+                #moveDir := -1;
+            ELSE
+                #moveDir := 0;
+            END_IF;
+
+            IF (#moveDir = 0) THEN
+                // 已经在该站
+                #state := 20;
+            ELSE
+                #state := 15;
+            END_IF;
+
+        15: // 运输中
+            IF (#moveDir > 0) THEN
+                #conveyorRight := TRUE;
+                #conveyorLeft := FALSE;
+            ELSE
+                #conveyorLeft := TRUE;
+                #conveyorRight := FALSE;
+            END_IF;
+
+            // 目标传感器判断
+            CASE #targetStation OF
+                1: #targetSensor := #s1;
+                2: #targetSensor := #s2;
+                3: #targetSensor := #s3;
+                4: #targetSensor := #s4;
+                5: #targetSensor := #s5;
+            ELSE
+                #targetSensor := FALSE;
+            END_CASE;
+
+            IF #targetSensor THEN
+                #conveyorLeft := FALSE;
+                #conveyorRight := FALSE;
+                #moveDir := 0;
+                #currentStation := #targetStation;
+                #state := 20;
+            END_IF;
+
+        20: // 目标站到达，等待处理完成（5#站为最终站）
+            #conveyorLeft := FALSE;
+            #conveyorRight := FALSE;
+            #moveDir := 0;
+
+            IF (#currentStation >= 5) THEN
+                // 最终站已到达，流程结束
+                #state := 30;
+            ELSE
+                // 根据当前站选择完成信号
+                CASE #currentStation OF
+                    2: #completeSignal := #station2Complete;
+                    3: #completeSignal := #station3Complete;
+                    4: #completeSignal := #station4Complete;
+                ELSE
+                    #completeSignal := FALSE;
+                END_CASE;
+
+                IF #completeSignal AND #completeEdge THEN
+                    // 前进到下一项
+                    IF (#cursor < #stationCount) THEN
+                        #cursor := #cursor + 1;
+                        #targetStation := USINT_TO_INT(#processSequence[#cursor]);
+                        #state := 10;
+                    ELSE
+                        // 无后续，结束
+                        #state := 30;
+                    END_IF;
+                END_IF;
+            END_IF;
+
+        30: // 完成
+            #conveyorLeft := FALSE;
+            #conveyorRight := FALSE;
+            #moveDir := 0;
+            // 重新启动条件
+            IF NOT #s1 THEN
+                #state := 0;
+            END_IF;
+
+    ELSE
+        #state := 0;
+    END_CASE;
+
+    // 互锁：不允许同时左右
+    IF #conveyorLeft AND #conveyorRight THEN
+        #conveyorLeft := FALSE;
+        #conveyorRight := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

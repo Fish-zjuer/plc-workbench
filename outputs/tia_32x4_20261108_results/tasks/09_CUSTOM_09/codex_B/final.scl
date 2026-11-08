@@ -1,0 +1,41 @@
+FUNCTION_BLOCK "FB_SpectrometerQualification" VERSION : 0.1
+VAR_INPUT
+    Maintenance : BOOL;
+    CalibDone : BOOL;
+    MeasureReq : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    State : USINT := 0;
+    CalibReq : BOOL := TRUE;
+    MaintLamp : BOOL := FALSE;
+    MeasurePermit : BOOL := FALSE;
+END_VAR
+
+VAR
+    PreState : USINT;
+END_VAR
+
+BEGIN
+    // One transition per call, decided from the pre-scan state.
+    #PreState := #State;
+
+    IF #Maintenance THEN
+        // Maintenance has priority over all other transitions.
+        #State := 2;
+    ELSIF #PreState = 2 THEN
+        // First scan after maintenance always returns to waiting for calibration.
+        #State := 0;
+    ELSIF (#PreState = 0) AND #CalibDone THEN
+        // Calibration complete level advances waiting for calibration to ready.
+        #State := 1;
+    ELSE
+        // Waiting without calibration stays waiting; ready stays ready.
+        #State := #PreState;
+    END_IF;
+
+    // Outputs use the state updated in this call.
+    #CalibReq := (#State = 0);
+    #MaintLamp := (#State = 2);
+    #MeasurePermit := #MeasureReq AND (#State = 1);
+END_FUNCTION_BLOCK

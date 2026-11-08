@@ -1,0 +1,91 @@
+FUNCTION_BLOCK Q11
+
+VAR_INPUT
+    Mode : BOOL; // 0=manual, 1=automatic
+    ForwardButton : BOOL;
+    ReverseButton : BOOL;
+    SensorA : BOOL;
+    SensorB : BOOL;
+    SensorC : BOOL;
+    ButtonA : BOOL;
+    ButtonB : BOOL;
+    ButtonC : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    MotorForward : BOOL;
+    MotorReverse : BOOL;
+    CompletionLight : BOOL;
+END_VAR
+
+VAR
+    AutoStep : INT; // 0=idle/wait A, 1=moving to B, 2=wait at B, 3=moving to C, 4=wait at C, 5=done
+    DoneLatched : BOOL;
+END_VAR
+
+     
+    // Default outputs
+    MotorForward := FALSE;
+    MotorReverse := FALSE;
+
+    IF NOT Mode THEN
+        // Manual mode: direct control with interlock
+        IF ForwardButton AND NOT ReverseButton THEN
+            MotorForward := TRUE;
+        ELSIF ReverseButton AND NOT ForwardButton THEN
+            MotorReverse := TRUE;
+        END_IF;
+        // Reset auto sequence state when leaving automatic mode
+        AutoStep := 0;
+    ELSE
+        // Automatic mode: sequential station handling
+        CASE AutoStep OF
+            0: // Wait at station A for product and ButtonA
+                IF SensorA AND ButtonA THEN
+                    AutoStep := 1;
+                    MotorForward := TRUE;
+                END_IF;
+
+            1: // Moving from A to B
+                MotorForward := TRUE;
+                IF SensorB THEN
+                    MotorForward := FALSE;
+                    AutoStep := 2;
+                END_IF;
+
+            2: // Wait at station B for ButtonB
+                IF SensorB AND ButtonB THEN
+                    AutoStep := 3;
+                    MotorForward := TRUE;
+                END_IF;
+
+            3: // Moving from B to C
+                MotorForward := TRUE;
+                IF SensorC THEN
+                    MotorForward := FALSE;
+                    AutoStep := 4;
+                END_IF;
+
+            4: // Wait at station C for ButtonC
+                IF SensorC AND ButtonC THEN
+                    DoneLatched := TRUE;
+                    AutoStep := 5;
+                END_IF;
+
+            5: // Done, completion light on while product present
+                IF NOT SensorC THEN
+                    DoneLatched := FALSE;
+                    AutoStep := 0;
+                END_IF;
+        END_CASE;
+    END_IF;
+
+    // Completion light reflects completed product still at sensor C
+    CompletionLight := DoneLatched AND SensorC;
+
+    // Final safety interlock
+    IF MotorForward AND MotorReverse THEN
+        MotorForward := FALSE;
+        MotorReverse := FALSE;
+    END_IF;
+END_FUNCTION_BLOCK

@@ -1,0 +1,165 @@
+FUNCTION_BLOCK "MovingAverage"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    cyclicExecution : BOOL;
+    trigger : BOOL;
+    value : LREAL;
+    windowSize : INT;
+    reset : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    average : LREAL;
+    windowSizeReached : BOOL;
+    error : BOOL;
+    status : WORD;
+END_VAR
+
+VAR
+    statHistory : ARRAY[1..100] OF LREAL;
+    statCount : INT;
+    statIndex : INT;
+    statFill : INT;
+    statSum : LREAL;
+    statTriggerPrev : BOOL;
+    statInitialized : BOOL;
+    statWindowValid : BOOL;
+END_VAR
+
+VAR_TEMP
+    tmpI : INT;
+    tmpSample : BOOL;
+    tmpLimit : INT;
+END_VAR
+
+BEGIN
+    // 初始化一次
+    IF NOT #statInitialized THEN
+        #statInitialized := TRUE;
+        #statCount := 0;
+        #statIndex := 1;
+        #statFill := 0;
+        #statSum := 0.0;
+        #statTriggerPrev := FALSE;
+        #statWindowValid := FALSE;
+        #average := 0.0;
+        #windowSizeReached := FALSE;
+    END_IF;
+
+    // 窗口长度校验
+    IF (#windowSize < 1) OR (#windowSize > 100) THEN
+        #statWindowValid := FALSE;
+    ELSE
+        #statWindowValid := TRUE;
+    END_IF;
+
+    // 状态输出
+    IF NOT #statWindowValid THEN
+        #error := TRUE;
+        #status := 16#8200;
+    ELSE
+        #error := FALSE;
+        #status := 16#0000;
+    END_IF;
+
+    // 采样判定
+    #tmpSample := FALSE;
+    IF #statWindowValid AND NOT #reset THEN
+        IF #cyclicExecution THEN
+            #tmpSample := TRUE;
+        ELSIF #trigger AND NOT #statTriggerPrev THEN
+            #tmpSample := TRUE;
+        END_IF;
+    END_IF;
+
+    // 保存触发沿历史
+    #statTriggerPrev := #trigger;
+
+    // 复位优先于采样
+    IF #reset THEN
+        #statCount := 0;
+        #statIndex := 1;
+        #statFill := 0;
+        #statSum := 0.0;
+        #windowSizeReached := FALSE;
+    ELSIF #tmpSample THEN
+        #tmpLimit := #windowSize;
+        IF #tmpLimit > 100 THEN
+            #tmpLimit := 100;
+        END_IF;
+
+        IF #statCount < #tmpLimit THEN
+            // 未满：追加到末尾
+            #statFill := #statFill + 1;
+            IF #statFill > 100 THEN
+                #statFill := 100;
+            END_IF;
+            #statHistory[#statFill] := #value;
+            #statSum := #statSum + #value;
+            #statCount := #statCount + 1;
+        ELSE
+            // 已满：替换最旧值（#statIndex 指向最旧样本）
+            IF #statIndex < 1 THEN
+                #statIndex := 1;
+            END_IF;
+            IF #statIndex > 100 THEN
+                #statIndex := 100;
+            END_IF;
+            #statSum := #statSum - #statHistory[#statIndex] + #value;
+            #statHistory[#statIndex] := #value;
+            #statIndex := #statIndex + 1;
+            IF #statIndex > #tmpLimit THEN
+                #statIndex := 1;
+            END_IF;
+            // 已满时 #statFill 始终等于 #tmpLimit
+            #statFill := #tmpLimit;
+        END_IF;
+
+        // windowSize 变化时的自适应：若当前样本数超过新窗口，裁剪
+        IF #statCount > #statCount THEN
+            ;
+        END_IF;
+        WHILE #statCount > #tmpLimit DO
+            // 丢弃最旧样本
+            IF #statCount <= 0 THEN
+                EXIT;
+            END_IF;
+            IF #statIndex < 1 THEN
+                #statIndex := 1;
+            END_IF;
+            IF #statIndex > 100 THEN
+                #statIndex := 100;
+            END_IF;
+            #statSum := #statSum - #statHistory[#statIndex];
+            #statHistory[#statIndex] := 0.0;
+            #statIndex := #statIndex + 1;
+            IF #statIndex > #tmpLimit THEN
+                #statIndex := 1;
+            END_IF;
+            #statCount := #statCount - 1;
+            #statFill := #statCount;
+        END_WHILE;
+
+        // 独立重算平均
+        #statSum := 0.0;
+        #tmpI := 1;
+        WHILE #tmpI <= #statFill DO
+            #statSum := #statSum + #statHistory[#tmpI];
+            #tmpI := #tmpI + 1;
+        END_WHILE;
+
+        IF #statFill > 0 THEN
+            #average := #statSum / INT_TO_LREAL(#statFill);
+        END_IF;
+    END_IF;
+
+    // 窗口是否达到
+    IF #statWindowValid AND (#statFill >= #windowSize) THEN
+        #windowSizeReached := TRUE;
+    ELSE
+        #windowSizeReached := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

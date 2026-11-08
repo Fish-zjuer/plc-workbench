@@ -1,0 +1,809 @@
+{
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_07",
+  "dataset_sha256": "5d79afb9949db243bce283947c30b2e8768edc06f6053aab3470e416c650be21",
+  "target": "tia",
+  "model": "deepseek-v4.1-flash-1017",
+  "inference_parameters": {
+    "thinking": {
+      "type": "disabled"
+    }
+  },
+  "status": "simulation_error",
+  "model_calls": 7,
+  "token_usage": {
+    "prompt_tokens": 86304,
+    "completion_tokens": 1545,
+    "total_tokens": 87849,
+    "cost": null,
+    "usage_calls": 7,
+    "complete": true,
+    "cost_complete": false,
+    "recorded_cost": 0.0
+  },
+  "metrics": [
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 87,
+        "prompt_tokens": 8306,
+        "total_tokens": 8393,
+        "prompt_tokens_details": {
+          "cached_tokens": 6144
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.00208"
+      },
+      "seconds": 1.325
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 56,
+        "prompt_tokens": 10303,
+        "total_tokens": 10359,
+        "prompt_tokens_details": {
+          "cached_tokens": 8192
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.001974"
+      },
+      "seconds": 1.287
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 581,
+        "prompt_tokens": 10543,
+        "total_tokens": 11124,
+        "prompt_tokens_details": {
+          "cached_tokens": 10240
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.002238"
+      },
+      "seconds": 3.637
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 145,
+        "prompt_tokens": 11841,
+        "total_tokens": 11986,
+        "prompt_tokens_details": {
+          "cached_tokens": 10496
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.001686"
+      },
+      "seconds": 2.972
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 216,
+        "prompt_tokens": 13331,
+        "total_tokens": 13547,
+        "prompt_tokens_details": {
+          "cached_tokens": 11776
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.002098"
+      },
+      "seconds": 3.047
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 89,
+        "prompt_tokens": 15673,
+        "total_tokens": 15762,
+        "prompt_tokens_details": {
+          "cached_tokens": 13312
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.002356"
+      },
+      "seconds": 2.709
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 371,
+        "prompt_tokens": 16307,
+        "total_tokens": 16678,
+        "prompt_tokens_details": {
+          "cached_tokens": 15616
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.001964"
+      },
+      "seconds": 6.704
+    }
+  ],
+  "seconds": 645.168,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\19_PUBLIC_07\\codex_A\\details",
+  "submissions": [
+    {
+      "status": "invalid_candidate",
+      "target_compile": "not_executed",
+      "message": "Need one complete Siemens FUNCTION_BLOCK \"Q07\" with BEGIN",
+      "target": "tia",
+      "behavior_tested": false,
+      "queue_seconds": 196.247,
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "5a2517ccc9ca2e1d02f1b94fe0271a99c35c6a36947da0266a6975a5162566a1",
+        "declared_ltl_total": 5,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(stop -> allPumpsOff)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(!enabled -> allPumpsOff)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!mode & enabled -> manualSelectionOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(mode & enabled -> topThreeOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(configPreserved)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "invalid_candidate",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "not_executed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 1,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 1,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "invalid_candidate",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 5,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 5,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "generation_failed",
+      "phase": "generate_blocks",
+      "message": "Siemens.Engineering.EngineeringTargetInvocationException: Error when calling method 'GenerateBlocksFromSource' of type 'Siemens.Engineering.SW.ExternalSources.PlcExternalSource'.\r\n\r\nAn error occurred during code generation. 外部源文件 WB_8eb824d8 正在生成块 \"Q07\"... Interface: 数据类型 Array[1..5] of ST_Pump 未知。   1 个错误，1 个警告：导入“WB_8eb824d8”完成，但存在错误。     行 000016: 块“ Q07” 将创建为具有“优化的块访问”属性。  \r\n   在 Siemens.Engineering.Private.Session.Siemens.Engineering.Private.IInstanceSession.InvokeAction[TC](LifetimeContractHandle`1 lifetimeContractHandle, String name, IEnumerable`1 parameters, String fullName)\r\n   在 Siemens.Engineering.Private.InternalInstanceAccess`2.InvokeAction(String name, IEnumerable`1 parameters)\r\n   在 CompileJob.Run(String projectFile, String sclFile) 位置 E:\\lab\\GenAI\\plc-workbench\\integrations\\tia_bridge\\Program.cs:行号 97",
+      "platform": "TIA Portal V21",
+      "returncode": 1,
+      "source_sha256": "d5fe3236bf6e49f699e70494b20dae2a1ca7ab6f7298d0681fefcf2842653364",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\19_PUBLIC_07\\codex_A\\details\\submissions\\2\\evaluation\\compile",
+      "seconds": 34.942,
+      "queue_seconds": 171.389,
+      "dataset_sha256": "5d79afb9949db243bce283947c30b2e8768edc06f6053aab3470e416c650be21",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "d5fe3236bf6e49f699e70494b20dae2a1ca7ab6f7298d0681fefcf2842653364",
+        "declared_ltl_total": 5,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(stop -> allPumpsOff)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(!enabled -> allPumpsOff)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!mode & enabled -> manualSelectionOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(mode & enabled -> topThreeOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(configPreserved)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "generation_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 1,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 1,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "generation_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 5,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 5,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "simulation_error",
+      "errors": 0,
+      "warnings": 0,
+      "state": "Success",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "PLC data types",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "ST_Pump (UDT)",
+          "state": "Success",
+          "description": "The data type was successfully updated.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Q07 (FB2)",
+          "state": "Success",
+          "description": "Block was successfully compiled.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Success",
+          "description": "Compiling finished (errors: 0; warnings: 0)",
+          "errors": 0,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 0,
+      "source_sha256": "b6013a6d501720631de6cfe95228258036cfb561979875cd13fdde7c82edf533",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+        "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+        "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "passed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\19_PUBLIC_07\\codex_A\\details\\submissions\\3\\evaluation\\simulation",
+      "seconds": 102.502,
+      "queue_seconds": 29.489,
+      "dataset_sha256": "5d79afb9949db243bce283947c30b2e8768edc06f6053aab3470e416c650be21",
+      "phase": "running_test",
+      "message": "System.TimeoutException: Siemens test harness did not finish\r\n   在 SimulationCardJob.Run(String requestPath)",
+      "instance_name": "WB_c1b4f51071e64c098614cdc164fd4d70",
+      "failure_kind": "vendor_environment",
+      "recovery_hint": "保留厂商错误，先检查本机环境；这不是候选逻辑失败，不应触发模型源码修复。",
+      "test_backend": "tia",
+      "target": "tia",
+      "compile_result": {
+        "status": "compile_passed",
+        "errors": 0,
+        "warnings": 0,
+        "state": "Success",
+        "diagnostics": [
+          {
+            "path": "PLC_1",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "PLC data types",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "ST_Pump (UDT)",
+            "state": "Success",
+            "description": "The data type was successfully updated.",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Program blocks",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Q07 (FB2)",
+            "state": "Success",
+            "description": "Block was successfully compiled.",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": null,
+            "state": "Success",
+            "description": "Compiling finished (errors: 0; warnings: 0)",
+            "errors": 0,
+            "warnings": 0
+          }
+        ],
+        "platform": "TIA Portal V21",
+        "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+        "returncode": 0,
+        "source_sha256": "b6013a6d501720631de6cfe95228258036cfb561979875cd13fdde7c82edf533",
+        "execution_fingerprint": {
+          "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+          "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+          "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+        },
+        "target_compile": "passed",
+        "behavior_tested": false,
+        "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\19_PUBLIC_07\\codex_A\\details\\submissions\\3\\evaluation\\compile",
+        "seconds": 40.568,
+        "queue_seconds": 0.0,
+        "dataset_sha256": "5d79afb9949db243bce283947c30b2e8768edc06f6053aab3470e416c650be21"
+      },
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "b6013a6d501720631de6cfe95228258036cfb561979875cd13fdde7c82edf533",
+        "declared_ltl_total": 5,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(stop -> allPumpsOff)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(!enabled -> allPumpsOff)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!mode & enabled -> manualSelectionOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(mode & enabled -> topThreeOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(configPreserved)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "simulation_error",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "passed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 1,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 1,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "simulation_error",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 5,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 5,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    }
+  ],
+  "limits": {
+    "source_versions": 6,
+    "model_requests": 24,
+    "seconds": 1800
+  },
+  "formal_policy": "automatic",
+  "final_evaluation": {
+    "status": "simulation_error",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "PLC data types",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "ST_Pump (UDT)",
+        "state": "Success",
+        "description": "The data type was successfully updated.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Q07 (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "b6013a6d501720631de6cfe95228258036cfb561979875cd13fdde7c82edf533",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+      "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+      "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\19_PUBLIC_07\\codex_A\\details\\submissions\\3\\evaluation\\simulation",
+    "seconds": 102.502,
+    "queue_seconds": 29.489,
+    "dataset_sha256": "5d79afb9949db243bce283947c30b2e8768edc06f6053aab3470e416c650be21",
+    "phase": "running_test",
+    "message": "System.TimeoutException: Siemens test harness did not finish\r\n   在 SimulationCardJob.Run(String requestPath)",
+    "instance_name": "WB_c1b4f51071e64c098614cdc164fd4d70",
+    "failure_kind": "vendor_environment",
+    "recovery_hint": "保留厂商错误，先检查本机环境；这不是候选逻辑失败，不应触发模型源码修复。",
+    "test_backend": "tia",
+    "target": "tia",
+    "compile_result": {
+      "status": "compile_passed",
+      "errors": 0,
+      "warnings": 0,
+      "state": "Success",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "PLC data types",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "ST_Pump (UDT)",
+          "state": "Success",
+          "description": "The data type was successfully updated.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Q07 (FB2)",
+          "state": "Success",
+          "description": "Block was successfully compiled.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Success",
+          "description": "Compiling finished (errors: 0; warnings: 0)",
+          "errors": 0,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 0,
+      "source_sha256": "b6013a6d501720631de6cfe95228258036cfb561979875cd13fdde7c82edf533",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "passed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\19_PUBLIC_07\\codex_A\\details\\submissions\\3\\evaluation\\compile",
+      "seconds": 40.568,
+      "queue_seconds": 0.0,
+      "dataset_sha256": "5d79afb9949db243bce283947c30b2e8768edc06f6053aab3470e416c650be21"
+    },
+    "formal_verification": {
+      "status": "not_executed",
+      "backend": "plcverif+cbmc",
+      "model_calls": 0,
+      "source_sha256": "b6013a6d501720631de6cfe95228258036cfb561979875cd13fdde7c82edf533",
+      "declared_ltl_total": 5,
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(stop -> allPumpsOff)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P02",
+          "formula": "G(!enabled -> allPumpsOff)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P03",
+          "formula": "G(!mode & enabled -> manualSelectionOK)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P04",
+          "formula": "G(mode & enabled -> topThreeOK)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P05",
+          "formula": "G(configPreserved)",
+          "status": "not_executed"
+        }
+      ],
+      "bounded_verified_property_ids": [],
+      "proved_property_ids": [],
+      "mapped_assertions_total": 0,
+      "full_ltl_proved": false,
+      "message": "Repair compilation or functional tests before formal verification."
+    },
+    "ltl_status": "not_executed",
+    "finite_test_status": "simulation_error",
+    "metrics_summary": {
+      "target_platform": "tia",
+      "target_compile": "passed",
+      "codesys_compile": "not_executed",
+      "test_cases_total": 1,
+      "test_cases_executed": 0,
+      "test_cases_not_executed": 1,
+      "test_cases_passed": null,
+      "test_case_pass_rate": null,
+      "finite_test_status": "simulation_error",
+      "formal_status": "not_executed",
+      "formal_backend": "plcverif+cbmc",
+      "formal_unwind": null,
+      "formal_unwind_complete": null,
+      "formal_valid_domain_witness": null,
+      "mapped_assertions_total": 0,
+      "mapped_assertions_proved": 0,
+      "declared_ltl_total": 5,
+      "formal_full_ltl_proved": false,
+      "formal_bound": null,
+      "formal_properties_verified": 0,
+      "formal_properties_total": 5,
+      "formal_properties_executed": 0,
+      "formal_properties_unsupported": 0,
+      "formal_counterexamples": 0,
+      "formal_property_pass_rate": 0.0,
+      "formal_all_properties_verified": false,
+      "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+    }
+  },
+  "target_compile": "passed",
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "b6013a6d501720631de6cfe95228258036cfb561979875cd13fdde7c82edf533",
+    "declared_ltl_total": 5,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(stop -> allPumpsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!enabled -> allPumpsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!mode & enabled -> manualSelectionOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(mode & enabled -> topThreeOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(configPreserved)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "cli_exit_code": 0,
+  "framework_version": "codex-cli 0.80.0",
+  "wire_api": "chat",
+  "source_sha256": "b6013a6d501720631de6cfe95228258036cfb561979875cd13fdde7c82edf533",
+  "metrics_summary": {
+    "target_platform": "tia",
+    "target_compile": "passed",
+    "codesys_compile": "not_executed",
+    "test_cases_total": 1,
+    "test_cases_executed": 0,
+    "test_cases_not_executed": 1,
+    "test_cases_passed": null,
+    "test_case_pass_rate": null,
+    "finite_test_status": "simulation_error",
+    "formal_status": "not_executed",
+    "formal_backend": "plcverif+cbmc",
+    "formal_unwind": null,
+    "formal_unwind_complete": null,
+    "formal_valid_domain_witness": null,
+    "mapped_assertions_total": 0,
+    "mapped_assertions_proved": 0,
+    "declared_ltl_total": 5,
+    "formal_full_ltl_proved": false,
+    "formal_bound": null,
+    "formal_properties_verified": 0,
+    "formal_properties_total": 5,
+    "formal_properties_executed": 0,
+    "formal_properties_unsupported": 0,
+    "formal_counterexamples": 0,
+    "formal_property_pass_rate": 0.0,
+    "formal_all_properties_verified": false,
+    "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+  },
+  "output_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\19_PUBLIC_07\\codex_A"
+}

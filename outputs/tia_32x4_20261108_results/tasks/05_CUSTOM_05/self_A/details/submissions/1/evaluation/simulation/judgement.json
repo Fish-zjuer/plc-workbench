@@ -1,0 +1,861 @@
+{
+  "status": "pass",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_05",
+  "source_sha256": "8ce793d1bebee1db0979a9d8e5d906aa1890e2723037aa3ef818afed2091b054",
+  "dataset_sha256": "fe8812537417eaeb1d18a9a57f021849a3a39c6eabdf4b8785f334c82052483c",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "cases": [
+    {
+      "name": "建立起点与采样点边界",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 299,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 300,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 1.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "跨多个采样点",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 299,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 300,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 1.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 750,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 2,
+            "MissedCount": 1
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "忙时漏采不补发",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 299,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 300,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 1.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 750,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 2,
+            "MissedCount": 1
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 900,
+            "SpacingMm": 200,
+            "CameraBusy": true
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 2,
+            "MissedCount": 2
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 2.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 900,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "MissedCount": 2
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 2.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "位置倒退锁存错误及重新起段",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 299,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 300,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 1.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 750,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 2,
+            "MissedCount": 1
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 900,
+            "SpacingMm": 200,
+            "CameraBusy": true
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 2,
+            "MissedCount": 2
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 2.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 900,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "MissedCount": 2
+          },
+          "phase": "setup",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 2.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 800,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "Error": true,
+            "CapturePulse": false,
+            "CaptureCount": 2
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 2.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 1100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "Error": true,
+            "CapturePulse": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 2.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 1100,
+            "SpacingMm": 200,
+            "CameraBusy": false
+          },
+          "expected": {
+            "Error": false,
+            "CaptureCount": 0,
+            "MissedCount": 0
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "连续扫描触发_忙时丢弃_回退锁存_重建",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "DistanceMm": 0,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 100,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 1.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 200,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 2,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 500,
+            "SpacingMm": 100,
+            "CameraBusy": true
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 2,
+            "MissedCount": 3,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 3.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 500,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 2,
+            "MissedCount": 3,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 2.0,
+            "MissedCount": 3.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 600,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 3,
+            "MissedCount": 3,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 3.0,
+            "MissedCount": 3.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 599,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 3,
+            "MissedCount": 3,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 3.0,
+            "MissedCount": 3.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 700,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 3,
+            "MissedCount": 3,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 3.0,
+            "MissedCount": 3.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Enable": false,
+            "Reset": false,
+            "DistanceMm": 700,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 3,
+            "MissedCount": 3,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 3.0,
+            "MissedCount": 3.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 700,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": false,
+            "CaptureCount": 0,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 0.0,
+            "CaptureCount": 0.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "DistanceMm": 800,
+            "SpacingMm": 100,
+            "CameraBusy": false
+          },
+          "expected": {
+            "CapturePulse": true,
+            "CaptureCount": 1,
+            "MissedCount": 0,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapturePulse": 1.0,
+            "CaptureCount": 1.0,
+            "MissedCount": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 5,
+    "scans": 33,
+    "assertions": 99,
+    "failed": 0
+  },
+  "target_compile": "passed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\05_CUSTOM_05\\self_A\\details\\submissions\\1\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "behavior_tested": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\05_CUSTOM_05\\self_A\\details\\submissions\\1\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0"
+}

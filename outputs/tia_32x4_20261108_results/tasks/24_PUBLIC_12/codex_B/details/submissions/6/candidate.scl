@@ -1,0 +1,76 @@
+FUNCTION_BLOCK "Q12"
+VERSION : 0.1
+
+VAR_INPUT
+    THICKNESS_FAULT : BOOL;
+    THICKNESS_SIGNAL_VALID : BOOL;
+    CUTTING_RUN : BOOL;
+    FaultTimestamp : DINT;
+    CycleTime : TIME := T#10ms;
+END_VAR
+
+VAR_OUTPUT
+    THICKNESS_ALARM : BOOL;
+    Slab_Fault_Counter : UINT;
+    Slab_Runtime_Accumulator : LTime;
+    Slab_Fault_History : ARRAY[0..4] OF DINT;
+END_VAR
+
+VAR
+    PreviousValidFault : BOOL := FALSE;
+    HoldElapsedNs : DINT := 0;
+    CycleNs : DINT := 0;
+    HoldActive : BOOL := FALSE;
+    HistoryFilled : INT := 0;
+    ShiftIndex : INT := 0;
+END_VAR
+
+BEGIN
+    CycleNs := TIME_TO_DINT(CycleTime) * 1000;
+
+    IF NOT THICKNESS_SIGNAL_VALID THEN
+        THICKNESS_ALARM := FALSE;
+        HoldActive := FALSE;
+        HoldElapsedNs := 0;
+        PreviousValidFault := FALSE;
+    ELSE
+        IF HoldActive THEN
+            HoldElapsedNs := HoldElapsedNs + CycleNs;
+            IF HoldElapsedNs >= 500000000 THEN
+                HoldActive := FALSE;
+                HoldElapsedNs := 0;
+            END_IF;
+        END_IF;
+
+        IF THICKNESS_FAULT AND (NOT PreviousValidFault) THEN
+            IF Slab_Fault_Counter < 65535 THEN
+                Slab_Fault_Counter := Slab_Fault_Counter + 1;
+            END_IF;
+            IF HistoryFilled < 5 THEN
+                FOR ShiftIndex := HistoryFilled TO 1 BY -1 DO
+                    Slab_Fault_History[ShiftIndex] := Slab_Fault_History[ShiftIndex - 1];
+                END_FOR;
+                HistoryFilled := HistoryFilled + 1;
+            ELSE
+                FOR ShiftIndex := 4 TO 1 BY -1 DO
+                    Slab_Fault_History[ShiftIndex] := Slab_Fault_History[ShiftIndex - 1];
+                END_FOR;
+            END_IF;
+            Slab_Fault_History[0] := FaultTimestamp;
+            HoldActive := TRUE;
+            HoldElapsedNs := 0;
+        END_IF;
+
+        PreviousValidFault := THICKNESS_FAULT;
+
+        IF THICKNESS_FAULT OR HoldActive THEN
+            THICKNESS_ALARM := TRUE;
+        ELSE
+            THICKNESS_ALARM := FALSE;
+        END_IF;
+
+        IF CUTTING_RUN AND (NOT THICKNESS_FAULT) THEN
+            Slab_Runtime_Accumulator := Slab_Runtime_Accumulator + LT#1ns * CycleNs;
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

@@ -1,0 +1,124 @@
+FUNCTION_BLOCK "MovingAverage"
+VERSION : 0.1
+   VAR_INPUT
+      cyclicExecution : BOOL;
+      trigger : BOOL;
+      value : LREAL;
+      windowSize : INT;
+      reset : BOOL;
+   END_VAR
+   VAR_OUTPUT
+      average : LREAL;
+      windowSizeReached : BOOL;
+      error : BOOL;
+      status : WORD;
+   END_VAR
+   VAR
+      history : ARRAY[1..100] OF LREAL;
+      sampleCount : INT := 0;
+      writeIndex : INT := 1;
+      lastTrigger : BOOL := FALSE;
+   END_VAR
+   VAR_TEMP
+      takeSample : BOOL;
+      effectiveLen : INT;
+      tempSum : LREAL;
+      currentIdx : INT;
+      i : INT;
+   END_VAR
+
+BEGIN
+    // 1. Validate window size
+    IF (windowSize < 1) OR (windowSize > 100) THEN
+        error := TRUE;
+        status := 16#8200;
+        RETURN;
+    END_IF;
+
+    // Clear error if window is valid and no other errors
+    error := FALSE;
+    status := 16#0000;
+
+    // 2. Reset Logic
+    IF reset THEN
+        sampleCount := 0;
+        writeIndex := 1;
+        average := 0.0;
+        windowSizeReached := FALSE;
+        FOR #i := 1 TO 100 DO
+            #history[#i] := 0.0;
+        END_FOR;
+        RETURN;
+    END_IF;
+
+    // 3. Determine Sampling Condition
+    #takeSample := FALSE;
+
+    IF cyclicExecution THEN
+        #takeSample := TRUE;
+    ELSE
+        // Rising edge detection for trigger
+        IF trigger AND NOT lastTrigger THEN
+            #takeSample := TRUE;
+        END_IF;
+    END_IF;
+
+    // Update lastTrigger state for next scan
+    lastTrigger := trigger;
+
+    // 4. Process Sample
+    IF #takeSample THEN
+        // Write to ring buffer
+        #history[#writeIndex] := value;
+        
+        // Advance write index
+        #writeIndex := #writeIndex + 1;
+        IF #writeIndex > 100 THEN
+            #writeIndex := 1;
+        END_IF;
+        
+        // Increase count if not already maxed out storage capacity (100)
+        IF #sampleCount < 100 THEN
+            #sampleCount := #sampleCount + 1;
+        END_IF;
+    END_IF;
+
+    // 5. Calculate Average
+    // Effective length is min(windowSize, available samples)
+    IF #windowSize < #sampleCount THEN
+        #effectiveLen := #windowSize;
+    ELSE
+        #effectiveLen := #sampleCount;
+    END_IF;
+
+    IF #effectiveLen > 0 THEN
+        #tempSum := 0.0;
+        
+        // Find the most recently written sample index
+        // If writeIndex is 1, last written was 100. Otherwise, it's writeIndex - 1.
+        #currentIdx := #writeIndex - 1;
+        IF #currentIdx < 1 THEN
+            #currentIdx := 100;
+        END_IF;
+        
+        // Sum the last 'effectiveLen' samples by traversing backwards in the ring buffer
+        FOR #i := 1 TO #effectiveLen DO
+            #tempSum := #tempSum + #history[#currentIdx];
+            
+            // Move to previous index
+            #currentIdx := #currentIdx - 1;
+            IF #currentIdx < 1 THEN
+                #currentIdx := 100;
+            END_IF;
+        END_FOR;
+        
+        // Use explicit type conversion compatible with Siemens SCL
+        #average := #tempSum / INT_TO_LREAL(#effectiveLen);
+        #windowSizeReached := (#sampleCount >= #windowSize);
+    ELSE
+        // No samples yet
+        #average := 0.0;
+        #windowSizeReached := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

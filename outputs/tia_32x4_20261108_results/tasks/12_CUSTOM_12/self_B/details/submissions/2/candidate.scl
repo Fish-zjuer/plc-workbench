@@ -1,0 +1,210 @@
+FUNCTION_BLOCK "FB_BuoyPowerBudget"
+VERSION : 0.1
+VAR_INPUT
+    Enable : BOOL;
+    BudgetW : UINT;
+    NeedSensor : BOOL;
+    NeedHeater : BOOL;
+    NeedRadio : BOOL;
+    MandatorySensor : BOOL;
+END_VAR
+VAR_OUTPUT
+    SelectedMask : USINT;
+    SensorOn : BOOL;
+    HeaterOn : BOOL;
+    RadioOn : BOOL;
+    PowerW : UINT;
+    Score : USINT;
+    BudgetShortage : BOOL;
+    Error : BOOL;
+END_VAR
+VAR_TEMP
+    i : INT;
+    mask : USINT;
+    currentPower : UINT;
+    currentScore : USINT;
+    bestScore : USINT;
+    bestPower : UINT;
+    bestMask : USINT;
+    isValidCombination : BOOL;
+    eligibleBits : USINT;
+    bit1 : BOOL;
+    bit2 : BOOL;
+    bit4 : BOOL;
+    tempInt : INT;
+END_VAR
+BEGIN
+    // Reset outputs
+    SelectedMask := 0;
+    SensorOn := FALSE;
+    HeaterOn := FALSE;
+    RadioOn := FALSE;
+    PowerW := 0;
+    Score := 0;
+    BudgetShortage := FALSE;
+    Error := FALSE;
+
+    // Check Enable
+    IF NOT #Enable THEN
+        RETURN;
+    END_IF;
+
+    // Check Budget Validity (0..200)
+    IF #BudgetW > 200 THEN
+        #Error := TRUE;
+        RETURN;
+    END_IF;
+
+    // Check Mandatory Sensor Shortage
+    IF #MandatorySensor AND (#BudgetW < 40) THEN
+        #BudgetShortage := TRUE;
+        RETURN;
+    END_IF;
+
+    // Determine Eligible Bits based on requests and mandatory flag
+    // Bit 1 (Sensor): Eligible if NeedSensor OR MandatorySensor
+    // Bit 2 (Heater): Eligible if NeedHeater
+    // Bit 4 (Radio): Eligible if NeedRadio
+    #eligibleBits := 0;
+    IF #NeedSensor OR #MandatorySensor THEN
+        #eligibleBits := #eligibleBits OR 16#01;
+    END_IF;
+    IF #NeedHeater THEN
+        #eligibleBits := #eligibleBits OR 16#02;
+    END_IF;
+    IF #NeedRadio THEN
+        #eligibleBits := #eligibleBits OR 16#04;
+    END_IF;
+
+    // Initialize best values for comparison
+    // We look for max Score, then min Power, then min Mask.
+    // Start with invalid/bad values to ensure any valid combination replaces them.
+    
+    #bestScore := 0;
+    #bestPower := 65535; // Max UINT
+    #bestMask := 255;   // Invalid high mask
+    
+    // Iterate through all possible masks 0..7
+    FOR #i := 0 TO 7 DO
+        // Convert int loop variable to USINT mask without TO_USINT
+        #tempInt := #i;
+        CASE #tempInt OF
+            0: #mask := 16#00;
+            1: #mask := 16#01;
+            2: #mask := 16#02;
+            3: #mask := 16#03;
+            4: #mask := 16#04;
+            5: #mask := 16#05;
+            6: #mask := 16#06;
+            7: #mask := 16#07;
+        ELSE
+            #mask := 16#00;
+        END_CASE;
+        
+        // Check if mask contains only eligible bits
+        #bit1 := (mask AND 16#01) <> 0;
+        #bit2 := (mask AND 16#02) <> 0;
+        #bit4 := (mask AND 16#04) <> 0;
+        
+        #isValidCombination := TRUE;
+        
+        // Check eligibility constraint
+        IF #bit1 AND NOT ((#eligibleBits AND 16#01) <> 0) THEN
+            #isValidCombination := FALSE;
+        END_IF;
+        IF #bit2 AND NOT ((#eligibleBits AND 16#02) <> 0) THEN
+            #isValidCombination := FALSE;
+        END_IF;
+        IF #bit4 AND NOT ((#eligibleBits AND 16#04) <> 0) THEN
+            #isValidCombination := FALSE;
+        END_IF;
+        
+        // Check Mandatory Sensor constraint
+        // If MandatorySensor is TRUE, bit1 MUST be present.
+        IF #MandatorySensor AND NOT #bit1 THEN
+            #isValidCombination := FALSE;
+        END_IF;
+        
+        IF NOT #isValidCombination THEN
+            CONTINUE;
+        END_IF;
+        
+        // Calculate Power and Score for this mask
+        #currentPower := 0;
+        #currentScore := 0;
+        
+        IF #bit1 THEN
+            #currentPower := #currentPower + 40;
+            #currentScore := #currentScore + 7;
+        END_IF;
+        IF #bit2 THEN
+            #currentPower := #currentPower + 70;
+            #currentScore := #currentScore + 10;
+        END_IF;
+        IF #bit4 THEN
+            #currentPower := #currentPower + 60;
+            #currentScore := #currentScore + 9;
+        END_IF;
+        
+        // Check Budget constraint
+        IF #currentPower > #BudgetW THEN
+            CONTINUE;
+        END_IF;
+        
+        // Compare with best found so far
+        // Criteria: Max Score, Min Power, Min Mask
+        
+        IF #currentScore > #bestScore THEN
+            // Better score
+            #bestScore := #currentScore;
+            #bestPower := #currentPower;
+            #bestMask := #mask;
+        ELSIF #currentScore = #bestScore THEN
+            IF #currentPower < #bestPower THEN
+                // Same score, lower power
+                #bestPower := #currentPower;
+                #bestMask := #mask;
+            ELSIF #currentPower = #bestPower THEN
+                IF #mask < #bestMask THEN
+                    // Same score, same power, smaller mask
+                    #bestMask := #mask;
+                END_IF;
+            END_IF;
+        END_IF;
+        
+    END_FOR;
+
+    // Set outputs based on bestMask
+    // Note: If no valid combination was found other than potentially none? 
+    // The problem states "The empty subset is allowed". 
+    // If MandatorySensor is False and no loads requested, eligibleBits=0. 
+    // Mask 0 is valid (no ineligible bits, no mandatory violation). Power 0 <= Budget. Score 0.
+    // Our loop starts with bestScore=0, bestPower=Max, bestMask=255.
+    // When i=0 (mask 0):
+    // isValid: True (if MandSensor false).
+    // CurrentScore 0, CurrentPower 0.
+    // Comparison: 0 > 0 False. 0 = 0 True. 0 < Max True. -> Best becomes Mask 0, Power 0, Score 0.
+    // So default initialization works correctly for empty set.
+    
+    // Handle case where no better mask was found but mask 0 is the only valid one
+    // Actually, the logic above handles it because mask 0 will update bestMask from 255 to 0
+    // provided it passes validity checks. If MandatorySensor is true, mask 0 fails validity,
+    // but we already handled shortage. If MandatorySensor is true and budget >= 40,
+    // mask 1 or higher must be feasible. If none are feasible (e.g. budget too low for any
+    // requested load but sensor is mandatory), the loop might leave bestMask at 255?
+    // Wait, if MandatorySensor=true, mask 0 is invalid. Masks 1,3,5,7 have bit 1.
+    // If BudgetW >= 40, mask 1 (power 40) is always feasible if sensor is eligible.
+    // Sensor is eligible if NeedSensor OR MandatorySensor. Since MandatorySensor is true,
+    // sensor is eligible. So mask 1 is always a candidate when MandatorySensor=true and Budget>=40.
+    // Thus bestMask will always be updated to something <= 7.
+    
+    #SelectedMask := #bestMask;
+    #PowerW := #bestPower;
+    #Score := #bestScore;
+    
+    // Map mask to booleans
+    #SensorOn := (#SelectedMask AND 16#01) <> 0;
+    #HeaterOn := (#SelectedMask AND 16#02) <> 0;
+    #RadioOn := (#SelectedMask AND 16#04) <> 0;
+
+END_FUNCTION_BLOCK

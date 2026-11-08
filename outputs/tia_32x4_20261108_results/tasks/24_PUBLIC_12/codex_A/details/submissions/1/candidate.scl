@@ -1,0 +1,67 @@
+FUNCTION_BLOCK "FB_SlabThicknessAlarm"
+VERSION : 0.1
+   VAR_INPUT
+      THICKNESS_FAULT : BOOL;
+      THICKNESS_SIGNAL_VALID : BOOL;
+      CUTTING_RUN : BOOL;
+      FaultTimestamp : DINT;
+      CycleTime : TIME;
+   END_VAR
+   VAR_OUTPUT
+      THICKNESS_ALARM : BOOL;
+      Slab_Fault_Counter : UINT;
+      Slab_Runtime_Accumulator : LTIME;
+      Slab_Fault_History : ARRAY[0..4] OF DINT;
+   END_VAR
+   VAR
+      statFaultPrev : BOOL;
+      statHoldTimer : TON_TIME;
+      statHoldActive : BOOL;
+      statHoldNeed : BOOL;
+   END_VAR
+   VAR_TEMP
+      tmpValidFault : BOOL;
+      tmpRise : BOOL;
+      tmpIdx : INT;
+   END_VAR
+BEGIN
+   #tmpValidFault := #THICKNESS_SIGNAL_VALID AND #THICKNESS_FAULT;
+
+   IF NOT #THICKNESS_SIGNAL_VALID THEN
+      #THICKNESS_ALARM := FALSE;
+      #statHoldActive := FALSE;
+      #statHoldNeed := FALSE;
+      #statFaultPrev := FALSE;
+      #statHoldTimer(IN := FALSE,
+                     PT := T#500ms);
+   ELSE
+      #tmpRise := #tmpValidFault AND NOT #statFaultPrev;
+
+      IF #tmpRise THEN
+         IF #Slab_Fault_Counter < 65535 THEN
+            #Slab_Fault_Counter := #Slab_Fault_Counter + 1;
+         END_IF;
+         FOR #tmpIdx := 4 TO 1 BY -1 DO
+            #Slab_Fault_History[#tmpIdx] := #Slab_Fault_History[#tmpIdx - 1];
+         END_FOR;
+         #Slab_Fault_History[0] := #FaultTimestamp;
+         #statHoldNeed := TRUE;
+      END_IF;
+
+      #statFaultPrev := #tmpValidFault;
+
+      #statHoldTimer(IN := #statHoldNeed,
+                     PT := T#500ms);
+
+      IF #statHoldTimer.Q THEN
+         #statHoldNeed := FALSE;
+      END_IF;
+
+      #THICKNESS_ALARM := #tmpValidFault OR #statHoldNeed;
+   END_IF;
+
+   IF #CUTTING_RUN AND #THICKNESS_SIGNAL_VALID AND NOT #THICKNESS_FAULT THEN
+      #Slab_Runtime_Accumulator := #Slab_Runtime_Accumulator + TIME_TO_LTIME(#CycleTime);
+   END_IF;
+
+END_FUNCTION_BLOCK

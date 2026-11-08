@@ -1,0 +1,445 @@
+{
+  "status": "tool_error",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_20",
+  "dataset_sha256": "09311a449ae6a7b894e63082b9ade6360a67250c560fa264a75b9431b6641c9f",
+  "source_sha256": "6ac0c7f7b29d34ad4941b19f1d6ac9665bb4b0139433ba2a6618779f5a05c6e5",
+  "model_calls": 0,
+  "declared_ltl_total": 13,
+  "mapped_assertions_total": 13,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\32_PUBLIC_20\\self_A\\details\\submissions\\1\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(!(MotorForward & MotorReverse))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": false,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P02",
+      "formula": "G(manualForwardOnly -> MotorForward & !MotorReverse)",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": false,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P03",
+      "formula": "G(manualReverseOnly -> MotorReverse & !MotorForward)",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": false,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P04",
+      "formula": "G(autoIdle & SensorFeed -> R1(MotorForward))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P05",
+      "formula": "G(movingToWash & SensorWash -> R1(motorStopped))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P06",
+      "formula": "G(waitingWash & washComplete -> R1(MotorForward))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P07",
+      "formula": "G(movingToWeight & SensorWeight -> R1(motorStopped))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P08",
+      "formula": "G(waitingWeight & weightComplete & qualified -> R1(temperatureAndDepartureOK))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P09",
+      "formula": "G(waitingWeight & weightComplete & !qualified -> R1(kick))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P10",
+      "formula": "G(movingToFiring & SensorFiring -> R1(motorStopped))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P11",
+      "formula": "G(waitingFiring & firingComplete -> R1(MotorForward))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P12",
+      "formula": "G(movingToOutput & SensorOutput -> R1(motorStopped & CompletionLight))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P13",
+      "formula": "G(finishedProduct & !SensorOutput -> R1(!CompletionLight))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [
+    "PVL_ModeOK",
+    "PVL_SensorsOK"
+  ],
+  "observer_definitions": {
+    "manualForwardOnly": "!Mode & ForwardButton & !ReverseButton",
+    "manualReverseOnly": "!Mode & ReverseButton & !ForwardButton",
+    "motorStopped": "!MotorForward & !MotorReverse",
+    "qualified": "100<=weight & weight<=200",
+    "temperatureAndDepartureOK": "firingTemp=PVL_ExpectedTemp & MotorForward & !kick",
+    "autoIdle": "Mode & PVL_PreStage=0",
+    "movingToWash": "Mode & PVL_PreStage=1",
+    "waitingWash": "Mode & PVL_PreStage=2",
+    "movingToWeight": "Mode & PVL_PreStage=3",
+    "waitingWeight": "Mode & PVL_PreStage=4",
+    "movingToFiring": "Mode & PVL_PreStage=5",
+    "waitingFiring": "Mode & PVL_PreStage=6",
+    "movingToOutput": "Mode & PVL_PreStage=7",
+    "finishedProduct": "Mode & PVL_PreStage=8"
+  },
+  "source_adaptations": [],
+  "instrumented_sha256": "3634c6d8f0a57f67a1756334c7cd3fd1a3c373c268f5f137783f166bf6d8d43b",
+  "tool_sha256": {
+    "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+    "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+    "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+  },
+  "plcverif_seconds": 11.074,
+  "message": "[WinError 5] 拒绝访问。",
+  "seconds": 11.154,
+  "model_source_sha256": "73c308538ded54e56d28b2e1684211980aace2ab4ac39b883bfc32a1222a7e05",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q20"
+    },
+    {
+      "kind": "layout_attribute",
+      "attribute": "S7_Optimized_Access",
+      "reason": "No absolute memory, pointers or references admitted by this adapter"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorReverse"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "kick"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "qualified"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "weight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "weight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Mode"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CompletionLight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SensorOutput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "firingTemp"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "ForwardButton"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "ReverseButton"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorReverse"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "ReverseButton"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "ForwardButton"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorReverse"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorReverse"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CompletionLight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SensorFeed"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SensorWash"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "washComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SensorWeight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "weightComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "qualified"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "firingTemp"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "weight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "kick"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "kick"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "firingTemp"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "weightComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SensorFiring"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "firingComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SensorOutput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "MotorForward"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CompletionLight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CompletionLight"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SensorOutput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SensorOutput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "fresh_temporary_inputs",
+      "interface_additions": [
+        {
+          "direction": "Input",
+          "name": "WBTEMP_0",
+          "type": "BOOL"
+        }
+      ],
+      "semantics": "Fresh independent scalar values at each entry FB call; exact fixed array/struct members, no zero or retained-state assumption"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

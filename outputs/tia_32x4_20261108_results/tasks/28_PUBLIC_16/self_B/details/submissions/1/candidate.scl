@@ -1,0 +1,206 @@
+FUNCTION_BLOCK "Q16"
+{
+    S7_Optimized_Access := 'TRUE'
+}
+VERSION : 0.1
+
+VAR_INPUT
+    processLength : USINT; // Active process-sequence length, 1..8
+    sensor1 : BOOL;        // Sensor at 1# station
+    sensor2 : BOOL;        // Sensor at 2# station
+    sensor3 : BOOL;        // Sensor at 3# station
+    sensor4 : BOOL;        // Sensor at 4# station
+    sensor5 : BOOL;        // Sensor at 5# station
+    station1Start : BOOL;  // Start button at 1# station
+    station2Complete : BOOL; // Processing completion signal at 2# station
+    station3Complete : BOOL; // Processing completion signal at 3# station
+    station4Complete : BOOL; // Processing completion signal at 4# station
+    processSequence : ARRAY[1..8] OF USINT; // Processing sequence
+END_VAR
+
+VAR_OUTPUT
+    conveyorLeft : BOOL;   // Conveyor turns left
+    conveyorRight : BOOL;  // Conveyor turns right
+END_VAR
+
+VAR
+    currentState : INT;    // Internal state machine
+    cursor : USINT;        // Index into processSequence (1-based)
+    currentStation : USINT; // Detected current station number (1-5)
+    targetStation : USINT;  // Target station for current move
+    prevStation1Start : BOOL;
+    prevStation2Complete : BOOL;
+    prevStation3Complete : BOOL;
+    prevStation4Complete : BOOL;
+END_VAR
+
+BEGIN
+    // Determine current physical station based on sensors
+    IF #sensor1 THEN
+        #currentStation := 1;
+    ELSIF #sensor2 THEN
+        #currentStation := 2;
+    ELSIF #sensor3 THEN
+        #currentStation := 3;
+    ELSIF #sensor4 THEN
+        #currentStation := 4;
+    ELSIF #sensor5 THEN
+        #currentStation := 5;
+    ELSE
+        // No sensor active, keep last known or reset if needed.
+        // For robustness, if no sensor, we might assume idle or error.
+        // However, logic relies on sensor arrival to stop movement.
+        // If neither start nor complete triggers, we hold state.
+    END_IF;
+
+    CASE #currentState OF
+        0: // IDLE / WAIT_FOR_START
+            #conveyorLeft := FALSE;
+            #conveyorRight := FALSE;
+            
+            // Rising edge detection for station1Start
+            IF #station1Start AND NOT #prevStation1Start THEN
+                // Check if there is material at station 1
+                IF #sensor1 THEN
+                    // Initialize cursor to first element
+                    #cursor := 1;
+                    IF #processLength >= 1 THEN
+                        #targetStation := #processSequence[#cursor];
+                        #currentState := 1; // MOVE_TO_TARGET
+                    ELSE
+                        // Invalid length, stay idle or go to done?
+                        // Contract says 1..8, so assume valid.
+                        #currentState := 0;
+                    END_IF;
+                END_IF;
+            END_IF;
+            
+        1: // MOVE_TO_TARGET
+            // Stop conveyor if target reached
+            IF #currentStation = #targetStation THEN
+                #conveyorLeft := FALSE;
+                #conveyorRight := FALSE;
+                
+                // Check if this was the final station (output/storage)
+                // The problem states: "continues until the product is delivered to the 5# workstation."
+                // And: "The final active entry is output station 5".
+                // So if we just arrived at the target defined in the sequence,
+                // we need to check if it's the end of the sequence.
+                
+                // Actually, the flow is:
+                // 1. Move to Sequence[i]
+                // 2. Wait for Complete (if not station 5? Station 5 is storage/output, usually no 'complete' signal needed for further processing, but it's the end).
+                // 3. Increment i.
+                
+                // Let's refine state 1 exit condition.
+                // If we arrive at target, we stop. Then we transition to waiting for completion 
+                // UNLESS the target is 5 (final output). But wait, the sequence ends with 5.
+                // Does station 5 have a 'complete' signal? Interface doesn't list station5Complete.
+                // Description: "Upon receiving the processing completion signal... continues to query next element... This continues until the product is delivered to the 5# workstation."
+                // This implies that reaching 5 terminates the cycle.
+                
+                IF #targetStation = 5 THEN
+                    // Final delivery achieved
+                    #currentState := 99; // DONE
+                ELSE
+                    // Need to wait for processing completion at this station
+                    #currentState := 2; // WAIT_PROCESSING
+                END_IF;
+            ELSE
+                // Determine direction
+                // Stations are numbered 1 to 5 left to right.
+                // Left decreases index, Right increases index.
+                IF #targetStation > #currentStation THEN
+                    // Need to move Right
+                    #conveyorRight := TRUE;
+                    #conveyorLeft := FALSE;
+                ELSIF #targetStation < #currentStation THEN
+                    // Need to move Left
+                    #conveyorLeft := TRUE;
+                    #conveyorRight := FALSE;
+                ELSE
+                    // Should not happen as we checked equality above
+                    #conveyorLeft := FALSE;
+                    #conveyorRight := FALSE;
+                END_IF;
+            END_IF;
+            
+        2: // WAIT_PROCESSING
+            #conveyorLeft := FALSE;
+            #conveyorRight := FALSE;
+            
+            // Check completion signals based on which station we are currently at (which equals targetStation)
+            // We use rising edges or level? Problem says "Upon receiving...". Usually level is sufficient if we clear it, 
+            // but rising edge is safer to avoid re-triggering if signal stays high.
+            // Given simple control, let's assume level trigger but ensure we only advance once per step.
+            // Since we are in a specific state, checking the relevant complete signal is enough.
+            
+            CASE #targetStation OF
+                2:
+                    IF #station2Complete THEN
+                         // Advance cursor
+                        IF #cursor < #processLength THEN
+                            #cursor := #cursor + 1;
+                            #targetStation := #processSequence[#cursor];
+                            #currentState := 1; // Move to next target
+                        ELSE
+                            // End of sequence without hitting 5? Contract violation or logic error.
+                            // Go to Done anyway.
+                            #currentState := 99;
+                        END_IF;
+                    END_IF;
+                3:
+                    IF #station3Complete THEN
+                        IF #cursor < #processLength THEN
+                            #cursor := #cursor + 1;
+                            #targetStation := #processSequence[#cursor];
+                            #currentState := 1;
+                        ELSE
+                            #currentState := 99;
+                        END_IF;
+                    END_IF;
+                4:
+                    IF #station4Complete THEN
+                        IF #cursor < #processLength THEN
+                            #cursor := #cursor + 1;
+                            #targetStation := #processSequence[#cursor];
+                            #currentState := 1;
+                        ELSE
+                            #currentState := 99;
+                        END_IF;
+                    END_IF;
+                OTHERWISE:
+                    // Should not reach here if target != 5 handled in State 1
+                    #currentState := 99;
+            END_CASE;
+            
+        99: // DONE
+            #conveyorLeft := FALSE;
+            #conveyorRight := FALSE;
+            
+            // Reset if new start requested? 
+            // Typically, after finishing, we wait for next raw material at St1.
+            // If sensor1 is true and station1Start rises, we restart.
+            IF #sensor1 THEN
+                 // Optional: Allow immediate restart if configured, but usually requires fresh start button press.
+                 // We fall through to State 0 effectively by resetting currentState if start pressed again.
+                 // But let's keep it in 99 until explicit reset or new start logic.
+                 // To allow continuous operation, we can check for start again.
+                 IF #station1Start AND NOT #prevStation1Start THEN
+                     #cursor := 1;
+                     IF #processLength >= 1 THEN
+                         #targetStation := #processSequence[#cursor];
+                         #currentState := 1;
+                     END_IF;
+                 END_IF;
+            END_IF;
+            
+    END_CASE;
+
+    // Update previous edge detectors
+    #prevStation1Start := #station1Start;
+    #prevStation2Complete := #station2Complete;
+    #prevStation3Complete := #station3Complete;
+    #prevStation4Complete := #station4Complete;
+
+END_FUNCTION_BLOCK

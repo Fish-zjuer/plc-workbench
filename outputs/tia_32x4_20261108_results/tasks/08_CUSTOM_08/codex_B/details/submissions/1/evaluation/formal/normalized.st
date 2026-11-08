@@ -1,0 +1,47 @@
+FUNCTION_BLOCK FB_CraneSpeedCheck
+
+  VAR_INPUT
+    LeftSpeed10 : INT;
+    RightSpeed10 : INT;
+    ReferenceSpeed10 : INT;
+  END_VAR
+  VAR_OUTPUT
+    SyncOK : BOOL;
+    SyncBad : BOOL;
+    Invalid : BOOL;
+  END_VAR
+  VAR
+    LeftD : DINT;
+    RightD : DINT;
+    RefD : DINT;
+    ValidInputs : BOOL;
+    DiffD : DINT;
+    RatioD : DINT;
+    WithinTolerance : BOOL;
+  END_VAR
+
+       
+    LeftD := INT_TO_DINT(LeftSpeed10);
+    RightD := INT_TO_DINT(RightSpeed10);
+    RefD := INT_TO_DINT(ReferenceSpeed10);
+    ValidInputs := (LeftD >= 0) AND (LeftD <= 100)
+                  AND (RightD >= 0) AND (RightD <= 100)
+                  AND (RefD > 0) AND (RefD <= 100);
+    IF ValidInputs THEN
+        DiffD := ABS(LeftD - RightD);
+        RatioD := ABS(LeftD + RightD - (13 * RefD));
+        WithinTolerance := (DiffD <= 1) AND (RatioD <= 2);
+        Invalid := FALSE;
+        IF WithinTolerance THEN
+            SyncOK := TRUE;
+            SyncBad := FALSE;
+        ELSE
+            SyncOK := FALSE;
+            SyncBad := TRUE;
+        END_IF;
+    ELSE
+        SyncOK := FALSE;
+        SyncBad := FALSE;
+        Invalid := TRUE;
+    END_IF;
+  END_FUNCTION_BLOCK

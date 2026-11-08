@@ -1,0 +1,1885 @@
+{
+  "status": "pass",
+  "errors": 0,
+  "warnings": 0,
+  "state": "Success",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "Program blocks",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "IPv4Parser (FB2)",
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Compiling finished (errors: 0; warnings: 0)",
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "returncode": 0,
+  "source_sha256": "885089ce710d7f063579799b1d80284fb006c2e66d01e36ae685e1f60ed2f66b",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": true,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\26_PUBLIC_14\\codex_A\\details\\submissions\\5\\evaluation\\compile",
+  "seconds": 43.692,
+  "queue_seconds": 330.477,
+  "dataset_sha256": "d4c84fb0c3866a5c6a1ef283a58037c9881afd7f91f08753bd7f73bff28c0190",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_14",
+  "cases": [
+    {
+      "name": "normal_common_valid_addresses",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "0.0.0.0"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "127.0.0.1"
+          },
+          "expected": {
+            "ipValue": 2130706433
+          },
+          "actual": {
+            "ipValue": 2130706433.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "192.168.1.10"
+          },
+          "expected": {
+            "ipValue": 3232235786
+          },
+          "actual": {
+            "ipValue": 3232235786.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "ipText": "255.255.255.255"
+          },
+          "expected": {
+            "ipValue": 4294967295
+          },
+          "actual": {
+            "ipValue": 4294967295.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_00",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": ""
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_01",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "."
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_02",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_03",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.4.5"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_04",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1..3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_05",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": ".1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_06",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.4."
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_07",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "-1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_08",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "+1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_09",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": " 1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_10",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.4 "
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_11",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.a.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_12",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "256.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_13",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.256.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_14",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.256.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_15",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.256"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_16",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "999999999999999999999.1.2.3"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_17",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.4junk"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_18",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1/2/3/4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_19",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "0x1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_20",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.\"4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_21",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "1.2.3.\\4"
+          },
+          "expected": {
+            "ipValue": 0
+          },
+          "actual": {
+            "ipValue": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_22",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "001.002.003.004"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_23",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "255.0.0.0"
+          },
+          "expected": {
+            "ipValue": 4278190080
+          },
+          "actual": {
+            "ipValue": 4278190080.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_24",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "0.255.0.0"
+          },
+          "expected": {
+            "ipValue": 16711680
+          },
+          "actual": {
+            "ipValue": 16711680.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_25",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "0.0.255.0"
+          },
+          "expected": {
+            "ipValue": 65280
+          },
+          "actual": {
+            "ipValue": 65280.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "focused_address_26",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ipText": "1.2.3.4"
+          },
+          "expected": {
+            "ipValue": 16909060
+          },
+          "actual": {
+            "ipValue": 16909060.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ipText": "0.0.0.255"
+          },
+          "expected": {
+            "ipValue": 255
+          },
+          "actual": {
+            "ipValue": 255.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ipText": "4.3.2.1"
+          },
+          "expected": {
+            "ipValue": 67305985
+          },
+          "actual": {
+            "ipValue": 67305985.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 28,
+    "scans": 85,
+    "assertions": 85,
+    "failed": 0
+  },
+  "ltl_status": "unsupported",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\26_PUBLIC_14\\codex_A\\details\\submissions\\5\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\26_PUBLIC_14\\codex_A\\details\\submissions\\5\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    100,
+    200,
+    300,
+    0,
+    101,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200,
+    0,
+    100,
+    201,
+    0,
+    100,
+    200,
+    0,
+    100,
+    200
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0",
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "IPv4Parser (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "885089ce710d7f063579799b1d80284fb006c2e66d01e36ae685e1f60ed2f66b",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\26_PUBLIC_14\\codex_A\\details\\submissions\\5\\evaluation\\compile",
+    "seconds": 43.692,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "d4c84fb0c3866a5c6a1ef283a58037c9881afd7f91f08753bd7f73bff28c0190"
+  },
+  "formal_verification": {
+    "status": "unsupported",
+    "backend": "plcverif+cbmc",
+    "policy": "automatic",
+    "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_14",
+    "dataset_sha256": "d4c84fb0c3866a5c6a1ef283a58037c9881afd7f91f08753bd7f73bff28c0190",
+    "source_sha256": "885089ce710d7f063579799b1d80284fb006c2e66d01e36ae685e1f60ed2f66b",
+    "model_calls": 0,
+    "declared_ltl_total": 2,
+    "mapped_assertions_total": 2,
+    "proved_property_ids": [],
+    "full_ltl_proved": false,
+    "bounded_verified_property_ids": [],
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\26_PUBLIC_14\\codex_A\\details\\submissions\\5\\evaluation\\formal\\shared",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(validIPv4 -> parsedNetworkOrderOK)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: runtime\\plcverif\n2026-11-08T15:56:15.119698900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\candidate.scl' contains the following errors: \n- mismatched input '(' expecting ';' (114:16)\n- missing 'END_VAR' at ';' (114:21)\n- no viable alternative at input 'INT' (115:12)\n- no viable alternative at input 'INT' (116:12)\n- no viable alternative at input 'INT' (117:12)\n- no viable alternative at input 'UDINT' (118:12)\n- no viable alternative at input 'INT' (119:12)\n- no viable alternative at input 'BYTE' (120:12)\n- no viable alternative at input 'BOOL' (121:12)\n- no viable alternative at input 'UDINT' (122:12)\n- no viable alternative at input 'UDINT' (123:12)\n- no viable alternative at input 'UDINT' (124:12)\n- no viable alternative at input 'UDINT' (125:13)\n- no viable alternative at input 'END_VAR' (126:1). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (234 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\candidate.scl' contains the following errors: \n- mismatched input '(' expecting ';' (114:16)\n- missing 'END_VAR' at ';' (114:21)\n- no viable alternative at input 'INT' (115:12)\n- no viable alternative at input 'INT' (116:12)\n- no viable alternative at input 'INT' (117:12)\n- no viable alternative at input 'UDINT' (118:12)\n- no viable alternative at input 'INT' (119:12)\n- no viable alternative at input 'BYTE' (120:12)\n- no viable alternative at input 'BOOL' (121:12)\n- no viable alternative at input 'UDINT' (122:12)\n- no viable alternative at input 'UDINT' (123:12)\n- no viable alternative at input 'UDINT' (124:12)\n- no viable alternative at input 'UDINT' (125:13)\n- no viable alternative at input 'END_VAR' (126:1).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_Active\n  -job.req.pattern_params.4 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!validIPv4 -> ipValueZero)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: runtime\\plcverif\n2026-11-08T15:56:15.119698900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\candidate.scl' contains the following errors: \n- mismatched input '(' expecting ';' (114:16)\n- missing 'END_VAR' at ';' (114:21)\n- no viable alternative at input 'INT' (115:12)\n- no viable alternative at input 'INT' (116:12)\n- no viable alternative at input 'INT' (117:12)\n- no viable alternative at input 'UDINT' (118:12)\n- no viable alternative at input 'INT' (119:12)\n- no viable alternative at input 'BYTE' (120:12)\n- no viable alternative at input 'BOOL' (121:12)\n- no viable alternative at input 'UDINT' (122:12)\n- no viable alternative at input 'UDINT' (123:12)\n- no viable alternative at input 'UDINT' (124:12)\n- no viable alternative at input 'UDINT' (125:13)\n- no viable alternative at input 'END_VAR' (126:1). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (234 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\candidate.scl' contains the following errors: \n- mismatched input '(' expecting ';' (114:16)\n- missing 'END_VAR' at ';' (114:21)\n- no viable alternative at input 'INT' (115:12)\n- no viable alternative at input 'INT' (116:12)\n- no viable alternative at input 'INT' (117:12)\n- no viable alternative at input 'UDINT' (118:12)\n- no viable alternative at input 'INT' (119:12)\n- no viable alternative at input 'BYTE' (120:12)\n- no viable alternative at input 'BOOL' (121:12)\n- no viable alternative at input 'UDINT' (122:12)\n- no viable alternative at input 'UDINT' (123:12)\n- no viable alternative at input 'UDINT' (124:12)\n- no viable alternative at input 'UDINT' (125:13)\n- no viable alternative at input 'END_VAR' (126:1).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_Active\n  -job.req.pattern_params.4 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\candidate.scl\n\n\n== Executing Agents ==\n"
+      }
+    ],
+    "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+    "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+    "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+    "bound": 20,
+    "timeout_seconds": 120,
+    "scan_period_ms": 10,
+    "memory_limit_mb": 768,
+    "time_coverage": {
+      "scan_samples": 20,
+      "scan_period_ms": 10,
+      "first_sample_offset_ms": 10,
+      "last_sample_offset_ms": 200,
+      "maximum_elapsed_between_samples_ms": 190
+    },
+    "assumptions": [],
+    "observer_definitions": {
+      "validIPv4": "PVL_Valid",
+      "parsedNetworkOrderOK": "ipValue=PVL_IP",
+      "ipValueZero": "ipValue=0"
+    },
+    "source_adaptations": [],
+    "instrumented_sha256": "d6342b103e384c610b95cbcc9711d9cdc9870a47e7de1dbdab8e109f18064ec6",
+    "tool_sha256": {
+      "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+      "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+      "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+    },
+    "plcverif_seconds": 6.626,
+    "message": "PLCverif could not build a structured C model: runtime\\plcverif\n2026-11-08T15:56:15.119698900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\candidate.scl' contains the following errors: \n- mismatched input '(' expecting ';' (114:16)\n- missing 'END_VAR' at ';' (114:21)\n- no viable alternative at input 'INT' (115:12)\n- no viable alternative at input 'INT' (116:12)\n- no viable alternative at input 'INT' (117:12)\n- no viable alternative at input 'UDINT' (118:12)\n- no viable alternative at input 'INT' (119:12)\n- no viable alternative at input 'BYTE' (120:12)\n- no viable alternative at input 'BOOL' (121:12)\n- no viable alternative at input 'UDINT' (122:12)\n- no viable alternative at input 'UDINT' (123:12)\n- no viable alternative at input 'UDINT' (124:12)\n- no viable alternative at input 'UDINT' (125:13)\n- no viable alternative at input 'END_VAR' (126:1). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (234 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\candidate.scl' contains the following errors: \n- mismatched input '(' expecting ';' (114:16)\n- missing 'END_VAR' at ';' (114:21)\n- no viable alternative at input 'INT' (115:12)\n- no viable alternative at input 'INT' (116:12)\n- no viable alternative at input 'INT' (117:12)\n- no viable alternative at input 'UDINT' (118:12)\n- no viable alternative at input 'INT' (119:12)\n- no viable alternative at input 'BYTE' (120:12)\n- no viable alternative at input 'BOOL' (121:12)\n- no viable alternative at input 'UDINT' (122:12)\n- no viable alternative at input 'UDINT' (123:12)\n- no viable alternative at input 'UDINT' (124:12)\n- no viable alternative at input 'UDINT' (125:13)\n- no viable alternative at input 'END_VAR' (126:1).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_Active\n  -job.req.pattern_params.4 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_bfp10c00\\candidate.scl\n\n\n== Executing Agents ==\n",
+    "seconds": 13.203,
+    "model_source_sha256": "14dba7e571d5ea49d3dfd917740a291931105323ad21bcd33fba16418e853b8c",
+    "platform_adaptations": [
+      {
+        "kind": "symbol_spelling",
+        "symbol": "IPv4Parser"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "ipValue"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v1"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v2"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v3"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v4"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segNo"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "digitCnt"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "len"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "ipText"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "len"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "len"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "i"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "len"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "c"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "ipText"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "i"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "c"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "c"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "digitCnt"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "digitCnt"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "digitCnt"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "c"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "c"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "digitCnt"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segNo"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v1"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v2"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v3"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segNo"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segNo"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "digitCnt"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "digitCnt"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segNo"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v4"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "segVal"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "bad"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "ipValue"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v1"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v2"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v3"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "v4"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "ipValue"
+      },
+      {
+        "kind": "fresh_temporary_inputs",
+        "interface_additions": [
+          {
+            "direction": "Input",
+            "name": "WBTEMP_0",
+            "type": "INT"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_1",
+            "type": "INT"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_2",
+            "type": "INT"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_3",
+            "type": "UDINT"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_4",
+            "type": "INT"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_5",
+            "type": "BYTE"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_6",
+            "type": "BOOL"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_7",
+            "type": "UDINT"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_8",
+            "type": "UDINT"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_9",
+            "type": "UDINT"
+          },
+          {
+            "direction": "Input",
+            "name": "WBTEMP_10",
+            "type": "UDINT"
+          }
+        ],
+        "semantics": "Fresh independent scalar values at each entry FB call; exact fixed array/struct members, no zero or retained-state assumption"
+      },
+      {
+        "kind": "pou_begin_delimiter",
+        "count": 1
+      }
+    ],
+    "source_dialect": "siemens_scl",
+    "platform_assumptions": []
+  },
+  "finite_test_status": "pass"
+}

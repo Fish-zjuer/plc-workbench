@@ -1,0 +1,720 @@
+{
+  "status": "pass",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_06",
+  "source_sha256": "0627ecff2435adc9a19664a9622e67c68cafd0438a5543f582f3274e0d3e30ac",
+  "dataset_sha256": "11a0649695908d3f197a7cf6754a2b1041bb71495ae78270b53cfe9e42f19f10",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "cases": [
+    {
+      "name": "前馈与积分首轮",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.4,
+            "CapacityPct": 24.4,
+            "Saturated": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 24.4,
+            "Integral": 0.4,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "持续高饱和不继续积分",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.4,
+            "CapacityPct": 24.4,
+            "Saturated": false
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 24.4,
+            "Integral": 0.4,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": 0.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100,
+            "Saturated": true
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 100.0,
+            "Integral": 0.0,
+            "Saturated": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 100.0,
+            "Integral": 0.0,
+            "Saturated": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "反向误差允许积分",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.4,
+            "CapacityPct": 24.4,
+            "Saturated": false
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 24.4,
+            "Integral": 0.4,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": 0.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100,
+            "Saturated": true
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 100.0,
+            "Integral": 0.0,
+            "Saturated": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 100.0,
+            "Integral": 0.0,
+            "Saturated": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 600,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": -2,
+            "CapacityPct": 78,
+            "Saturated": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 78.0,
+            "Integral": -2.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "禁用及非法间隔保持",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.4,
+            "CapacityPct": 24.4,
+            "Saturated": false
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 24.4,
+            "Integral": 0.4,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "PressureKpa": 480,
+            "AirUseFlow": 10,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": 0.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100,
+            "Saturated": true
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 100.0,
+            "Integral": 0.0,
+            "Saturated": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 400,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 100.0,
+            "Integral": 0.0,
+            "Saturated": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 600,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": -2,
+            "CapacityPct": 78,
+            "Saturated": false
+          },
+          "phase": "setup",
+          "actual": {
+            "CapacityPct": 78.0,
+            "Integral": -2.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": false,
+            "Reset": false,
+            "PressureKpa": 600,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": -2,
+            "CapacityPct": 0
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": -2.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 600,
+            "AirUseFlow": 50,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 0
+          },
+          "expected": {
+            "Integral": -2,
+            "CapacityPct": 0,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": -2.0,
+            "Saturated": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "抗饱和双向_严格边界_禁用及复位优先",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Enable": true,
+            "Reset": true,
+            "PressureKpa": -1,
+            "AirUseFlow": 0,
+            "Kp": 0.2,
+            "Ki": 0.020000000000000004,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": 0.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 0,
+            "AirUseFlow": 90,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 100,
+            "Saturated": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 100.0,
+            "Integral": 0.0,
+            "Saturated": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 1000,
+            "AirUseFlow": 0,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0,
+            "Saturated": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": 0.0,
+            "Saturated": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 500,
+            "AirUseFlow": 50,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.0,
+            "CapacityPct": 100,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 100.0,
+            "Integral": 0.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 500,
+            "AirUseFlow": 50.001,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.0,
+            "CapacityPct": 100,
+            "Saturated": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 100.0,
+            "Integral": 0.0,
+            "Saturated": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Enable": false,
+            "Reset": false,
+            "PressureKpa": -1,
+            "AirUseFlow": 50.001,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.0,
+            "CapacityPct": 0,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": 0.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Enable": false,
+            "Reset": true,
+            "PressureKpa": -1,
+            "AirUseFlow": 50.001,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0,
+            "CapacityPct": 0,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": 0.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Enable": true,
+            "Reset": false,
+            "PressureKpa": 500,
+            "AirUseFlow": 0,
+            "Kp": 1,
+            "Ki": 0.1,
+            "DtSec": 1
+          },
+          "expected": {
+            "Integral": 0.0,
+            "CapacityPct": 0,
+            "Saturated": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "CapacityPct": 0.0,
+            "Integral": 0.0,
+            "Saturated": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 5,
+    "scans": 25,
+    "assertions": 76,
+    "failed": 0
+  },
+  "target_compile": "passed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\06_CUSTOM_06\\codex_A\\details\\submissions\\1\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "behavior_tested": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\06_CUSTOM_06\\codex_A\\details\\submissions\\1\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    40,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0"
+}

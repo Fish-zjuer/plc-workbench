@@ -1,0 +1,406 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_17",
+  "dataset_sha256": "fa86e77a01a6644980c2ed2664fd2c7a93b44868fa8d4127f7bcf703896cd3b9",
+  "source_sha256": "80787056d9b5820e58bfac6fa55983050cee39285d5daefaa8c272c2ed91bff1",
+  "model_calls": 0,
+  "declared_ltl_total": 10,
+  "mapped_assertions_total": 10,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\29_PUBLIC_17\\codex_A\\details\\submissions\\3\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(query & !exists -> error8001)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    },
+    {
+      "id": "P02",
+      "formula": "G(query & exists -> queryResultMatches)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    },
+    {
+      "id": "P03",
+      "formula": "G(add & exists -> error8002 & databaseHeld)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    },
+    {
+      "id": "P04",
+      "formula": "G(add & !exists & !free -> error8003 & databaseHeld)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    },
+    {
+      "id": "P05",
+      "formula": "G(add & !exists & free -> addedAtFirstFree & otherEntriesHeld)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    },
+    {
+      "id": "P06",
+      "formula": "G(delete & !exists -> error8004 & databaseHeld)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    },
+    {
+      "id": "P07",
+      "formula": "G(delete & exists -> matchingIDCleared & otherEntriesHeld)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    },
+    {
+      "id": "P08",
+      "formula": "G(modify & !exists -> error8005 & databaseHeld)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    },
+    {
+      "id": "P09",
+      "formula": "G(modify & exists -> matchingEntryReplaced & otherEntriesHeld)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    },
+    {
+      "id": "P10",
+      "formula": "G(nonzeroIDsUnique)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [
+    "PVL_Env"
+  ],
+  "observer_definitions": {
+    "query": "queryRecipe",
+    "add": "addRecipe",
+    "delete": "deleteRecipe",
+    "modify": "modifyRecipe",
+    "exists": "PVL_Found>0",
+    "free": "PVL_Free>0",
+    "databaseHeld": "PVL_Held",
+    "otherEntriesHeld": "PVL_OtherHeld",
+    "queryResultMatches": "PVL_QueryOK",
+    "addedAtFirstFree": "PVL_AddOK",
+    "matchingIDCleared": "PVL_DeleteOK",
+    "matchingEntryReplaced": "PVL_ModifyOK",
+    "nonzeroIDsUnique": "PVL_Unique",
+    "error8001": "error & status=32769",
+    "error8002": "error & status=32770",
+    "error8003": "error & status=32771",
+    "error8004": "error & status=32772",
+    "error8005": "error & status=32773"
+  },
+  "source_adaptations": [],
+  "message": "IN_OUT verification requires an explicit reference_model storage contract; value-copy fallback is disabled",
+  "seconds": 0.011,
+  "model_source_sha256": "51ab72206710f2b92e44551e55333f1136c31d23d909a7b8859b58b0c6f620af",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "ST_Recipe"
+    },
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q17"
+    },
+    {
+      "kind": "symbol_spelling",
+      "symbol": "ST_Recipe"
+    },
+    {
+      "kind": "symbol_spelling",
+      "symbol": "ST_Recipe"
+    },
+    {
+      "kind": "symbol_spelling",
+      "symbol": "ST_Recipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeAdded"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeDeleted"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeModified"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "error"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "status"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "matchIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "freeIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "dupFound"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "freeIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "freeIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeIn"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeIn"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "dupFound"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "matchIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "matchIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "queryRecipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "matchIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "error"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "status"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeQueryResult"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "matchIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "addRecipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "dupFound"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "error"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "status"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "freeIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "error"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "status"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "freeIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeIn"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeAdded"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "deleteRecipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "matchIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "error"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "status"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "matchIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeDeleted"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "modifyRecipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "matchIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "error"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "status"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipe"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "matchIdx"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeIn"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "recipeModified"
+    },
+    {
+      "kind": "range_token_spacing",
+      "count": 1
+    },
+    {
+      "kind": "fresh_temporary_inputs",
+      "interface_additions": [
+        {
+          "direction": "Input",
+          "name": "WBTEMP_0",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_1",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_2",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_3",
+          "type": "BOOL"
+        }
+      ],
+      "semantics": "Fresh independent scalar values at each entry FB call; exact fixed array/struct members, no zero or retained-state assumption"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

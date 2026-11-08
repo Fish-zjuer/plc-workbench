@@ -1,0 +1,135 @@
+FUNCTION_BLOCK "IPv4Parser"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    ipText : STRING[254];
+END_VAR
+
+VAR_OUTPUT
+    ipValue : UDINT;
+END_VAR
+
+VAR_TEMP
+    len : INT;
+    i : INT;
+    currentChar : CHAR;
+    segmentCount : INT;
+    digitCount : INT;
+    segValue : UDINT;
+    totalValue : UDINT;
+    isValid : BOOL;
+    tempStr : STRING[254];
+END_VAR
+
+BEGIN
+    // Initialize output to 0 (covers invalid cases and 0.0.0.0)
+    #ipValue := 0;
+    
+    // Get length of the input string
+    #len := LEN(#ipText);
+    
+    // Basic check: must have at least 3 dots and some digits, e.g., "0.0.0.0" is min length 7
+    // But we rely on loop logic for strict validation.
+    // Reset state variables
+    #segmentCount := 0;
+    #digitCount := 0;
+    #segValue := 0;
+    #totalValue := 0;
+    #isValid := TRUE;
+    
+    // Iterate through the string
+    FOR #i := 1 TO #len DO
+        #currentChar := CHAR_AT(#ipText, #i);
+        
+        IF #currentChar = '.' THEN
+            // End of a segment
+            // Check if segment had at least one digit
+            IF #digitCount = 0 THEN
+                #isValid := FALSE;
+                EXIT; // Stop processing
+            END_IF;
+            
+            // Check if segment value is within range 0-255
+            IF #segValue > 255 THEN
+                #isValid := FALSE;
+                EXIT;
+            END_IF;
+            
+            // Accumulate to total value based on position
+            // Segment 0 (first) -> bits 24-31
+            // Segment 1 (second) -> bits 16-23
+            // Segment 2 (third) -> bits 8-15
+            // Segment 3 (fourth) -> bits 0-7
+            CASE #segmentCount OF
+                0:
+                    #totalValue := #totalValue OR (#segValue SHL 24);
+                1:
+                    #totalValue := #totalValue OR (#segValue SHL 16);
+                2:
+                    #totalValue := #totalValue OR (#segValue SHL 8);
+                ELSE:
+                    // More than 3 dots encountered before end? 
+                    // If we are here, it means we finished segment 3 and hit another dot.
+                    // This implies more than 4 segments or trailing dot issues handled later.
+                    // Actually, if segmentCount becomes 3, next dot makes it 4, which is invalid count.
+                    #isValid := FALSE;
+                    EXIT;
+            END_CASE;
+            
+            // Prepare for next segment
+            #segmentCount := #segmentCount + 1;
+            #digitCount := 0;
+            #segValue := 0;
+            
+        ELSIF #currentChar >= '0' AND #currentChar <= '9' THEN
+            // Digit character
+            #digitCount := #digitCount + 1;
+            
+            // Prevent overflow during accumulation if possible, though UDINT is large enough for intermediate steps usually
+            // But strictly, if digits are too many, it might exceed 255 quickly.
+            #segValue := (#segValue * 10) + (ORD(#currentChar) - ORD('0'));
+            
+            // Early exit if segment exceeds 255 to avoid unnecessary processing and potential overflow issues
+            IF #segValue > 255 THEN
+                #isValid := FALSE;
+                EXIT;
+            END_IF;
+            
+        ELSE
+            // Invalid character found
+            #isValid := FALSE;
+            EXIT;
+        END_IF;
+    END_FOR;
+    
+    // After loop, validate final segment
+    IF #isValid THEN
+        // Must have exactly 4 segments (indices 0, 1, 2, 3 processed)
+        // If we exited normally, we haven't added the last segment to totalValue yet because there was no trailing dot.
+        
+        // Check if last segment has digits
+        IF #digitCount = 0 THEN
+            #isValid := FALSE;
+        END_IF;
+        
+        // Check range of last segment
+        IF #isValid AND #segValue > 255 THEN
+            #isValid := FALSE;
+        END_IF;
+        
+        // Check segment count: should be 3 completed segments + 1 current = 4 total
+        // segmentCount increments on every dot. So after 3 dots, segmentCount is 3.
+        // The 4th segment is currently being held in segValue.
+        IF #isValid AND #segmentCount <> 3 THEN
+            #isValid := FALSE;
+        END_IF;
+        
+        IF #isValid THEN
+            // Add the last segment (bits 0-7)
+            #totalValue := #totalValue OR #segValue;
+            #ipValue := #totalValue;
+        END_IF;
+    END_IF;
+
+END_FUNCTION_BLOCK

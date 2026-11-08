@@ -1,0 +1,65 @@
+FUNCTION_BLOCK FB_HmiAccess
+
+  VAR_INPUT
+    SessionValid : BOOL;
+    Role : USINT;
+    Page : USINT;
+    WriteReq : BOOL;
+    WriteValue : LREAL;
+  END_VAR
+
+  VAR_OUTPUT
+    ViewAllowed : BOOL;
+    WriteAllowed : BOOL;
+    Accepted : BOOL;
+    Denied : BOOL;
+    ParamValue : LREAL := 0.0;
+  END_VAR
+
+     
+    // Default permissions: denied until the role/page matrix grants access.
+    ViewAllowed := FALSE;
+    WriteAllowed := FALSE;
+
+    IF SessionValid THEN
+        CASE Role OF
+            1:
+                IF (Page = 1) OR (Page = 2) THEN
+                    ViewAllowed := TRUE;
+                END_IF;
+            2:
+                IF (Page = 1) OR (Page = 2) OR (Page = 4) THEN
+                    ViewAllowed := TRUE;
+                END_IF;
+            3:
+                IF (Page >= 1) AND (Page <= 4) THEN
+                    ViewAllowed := TRUE;
+                END_IF;
+            ELSE
+                ViewAllowed := FALSE;
+        END_CASE;
+
+        IF (Role = 2) OR (Role = 3) THEN
+            IF Page = 4 THEN
+                WriteAllowed := TRUE;
+            END_IF;
+        END_IF;
+    END_IF;
+
+    IF WriteReq AND WriteAllowed THEN
+        IF (WriteValue >= 0.0) AND (WriteValue <= 100.0) THEN
+            ParamValue := WriteValue;
+            Accepted := TRUE;
+            Denied := FALSE;
+        ELSE
+            Accepted := FALSE;
+            Denied := TRUE;
+        END_IF;
+    ELSIF WriteReq THEN
+        Accepted := FALSE;
+        Denied := TRUE;
+    ELSE
+        Accepted := FALSE;
+        Denied := FALSE;
+    END_IF;
+END_FUNCTION_BLOCK

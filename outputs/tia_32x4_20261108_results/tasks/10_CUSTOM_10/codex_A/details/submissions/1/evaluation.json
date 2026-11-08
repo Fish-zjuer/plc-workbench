@@ -1,0 +1,6697 @@
+{
+  "status": "fail",
+  "errors": 0,
+  "warnings": 0,
+  "state": "Success",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "Program blocks",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "FB_InventoryRequest (FB2)",
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Compiling finished (errors: 0; warnings: 0)",
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "returncode": 0,
+  "source_sha256": "c44f44bd3d69e86d618dbdb91b5ed19f17ee87cb1018785c008e683f8d9c10bf",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": true,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\10_CUSTOM_10\\codex_A\\details\\submissions\\1\\evaluation\\compile",
+  "seconds": 41.92,
+  "queue_seconds": 350.478,
+  "dataset_sha256": "d5a34643f7671eb3f052ecb992c89e544af49a71be5a264644449989c81c8ede",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_10",
+  "cases": [
+    {
+      "name": "20-A：资源忙保持、到站下发及取消",
+      "status": "fail",
+      "first_failure": {
+        "scan": 0,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Dispatched",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Dispatched",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "20-B：新盘点请求与取消同时发生",
+      "status": "fail",
+      "first_failure": {
+        "scan": 3,
+        "output": "Dispatched",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Dispatched",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty_low_0000",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_0001",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_0010",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_0011",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_0100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_0101",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_0110",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_0111",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_1000",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty_low_1001",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_1010",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty_low_1011",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_1100",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Dispatched",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Dispatched",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty_low_1101",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_low_1110",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty_low_1111",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_0000",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_0001",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_0010",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_0011",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_0100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_0101",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_0110",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_0111",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_1000",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_1001",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_1010",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_1011",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_1100",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_1101",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_1110",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "empty_high_1111",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_low_0000",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_low_0001",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_low_0010",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_low_0011",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_low_0100",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Dispatched",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_low_0101",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_low_0110",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_low_0111",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_low_1000",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_low_1001",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_low_1010",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_low_1011",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_low_1100",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Dispatched",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_low_1101",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_low_1110",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_low_1111",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_high_0000",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_high_0001",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_high_0010",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_high_0011",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_high_0100",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Dispatched",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_high_0101",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_high_0110",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_high_0111",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_high_1000",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_high_1001",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_high_1010",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_high_1011",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_high_1100",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": true
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Dispatched",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_high_1101",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": false,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "pending_high_1110",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pending_high_1111",
+      "status": "fail",
+      "first_failure": {
+        "scan": 1,
+        "output": "Pending",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "RequestBtn": false,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": false,
+            "Busy": true,
+            "Cancel": false
+          },
+          "expected": {
+            "Pending": true,
+            "RequestLamp": true,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": [
+            {
+              "output": "Pending",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "RequestLamp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "RequestBtn": true,
+            "ServiceReady": true,
+            "Busy": true,
+            "Cancel": true
+          },
+          "expected": {
+            "Pending": false,
+            "RequestLamp": false,
+            "Dispatched": false
+          },
+          "phase": "test",
+          "actual": {
+            "Pending": 0.0,
+            "RequestLamp": 0.0,
+            "Dispatched": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 66,
+    "scans": 223,
+    "assertions": 669,
+    "failed": 38
+  },
+  "ltl_status": "not_executed",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\10_CUSTOM_10\\codex_A\\details\\submissions\\1\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\10_CUSTOM_10\\codex_A\\details\\submissions\\1\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    11,
+    20,
+    30,
+    0,
+    11,
+    20,
+    30,
+    0,
+    11,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    21,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    31,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    31,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0",
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "FB_InventoryRequest (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "c44f44bd3d69e86d618dbdb91b5ed19f17ee87cb1018785c008e683f8d9c10bf",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\10_CUSTOM_10\\codex_A\\details\\submissions\\1\\evaluation\\compile",
+    "seconds": 41.92,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "d5a34643f7671eb3f052ecb992c89e544af49a71be5a264644449989c81c8ede"
+  },
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "c44f44bd3d69e86d618dbdb91b5ed19f17ee87cb1018785c008e683f8d9c10bf",
+    "declared_ltl_total": 8,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(pendingMatch)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(Dispatched <-> (!Cancel & request & canServe))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(RequestLamp <-> Pending)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(Cancel -> (!Pending & !Dispatched & !RequestLamp))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G((!Cancel & request & Busy) -> (Pending & !Dispatched))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G(!request -> (!Pending & !Dispatched))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(!(Pending & Dispatched))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P08",
+        "formula": "A_service -> G(Pending -> F(Cancel | Dispatched))",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "finite_test_status": "fail"
+}

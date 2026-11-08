@@ -1,0 +1,65 @@
+FUNCTION_BLOCK "Q10"
+VERSION : 0.1
+   VAR_INPUT
+      TemperatureSensorInput : REAL;
+      SetTemperature : REAL;
+   END_VAR
+   VAR_OUTPUT
+      CurrentTemperature : REAL;
+      SetTempDisplay : REAL;
+      HeaterStatus : BOOL;
+      OverheatProtection : BOOL;
+      HeaterOutput : BOOL;
+   END_VAR
+   VAR
+      heaterTimer : TON;
+      coolingTimer : TON;
+      rtCurrent : REAL;
+      rtSet : REAL;
+      bSensorFault : BOOL;
+      bDemand : BOOL;
+      bHeaterCmd : BOOL;
+   END_VAR
+   VAR_TEMP
+      tmpCooling : BOOL;
+   END_VAR
+
+BEGIN
+      #rtCurrent := #TemperatureSensorInput;
+      #rtSet := #SetTemperature;
+      #bSensorFault := (#rtCurrent < 0.0) OR (#rtCurrent > 100.0);
+      #bDemand := #rtCurrent < #rtSet;
+
+      #tmpCooling := #OverheatProtection;
+
+      #heaterTimer(IN := #bHeaterCmd AND NOT #tmpCooling AND NOT #bSensorFault,
+                   PT := T#5S);
+
+      IF (#heaterTimer.Q AND NOT #tmpCooling) THEN
+         #tmpCooling := TRUE;
+      END_IF;
+
+      #coolingTimer(IN := #tmpCooling,
+                    PT := T#3S);
+
+      IF (#tmpCooling AND #coolingTimer.Q) THEN
+         #tmpCooling := FALSE;
+      END_IF;
+
+      IF #tmpCooling THEN
+         #bHeaterCmd := FALSE;
+      ELSIF #bSensorFault THEN
+         #bHeaterCmd := FALSE;
+      ELSIF NOT #bDemand THEN
+         #bHeaterCmd := FALSE;
+      ELSE
+         #bHeaterCmd := TRUE;
+      END_IF;
+
+      #OverheatProtection := #tmpCooling;
+      #HeaterOutput := #bHeaterCmd;
+
+      #CurrentTemperature := #rtCurrent;
+      #SetTempDisplay := #rtSet;
+      #HeaterStatus := #HeaterOutput;
+END_FUNCTION_BLOCK

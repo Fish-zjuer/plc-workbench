@@ -1,0 +1,49 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "85e42bc12d86ca9eaf5fb9e60a9d97adab35cf962ab7c919d75209442a6d90d3",
+  "declared_ltl_total": 7,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(ViewAllowed <-> view)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(WriteAllowed <-> write)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(Accepted <-> accept)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(Denied <-> (WriteReq & !accept))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(accept -> parameterUpdated)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(!accept -> parameterHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(!(Accepted & Denied))",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

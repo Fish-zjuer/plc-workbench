@@ -1,0 +1,2252 @@
+{
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_16",
+  "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+  "target": "tia",
+  "model": "qwen3.8-flash",
+  "inference_parameters": {
+    "enable_thinking": false
+  },
+  "status": "finite_pass",
+  "model_calls": 2,
+  "token_usage": {
+    "prompt_tokens": 7489,
+    "completion_tokens": 3952,
+    "total_tokens": 11441,
+    "cost": null,
+    "usage_calls": 2,
+    "complete": true,
+    "cost_complete": false,
+    "recorded_cost": 0.0
+  },
+  "metrics": [
+    {
+      "model": "qwen3.8-flash",
+      "usage": {
+        "prompt_tokens": 2069,
+        "completion_tokens": 2120,
+        "total_tokens": 4189,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 2069
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2069,
+        "cost": "¥0.00701"
+      },
+      "seconds": 35.28
+    },
+    {
+      "model": "qwen3.8-flash",
+      "usage": {
+        "prompt_tokens": 5420,
+        "completion_tokens": 1832,
+        "total_tokens": 7252,
+        "prompt_tokens_details": {
+          "cached_tokens": 1024,
+          "text_tokens": 5420
+        },
+        "prompt_cache_hit_tokens": 1024,
+        "prompt_cache_miss_tokens": 4396,
+        "cost": "¥0.008138"
+      },
+      "seconds": 36.919
+    }
+  ],
+  "seconds": 274.206,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details",
+  "submissions": [
+    {
+      "status": "compile_failed",
+      "errors": 1,
+      "warnings": 0,
+      "state": "Error",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Error",
+          "description": "",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Error",
+          "description": "",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "Q16 (FB2)",
+          "state": "Error",
+          "description": "",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "12",
+          "state": "Error",
+          "description": "Compound part of instruction expected.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Error",
+          "description": "Compiling finished (errors: 1; warnings: 0)",
+          "errors": 1,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 1,
+      "source_sha256": "5aa74372e8c2ea99917bd50bdfaa7f64f934e1d8dde5028028bb5e540fe5521b",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\1\\evaluation\\compile",
+      "seconds": 34.38,
+      "queue_seconds": 0.031,
+      "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "5aa74372e8c2ea99917bd50bdfaa7f64f934e1d8dde5028028bb5e540fe5521b",
+        "declared_ltl_total": 7,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(!(conveyorLeft & conveyorRight))",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(routeStart -> R1(firstTargetSelected))",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(transporting & !targetReached -> directionOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(targetReached -> R1(conveyorStopped))",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(waitingProcessing & targetComplete -> R1(nextTargetSelected))",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(finalStationReached -> R1(conveyorStopped))",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "compile_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 2,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 2,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "compile_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 7,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 7,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "pass",
+      "errors": 0,
+      "warnings": 0,
+      "state": "Success",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Q16 (FB2)",
+          "state": "Success",
+          "description": "Block was successfully compiled.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Success",
+          "description": "Compiling finished (errors: 0; warnings: 0)",
+          "errors": 0,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+      "returncode": 0,
+      "source_sha256": "271755a01043667a5094d92f7015fb1e311935d41e782b517bd776ede377a8d4",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+        "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+        "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "passed",
+      "behavior_tested": true,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\compile",
+      "seconds": 48.47,
+      "queue_seconds": 8.871,
+      "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+      "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_16",
+      "summary": {
+        "scenarios": 2,
+        "scans": 22,
+        "assertions": 211,
+        "failed": 0
+      },
+      "ltl_status": "tool_error",
+      "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\simulation\\result.json",
+      "test_backend": "tia",
+      "target": "tia",
+      "vendor": "Siemens",
+      "simulation": true,
+      "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\simulation",
+      "actual_scan_times_ms": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100,
+        110,
+        120,
+        130,
+        140,
+        150,
+        160,
+        0,
+        10,
+        20,
+        30,
+        40
+      ],
+      "simulation_cpu": "6ES7 511-1AK02-0AB0",
+      "compile_result": {
+        "status": "compile_passed",
+        "errors": 0,
+        "warnings": 0,
+        "state": "Success",
+        "diagnostics": [
+          {
+            "path": "PLC_1",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Program blocks",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Q16 (FB2)",
+            "state": "Success",
+            "description": "Block was successfully compiled.",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": null,
+            "state": "Success",
+            "description": "Compiling finished (errors: 0; warnings: 0)",
+            "errors": 0,
+            "warnings": 0
+          }
+        ],
+        "platform": "TIA Portal V21",
+        "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+        "returncode": 0,
+        "source_sha256": "271755a01043667a5094d92f7015fb1e311935d41e782b517bd776ede377a8d4",
+        "execution_fingerprint": {
+          "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+          "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+          "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+        },
+        "target_compile": "passed",
+        "behavior_tested": false,
+        "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\compile",
+        "seconds": 48.47,
+        "queue_seconds": 0.0,
+        "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1"
+      },
+      "formal_verification": {
+        "status": "tool_error",
+        "backend": "plcverif+cbmc",
+        "policy": "automatic",
+        "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_16",
+        "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+        "source_sha256": "271755a01043667a5094d92f7015fb1e311935d41e782b517bd776ede377a8d4",
+        "model_calls": 0,
+        "declared_ltl_total": 7,
+        "mapped_assertions_total": 7,
+        "proved_property_ids": [],
+        "full_ltl_proved": false,
+        "bounded_verified_property_ids": [],
+        "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\formal\\shared",
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(!(conveyorLeft & conveyorRight))",
+            "status": "not_executed",
+            "temporal_boundary_sensitive": false,
+            "message": "[WinError 5] 拒绝访问。"
+          },
+          {
+            "id": "P02",
+            "formula": "G(routeStart -> R1(firstTargetSelected))",
+            "status": "not_executed",
+            "temporal_boundary_sensitive": true,
+            "message": "[WinError 5] 拒绝访问。"
+          },
+          {
+            "id": "P03",
+            "formula": "G(transporting & !targetReached -> directionOK)",
+            "status": "not_executed",
+            "temporal_boundary_sensitive": false,
+            "message": "[WinError 5] 拒绝访问。"
+          },
+          {
+            "id": "P04",
+            "formula": "G(targetReached -> R1(conveyorStopped))",
+            "status": "not_executed",
+            "temporal_boundary_sensitive": true,
+            "message": "[WinError 5] 拒绝访问。"
+          },
+          {
+            "id": "P05",
+            "formula": "G(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)",
+            "status": "not_executed",
+            "temporal_boundary_sensitive": false,
+            "message": "[WinError 5] 拒绝访问。"
+          },
+          {
+            "id": "P06",
+            "formula": "G(waitingProcessing & targetComplete -> R1(nextTargetSelected))",
+            "status": "not_executed",
+            "temporal_boundary_sensitive": true,
+            "message": "[WinError 5] 拒绝访问。"
+          },
+          {
+            "id": "P07",
+            "formula": "G(finalStationReached -> R1(conveyorStopped))",
+            "status": "not_executed",
+            "temporal_boundary_sensitive": true,
+            "message": "[WinError 5] 拒绝访问。"
+          }
+        ],
+        "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+        "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+        "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+        "bound": 20,
+        "timeout_seconds": 120,
+        "scan_period_ms": 10,
+        "memory_limit_mb": 768,
+        "time_coverage": {
+          "scan_samples": 20,
+          "scan_period_ms": 10,
+          "first_sample_offset_ms": 10,
+          "last_sample_offset_ms": 200,
+          "maximum_elapsed_between_samples_ms": 190
+        },
+        "assumptions": [
+          "PVL_RouteOK"
+        ],
+        "observer_definitions": {
+          "routeStart": "PVL_PreStage=0 & sensor1 & station1Start",
+          "transporting": "PVL_PreStage=1",
+          "targetReached": "PVL_Reached",
+          "directionOK": "PVL_DirectionOK",
+          "conveyorStopped": "!conveyorLeft & !conveyorRight",
+          "waitingProcessing": "PVL_PreStage=2",
+          "targetComplete": "PVL_Complete",
+          "cursorHeld": "PVL_Cursor=PVL_PreCursor",
+          "firstTargetSelected": "PVL_DirectionOK",
+          "nextTargetSelected": "PVL_DirectionOK",
+          "finalStationReached": "PVL_PreStage=1 & PVL_Reached & PVL_PreTarget=5"
+        },
+        "source_adaptations": [],
+        "instrumented_sha256": "c472048125cfda748bcf769bed00c6e27546f8791e857ff110fe03a894cb1ffb",
+        "tool_sha256": {
+          "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+          "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+          "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+        },
+        "plcverif_seconds": 10.82,
+        "message": "[WinError 5] 拒绝访问。",
+        "seconds": 21.12,
+        "model_source_sha256": "190956185cfe8964860d244382eac74f8f7c37f5ba62323346895e3506d3daed",
+        "platform_adaptations": [
+          {
+            "kind": "symbol_spelling",
+            "symbol": "Q16"
+          },
+          {
+            "kind": "layout_attribute",
+            "attribute": "S7_Optimized_Access",
+            "reason": "No absolute memory, pointers or references admitted by this adapter"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensor1"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "currentStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensor2"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "currentStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensor3"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "currentStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensor4"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "currentStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensor5"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "currentStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateIdle"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorLeft"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorRight"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "station1Start"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "prevStation1Start"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensor1"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processLength"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processSequence"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateIdle"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateMoving"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateIdle"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateMoving"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "currentStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorLeft"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorRight"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateMoving"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateDone"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateMoving"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateProcessing"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "currentStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorRight"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorLeft"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "currentStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorLeft"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorRight"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorLeft"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorRight"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateProcessing"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorLeft"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorRight"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "station2Complete"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processLength"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processSequence"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateProcessing"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateMoving"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateProcessing"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateDone"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "station3Complete"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processLength"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processSequence"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateProcessing"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateMoving"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateProcessing"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateDone"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "station4Complete"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processLength"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processSequence"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateProcessing"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateMoving"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateProcessing"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateDone"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateDone"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorLeft"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "conveyorRight"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensor1"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "station1Start"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "prevStation1Start"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processLength"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "targetStation"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "processSequence"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "cursor"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateDone"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "stateMoving"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "prevStation1Start"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "station1Start"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "prevStation2Complete"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "station2Complete"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "prevStation3Complete"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "station3Complete"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "prevStation4Complete"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "station4Complete"
+          },
+          {
+            "kind": "range_token_spacing",
+            "count": 1
+          },
+          {
+            "kind": "pou_begin_delimiter",
+            "count": 1
+          }
+        ],
+        "source_dialect": "siemens_scl",
+        "platform_assumptions": []
+      },
+      "finite_test_status": "pass",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "passed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 2,
+        "test_cases_executed": 2,
+        "test_cases_not_executed": 0,
+        "test_cases_passed": 2,
+        "test_case_pass_rate": 1.0,
+        "finite_test_status": "pass",
+        "formal_status": "tool_error",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 7,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 7,
+        "formal_full_ltl_proved": false,
+        "formal_bound": 20,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 7,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    }
+  ],
+  "limits": {
+    "source_versions": 6,
+    "model_requests": 24,
+    "seconds": 1800
+  },
+  "formal_policy": "automatic",
+  "final_evaluation": {
+    "status": "pass",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Q16 (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+    "returncode": 0,
+    "source_sha256": "271755a01043667a5094d92f7015fb1e311935d41e782b517bd776ede377a8d4",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+      "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+      "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": true,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\compile",
+    "seconds": 48.47,
+    "queue_seconds": 8.871,
+    "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+    "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_16",
+    "summary": {
+      "scenarios": 2,
+      "scans": 22,
+      "assertions": 211,
+      "failed": 0
+    },
+    "ltl_status": "tool_error",
+    "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\simulation\\result.json",
+    "test_backend": "tia",
+    "target": "tia",
+    "vendor": "Siemens",
+    "simulation": true,
+    "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\simulation",
+    "actual_scan_times_ms": [
+      0,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100,
+      110,
+      120,
+      130,
+      140,
+      150,
+      160,
+      0,
+      10,
+      20,
+      30,
+      40
+    ],
+    "simulation_cpu": "6ES7 511-1AK02-0AB0",
+    "compile_result": {
+      "status": "compile_passed",
+      "errors": 0,
+      "warnings": 0,
+      "state": "Success",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Q16 (FB2)",
+          "state": "Success",
+          "description": "Block was successfully compiled.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Success",
+          "description": "Compiling finished (errors: 0; warnings: 0)",
+          "errors": 0,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 0,
+      "source_sha256": "271755a01043667a5094d92f7015fb1e311935d41e782b517bd776ede377a8d4",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "passed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\compile",
+      "seconds": 48.47,
+      "queue_seconds": 0.0,
+      "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1"
+    },
+    "formal_verification": {
+      "status": "tool_error",
+      "backend": "plcverif+cbmc",
+      "policy": "automatic",
+      "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_16",
+      "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+      "source_sha256": "271755a01043667a5094d92f7015fb1e311935d41e782b517bd776ede377a8d4",
+      "model_calls": 0,
+      "declared_ltl_total": 7,
+      "mapped_assertions_total": 7,
+      "proved_property_ids": [],
+      "full_ltl_proved": false,
+      "bounded_verified_property_ids": [],
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\formal\\shared",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(!(conveyorLeft & conveyorRight))",
+          "status": "not_executed",
+          "temporal_boundary_sensitive": false,
+          "message": "[WinError 5] 拒绝访问。"
+        },
+        {
+          "id": "P02",
+          "formula": "G(routeStart -> R1(firstTargetSelected))",
+          "status": "not_executed",
+          "temporal_boundary_sensitive": true,
+          "message": "[WinError 5] 拒绝访问。"
+        },
+        {
+          "id": "P03",
+          "formula": "G(transporting & !targetReached -> directionOK)",
+          "status": "not_executed",
+          "temporal_boundary_sensitive": false,
+          "message": "[WinError 5] 拒绝访问。"
+        },
+        {
+          "id": "P04",
+          "formula": "G(targetReached -> R1(conveyorStopped))",
+          "status": "not_executed",
+          "temporal_boundary_sensitive": true,
+          "message": "[WinError 5] 拒绝访问。"
+        },
+        {
+          "id": "P05",
+          "formula": "G(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)",
+          "status": "not_executed",
+          "temporal_boundary_sensitive": false,
+          "message": "[WinError 5] 拒绝访问。"
+        },
+        {
+          "id": "P06",
+          "formula": "G(waitingProcessing & targetComplete -> R1(nextTargetSelected))",
+          "status": "not_executed",
+          "temporal_boundary_sensitive": true,
+          "message": "[WinError 5] 拒绝访问。"
+        },
+        {
+          "id": "P07",
+          "formula": "G(finalStationReached -> R1(conveyorStopped))",
+          "status": "not_executed",
+          "temporal_boundary_sensitive": true,
+          "message": "[WinError 5] 拒绝访问。"
+        }
+      ],
+      "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+      "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+      "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+      "bound": 20,
+      "timeout_seconds": 120,
+      "scan_period_ms": 10,
+      "memory_limit_mb": 768,
+      "time_coverage": {
+        "scan_samples": 20,
+        "scan_period_ms": 10,
+        "first_sample_offset_ms": 10,
+        "last_sample_offset_ms": 200,
+        "maximum_elapsed_between_samples_ms": 190
+      },
+      "assumptions": [
+        "PVL_RouteOK"
+      ],
+      "observer_definitions": {
+        "routeStart": "PVL_PreStage=0 & sensor1 & station1Start",
+        "transporting": "PVL_PreStage=1",
+        "targetReached": "PVL_Reached",
+        "directionOK": "PVL_DirectionOK",
+        "conveyorStopped": "!conveyorLeft & !conveyorRight",
+        "waitingProcessing": "PVL_PreStage=2",
+        "targetComplete": "PVL_Complete",
+        "cursorHeld": "PVL_Cursor=PVL_PreCursor",
+        "firstTargetSelected": "PVL_DirectionOK",
+        "nextTargetSelected": "PVL_DirectionOK",
+        "finalStationReached": "PVL_PreStage=1 & PVL_Reached & PVL_PreTarget=5"
+      },
+      "source_adaptations": [],
+      "instrumented_sha256": "c472048125cfda748bcf769bed00c6e27546f8791e857ff110fe03a894cb1ffb",
+      "tool_sha256": {
+        "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+        "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+        "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+      },
+      "plcverif_seconds": 10.82,
+      "message": "[WinError 5] 拒绝访问。",
+      "seconds": 21.12,
+      "model_source_sha256": "190956185cfe8964860d244382eac74f8f7c37f5ba62323346895e3506d3daed",
+      "platform_adaptations": [
+        {
+          "kind": "symbol_spelling",
+          "symbol": "Q16"
+        },
+        {
+          "kind": "layout_attribute",
+          "attribute": "S7_Optimized_Access",
+          "reason": "No absolute memory, pointers or references admitted by this adapter"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensor1"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "currentStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensor2"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "currentStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensor3"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "currentStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensor4"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "currentStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensor5"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "currentStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateIdle"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorLeft"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorRight"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "station1Start"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "prevStation1Start"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensor1"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processLength"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processSequence"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateIdle"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateMoving"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateIdle"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateMoving"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "currentStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorLeft"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorRight"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateMoving"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateDone"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateMoving"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateProcessing"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "currentStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorRight"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorLeft"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "currentStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorLeft"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorRight"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorLeft"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorRight"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateProcessing"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorLeft"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorRight"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "station2Complete"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processLength"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processSequence"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateProcessing"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateMoving"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateProcessing"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateDone"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "station3Complete"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processLength"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processSequence"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateProcessing"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateMoving"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateProcessing"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateDone"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "station4Complete"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processLength"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processSequence"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateProcessing"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateMoving"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateProcessing"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateDone"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateDone"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorLeft"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "conveyorRight"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensor1"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "station1Start"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "prevStation1Start"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processLength"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "targetStation"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "processSequence"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "cursor"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateDone"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "stateMoving"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "prevStation1Start"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "station1Start"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "prevStation2Complete"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "station2Complete"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "prevStation3Complete"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "station3Complete"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "prevStation4Complete"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "station4Complete"
+        },
+        {
+          "kind": "range_token_spacing",
+          "count": 1
+        },
+        {
+          "kind": "pou_begin_delimiter",
+          "count": 1
+        }
+      ],
+      "source_dialect": "siemens_scl",
+      "platform_assumptions": []
+    },
+    "finite_test_status": "pass",
+    "metrics_summary": {
+      "target_platform": "tia",
+      "target_compile": "passed",
+      "codesys_compile": "not_executed",
+      "test_cases_total": 2,
+      "test_cases_executed": 2,
+      "test_cases_not_executed": 0,
+      "test_cases_passed": 2,
+      "test_case_pass_rate": 1.0,
+      "finite_test_status": "pass",
+      "formal_status": "tool_error",
+      "formal_backend": "plcverif+cbmc",
+      "formal_unwind": null,
+      "formal_unwind_complete": null,
+      "formal_valid_domain_witness": null,
+      "mapped_assertions_total": 7,
+      "mapped_assertions_proved": 0,
+      "declared_ltl_total": 7,
+      "formal_full_ltl_proved": false,
+      "formal_bound": 20,
+      "formal_properties_verified": 0,
+      "formal_properties_total": 7,
+      "formal_properties_executed": 0,
+      "formal_properties_unsupported": 0,
+      "formal_counterexamples": 0,
+      "formal_property_pass_rate": 0.0,
+      "formal_all_properties_verified": false,
+      "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+    }
+  },
+  "target_compile": "passed",
+  "formal_verification": {
+    "status": "tool_error",
+    "backend": "plcverif+cbmc",
+    "policy": "automatic",
+    "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_16",
+    "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+    "source_sha256": "271755a01043667a5094d92f7015fb1e311935d41e782b517bd776ede377a8d4",
+    "model_calls": 0,
+    "declared_ltl_total": 7,
+    "mapped_assertions_total": 7,
+    "proved_property_ids": [],
+    "full_ltl_proved": false,
+    "bounded_verified_property_ids": [],
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\2\\evaluation\\formal\\shared",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(!(conveyorLeft & conveyorRight))",
+        "status": "not_executed",
+        "temporal_boundary_sensitive": false,
+        "message": "[WinError 5] 拒绝访问。"
+      },
+      {
+        "id": "P02",
+        "formula": "G(routeStart -> R1(firstTargetSelected))",
+        "status": "not_executed",
+        "temporal_boundary_sensitive": true,
+        "message": "[WinError 5] 拒绝访问。"
+      },
+      {
+        "id": "P03",
+        "formula": "G(transporting & !targetReached -> directionOK)",
+        "status": "not_executed",
+        "temporal_boundary_sensitive": false,
+        "message": "[WinError 5] 拒绝访问。"
+      },
+      {
+        "id": "P04",
+        "formula": "G(targetReached -> R1(conveyorStopped))",
+        "status": "not_executed",
+        "temporal_boundary_sensitive": true,
+        "message": "[WinError 5] 拒绝访问。"
+      },
+      {
+        "id": "P05",
+        "formula": "G(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)",
+        "status": "not_executed",
+        "temporal_boundary_sensitive": false,
+        "message": "[WinError 5] 拒绝访问。"
+      },
+      {
+        "id": "P06",
+        "formula": "G(waitingProcessing & targetComplete -> R1(nextTargetSelected))",
+        "status": "not_executed",
+        "temporal_boundary_sensitive": true,
+        "message": "[WinError 5] 拒绝访问。"
+      },
+      {
+        "id": "P07",
+        "formula": "G(finalStationReached -> R1(conveyorStopped))",
+        "status": "not_executed",
+        "temporal_boundary_sensitive": true,
+        "message": "[WinError 5] 拒绝访问。"
+      }
+    ],
+    "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+    "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+    "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+    "bound": 20,
+    "timeout_seconds": 120,
+    "scan_period_ms": 10,
+    "memory_limit_mb": 768,
+    "time_coverage": {
+      "scan_samples": 20,
+      "scan_period_ms": 10,
+      "first_sample_offset_ms": 10,
+      "last_sample_offset_ms": 200,
+      "maximum_elapsed_between_samples_ms": 190
+    },
+    "assumptions": [
+      "PVL_RouteOK"
+    ],
+    "observer_definitions": {
+      "routeStart": "PVL_PreStage=0 & sensor1 & station1Start",
+      "transporting": "PVL_PreStage=1",
+      "targetReached": "PVL_Reached",
+      "directionOK": "PVL_DirectionOK",
+      "conveyorStopped": "!conveyorLeft & !conveyorRight",
+      "waitingProcessing": "PVL_PreStage=2",
+      "targetComplete": "PVL_Complete",
+      "cursorHeld": "PVL_Cursor=PVL_PreCursor",
+      "firstTargetSelected": "PVL_DirectionOK",
+      "nextTargetSelected": "PVL_DirectionOK",
+      "finalStationReached": "PVL_PreStage=1 & PVL_Reached & PVL_PreTarget=5"
+    },
+    "source_adaptations": [],
+    "instrumented_sha256": "c472048125cfda748bcf769bed00c6e27546f8791e857ff110fe03a894cb1ffb",
+    "tool_sha256": {
+      "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+      "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+      "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+    },
+    "plcverif_seconds": 10.82,
+    "message": "[WinError 5] 拒绝访问。",
+    "seconds": 21.12,
+    "model_source_sha256": "190956185cfe8964860d244382eac74f8f7c37f5ba62323346895e3506d3daed",
+    "platform_adaptations": [
+      {
+        "kind": "symbol_spelling",
+        "symbol": "Q16"
+      },
+      {
+        "kind": "layout_attribute",
+        "attribute": "S7_Optimized_Access",
+        "reason": "No absolute memory, pointers or references admitted by this adapter"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensor1"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "currentStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensor2"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "currentStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensor3"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "currentStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensor4"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "currentStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensor5"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "currentStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateIdle"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorLeft"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorRight"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "station1Start"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "prevStation1Start"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensor1"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processLength"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processSequence"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateIdle"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateMoving"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateIdle"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateMoving"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "currentStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorLeft"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorRight"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateMoving"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateDone"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateMoving"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateProcessing"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "currentStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorRight"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorLeft"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "currentStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorLeft"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorRight"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorLeft"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorRight"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateProcessing"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorLeft"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorRight"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "station2Complete"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processLength"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processSequence"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateProcessing"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateMoving"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateProcessing"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateDone"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "station3Complete"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processLength"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processSequence"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateProcessing"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateMoving"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateProcessing"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateDone"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "station4Complete"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processLength"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processSequence"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateProcessing"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateMoving"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateProcessing"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateDone"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateDone"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorLeft"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "conveyorRight"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensor1"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "station1Start"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "prevStation1Start"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processLength"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "targetStation"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "processSequence"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "cursor"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateDone"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "stateMoving"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "prevStation1Start"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "station1Start"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "prevStation2Complete"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "station2Complete"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "prevStation3Complete"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "station3Complete"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "prevStation4Complete"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "station4Complete"
+      },
+      {
+        "kind": "range_token_spacing",
+        "count": 1
+      },
+      {
+        "kind": "pou_begin_delimiter",
+        "count": 1
+      }
+    ],
+    "source_dialect": "siemens_scl",
+    "platform_assumptions": []
+  },
+  "ltl_status": "tool_error",
+  "behavior_tested": true,
+  "source_sha256": "271755a01043667a5094d92f7015fb1e311935d41e782b517bd776ede377a8d4",
+  "metrics_summary": {
+    "target_platform": "tia",
+    "target_compile": "passed",
+    "codesys_compile": "not_executed",
+    "test_cases_total": 2,
+    "test_cases_executed": 2,
+    "test_cases_not_executed": 0,
+    "test_cases_passed": 2,
+    "test_case_pass_rate": 1.0,
+    "finite_test_status": "pass",
+    "formal_status": "tool_error",
+    "formal_backend": "plcverif+cbmc",
+    "formal_unwind": null,
+    "formal_unwind_complete": null,
+    "formal_valid_domain_witness": null,
+    "mapped_assertions_total": 7,
+    "mapped_assertions_proved": 0,
+    "declared_ltl_total": 7,
+    "formal_full_ltl_proved": false,
+    "formal_bound": 20,
+    "formal_properties_verified": 0,
+    "formal_properties_total": 7,
+    "formal_properties_executed": 0,
+    "formal_properties_unsupported": 0,
+    "formal_counterexamples": 0,
+    "formal_property_pass_rate": 0.0,
+    "formal_all_properties_verified": false,
+    "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+  },
+  "output_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B"
+}

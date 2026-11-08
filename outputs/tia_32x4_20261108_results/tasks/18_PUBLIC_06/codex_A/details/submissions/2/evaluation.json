@@ -1,0 +1,174 @@
+{
+  "status": "behavior_not_supported",
+  "errors": 0,
+  "warnings": 1,
+  "state": "Warning",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "Program blocks",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "BlowerControl (FB2)",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "11",
+      "state": "Warning",
+      "description": "The parameter '#AERATION_BLOWER_CYCLE_COUNT' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Warning",
+      "description": "Compiling finished (errors: 0; warnings: 1)",
+      "errors": 0,
+      "warnings": 1
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+  "returncode": 0,
+  "source_sha256": "4642d7b77de32ee9008dcbaa0dd59870189b57d7fd77da5739285f8a12857899",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": false,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\18_PUBLIC_06\\codex_A\\details\\submissions\\2\\evaluation\\compile",
+  "seconds": 46.296,
+  "queue_seconds": 203.459,
+  "dataset_sha256": "761267da82e26a07b630a4938d52d7ecc93c6819e622f35853de6975902d62de",
+  "test_backend": "tia",
+  "message": "Increase the Siemens simulation timeout for this native-clock scenario.",
+  "target": "tia",
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 1,
+    "state": "Warning",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "Program blocks",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "BlowerControl (FB2)",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "11",
+        "state": "Warning",
+        "description": "The parameter '#AERATION_BLOWER_CYCLE_COUNT' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Warning",
+        "description": "Compiling finished (errors: 0; warnings: 1)",
+        "errors": 0,
+        "warnings": 1
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "4642d7b77de32ee9008dcbaa0dd59870189b57d7fd77da5739285f8a12857899",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\18_PUBLIC_06\\codex_A\\details\\submissions\\2\\evaluation\\compile",
+    "seconds": 46.296,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "761267da82e26a07b630a4938d52d7ecc93c6819e622f35853de6975902d62de"
+  },
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "4642d7b77de32ee9008dcbaa0dd59870189b57d7fd77da5739285f8a12857899",
+    "declared_ltl_total": 5,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> blowerInitialOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!eligible -> !BLOWER_RUN)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(BLOWER_RUN -> eligible & delayReady)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(eligible & delayReady -> BLOWER_RUN)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(startCountOK)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "behavior_not_supported"
+}

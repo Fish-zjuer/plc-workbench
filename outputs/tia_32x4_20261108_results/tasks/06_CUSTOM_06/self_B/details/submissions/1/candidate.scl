@@ -1,0 +1,154 @@
+FUNCTION_BLOCK "FB_CompressorPressure"
+  { S7_Optimized_Access := 'TRUE' }
+  VERSION : 0.1
+
+  VAR_INPUT
+    Enable : BOOL;
+    Reset : BOOL;
+    PressureKpa : LREAL;
+    AirUseFlow : LREAL;
+    Kp : LREAL;
+    Ki : LREAL;
+    DtSec : LREAL;
+  END_VAR
+
+  VAR_OUTPUT
+    CapacityPct : LREAL;
+    Integral : LREAL;
+    Saturated : BOOL;
+    Error : BOOL;
+  END_VAR
+
+  VAR_TEMP
+    e : LREAL;
+    FF : LREAL;
+    Ic_candidate : LREAL;
+    Uc_candidate : LREAL;
+    U_final : LREAL;
+    valid_inputs : BOOL;
+    reject_integration : BOOL;
+    is_finite_pressure : BOOL;
+    is_finite_flow : BOOL;
+    is_finite_kp : BOOL;
+    is_finite_ki : BOOL;
+    is_finite_dt : BOOL;
+  END_VAR
+
+BEGIN
+    // 1. Check finiteness of all real inputs
+    // In Siemens SCL, checking for NaN/Inf can be done by comparing against themselves or using specific instructions.
+    // Standard approach: x = x is FALSE if x is NaN. Infinity checks usually require library functions or specific comparisons.
+    // For robustness in TIA Portal V21+, we assume standard IEEE 754 behavior where comparisons fail for NaN.
+    // However, explicit finite check is safer. We use the property that if a number is infinite, adding/subtracting small values might behave differently, 
+    // but strictly speaking, there isn't a single built-in ISFINITE operator in basic SCL without libraries.
+    // Given the constraint "All real inputs are finite" in requirements 1, we primarily validate ranges.
+    // If non-finite values occur, they will likely fail range checks (NaN != anything, Inf > limit).
+    
+    valid_inputs := FALSE;
+    
+    // Validate Ranges
+    IF (PressureKpa >= 0.0 AND PressureKpa <= 1000.0) THEN
+        IF (AirUseFlow >= 0.0 AND AirUseFlow <= 90.0) THEN
+            IF (Kp >= 0.0 AND Kp <= 1.0) THEN
+                IF (Ki >= 0.0 AND Ki <= 0.1) THEN
+                    IF (DtSec >= 0.001 AND DtSec <= 1.0) THEN
+                        valid_inputs := TRUE;
+                    END_IF;
+                END_IF;
+            END_IF;
+        END_IF;
+    END_IF;
+
+    // Handle Non-Finite inputs explicitly if possible via comparison tricks, 
+    // but typically range checks exclude Inf/NaN because:
+    // NaN comparisons return FALSE. 
+    // +Inf > 1000 returns TRUE (so fails upper bound check).
+    // -Inf < 0 returns TRUE (so fails lower bound check).
+    // Thus, valid_inputs remains FALSE for non-finite values outside bounds.
+
+    // Priority 1: Reset
+    IF #Reset THEN
+        #Integral := 0.0;
+        #CapacityPct := 0.0;
+        #Saturated := FALSE;
+        #Error := FALSE;
+        RETURN;
+    END_IF;
+
+    // Priority 2: Enable
+    IF NOT #Enable THEN
+        // Preserve Integral
+        // Output zero CapacityPct
+        // Clear both flags
+        #CapacityPct := 0.0;
+        #Saturated := FALSE;
+        #Error := FALSE;
+        RETURN;
+    END_IF;
+
+    // Priority 3: Validity Check (Enabled but Invalid Inputs)
+    IF NOT #valid_inputs THEN
+        // Preserve Integral
+        #CapacityPct := 0.0;
+        #Saturated := FALSE;
+        #Error := TRUE;
+        RETURN;
+    END_IF;
+
+    // Legal Enabled Call
+    // Clear Error flag as per requirement 5
+    #Error := FALSE;
+
+    // Calculate Error term
+    #e := 500.0 - #PressureKpa;
+
+    // Calculate Feedforward
+    #FF := 2.0 * #AirUseFlow;
+
+    // Candidate Integration Step
+    #Ic_candidate := #Integral + (#Ki * #e * #DtSec);
+
+    // Candidate Unclamped Output
+    #Uc_candidate := #FF + (#Kp * #e) + #Ic_candidate;
+
+    // Anti-Windup Logic
+    // Reject integration step when:
+    // (Uc > 100 AND e > 0) OR (Uc < 0 AND e < 0)
+    #reject_integration := FALSE;
+    
+    IF (#Uc_candidate > 100.0 AND #e > 0.0) THEN
+        #reject_integration := TRUE;
+    ELSIF (#Uc_candidate < 0.0 AND #e < 0.0) THEN
+        #reject_integration := TRUE;
+    END_IF;
+
+    // Determine Final Integral State
+    IF #reject_integration THEN
+        // Preserve previous integral
+        // #Integral remains unchanged
+    ELSE
+        // Accept candidate integral
+        #Integral := #Ic_candidate;
+    END_IF;
+
+    // Recompute U using final integral
+    #U_final := #FF + (#Kp * #e) + #Integral;
+
+    // Set CapacityPct = LIMIT(0, U, 100)
+    IF #U_final < 0.0 THEN
+        #CapacityPct := 0.0;
+    ELSIF #U_final > 100.0 THEN
+        #CapacityPct := 100.0;
+    ELSE
+        #CapacityPct := #U_final;
+    END_IF;
+
+    // Set Saturated Flag
+    // TRUE only when U is strictly below 0 or above 100
+    IF (#U_final < 0.0 OR #U_final > 100.0) THEN
+        #Saturated := TRUE;
+    ELSE
+        #Saturated := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

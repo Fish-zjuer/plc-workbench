@@ -1,0 +1,59 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "a78937cdc0133bf13bad052555703b059d29f1ddf8d1a30dcf5085aa01034cd6",
+  "declared_ltl_total": 9,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(Error <-> invalid)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(BudgetShortage <-> shortage)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G((disabled | invalid | shortage) -> (SelectedMask=0 & PowerW=0 & Score=0 & !SensorOn & !HeaterOn & !RadioOn))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(normal -> optimalChoiceOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(maskMapOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G((Enable & V) -> PowerW<=BudgetW)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G((normal & MandatorySensor) -> SensorOn)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P08",
+      "formula": "G((normal & !NeedHeater) -> !HeaterOn)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P09",
+      "formula": "G((normal & !NeedRadio) -> !RadioOn)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

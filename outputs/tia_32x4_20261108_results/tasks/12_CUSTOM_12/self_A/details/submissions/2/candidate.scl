@@ -1,0 +1,181 @@
+FUNCTION_BLOCK "FB_BuoyPowerBudget"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    Enable : BOOL;
+    BudgetW : UINT;
+    NeedSensor : BOOL;
+    NeedHeater : BOOL;
+    NeedRadio : BOOL;
+    MandatorySensor : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    SelectedMask : USINT;
+    SensorOn : BOOL;
+    HeaterOn : BOOL;
+    RadioOn : BOOL;
+    PowerW : UINT;
+    Score : USINT;
+    BudgetShortage : BOOL;
+    Error : BOOL;
+END_VAR
+
+VAR_TEMP
+    i : INT;
+    mask : USINT;
+    allowedMask : USINT;
+    p : UINT;
+    s : USINT;
+    feasible : BOOL;
+    validBudget : BOOL;
+    shortage : BOOL;
+    bestFound : BOOL;
+    bestMask : USINT;
+    bestPower : UINT;
+    bestScore : USINT;
+    bitS : BOOL;
+    bitH : BOOL;
+    bitR : BOOL;
+    tmpMask : USINT;
+    tmpAllowed : USINT;
+    maskBit : USINT;
+END_VAR
+
+BEGIN
+    // Default outputs each scan
+    #SelectedMask := 0;
+    #SensorOn := FALSE;
+    #HeaterOn := FALSE;
+    #RadioOn := FALSE;
+    #PowerW := 0;
+    #Score := 0;
+    #BudgetShortage := FALSE;
+    #Error := FALSE;
+
+    // Budget validity 0..200
+    #validBudget := (#BudgetW <= 200);
+
+    IF NOT #Enable THEN
+        // Disabled: all outputs zero/FALSE
+        #Error := FALSE;
+        #BudgetShortage := FALSE;
+    ELSIF NOT #validBudget THEN
+        // Invalid budget: error, all other outputs zero/FALSE
+        #Error := TRUE;
+        #BudgetShortage := FALSE;
+    ELSE
+        #Error := FALSE;
+
+        // Mandatory sensor with insufficient budget (<40 W)
+        IF #MandatorySensor AND (#BudgetW < 40) THEN
+            #BudgetShortage := TRUE;
+            #SelectedMask := 0;
+            #PowerW := 0;
+            #Score := 0;
+        ELSE
+            #BudgetShortage := FALSE;
+
+            // Eligible loads mask
+            #allowedMask := 0;
+            IF #NeedSensor OR #MandatorySensor THEN
+                #allowedMask := #allowedMask OR USINT#16#01;
+            END_IF;
+            IF #NeedHeater THEN
+                #allowedMask := #allowedMask OR USINT#16#02;
+            END_IF;
+            IF #NeedRadio THEN
+                #allowedMask := #allowedMask OR USINT#16#04;
+            END_IF;
+
+            // Enumerate subsets 0..7, global optimum
+            #bestFound := FALSE;
+            #bestMask := 0;
+            #bestPower := 0;
+            #bestScore := 0;
+
+            FOR #i := 0 TO 7 DO
+                #mask := INT_TO_USINT(#i);
+                #feasible := TRUE;
+
+                // Mask must only contain eligible bits
+                #tmpMask := #mask AND NOT #allowedMask;
+                IF #tmpMask <> 0 THEN
+                    #feasible := FALSE;
+                END_IF;
+
+                // Compute power and score
+                #maskBit := #mask AND USINT#16#01;
+                #bitS := (#maskBit <> 0);
+                #maskBit := #mask AND USINT#16#02;
+                #bitH := (#maskBit <> 0);
+                #maskBit := #mask AND USINT#16#04;
+                #bitR := (#maskBit <> 0);
+
+                #p := 0;
+                #s := 0;
+                IF #bitS THEN
+                    #p := #p + 40;
+                    #s := #s + 7;
+                END_IF;
+                IF #bitH THEN
+                    #p := #p + 70;
+                    #s := #s + 10;
+                END_IF;
+                IF #bitR THEN
+                    #p := #p + 60;
+                    #s := #s + 9;
+                END_IF;
+
+                // Budget feasibility
+                IF #p > #BudgetW THEN
+                    #feasible := FALSE;
+                END_IF;
+
+                // Mandatory sensor constraint
+                IF #MandatorySensor AND NOT #bitS THEN
+                    #feasible := FALSE;
+                END_IF;
+
+                // Selection: max score, then min power, then min mask
+                IF #feasible THEN
+                    IF NOT #bestFound THEN
+                        #bestFound := TRUE;
+                        #bestMask := #mask;
+                        #bestPower := #p;
+                        #bestScore := #s;
+                    ELSIF #s > #bestScore THEN
+                        #bestMask := #mask;
+                        #bestPower := #p;
+                        #bestScore := #s;
+                    ELSIF #s = #bestScore THEN
+                        IF #p < #bestPower THEN
+                            #bestMask := #mask;
+                            #bestPower := #p;
+                            #bestScore := #s;
+                        ELSIF #p = #bestPower THEN
+                            IF #mask < #bestMask THEN
+                                #bestMask := #mask;
+                                #bestPower := #p;
+                                #bestScore := #s;
+                            END_IF;
+                        END_IF;
+                    END_IF;
+                END_IF;
+            END_FOR;
+
+            #SelectedMask := #bestMask;
+            #PowerW := #bestPower;
+            #Score := #bestScore;
+        END_IF;
+    END_IF;
+
+    // Map mask bits to outputs
+    #maskBit := #SelectedMask AND USINT#16#01;
+    #SensorOn := (#maskBit <> 0);
+    #maskBit := #SelectedMask AND USINT#16#02;
+    #HeaterOn := (#maskBit <> 0);
+    #maskBit := #SelectedMask AND USINT#16#04;
+    #RadioOn := (#maskBit <> 0);
+END_FUNCTION_BLOCK

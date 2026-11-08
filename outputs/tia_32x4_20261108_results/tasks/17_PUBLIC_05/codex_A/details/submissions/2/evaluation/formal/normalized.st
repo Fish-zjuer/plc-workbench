@@ -1,0 +1,49 @@
+FUNCTION_BLOCK Q05
+
+   VAR_INPUT
+      Gap_Exceeded : BOOL;
+      Weld_E_Stop_NC : BOOL;
+      DebounceTime : TIME;
+   END_VAR
+   VAR_OUTPUT
+      Operator_Alert : BOOL;
+      Weld_Soft_Start_Active : BOOL;
+   END_VAR
+   VAR
+      InitTimer : TON;
+      GapTimer : TON;
+      Gap_Ready : BOOL;
+      Init_Done : BOOL;
+   END_VAR
+   VAR
+      Debounce_Valid : BOOL;
+   END_VAR
+VAR_INPUT
+WBTEMP_0 : BOOL;
+END_VAR
+
+     
+Debounce_Valid := WBTEMP_0;
+   Debounce_Valid := DebounceTime > T#0ms;
+
+   InitTimer(IN := NOT Init_Done, PT := T#5s);
+   IF InitTimer.Q THEN
+      Init_Done := TRUE;
+   END_IF;
+
+   GapTimer(IN := Init_Done AND Weld_E_Stop_NC AND Gap_Exceeded AND Debounce_Valid,
+             PT := DebounceTime);
+   Gap_Ready := GapTimer.Q;
+
+   IF NOT Weld_E_Stop_NC THEN
+      Operator_Alert := FALSE;
+   ELSIF NOT Gap_Exceeded THEN
+      Operator_Alert := FALSE;
+   ELSIF NOT Init_Done THEN
+      Operator_Alert := FALSE;
+   ELSE
+      Operator_Alert := Gap_Ready;
+   END_IF;
+
+   Weld_Soft_Start_Active := NOT Init_Done;
+END_FUNCTION_BLOCK

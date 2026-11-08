@@ -1,0 +1,6079 @@
+{
+  "status": "fail",
+  "errors": 0,
+  "warnings": 0,
+  "state": "Success",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "Program blocks",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "Q19 (FB2)",
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Compiling finished (errors: 0; warnings: 0)",
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "returncode": 0,
+  "source_sha256": "7c62b3f6233bfbbe56f21a494c76fe4797bb778c5deaa6f05607be4239631606",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": true,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\31_PUBLIC_19\\self_A\\details\\submissions\\2\\evaluation\\compile",
+  "seconds": 49.403,
+  "queue_seconds": 125.464,
+  "dataset_sha256": "3e0317777c6a8f20c8b1852e05940d7fbb178b87edf5c61c5820cbc38e49fc84",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_19",
+  "cases": [
+    {
+      "name": "manual_limit_Down",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": true,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": true,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": true,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": true,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": false,
+            "MoveUp": false,
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateGrip": false,
+            "ActivateRelease": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "manual_limit_Up",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": true,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveUp": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 1.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": true,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveUp": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": true,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveUp": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 1.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveUp": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": true,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": false,
+            "MoveUp": false,
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateGrip": false,
+            "ActivateRelease": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "manual_limit_Left",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": true,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveLeft": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 1.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": true,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveLeft": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": true,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveLeft": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 1.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveLeft": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": true,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": false,
+            "MoveUp": false,
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateGrip": false,
+            "ActivateRelease": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "manual_limit_Right",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": true,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveRight": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 1.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": true,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveRight": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": true,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveRight": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 1.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveRight": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": true,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": false,
+            "MoveUp": false,
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateGrip": false,
+            "ActivateRelease": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "manual_limit_Grip",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": true,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateGrip": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 1.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": true,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateGrip": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": true,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateGrip": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 1.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateGrip": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": true,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": false,
+            "MoveUp": false,
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateGrip": false,
+            "ActivateRelease": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "manual_limit_Release",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": true,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateRelease": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": true,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "ActivateRelease": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": true,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateRelease": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateRelease": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "ManualMode": true,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": true,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": false,
+            "MoveUp": false,
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateGrip": false,
+            "ActivateRelease": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "single_cycle_estop",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": false,
+            "MoveUp": false,
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateGrip": false,
+            "ActivateRelease": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "补充_完整八动作_SingleStepMode",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 1.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateGrip": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 1.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 1.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveUp": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 1.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 1.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveRight": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 1.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateRelease": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 1.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveUp": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 1.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 1.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 1.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": true,
+            "SingleCycleMode": false,
+            "ContinuousMode": false,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "补充_完整八动作_SingleCycleMode",
+      "status": "fail",
+      "first_failure": {
+        "scan": 6,
+        "output": "ActivateGrip",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                4,
+                5
+              ],
+              "expected": {
+                "ActivateGrip": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateGrip": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "ActivateGrip",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                7,
+                8
+              ],
+              "expected": {
+                "MoveUp": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveUp": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveUp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                10,
+                11
+              ],
+              "expected": {
+                "MoveRight": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveRight": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveRight",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                13,
+                14
+              ],
+              "expected": {
+                "MoveDown": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveDown",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                16,
+                17
+              ],
+              "expected": {
+                "ActivateRelease": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateRelease": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "ActivateRelease",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                19,
+                20
+              ],
+              "expected": {
+                "MoveUp": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveUp": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveUp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                22,
+                23
+              ],
+              "expected": {
+                "MoveLeft": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveLeft",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": true,
+            "ContinuousMode": false,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "补充_完整八动作_ContinuousMode",
+      "status": "fail",
+      "first_failure": {
+        "scan": 6,
+        "output": "ActivateGrip",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": true,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 1.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                4,
+                5
+              ],
+              "expected": {
+                "ActivateGrip": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateGrip": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "ActivateGrip",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                7,
+                8
+              ],
+              "expected": {
+                "MoveUp": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveUp": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveUp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                10,
+                11
+              ],
+              "expected": {
+                "MoveRight": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveRight": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveRight",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                13,
+                14
+              ],
+              "expected": {
+                "MoveDown": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveDown",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                16,
+                17
+              ],
+              "expected": {
+                "ActivateRelease": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": true,
+            "ReleaseLimitSwitch": false
+          },
+          "expected": {
+            "ActivateRelease": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "ActivateRelease",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                19,
+                20
+              ],
+              "expected": {
+                "MoveUp": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": true,
+            "UpLimitSwitch": false,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveUp": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveUp",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                22,
+                23
+              ],
+              "expected": {
+                "MoveLeft": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": false,
+            "RightLimitSwitch": true,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveLeft",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {},
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "window": [
+                25,
+                26
+              ],
+              "expected": {
+                "MoveDown": true
+              },
+              "actual": [
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                },
+                {
+                  "MoveDown": 0.0,
+                  "MoveUp": 0.0,
+                  "MoveLeft": 0.0,
+                  "MoveRight": 0.0,
+                  "ActivateGrip": 0.0,
+                  "ActivateRelease": 0.0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": true,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveDown": true
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": [
+            {
+              "output": "MoveDown",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "ManualMode": false,
+            "SingleStepMode": false,
+            "SingleCycleMode": false,
+            "ContinuousMode": true,
+            "EmergencyStop": false,
+            "Start": false,
+            "DownButton": false,
+            "UpButton": false,
+            "LeftButton": false,
+            "RightButton": false,
+            "GripButton": false,
+            "ReleaseButton": false,
+            "DownLimitSwitch": false,
+            "UpLimitSwitch": true,
+            "LeftLimitSwitch": true,
+            "RightLimitSwitch": false,
+            "GripLimitSwitch": false,
+            "ReleaseLimitSwitch": true
+          },
+          "expected": {
+            "MoveLeft": false,
+            "MoveRight": false,
+            "ActivateRelease": false,
+            "ActivateGrip": false,
+            "MoveUp": false,
+            "MoveDown": false
+          },
+          "actual": {
+            "MoveDown": 0.0,
+            "MoveUp": 0.0,
+            "MoveLeft": 0.0,
+            "MoveRight": 0.0,
+            "ActivateGrip": 0.0,
+            "ActivateRelease": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 10,
+    "scans": 149,
+    "assertions": 195,
+    "failed": 2
+  },
+  "ltl_status": "not_executed",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\31_PUBLIC_19\\self_A\\details\\submissions\\2\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\31_PUBLIC_19\\self_A\\details\\submissions\\2\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120,
+    130,
+    140,
+    150,
+    160,
+    170,
+    180,
+    190,
+    200,
+    210,
+    220,
+    230,
+    240,
+    250,
+    260,
+    270,
+    280,
+    291,
+    300,
+    310,
+    320,
+    330,
+    340,
+    350,
+    360,
+    370,
+    380,
+    390,
+    400,
+    410,
+    420,
+    430,
+    440,
+    450,
+    460,
+    470,
+    480,
+    490,
+    500,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120,
+    130,
+    140,
+    150,
+    160,
+    170,
+    180,
+    190,
+    200,
+    210,
+    220,
+    230,
+    240,
+    250,
+    260,
+    270,
+    280,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120,
+    130,
+    140,
+    150,
+    160,
+    170,
+    180,
+    190,
+    200,
+    210,
+    220,
+    230,
+    240,
+    250,
+    260,
+    270,
+    280
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0",
+  "timing": {
+    "clock": "Siemens native",
+    "max_deviation_ms": 1,
+    "tolerance_ms": 1
+  },
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Q19 (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "7c62b3f6233bfbbe56f21a494c76fe4797bb778c5deaa6f05607be4239631606",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\31_PUBLIC_19\\self_A\\details\\submissions\\2\\evaluation\\compile",
+    "seconds": 49.403,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "3e0317777c6a8f20c8b1852e05940d7fbb178b87edf5c61c5820cbc38e49fc84"
+  },
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "7c62b3f6233bfbbe56f21a494c76fe4797bb778c5deaa6f05607be4239631606",
+    "declared_ltl_total": 8,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(!EmergencyStop -> allArmCommandsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(manualMode & EmergencyStop -> manualCommandMapOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(actionActive & actionLimitReached -> R1(actionCommandOff))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(singleStepActionDone & noNewStart -> noNextAction)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(singleStepReady & startRise -> R1(exactNextAction))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "A19 -> G(singleCycleStarted -> F(cycleDone))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(singleCycleDone & noNewStart -> allArmCommandsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P08",
+        "formula": "G(continuousRunning & cycleDone & EmergencyStop -> R1(firstAction))",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "finite_test_status": "fail"
+}

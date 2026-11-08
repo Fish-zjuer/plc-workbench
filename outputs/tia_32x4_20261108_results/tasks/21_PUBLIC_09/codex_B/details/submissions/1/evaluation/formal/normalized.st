@@ -1,0 +1,66 @@
+FUNCTION_BLOCK MovingAverage
+
+   VAR_INPUT
+      cyclicExecution : BOOL;
+      trigger : BOOL;
+      value : LREAL;
+      windowSize : INT;
+      reset : BOOL;
+   END_VAR
+
+   VAR_OUTPUT
+      average : LREAL;
+      windowSizeReached : BOOL;
+      error : BOOL;
+      status : WORD;
+   END_VAR
+
+   VAR
+      buffer : ARRAY[1 .. 100] OF LREAL;
+      fillCount : INT;
+      writeIndex : INT;
+      prevTrigger : BOOL;
+      idx : INT;
+      sum : LREAL;
+   END_VAR
+
+     
+    IF (windowSize < 1) OR (windowSize > 100) THEN
+        error := TRUE;
+        status := 16#8200;
+        windowSizeReached := FALSE;
+    ELSE
+        error := FALSE;
+        status := 16#0000;
+        IF reset THEN
+            fillCount := 0;
+            writeIndex := 0;
+            average := 0.0;
+            windowSizeReached := FALSE;
+        ELSE
+            IF cyclicExecution OR (trigger AND NOT prevTrigger) THEN
+                IF fillCount < windowSize THEN
+                    fillCount := fillCount + 1;
+                    writeIndex := fillCount;
+                    buffer[writeIndex] := value;
+                ELSE
+                    IF writeIndex >= windowSize THEN
+                        writeIndex := 1;
+                    ELSE
+                        writeIndex := writeIndex + 1;
+                    END_IF;
+                    buffer[writeIndex] := value;
+                END_IF;
+            END_IF;
+        END_IF;
+        prevTrigger := trigger;
+        sum := 0.0;
+        FOR idx := 1 TO fillCount DO
+            sum := sum + buffer[idx];
+        END_FOR;
+        IF fillCount > 0 THEN
+            average := sum / INT_TO_LREAL(fillCount);
+        END_IF;
+        windowSizeReached := (fillCount >= windowSize);
+    END_IF;
+END_FUNCTION_BLOCK

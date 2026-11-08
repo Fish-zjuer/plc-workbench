@@ -1,0 +1,59 @@
+{
+  "status": "invalid_candidate",
+  "target_compile": "not_executed",
+  "message": "Need one complete Siemens FUNCTION_BLOCK \"Q12\" with BEGIN",
+  "target": "tia",
+  "behavior_tested": false,
+  "queue_seconds": 48.857,
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "f96e056a5d06ea7bf5a47b32dfc11477606c59e55ef3ec8c4253bfb54c7d1c4a",
+    "declared_ltl_total": 7,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> slabInitialOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!THICKNESS_SIGNAL_VALID -> !THICKNESS_ALARM)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(validFault -> THICKNESS_ALARM)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(THICKNESS_SIGNAL_VALID & holdRequired -> THICKNESS_ALARM)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(validFaultRise -> countIncremented & newestHistoryShiftOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G(!validFaultRise -> faultCountHeld & historyHeld)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(runtimeOK)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "invalid_candidate"
+}

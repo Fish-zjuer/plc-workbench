@@ -1,0 +1,159 @@
+FUNCTION_BLOCK Q15
+
+VAR_INPUT
+    estop : BOOL;
+    opeMode : BOOL;
+    valveAStart : BOOL;
+    valveBStart : BOOL;
+    valveCStart : BOOL;
+    valveDStart : BOOL;
+    mixMotorStart : BOOL;
+    autoStart : BOOL;
+    processMode : BOOL;
+    levelSensor : INT;
+    mixMotorComplete : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    valveARun : BOOL;
+    valveBRun : BOOL;
+    valveCRun : BOOL;
+    valveDRun : BOOL;
+    mixMotorRun : BOOL;
+END_VAR
+
+VAR
+    rtAutoStart : R_TRIG;
+    rtValveA : R_TRIG;
+    rtValveB : R_TRIG;
+    rtValveC : R_TRIG;
+    rtValveD : R_TRIG;
+    rtMixMotor : R_TRIG;
+    trgAutoStart : BOOL;
+    trgValveA : BOOL;
+    trgValveB : BOOL;
+    trgValveC : BOOL;
+    trgValveD : BOOL;
+    trgMixMotor : BOOL;
+    autoActive : BOOL := FALSE;
+    step : INT := 10;
+END_VAR
+
+     
+    // Edge detection for all push buttons (rising edge only).
+    rtAutoStart(CLK := autoStart, Q => trgAutoStart);
+    rtValveA(CLK := valveAStart, Q => trgValveA);
+    rtValveB(CLK := valveBStart, Q => trgValveB);
+    rtValveC(CLK := valveCStart, Q => trgValveC);
+    rtValveD(CLK := valveDStart, Q => trgValveD);
+    rtMixMotor(CLK := mixMotorStart, Q => trgMixMotor);
+
+    IF NOT estop THEN
+        // Emergency stop has priority: all equipment stops immediately.
+        valveARun := FALSE;
+        valveBRun := FALSE;
+        valveCRun := FALSE;
+        valveDRun := FALSE;
+        mixMotorRun := FALSE;
+        autoActive := FALSE;
+        step := 10;
+    ELSIF opeMode THEN
+        // Automatic mode: sequential process control.
+        IF trgAutoStart THEN
+            autoActive := TRUE;
+            step := 10;
+        END_IF;
+        IF autoActive THEN
+            CASE step OF
+                10: // Valve A open until the level reaches 50 cm.
+                    valveARun := TRUE;
+                    valveBRun := FALSE;
+                    valveCRun := FALSE;
+                    valveDRun := FALSE;
+                    mixMotorRun := FALSE;
+                    IF levelSensor >= 50 THEN
+                        // Close valve A, open valve B.
+                        valveARun := FALSE;
+                        valveBRun := TRUE;
+                        step := 20;
+                    END_IF;
+                20: // Valve B open until the level reaches 80 cm.
+                    valveARun := FALSE;
+                    valveBRun := TRUE;
+                    valveCRun := FALSE;
+                    valveDRun := FALSE;
+                    mixMotorRun := FALSE;
+                    IF levelSensor >= 80 THEN
+                        // Close valve B.
+                        valveBRun := FALSE;
+                        IF processMode THEN
+                            // Open valve C.
+                            valveCRun := TRUE;
+                            step := 30;
+                        ELSE
+                            // Start the mixing motor.
+                            mixMotorRun := TRUE;
+                            step := 40;
+                        END_IF;
+                    END_IF;
+                30: // Valve C open until the level reaches 100 cm.
+                    valveARun := FALSE;
+                    valveBRun := FALSE;
+                    valveCRun := TRUE;
+                    valveDRun := FALSE;
+                    mixMotorRun := FALSE;
+                    IF levelSensor >= 100 THEN
+                        // Close valve C, start the mixing motor.
+                        valveCRun := FALSE;
+                        mixMotorRun := TRUE;
+                        step := 40;
+                    END_IF;
+                40: // Mixing motor running.
+                    valveARun := FALSE;
+                    valveBRun := FALSE;
+                    valveCRun := FALSE;
+                    valveDRun := FALSE;
+                    mixMotorRun := TRUE;
+                    IF mixMotorComplete THEN
+                        // Stop the mixing motor, open valve D.
+                        mixMotorRun := FALSE;
+                        valveDRun := TRUE;
+                        step := 50;
+                    END_IF;
+                50: // Deliver to the next process through valve D; cycle ended.
+                    valveARun := FALSE;
+                    valveBRun := FALSE;
+                    valveCRun := FALSE;
+                    valveDRun := TRUE;
+                    mixMotorRun := FALSE;
+                    autoActive := FALSE;
+                    step := 10;
+                ELSE
+                    valveARun := FALSE;
+                    valveBRun := FALSE;
+                    valveCRun := FALSE;
+                    valveDRun := FALSE;
+                    mixMotorRun := FALSE;
+                    autoActive := FALSE;
+                    step := 10;
+            END_CASE;
+        END_IF;
+    ELSE
+        // Manual mode: each button rising edge toggles only its own output.
+        IF trgValveA THEN
+            valveARun := NOT valveARun;
+        END_IF;
+        IF trgValveB THEN
+            valveBRun := NOT valveBRun;
+        END_IF;
+        IF trgValveC THEN
+            valveCRun := NOT valveCRun;
+        END_IF;
+        IF trgValveD THEN
+            valveDRun := NOT valveDRun;
+        END_IF;
+        IF trgMixMotor THEN
+            mixMotorRun := NOT mixMotorRun;
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

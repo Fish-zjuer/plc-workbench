@@ -1,0 +1,23 @@
+FUNCTION_BLOCK "FB_InventoryRequest"
+VERSION : 0.1
+
+VAR_INPUT
+   RequestBtn : BOOL;
+   ServiceReady : BOOL;
+   Busy : BOOL;
+   Cancel : BOOL;
+END_VAR
+
+VAR_OUTPUT
+   Pending : BOOL;
+   RequestLamp : BOOL;
+   Dispatched : BOOL;
+END_VAR
+
+VAR
+   PrevCall : BOOL;
+END_VAR
+
+BEGIN
+   #PrevCall := #RequestBtn;
+END_FUNCTION_BLOCK

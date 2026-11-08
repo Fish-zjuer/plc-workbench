@@ -1,0 +1,47 @@
+FUNCTION_BLOCK "Q13"
+  VAR_INPUT
+    OCCUPANCY_DETECTED : BOOL;    // occupancy detected from CO2 sensor
+    ENERGY_SAVING_MODE : BOOL;    // TRUE = energy saving, affects Auto only
+    HVAC_MODE_SELECTOR : INT;     // 0 Auto, 1 Comfort, 2 Economy, 3 Night
+  END_VAR
+  VAR_OUTPUT
+    SUPPLY_FAN_RUN : BOOL := FALSE;
+    TEMP_SETPOINT_ADJUST : INT := 0;
+  END_VAR
+  VAR
+    StartTimer : TON_TIME;
+    Eligible : BOOL;
+    Adjustment : INT;
+  END_VAR
+
+BEGIN
+  Eligible := OCCUPANCY_DETECTED AND (HVAC_MODE_SELECTOR <> 3);
+  StartTimer(IN := Eligible, PT := T#30s);
+  SUPPLY_FAN_RUN := StartTimer.Q;
+
+  IF HVAC_MODE_SELECTOR = 3 THEN
+    Adjustment := 4;
+  ELSIF OCCUPANCY_DETECTED THEN
+    Adjustment := 0;
+  ELSIF HVAC_MODE_SELECTOR = 0 THEN
+    IF ENERGY_SAVING_MODE THEN
+      Adjustment := 3;
+    ELSE
+      Adjustment := 2;
+    END_IF;
+  ELSIF HVAC_MODE_SELECTOR = 1 THEN
+    Adjustment := 1;
+  ELSIF HVAC_MODE_SELECTOR = 2 THEN
+    Adjustment := 4;
+  ELSE
+    Adjustment := 0;
+  END_IF;
+
+  IF Adjustment > 4 THEN
+    Adjustment := 4;
+  ELSIF Adjustment < -4 THEN
+    Adjustment := -4;
+  END_IF;
+
+  TEMP_SETPOINT_ADJUST := Adjustment;
+END_FUNCTION_BLOCK

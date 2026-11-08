@@ -1,0 +1,170 @@
+FUNCTION_BLOCK "Q15"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    estop : BOOL;
+    opeMode : BOOL;
+    valveAStart : BOOL;
+    valveBStart : BOOL;
+    valveCStart : BOOL;
+    valveDStart : BOOL;
+    mixMotorStart : BOOL;
+    autoStart : BOOL;
+    processMode : BOOL;
+    levelSensor : INT;
+    mixMotorComplete : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    valveARun : BOOL;
+    valveBRun : BOOL;
+    valveCRun : BOOL;
+    valveDRun : BOOL;
+    mixMotorRun : BOOL;
+END_VAR
+
+VAR
+    aStartEdge : R_TRIG;
+    bStartEdge : R_TRIG;
+    cStartEdge : R_TRIG;
+    dStartEdge : R_TRIG;
+    mStartEdge : R_TRIG;
+    autoStartEdge : R_TRIG;
+    autoStep : INT;
+    phaseMix : BOOL;
+    phaseDone : BOOL;
+END_VAR
+
+VAR_TEMP
+    tbA : BOOL;
+    tbB : BOOL;
+    tbC : BOOL;
+    tbD : BOOL;
+    tbM : BOOL;
+    tbAuto : BOOL;
+END_VAR
+
+BEGIN
+    // Edge detection
+    #aStartEdge(CLK := #valveAStart);
+    #bStartEdge(CLK := #valveBStart);
+    #cStartEdge(CLK := #valveCStart);
+    #dStartEdge(CLK := #valveDStart);
+    #mStartEdge(CLK := #mixMotorStart);
+    #autoStartEdge(CLK := #autoStart);
+
+    IF NOT #estop THEN
+        // Emergency stop: all equipment off, reset auto sequence
+        #valveARun := FALSE;
+        #valveBRun := FALSE;
+        #valveCRun := FALSE;
+        #valveDRun := FALSE;
+        #mixMotorRun := FALSE;
+        #autoStep := 0;
+        #phaseMix := FALSE;
+        #phaseDone := FALSE;
+    ELSE
+        IF NOT #opeMode THEN
+            // Manual mode
+            #autoStep := 0;
+            #phaseMix := FALSE;
+            #phaseDone := FALSE;
+
+            IF #aStartEdge.Q THEN
+                #valveARun := NOT #valveARun;
+            END_IF;
+            IF #bStartEdge.Q THEN
+                #valveBRun := NOT #valveBRun;
+            END_IF;
+            IF #cStartEdge.Q THEN
+                #valveCRun := NOT #valveCRun;
+            END_IF;
+            IF #dStartEdge.Q THEN
+                #valveDRun := NOT #valveDRun;
+            END_IF;
+            IF #mStartEdge.Q THEN
+                #mixMotorRun := NOT #mixMotorRun;
+            END_IF;
+        ELSE
+            // Automatic mode
+            IF #autoStep = 0 THEN
+                // idle
+                #valveARun := FALSE;
+                #valveBRun := FALSE;
+                #valveCRun := FALSE;
+                #valveDRun := FALSE;
+                #mixMotorRun := FALSE;
+                #phaseMix := FALSE;
+                #phaseDone := FALSE;
+                IF #autoStartEdge.Q THEN
+                    #autoStep := 1;
+                    #valveARun := TRUE;
+                END_IF;
+            ELSIF #autoStep = 1 THEN
+                // filling A until 50cm
+                #valveARun := TRUE;
+                #valveBRun := FALSE;
+                #valveCRun := FALSE;
+                #valveDRun := FALSE;
+                #mixMotorRun := FALSE;
+                IF #levelSensor >= 50 THEN
+                    #autoStep := 2;
+                    #valveARun := FALSE;
+                    #valveBRun := TRUE;
+                END_IF;
+            ELSIF #autoStep = 2 THEN
+                // filling B until 80cm
+                #valveARun := FALSE;
+                #valveBRun := TRUE;
+                #valveCRun := FALSE;
+                #valveDRun := FALSE;
+                #mixMotorRun := FALSE;
+                IF #levelSensor >= 80 THEN
+                    #valveBRun := FALSE;
+                    IF #processMode THEN
+                        #autoStep := 3;
+                        #valveCRun := TRUE;
+                    ELSE
+                        #autoStep := 4;
+                        #mixMotorRun := TRUE;
+                    END_IF;
+                END_IF;
+            ELSIF #autoStep = 3 THEN
+                // filling C until 100cm
+                #valveARun := FALSE;
+                #valveBRun := FALSE;
+                #valveCRun := TRUE;
+                #valveDRun := FALSE;
+                #mixMotorRun := FALSE;
+                IF #levelSensor >= 100 THEN
+                    #autoStep := 4;
+                    #valveCRun := FALSE;
+                    #mixMotorRun := TRUE;
+                END_IF;
+            ELSIF #autoStep = 4 THEN
+                // mixing
+                #valveARun := FALSE;
+                #valveBRun := FALSE;
+                #valveCRun := FALSE;
+                #valveDRun := FALSE;
+                #mixMotorRun := TRUE;
+                IF #mixMotorComplete THEN
+                    #autoStep := 5;
+                    #mixMotorRun := FALSE;
+                    #valveDRun := TRUE;
+                END_IF;
+            ELSIF #autoStep = 5 THEN
+                // delivering through D, automatic process ends
+                #valveARun := FALSE;
+                #valveBRun := FALSE;
+                #valveCRun := FALSE;
+                #valveDRun := TRUE;
+                #mixMotorRun := FALSE;
+                #autoStep := 0;
+                #valveDRun := FALSE;
+            END_IF;
+        END_IF;
+    END_IF;
+
+END_FUNCTION_BLOCK

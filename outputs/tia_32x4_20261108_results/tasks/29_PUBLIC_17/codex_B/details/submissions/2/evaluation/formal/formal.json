@@ -1,0 +1,77 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_17",
+  "dataset_sha256": "fa86e77a01a6644980c2ed2664fd2c7a93b44868fa8d4127f7bcf703896cd3b9",
+  "source_sha256": "68e0fc54f6a83ff5d19c6734ba3a5ffc173ae6682ddf2013196d37992ce5e2a3",
+  "declared_ltl_total": 10,
+  "mapped_assertions_total": 0,
+  "proved_property_ids": [],
+  "bounded_verified_property_ids": [],
+  "full_ltl_proved": false,
+  "model_calls": 0,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(query & !exists -> error8001)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    },
+    {
+      "id": "P02",
+      "formula": "G(query & exists -> queryResultMatches)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    },
+    {
+      "id": "P03",
+      "formula": "G(add & exists -> error8002 & databaseHeld)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    },
+    {
+      "id": "P04",
+      "formula": "G(add & !exists & !free -> error8003 & databaseHeld)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    },
+    {
+      "id": "P05",
+      "formula": "G(add & !exists & free -> addedAtFirstFree & otherEntriesHeld)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    },
+    {
+      "id": "P06",
+      "formula": "G(delete & !exists -> error8004 & databaseHeld)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    },
+    {
+      "id": "P07",
+      "formula": "G(delete & exists -> matchingIDCleared & otherEntriesHeld)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    },
+    {
+      "id": "P08",
+      "formula": "G(modify & !exists -> error8005 & databaseHeld)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    },
+    {
+      "id": "P09",
+      "formula": "G(modify & exists -> matchingEntryReplaced & otherEntriesHeld)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    },
+    {
+      "id": "P10",
+      "formula": "G(nonzeroIDsUnique)",
+      "status": "unsupported_model",
+      "message": "SCL unit packaging: TYPE must contain a named single declaration"
+    }
+  ],
+  "message": "SCL unit packaging: TYPE must contain a named single declaration",
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\29_PUBLIC_17\\codex_B\\details\\submissions\\2\\evaluation\\formal"
+}

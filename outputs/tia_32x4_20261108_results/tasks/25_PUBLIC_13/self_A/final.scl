@@ -1,0 +1,72 @@
+FUNCTION_BLOCK "Q13"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+  OCCUPANCY_DETECTED : BOOL;
+  ENERGY_SAVING_MODE : BOOL;
+  HVAC_MODE_SELECTOR : INT;
+END_VAR
+
+VAR_OUTPUT
+  SUPPLY_FAN_RUN : BOOL;
+  TEMP_SETPOINT_ADJUST : INT;
+END_VAR
+
+VAR
+  FanDelayTimer : TON_TIME;
+  FanReady : BOOL;
+  Eligible : BOOL;
+  Adjustment : INT;
+END_VAR
+
+BEGIN
+  // 占用且非 Night 模式才允许启动延时
+  #Eligible := #OCCUPANCY_DETECTED AND (#HVAC_MODE_SELECTOR <> 3);
+
+  // 独立 30 秒延时；条件失效立即复位计时
+  #FanDelayTimer.TON(IN := #Eligible, PT := T#30s);
+  #FanReady := #Eligible AND #FanDelayTimer.Q;
+
+  // 送风机输出仅由 eligible 与延时满共同决定
+  IF #FanReady THEN
+    #SUPPLY_FAN_RUN := TRUE;
+  ELSE
+    #SUPPLY_FAN_RUN := FALSE;
+  END_IF;
+
+  // 温度设定点修正计算
+  IF #HVAC_MODE_SELECTOR = 3 THEN
+    // Night 模式恒为 +4°C，与占用无关
+    #Adjustment := 4;
+  ELSIF #OCCUPANCY_DETECTED THEN
+    // 任何非 Night 模式，占用时为 0°C
+    #Adjustment := 0;
+  ELSE
+    // 非占用
+    CASE #HVAC_MODE_SELECTOR OF
+      0: // Auto
+         IF #ENERGY_SAVING_MODE THEN
+           #Adjustment := 3;
+         ELSE
+           #Adjustment := 2;
+         END_IF;
+      1: // Comfort
+         #Adjustment := 1;
+      2: // Economy
+         #Adjustment := 4;
+      ELSE
+         // 非有效模式值，保持 0°C 以维持 ±4°C 约束
+         #Adjustment := 0;
+    END_CASE;
+  END_IF;
+
+  // 限幅 ±4°C
+  IF #Adjustment > 4 THEN
+    #Adjustment := 4;
+  ELSIF #Adjustment < -4 THEN
+    #Adjustment := -4;
+  END_IF;
+
+  #TEMP_SETPOINT_ADJUST := #Adjustment;
+END_FUNCTION_BLOCK

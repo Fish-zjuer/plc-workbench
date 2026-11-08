@@ -1,0 +1,28 @@
+FUNCTION_BLOCK "Q04"
+VERSION : 0.1
+   VAR_INPUT
+      VISCOSITY_OK : BOOL;
+      PASTE_E_STOP_NC : BOOL;
+      DebounceTime : TIME;
+      CycleTime : TIME;
+   END_VAR
+   VAR_OUTPUT
+      VFD_RUN : BOOL;
+      PUMP_MAINT_DUE : BOOL;
+      PUMP_RUNTIME_ACC : LTIME;
+   END_VAR
+   VAR
+      debTimer : TON;
+      debounceValid : BOOL;
+   END_VAR
+BEGIN
+   IF NOT #PASTE_E_STOP_NC THEN
+      #debTimer(IN := FALSE, PT := #DebounceTime);
+      #debounceValid := FALSE;
+   ELSE
+      #debTimer(IN := #VISCOSITY_OK, PT := #DebounceTime);
+      #debounceValid := #VISCOSITY_OK AND #debTimer.Q;
+   END_IF;
+
+   #VFD_RUN := #PASTE_E_STOP_NC AND #debounceValid;
+END_FUNCTION_BLOCK

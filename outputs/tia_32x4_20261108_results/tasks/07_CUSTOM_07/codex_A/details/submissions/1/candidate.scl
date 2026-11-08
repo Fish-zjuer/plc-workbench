@@ -1,0 +1,37 @@
+FUNCTION_BLOCK "FB_CrusherExtraction"
+VERSION : 0.1
+   VAR_INPUT 
+      Enable : BOOL;   // Enable coordination.
+      Trip : BOOL;   // Benchmark setpoint-withdrawal signal.
+      FeedDemand : LREAL;   // Demand, 0..100 equivalent dust load.
+      FeedActual : LREAL;   // Extraction required by measured feed, 0..100.
+      ExtractionCapacity : LREAL;   // Feed supported by measured extraction, 0..100.
+   END_VAR 
+   VAR_OUTPUT 
+      FeedSP : LREAL;   // Feed-channel setpoint.
+      ExtractionSP : LREAL;   // Dust-extraction setpoint.
+      Error : BOOL;   // Illegal numeric input.
+   END_VAR 
+   VAR_TEMP 
+      legal : BOOL;
+   END_VAR 
+
+BEGIN
+	legal := (#FeedDemand >= 0.0) AND (#FeedDemand <= 100.0)
+	         AND (#FeedActual >= 0.0) AND (#FeedActual <= 100.0)
+	         AND (#ExtractionCapacity >= 0.0) AND (#ExtractionCapacity <= 100.0);
+
+	IF (NOT #Enable) OR #Trip THEN
+	    #FeedSP := 0.0;
+	    #ExtractionSP := 0.0;
+	    #Error := FALSE;
+	ELSIF NOT #legal THEN
+	    #FeedSP := 0.0;
+	    #ExtractionSP := 0.0;
+	    #Error := TRUE;
+	ELSE
+	    #FeedSP := MIN(#FeedDemand, #ExtractionCapacity);
+	    #ExtractionSP := MAX(#FeedDemand, #FeedActual);
+	    #Error := FALSE;
+	END_IF;
+END_FUNCTION_BLOCK

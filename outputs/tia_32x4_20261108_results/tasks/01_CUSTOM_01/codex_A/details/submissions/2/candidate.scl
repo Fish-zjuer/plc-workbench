@@ -1,0 +1,93 @@
+FUNCTION_BLOCK "FB_ElevatorTarget"
+VERSION : 0.1
+   VAR_INPUT
+      Enable : BOOL;
+      CurrentFloor : INT;
+      Direction : INT;
+      FullLoad : BOOL;
+      CabReq : ARRAY[1..6] OF BOOL;
+      HallReq : ARRAY[1..6] OF BOOL;
+   END_VAR
+   VAR_OUTPUT
+      HasTarget : BOOL;
+      TargetFloor : INT;
+      NextDirection : INT;
+   END_VAR
+   VAR_TEMP
+      i : INT;
+      f : INT;
+      d : INT;
+      bestDist : INT;
+      bestFloor : INT;
+      anyReq : BOOL;
+      anyAbove : BOOL;
+      anyBelow : BOOL;
+      nearAbove : INT;
+      nearBelow : INT;
+      elig : BOOL;
+      curElig : BOOL;
+   END_VAR
+BEGIN
+   f := #CurrentFloor;
+   #anyReq := FALSE;
+   #curElig := FALSE;
+   #anyAbove := FALSE;
+   #anyBelow := FALSE;
+   #nearAbove := 0;
+   #nearBelow := 0;
+   #bestDist := 99;
+   #bestFloor := #f;
+
+   FOR #i := 1 TO 6 DO
+      #elig := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+      IF #elig THEN
+         #anyReq := TRUE;
+         IF #i = #f THEN
+            #curElig := TRUE;
+         ELSIF #i > #f THEN
+            IF NOT #anyAbove THEN
+               #nearAbove := #i;
+               #anyAbove := TRUE;
+            END_IF;
+         ELSE
+            IF NOT #anyBelow THEN
+               #nearBelow := #i;
+               #anyBelow := TRUE;
+            END_IF;
+         END_IF;
+         IF #i <> #f THEN
+            #d := #i - #f;
+            IF #d < 0 THEN
+               #d := -#d;
+            END_IF;
+            IF #d < #bestDist THEN
+               #bestDist := #d;
+               #bestFloor := #i;
+            END_IF;
+         END_IF;
+      END_IF;
+   END_FOR;
+
+   IF NOT #Enable OR NOT #anyReq THEN
+      #HasTarget := FALSE;
+      #TargetFloor := #f;
+      #NextDirection := 0;
+   ELSIF #curElig THEN
+      #HasTarget := TRUE;
+      #TargetFloor := #f;
+      #NextDirection := 0;
+   ELSE
+      IF #Direction = 1 AND #anyAbove THEN
+         #bestFloor := #nearAbove;
+      ELSIF #Direction = -1 AND #anyBelow THEN
+         #bestFloor := #nearBelow;
+      END_IF;
+      #HasTarget := TRUE;
+      #TargetFloor := #bestFloor;
+      IF #bestFloor > #f THEN
+         #NextDirection := 1;
+      ELSE
+         #NextDirection := -1;
+      END_IF;
+   END_IF;
+END_FUNCTION_BLOCK

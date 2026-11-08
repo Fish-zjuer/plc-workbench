@@ -1,0 +1,39 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "e9282bf78aa2aaff775790e810bb642ca363f99987d6bbf7eea341255484499b",
+  "declared_ltl_total": 5,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(SyncOK <-> (V & R))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(SyncBad <-> (V & !R))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(Invalid <-> !V)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(!(SyncOK & SyncBad) & !(SyncOK & Invalid) & !(SyncBad & Invalid))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(SyncOK | SyncBad | Invalid)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

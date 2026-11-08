@@ -1,0 +1,66 @@
+FUNCTION_BLOCK "Q13"
+VAR_INPUT
+    OCCUPANCY_DETECTED : BOOL;
+    ENERGY_SAVING_MODE : BOOL;
+    HVAC_MODE_SELECTOR : INT;
+END_VAR
+VAR_OUTPUT
+    SUPPLY_FAN_RUN : BOOL;
+    TEMP_SETPOINT_ADJUST : INT;
+END_VAR
+VAR
+    timerStartDelay : TON_TIME;
+    eligible : BOOL;
+END_VAR
+
+BEGIN
+    // Determine eligibility: Occupied AND not Night Mode (3)
+    #eligible := #OCCUPANCY_DETECTED AND (#HVAC_MODE_SELECTOR <> 3);
+
+    // Timer logic for start delay
+    // IN is true only when eligible. If eligible becomes false, timer resets immediately.
+    #timerStartDelay(IN := #eligible, PT := T#30s);
+
+    // Fan Run Output
+    // Runs only if eligible AND timer has finished (Q is true)
+    #SUPPLY_FAN_RUN := #eligible AND #timerStartDelay.Q;
+
+    // Temperature Setpoint Adjustment Logic
+    CASE #HVAC_MODE_SELECTOR OF
+        0: // Auto Mode
+            IF #OCCUPANCY_DETECTED THEN
+                #TEMP_SETPOINT_ADJUST := 0;
+            ELSE
+                IF #ENERGY_SAVING_MODE THEN
+                    #TEMP_SETPOINT_ADJUST := 3;
+                ELSE
+                    #TEMP_SETPOINT_ADJUST := 2;
+                END_IF;
+            END_IF;
+        1: // Comfort Mode
+            IF #OCCUPANCY_DETECTED THEN
+                #TEMP_SETPOINT_ADJUST := 0;
+            ELSE
+                #TEMP_SETPOINT_ADJUST := 1;
+            END_IF;
+        2: // Economy Mode
+            IF #OCCUPANCY_DETECTED THEN
+                #TEMP_SETPOINT_ADJUST := 0;
+            ELSE
+                #TEMP_SETPOINT_ADJUST := 4;
+            END_IF;
+        3: // Night Mode
+            #TEMP_SETPOINT_ADJUST := 4;
+        ELSE
+            // Default to safe value if invalid mode passed (though spec says callers supply valid 0-3)
+            #TEMP_SETPOINT_ADJUST := 0;
+    END_CASE;
+
+    // Ensure bounds ±4°C (Logic above naturally satisfies this, but explicit clamp ensures safety)
+    IF #TEMP_SETPOINT_ADJUST > 4 THEN
+        #TEMP_SETPOINT_ADJUST := 4;
+    ELSIF #TEMP_SETPOINT_ADJUST < -4 THEN
+        #TEMP_SETPOINT_ADJUST := -4;
+    END_IF;
+
+END_FUNCTION_BLOCK

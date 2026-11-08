@@ -1,0 +1,74 @@
+FUNCTION_BLOCK "ProductionLineControl"
+    VERSION : 0.1
+
+    VAR_INPUT
+        Mode : BOOL;
+        ForwardButton : BOOL;
+        ReverseButton : BOOL;
+        SensorA : BOOL;
+        SensorB : BOOL;
+        SensorC : BOOL;
+        ButtonA : BOOL;
+        ButtonB : BOOL;
+        ButtonC : BOOL;
+    END_VAR
+
+    VAR_OUTPUT
+        MotorForward : BOOL;
+        MotorReverse : BOOL;
+        CompletionLight : BOOL;
+    END_VAR
+
+    VAR
+        Step : INT := 0;
+    END_VAR
+
+BEGIN
+    IF NOT #Mode THEN
+        #MotorForward := #ForwardButton AND NOT #ReverseButton;
+        #MotorReverse := #ReverseButton AND NOT #ForwardButton;
+        #CompletionLight := FALSE;
+    ELSE
+        #MotorReverse := FALSE;
+
+        CASE #Step OF
+            0:
+                #MotorForward := FALSE;
+                IF #SensorA AND #ButtonA THEN
+                    #Step := 1;
+                END_IF;
+            1:
+                #MotorForward := TRUE;
+                IF #SensorB THEN
+                    #MotorForward := FALSE;
+                    #Step := 2;
+                END_IF;
+            2:
+                #MotorForward := FALSE;
+                IF #ButtonB THEN
+                    #Step := 3;
+                END_IF;
+            3:
+                #MotorForward := TRUE;
+                IF #SensorC THEN
+                    #MotorForward := FALSE;
+                    #Step := 4;
+                END_IF;
+            4:
+                #MotorForward := FALSE;
+                IF #ButtonC THEN
+                    #Step := 5;
+                END_IF;
+            5:
+                #MotorForward := FALSE;
+                #CompletionLight := #SensorC;
+                IF NOT #SensorC THEN
+                    #Step := 0;
+                END_IF;
+        END_CASE;
+
+        IF #Step <> 5 THEN
+            #CompletionLight := FALSE;
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

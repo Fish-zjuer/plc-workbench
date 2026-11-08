@@ -1,0 +1,1051 @@
+{
+  "status": "pass",
+  "errors": 0,
+  "warnings": 2,
+  "state": "Warning",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 2
+    },
+    {
+      "path": "Program blocks",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 2
+    },
+    {
+      "path": "Q13 (FB2)",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 2
+    },
+    {
+      "path": "27",
+      "state": "Warning",
+      "description": "The parameter '#TEMP_SETPOINT_ADJUST' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "29",
+      "state": "Warning",
+      "description": "The parameter '#TEMP_SETPOINT_ADJUST' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Warning",
+      "description": "Compiling finished (errors: 0; warnings: 2)",
+      "errors": 0,
+      "warnings": 1
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "returncode": 0,
+  "source_sha256": "82fc4d8c1265efe922673840c2192b81f42243db38099b8a5a49079f908f6026",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": true,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\25_PUBLIC_13\\codex_B\\details\\submissions\\2\\evaluation\\compile",
+  "seconds": 41.214,
+  "queue_seconds": 50.131,
+  "dataset_sha256": "16f9d7d46ea2ea1501bcceae00d4bdb0c5a85d7318ce4d6947ff5669a9687b18",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_13",
+  "cases": [
+    {
+      "name": "setpoint_0_0_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 2.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 2
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 2.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_0_0_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 3.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 3
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 3.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_0_1_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_0_1_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_1_0_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 1
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_1_0_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 1
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_1_1_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_1_1_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 1
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_2_0_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_2_0_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_2_1_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_2_1_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 2
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 0
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_3_0_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_3_0_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_3_1_0",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "setpoint_3_1_1",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {},
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 1,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": true,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "TEMP_SETPOINT_ADJUST": 4
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "delay_and_night_reset",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 29999,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30000,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": true
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 1.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30001,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 3
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 4.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30002,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60001,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60002,
+          "inputs": {
+            "OCCUPANCY_DETECTED": true,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": true
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 1.0,
+            "TEMP_SETPOINT_ADJUST": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60003,
+          "inputs": {
+            "OCCUPANCY_DETECTED": false,
+            "ENERGY_SAVING_MODE": false,
+            "HVAC_MODE_SELECTOR": 0
+          },
+          "expected": {
+            "SUPPLY_FAN_RUN": false
+          },
+          "actual": {
+            "SUPPLY_FAN_RUN": 0.0,
+            "TEMP_SETPOINT_ADJUST": 2.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 17,
+    "scans": 40,
+    "assertions": 24,
+    "failed": 0
+  },
+  "ltl_status": "unsupported",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\25_PUBLIC_13\\codex_B\\details\\submissions\\2\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\25_PUBLIC_13\\codex_B\\details\\submissions\\2\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    2,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    29999,
+    30000,
+    30001,
+    30002,
+    60001,
+    60002,
+    60003
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0",
+  "timing": {
+    "clock": "Siemens native",
+    "max_deviation_ms": 1,
+    "tolerance_ms": 1
+  },
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 2,
+    "state": "Warning",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 2
+      },
+      {
+        "path": "Program blocks",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 2
+      },
+      {
+        "path": "Q13 (FB2)",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 2
+      },
+      {
+        "path": "27",
+        "state": "Warning",
+        "description": "The parameter '#TEMP_SETPOINT_ADJUST' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "29",
+        "state": "Warning",
+        "description": "The parameter '#TEMP_SETPOINT_ADJUST' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Warning",
+        "description": "Compiling finished (errors: 0; warnings: 2)",
+        "errors": 0,
+        "warnings": 1
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "82fc4d8c1265efe922673840c2192b81f42243db38099b8a5a49079f908f6026",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\25_PUBLIC_13\\codex_B\\details\\submissions\\2\\evaluation\\compile",
+    "seconds": 41.214,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "16f9d7d46ea2ea1501bcceae00d4bdb0c5a85d7318ce4d6947ff5669a9687b18"
+  },
+  "formal_verification": {
+    "status": "unsupported",
+    "backend": "plcverif+cbmc",
+    "policy": "automatic",
+    "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_13",
+    "dataset_sha256": "16f9d7d46ea2ea1501bcceae00d4bdb0c5a85d7318ce4d6947ff5669a9687b18",
+    "source_sha256": "82fc4d8c1265efe922673840c2192b81f42243db38099b8a5a49079f908f6026",
+    "model_calls": 0,
+    "declared_ltl_total": 6,
+    "mapped_assertions_total": 6,
+    "proved_property_ids": [],
+    "full_ltl_proved": false,
+    "bounded_verified_property_ids": [],
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\25_PUBLIC_13\\codex_B\\details\\submissions\\2\\evaluation\\formal\\shared",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> hvacInitialOK)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!eligible -> !SUPPLY_FAN_RUN)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P03",
+        "formula": "G(SUPPLY_FAN_RUN -> eligible & fanReady)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P04",
+        "formula": "G(eligible & fanReady -> SUPPLY_FAN_RUN)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P05",
+        "formula": "G(normalCalculation -> adjustmentOK)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P06",
+        "formula": "G(adjustmentWithinFourDegrees)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+      }
+    ],
+    "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+    "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+    "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+    "bound": 20,
+    "timeout_seconds": 120,
+    "scan_period_ms": 10,
+    "memory_limit_mb": 768,
+    "time_coverage": {
+      "scan_samples": 20,
+      "scan_period_ms": 10,
+      "first_sample_offset_ms": 10,
+      "last_sample_offset_ms": 200,
+      "maximum_elapsed_between_samples_ms": 190,
+      "observer_thresholds": [
+        {
+          "binding": "fanReady",
+          "threshold_ms": 30000,
+          "minimum_scan_bound": 3001,
+          "covered": false
+        }
+      ]
+    },
+    "assumptions": [
+      "0<=HVAC_MODE_SELECTOR & HVAC_MODE_SELECTOR<=3"
+    ],
+    "observer_definitions": {
+      "initial": "PVL_First",
+      "hvacInitialOK": "PVL_InitOK",
+      "eligible": "OCCUPANCY_DETECTED & HVAC_MODE_SELECTOR<>3",
+      "fanReady": "PVL_Started & PVL_NowMs-PVL_StartMs>=30000",
+      "normalCalculation": "true",
+      "adjustmentOK": "TEMP_SETPOINT_ADJUST=PVL_Adjust",
+      "adjustmentWithinFourDegrees": "0<=TEMP_SETPOINT_ADJUST & TEMP_SETPOINT_ADJUST<=4"
+    },
+    "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model",
+    "seconds": 0.005,
+    "model_source_sha256": "be2214fe6a0a8142bbd0746c1eeae4974846bb2099dc328eacc629b57225d7e1",
+    "platform_adaptations": [
+      {
+        "kind": "symbol_spelling",
+        "symbol": "Q13"
+      },
+      {
+        "kind": "timer_spelling",
+        "count": 1,
+        "semantics": "Delegated to shared ST adapter"
+      },
+      {
+        "kind": "pou_begin_delimiter",
+        "count": 1
+      }
+    ],
+    "source_dialect": "siemens_scl",
+    "platform_assumptions": []
+  },
+  "finite_test_status": "pass"
+}

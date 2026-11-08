@@ -1,0 +1,54 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "23ddbf4b05d6dd7e40989b165f3b442d6fe43d9709259f82741d85945d35ecf6",
+  "declared_ltl_total": 8,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(idleBefore & bottleSensor -> R1(cleanOutputOK))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(cleanBefore & cleaningConfirmButton -> R1(fillOutputOK))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(fillBefore & fillingConfirmButton -> R1(capOutputOK))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(capBefore & cappingConfirmButton -> R1(packOutputOK))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(packBefore & packingConfirmButton -> R1(doneOutputOK))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(doneBefore & finishedButton -> R1(idleOutputOK))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(waitingForCurrentConfirmation -> currentStageHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P08",
+      "formula": "G(wrongStageConfirmationOnly -> observerStageUnchanged)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

@@ -1,0 +1,178 @@
+FUNCTION_BLOCK "Q19"
+VERSION : 0.1
+VAR_INPUT
+    ManualMode : BOOL;
+    SingleStepMode : BOOL;
+    SingleCycleMode : BOOL;
+    ContinuousMode : BOOL;
+    EmergencyStop : BOOL;
+    Start : BOOL;
+    DownButton : BOOL;
+    UpButton : BOOL;
+    LeftButton : BOOL;
+    RightButton : BOOL;
+    GripButton : BOOL;
+    ReleaseButton : BOOL;
+    DownLimitSwitch : BOOL;
+    UpLimitSwitch : BOOL;
+    LeftLimitSwitch : BOOL;
+    RightLimitSwitch : BOOL;
+    GripLimitSwitch : BOOL;
+    ReleaseLimitSwitch : BOOL;
+END_VAR
+VAR_OUTPUT
+    MoveDown : BOOL;
+    MoveUp : BOOL;
+    MoveLeft : BOOL;
+    MoveRight : BOOL;
+    ActivateGrip : BOOL;
+    ActivateRelease : BOOL;
+END_VAR
+VAR
+    Step : INT := 0;
+    StartPrev : BOOL := FALSE;
+    StartRise : BOOL := FALSE;
+    AutoRun : BOOL := FALSE;
+    CmdId : INT := 0;
+    LimitOk : BOOL := FALSE;
+    CycleDone : BOOL := FALSE;
+END_VAR
+BEGIN
+    // ---- rising edge of the start button ----
+    #StartRise := #Start AND NOT #StartPrev;
+    #StartPrev := #Start;
+
+    // ---- action requested by the manual push buttons ----
+    IF #DownButton THEN
+        #CmdId := 1;
+    ELSIF #UpButton THEN
+        #CmdId := 2;
+    ELSIF #LeftButton THEN
+        #CmdId := 3;
+    ELSIF #RightButton THEN
+        #CmdId := 4;
+    ELSIF #GripButton THEN
+        #CmdId := 5;
+    ELSIF #ReleaseButton THEN
+        #CmdId := 6;
+    ELSE
+        #CmdId := 0;
+    END_IF;
+
+    // ---- the manual mode is independent from the automatic sequence ----
+    IF #ManualMode THEN
+        #Step := 0;
+        #AutoRun := FALSE;
+        #CycleDone := FALSE;
+    END_IF;
+
+    // ---- action demanded by the preset program on this scan ----
+    IF #ManualMode THEN
+        #CmdId := 0;
+    ELSE
+        CASE #Step OF
+            0: ;               // idle in the initial position (top left)
+            1: #CmdId := 1;    // down
+            2: #CmdId := 5;    // grip
+            3: #CmdId := 2;    // up
+            4: #CmdId := 4;    // right
+            5: #CmdId := 1;    // down
+            6: #CmdId := 6;    // release
+            7: #CmdId := 2;    // up
+            8: #CmdId := 3;    // left
+            9: ;               // cycle completed
+            10: ;              // not used
+        ELSE
+            #CmdId := 0;
+        END_CASE;
+    END_IF;
+
+    // ---- in-position feedback of the demanded action ----
+    CASE #CmdId OF
+        1: #LimitOk := #DownLimitSwitch;
+        2: #LimitOk := #UpLimitSwitch;
+        3: #LimitOk := #LeftLimitSwitch;
+        4: #LimitOk := #RightLimitSwitch;
+        5: #LimitOk := #GripLimitSwitch;
+        6: #LimitOk := #ReleaseLimitSwitch;
+    ELSE
+        #LimitOk := TRUE;
+    END_CASE;
+
+    // ---- sequence handling ----
+    IF NOT #EmergencyStop THEN
+        // an emergency stop interrupts every action and the running sequence
+        #Step := 0;
+        #AutoRun := FALSE;
+        #CycleDone := FALSE;
+    ELSIF #SingleStepMode THEN
+        #CycleDone := FALSE;
+        IF (#Step <= 0) OR (#Step >= 9) THEN
+            // one operator confirmation starts the next single action
+            IF #StartRise THEN
+                #Step := 1;
+            END_IF;
+        ELSIF #LimitOk THEN
+            // action finished -> wait for the next confirmation
+            #Step := #Step + 1;
+        END_IF;
+    ELSIF #SingleCycleMode THEN
+        IF (#Step <= 0) OR (#Step >= 9) THEN
+            #AutoRun := FALSE;
+            #CycleDone := (#Step >= 9);
+            IF #StartRise THEN
+                #Step := 1;
+                #AutoRun := TRUE;
+                #CycleDone := FALSE;
+            END_IF;
+        ELSE
+            #CycleDone := FALSE;
+            IF #LimitOk THEN
+                #Step := #Step + 1;
+            END_IF;
+        END_IF;
+    ELSIF #ContinuousMode THEN
+        #CycleDone := FALSE;
+        IF (#Step <= 0) OR (#Step >= 9) THEN
+            IF #StartRise OR #AutoRun THEN
+                // continuous operation repeats the cycle without a new confirmation
+                #Step := 1;
+                #AutoRun := TRUE;
+            END_IF;
+        ELSIF #LimitOk THEN
+            #Step := #Step + 1;
+        END_IF;
+    ELSE
+        // no mode selected
+        #Step := 0;
+        #AutoRun := FALSE;
+        #CycleDone := FALSE;
+    END_IF;
+
+    // ---- output decoding ----
+    IF NOT #EmergencyStop THEN
+        #CmdId := 0;
+    END_IF;
+
+    IF #ManualMode THEN
+        // a manual action stops when the position is reached or the button is released
+        IF #LimitOk THEN
+            #CmdId := 0;
+        END_IF;
+    ELSE
+        IF (#Step <= 0) OR (#Step >= 9) THEN
+            // idle, waiting for a confirmation or cycle completed
+            #CmdId := 0;
+        ELSIF #LimitOk THEN
+            // action in position: the command is switched off in the same scan
+            #CmdId := 0;
+        END_IF;
+    END_IF;
+
+    #MoveDown := (#CmdId = 1);
+    #MoveUp := (#CmdId = 2);
+    #MoveLeft := (#CmdId = 3);
+    #MoveRight := (#CmdId = 4);
+    #ActivateGrip := (#CmdId = 5);
+    #ActivateRelease := (#CmdId = 6);
+END_FUNCTION_BLOCK

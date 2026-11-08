@@ -1,0 +1,206 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_05",
+  "dataset_sha256": "7def035e4b5e536ac0043bb504abfed3a92ed7380b4d0086d0cceae5bd69f2bf",
+  "source_sha256": "13733e0ac40ef6316bdc05802692ed75041fe98649a3e28d6ac0431b4fb200b7",
+  "model_calls": 0,
+  "declared_ltl_total": 7,
+  "mapped_assertions_total": 7,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\17_PUBLIC_05\\self_A\\details\\submissions\\2\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(initializing -> !Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance DebTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P02",
+      "formula": "G(initializing -> Weld_Soft_Start_Active)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance DebTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P03",
+      "formula": "G(!initializing -> !Weld_Soft_Start_Active)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance DebTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P04",
+      "formula": "G(!Weld_E_Stop_NC -> !Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance DebTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P05",
+      "formula": "G(!Gap_Exceeded -> !Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance DebTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P06",
+      "formula": "G(!initializing & Weld_E_Stop_NC & gapReady -> Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance DebTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P07",
+      "formula": "G(Operator_Alert -> !initializing & Weld_E_Stop_NC & gapReady)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance DebTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [],
+  "observer_definitions": {
+    "initializing": "PVL_NowMs<5000",
+    "gapReady": "PVL_GapReady"
+  },
+  "message": "TON instance DebTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model",
+  "seconds": 0.086,
+  "model_source_sha256": "c91aa910d600bb2d42224acdf1a81223f4de9058170973a905ed8babe1b05f33",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q05"
+    },
+    {
+      "kind": "layout_attribute",
+      "attribute": "S7_Optimized_Access",
+      "reason": "No absolute memory, pointers or references admitted by this adapter"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "InitTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "InitDone"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "InitTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "InitDone"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebouncePositive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebounceTime"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "GapActive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "InitDone"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Weld_E_Stop_NC"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Gap_Exceeded"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebouncePositive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "GapActive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebounceTime"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebounceDone"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "GapActive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Weld_Soft_Start_Active"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "InitDone"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Operator_Alert"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "InitDone"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Weld_E_Stop_NC"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Gap_Exceeded"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebounceDone"
+    },
+    {
+      "kind": "timer_spelling",
+      "count": 4,
+      "semantics": "Delegated to shared ST adapter"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

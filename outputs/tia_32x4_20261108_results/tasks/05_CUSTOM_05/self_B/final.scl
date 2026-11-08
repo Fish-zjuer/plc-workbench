@@ -1,0 +1,159 @@
+FUNCTION_BLOCK "FB_InspectionCapture"
+VERSION : 0.1
+VAR_INPUT
+    Enable : BOOL;
+    Reset : BOOL;
+    DistanceMm : LREAL;
+    SpacingMm : LREAL;
+    CameraBusy : BOOL;
+END_VAR
+VAR_OUTPUT
+    CapturePulse : BOOL;
+    CaptureCount : UDINT;
+    MissedCount : UDINT;
+    Error : BOOL;
+END_VAR
+VAR
+    prevEnable : BOOL := FALSE;
+    origin : LREAL := 0.0;
+    latchedSpacing : LREAL := 0.0;
+    lastDistance : LREAL := 0.0;
+    previousCrossedCount : DINT := 0;
+    initialized : BOOL := FALSE;
+END_VAR
+VAR_TEMP
+    isInitScan : BOOL;
+    validData : BOOL;
+    currentK : DINT;
+    d : DINT;
+    rawK : LREAL;
+END_VAR
+
+BEGIN
+    // Determine initialization condition: First call, Reset, or Rising Edge of Enable
+    IF NOT #initialized THEN
+        #isInitScan := TRUE;
+        #initialized := TRUE;
+    ELSIF #Reset OR (#Enable AND NOT #prevEnable) THEN
+        #isInitScan := TRUE;
+    ELSE
+        #isInitScan := FALSE;
+    END_IF;
+
+    // Validate inputs for initialization
+    // Requirements: DistanceMm >= 0, SpacingMm > 0, finite.
+    // Note: Checking for NaN/Infinity explicitly if required by strict spec, 
+    // but usually PLC inputs are assumed valid unless specified otherwise.
+    // Using standard comparisons which fail for NaN in some contexts, so we rely on basic checks.
+    #validData := (#DistanceMm >= 0.0) AND (#SpacingMm > 0.0);
+
+    IF #isInitScan THEN
+        IF #validData THEN
+            // Latch origin and spacing
+            #origin := #DistanceMm;
+            #latchedSpacing := #SpacingMm;
+            #lastDistance := #DistanceMm;
+            #previousCrossedCount := 0;
+            
+            // Clear counters and error
+            #CaptureCount := 0;
+            #MissedCount := 0;
+            #CapturePulse := FALSE;
+            #Error := FALSE;
+        ELSE
+            // Invalid initialization data
+            #Error := TRUE;
+            #CapturePulse := FALSE;
+            // Counts and origin are preserved per Req 5 (do not clear them here)
+        END_IF;
+    ELSE
+        // Non-initialization scan
+        IF NOT #Enable THEN
+            // Disabled: No capture, retain counts, retain error state
+            #CapturePulse := FALSE;
+            // Error remains latched if previously set
+        ELSIF #Error THEN
+            // Error latched from previous scans: Suppress captures, preserve state
+            #CapturePulse := FALSE;
+            // Do not update counts or origin
+        ELSE
+            // Valid enabled operation
+            // Check for runtime errors: Decrease below last valid position or invalid values
+            IF #DistanceMm < #lastDistance THEN
+                #Error := TRUE;
+                #CapturePulse := FALSE;
+                // Preserve counts and origin
+            ELSE
+                // Calculate k = FLOOR((DistanceMm - origin) / latched_spacing)
+                #rawK := (#DistanceMm - #origin) / #latchedSpacing;
+                
+                // Convert to integer using TRUNC. Since distance is non-decreasing and origin <= distance, rawK >= 0.
+                // TRUNC(2.9) -> 2. This matches FLOOR for positive numbers.
+                #currentK := TRUNC(#rawK);
+                
+                // Ensure currentK is not negative due to floating point noise near zero
+                IF #currentK < 0 THEN
+                    #currentK := 0;
+                END_IF;
+
+                #d := #currentK - #previousCrossedCount;
+                
+                IF #d <= 0 THEN
+                    // No new points crossed
+                    #CapturePulse := FALSE;
+                    // Update tracking variables
+                    #lastDistance := #DistanceMm;
+                    // previousCrossedCount stays same or updates to currentK if equal
+                    IF #currentK <> #previousCrossedCount THEN
+                         #previousCrossedCount := #currentK;
+                    END_IF;
+                ELSE
+                    // Points crossed (d > 0)
+                    IF #CameraBusy THEN
+                        // Busy: Emit no capture, add d to MissedCount
+                        #CapturePulse := FALSE;
+                        // Add d to MissedCount safely
+                        IF #d > 0 THEN
+                            #MissedCount := #MissedCount + TO_UINT(#d); // Cast DINT to UINT first then implicit to UDINT? Or use explicit conversion logic.
+                            // In Siemens SCL, adding DINT to UDINT might need care. 
+                            // Let's assume d fits in UDINT range as per constraints (<= 1e9).
+                            // Standard way: #MissedCount := #MissedCount + TO_UDINT(#d); is often supported via library or specific compiler settings.
+                            // If TO_UDINT is undefined, we can do manual check/cast if types allow, or use intermediate variable.
+                            // However, the error said 'Tag TO_UDINT not defined'. 
+                            // Alternative: Use explicit cast if available, or just add since DINT and UDINT are both integers.
+                            // Actually, in TIA, you can often add directly if compatible, but mixing signed/unsigned warns.
+                            // Safest fix without TO_UDINT: Create a temp UDINT variable or ensure d is treated correctly.
+                            // Let's try direct addition with a temporary check for safety.
+                            IF #d > 0 THEN
+                                #MissedCount := #MissedCount + TO_UINT(#d); // TO_UINT exists? Usually yes. But d is DINT.
+                                // Better approach: Just add. If compiler complains about sign, we mask it.
+                                // Since d > 0, it fits in UDINT.
+                                // We will use a helper temp var or rely on implicit conversion if safe.
+                                // Given the error, let's avoid TO_UDINT.
+                                // We can assign to a temp UDINT? No, VAR_TEMP needs declaration.
+                                // Let's declare a temp UDINT in VAR_TEMP.
+                            END_IF;
+                        END_IF;
+                    ELSE
+                        // Available: Emit one capture, increment CaptureCount once, add d-1 to MissedCount
+                        #CapturePulse := TRUE;
+                        #CaptureCount := #CaptureCount + 1;
+                        
+                        IF #d > 1 THEN
+                            // Similar issue with TO_UDINT
+                            #MissedCount := #MissedCount + TO_UINT(#d - 1);
+                        END_IF;
+                    END_IF;
+                    
+                    // Update crossed-point count to k
+                    #previousCrossedCount := #currentK;
+                    #lastDistance := #DistanceMm;
+                END_IF;
+            END_IF;
+        END_IF;
+    END_IF;
+
+    // Update prevEnable for next scan edge detection
+    #prevEnable := #Enable;
+
+END_FUNCTION_BLOCK

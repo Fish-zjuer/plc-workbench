@@ -1,0 +1,79 @@
+FUNCTION_BLOCK "Q04"
+VAR_INPUT
+    VISCOSITY_OK : BOOL;
+    PASTE_E_STOP_NC : BOOL;
+    DebounceTime : TIME;
+    CycleTime : TIME;
+END_VAR
+VAR_OUTPUT
+    VFD_RUN : BOOL;
+    PUMP_MAINT_DUE : BOOL;
+    PUMP_RUNTIME_ACC : LTIME;
+END_VAR
+VAR
+    timerDebounce : TON_TIME;
+    viscConditionValid : BOOL;
+    runtimeAccLtime : LTIME;
+    cycleTimeLtime : LTIME;
+END_VAR
+
+BEGIN
+    // Initialize static variables if needed, though TIA Portal handles initial values.
+    // Ensure local temp/static vars are reset appropriately for logic flow.
+
+    // 1. Emergency Stop Priority & Debounce Reset
+    // If E-Stop is active (FALSE), immediately disable run and reset debounce timer.
+    IF NOT PASTE_E_STOP_NC THEN
+        VFD_RUN := FALSE;
+        viscConditionValid := FALSE;
+        // Reset the timer by calling it with IN=FALSE
+        #timerDebounce(IN := FALSE, PT := #DebounceTime);
+    ELSE
+        // 2. Viscosity Debouncing Logic
+        // The timer starts when VISCOSITY_OK is TRUE.
+        // It resets immediately if VISCOSITY_OK becomes FALSE.
+        #timerDebounce(IN := #VISCOSITY_OK, PT := #DebounceTime);
+        
+        // The condition is valid only if the timer has finished (Q = TRUE)
+        viscConditionValid := #timerDebounce.Q;
+        
+        // 3. Run Command Logic
+        // Allow VFD_RUN only if viscosity condition is valid (E-stop already checked above)
+        IF viscConditionValid THEN
+            VFD_RUN := TRUE;
+        ELSE
+            VFD_RUN := FALSE;
+        END_IF;
+    END_IF;
+
+    // 4. Runtime Accumulation
+    // Accumulate time only while VFD_RUN is TRUE.
+    // Convert CycleTime to LTIME for accumulation in LTIME variable.
+    IF VFD_RUN THEN
+        // Siemens SCL conversion: TIME to LTIME
+        // Note: In newer TIA versions, direct assignment or CAST might be used.
+        // Standard way: Multiply by 1000000 (ns per ms) or use specific conversion functions if available.
+        // However, simple arithmetic on LTIME usually requires explicit casting or multiplication.
+        // LTIME is nanoseconds. TIME is milliseconds.
+        // 1 TIME unit (ms) = 1,000,000 LTIME units (ns).
+        
+        // Using intermediate calculation to avoid overflow issues if possible, but standard cast:
+        #cycleTimeLtime := #CycleTime * 1000000; 
+        #PUMP_RUNTIME_ACC := #PUMP_RUNTIME_ACC + #cycleTimeLtime;
+    END_IF;
+
+    // 5. Maintenance Due Indication
+    // Set PUMP_MAINT_DUE when accumulated runtime reaches 500 hours.
+    // 500 hours = 1,800,000 seconds = 1,800,000,000 milliseconds.
+    // In LTIME (nanoseconds): 1,800,000,000 ms * 1,000,000 ns/ms = 1,800,000,000,000,000 ns.
+    // Or simply compare against a constant LTIME value.
+    
+    // Define threshold: 500h in LTIME
+    // 500 * 60 * 60 * 1000 * 1000000 = 1,800,000,000,000,000
+    IF #PUMP_RUNTIME_ACC >= LT#500H THEN
+        PUMP_MAINT_DUE := TRUE;
+    ELSE
+        PUMP_MAINT_DUE := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

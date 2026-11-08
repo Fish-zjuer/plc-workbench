@@ -1,0 +1,100 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_05",
+  "dataset_sha256": "7def035e4b5e536ac0043bb504abfed3a92ed7380b4d0086d0cceae5bd69f2bf",
+  "source_sha256": "9f99cef80810c667c6a192a16c7acf2c9f18fed0d4943e4f1f4d56027bd94d75",
+  "model_calls": 0,
+  "declared_ltl_total": 7,
+  "mapped_assertions_total": 7,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\17_PUBLIC_05\\codex_B\\details\\submissions\\2\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(initializing -> !Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance InitTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P02",
+      "formula": "G(initializing -> Weld_Soft_Start_Active)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance InitTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P03",
+      "formula": "G(!initializing -> !Weld_Soft_Start_Active)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance InitTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P04",
+      "formula": "G(!Weld_E_Stop_NC -> !Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance InitTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P05",
+      "formula": "G(!Gap_Exceeded -> !Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance InitTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P06",
+      "formula": "G(!initializing & Weld_E_Stop_NC & gapReady -> Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance InitTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P07",
+      "formula": "G(Operator_Alert -> !initializing & Weld_E_Stop_NC & gapReady)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance InitTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [],
+  "observer_definitions": {
+    "initializing": "PVL_NowMs<5000",
+    "gapReady": "PVL_GapReady"
+  },
+  "message": "TON instance InitTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model",
+  "seconds": 0.952,
+  "model_source_sha256": "12c6baf6fb9795418953a68580c945fbc3d974c108ff1b12887751766aee6a8a",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q05"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

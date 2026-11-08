@@ -1,0 +1,151 @@
+FUNCTION_BLOCK "Q17"
+TITLE = Recipe Management System
+AUTHOR : Author
+FAMILY : Recipe
+NAME : Q17
+VERSION : 0.1
+
+VAR_INPUT
+    addRecipe : BOOL; // Add Recipe Request Signal
+    deleteRecipe : BOOL; // Delete Recipe Request Signal
+    modifyRecipe : BOOL; // Modify Recipe Request Signal
+    queryRecipe : BOOL; // Query Recipe Request Signal
+    recipeIn : ST_Recipe; // Input Recipe
+END_VAR
+
+VAR_OUTPUT
+    recipeAdded : BOOL; // Recipe Added Success Indicator
+    recipeDeleted : BOOL; // Recipe Deleted Success Indicator
+    recipeModified : BOOL; // Recipe Modified Success Indicator
+    recipeQueryResult : ST_Recipe; // Recipe Query Result Output
+    error : BOOL; // Error Status Indicator
+    status : WORD; // Status Code
+END_VAR
+
+VAR_IN_OUT
+    recipe : ARRAY[1..10] OF ST_Recipe; // Recipe Database
+END_VAR
+
+VAR_TEMP
+    i : INT;
+    foundIndex : INT;
+    emptyIndex : INT;
+    exists : BOOL;
+    hasEmptySlot : BOOL;
+END_VAR
+
+BEGIN
+    // Initialize outputs for this scan cycle
+    #recipeAdded := FALSE;
+    #recipeDeleted := FALSE;
+    #recipeModified := FALSE;
+    #error := FALSE;
+    #status := 16#0000;
+    
+    // Reset temporary variables
+    #foundIndex := 0;
+    #emptyIndex := 0;
+    #exists := FALSE;
+    #hasEmptySlot := FALSE;
+
+    // Determine operation priority or handle mutually exclusive signals.
+    // Based on requirements, requests are single pulses. We check them in order.
+    // Note: If multiple inputs are active simultaneously, behavior depends on implementation choice.
+    // Typically, one action per scan is expected. We will process the first valid request found.
+    
+    // 1. Query Operation
+    IF #queryRecipe THEN
+        #exists := FALSE;
+        FOR #i := 1 TO 10 DO
+            IF #recipe[#i].recipeID = #recipeIn.recipeID AND #recipeIn.recipeID <> 0 THEN
+                #exists := TRUE;
+                #foundIndex := #i;
+                EXIT; // Found it
+            END_IF;
+        END_FOR;
+        
+        IF NOT #exists THEN
+            #error := TRUE;
+            #status := 16#8001;
+        ELSE
+            #recipeQueryResult := #recipe[#foundIndex];
+        END_IF;
+        
+    // 2. Add Operation
+    ELSIF #addRecipe THEN
+        // Check if ID already exists
+        #exists := FALSE;
+        FOR #i := 1 TO 10 DO
+            IF #recipe[#i].recipeID = #recipeIn.recipeID AND #recipeIn.recipeID <> 0 THEN
+                #exists := TRUE;
+                EXIT;
+            END_IF;
+        END_FOR;
+        
+        IF #exists THEN
+            #error := TRUE;
+            #status := 16#8002;
+        ELSE
+            // Find first empty slot (recipeID == 0)
+            #hasEmptySlot := FALSE;
+            FOR #i := 1 TO 10 DO
+                IF #recipe[#i].recipeID = 0 THEN
+                    #hasEmptySlot := TRUE;
+                    #emptyIndex := #i;
+                    EXIT;
+                END_IF;
+            END_FOR;
+            
+            IF NOT #hasEmptySlot THEN
+                #error := TRUE;
+                #status := 16#8003;
+            ELSE
+                // Store recipe in the first empty slot
+                #recipe[#emptyIndex] := #recipeIn;
+                #recipeAdded := TRUE;
+            END_IF;
+        END_IF;
+        
+    // 3. Delete Operation
+    ELSIF #deleteRecipe THEN
+        // Check if ID exists
+        #exists := FALSE;
+        FOR #i := 1 TO 10 DO
+            IF #recipe[#i].recipeID = #recipeIn.recipeID AND #recipeIn.recipeID <> 0 THEN
+                #exists := TRUE;
+                #foundIndex := #i;
+                EXIT;
+            END_IF;
+        END_FOR;
+        
+        IF NOT #exists THEN
+            #error := TRUE;
+            #status := 16#8004;
+        ELSE
+            // Delete by setting recipeID to 0
+            #recipe[#foundIndex].recipeID := 0;
+            #recipeDeleted := TRUE;
+        END_IF;
+        
+    // 4. Modify Operation
+    ELSIF #modifyRecipe THEN
+        // Check if ID exists
+        #exists := FALSE;
+        FOR #i := 1 TO 10 DO
+            IF #recipe[#i].recipeID = #recipeIn.recipeID AND #recipeIn.recipeID <> 0 THEN
+                #exists := TRUE;
+                #foundIndex := #i;
+                EXIT;
+            END_IF;
+        END_FOR;
+        
+        IF NOT #exists THEN
+            #error := TRUE;
+            #status := 16#8005;
+        ELSE
+            // Replace recipe with input recipe
+            #recipe[#foundIndex] := #recipeIn;
+            #recipeModified := TRUE;
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

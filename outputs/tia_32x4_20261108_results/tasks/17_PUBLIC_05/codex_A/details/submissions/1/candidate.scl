@@ -1,0 +1,48 @@
+FUNCTION_BLOCK "WeldGapAlarm"
+VERSION : 0.1
+   VAR_INPUT
+      Gap_Exceeded : BOOL;
+      Weld_E_Stop_NC : BOOL;
+      DebounceTime : TIME;
+   END_VAR
+   VAR_OUTPUT
+      Operator_Alert : BOOL;
+      Weld_Soft_Start_Active : BOOL;
+   END_VAR
+   VAR
+      InitTimer : TON_TIME;
+      GapTimer : TON_TIME;
+      Gap_Ready : BOOL;
+      Init_Done : BOOL;
+   END_VAR
+   VAR_TEMP
+      Debounce_Valid : BOOL;
+   END_VAR
+BEGIN
+   // DebounceTime must be positive to allow the alarm
+   #Debounce_Valid := #DebounceTime > T#0ms;
+
+   // 5 s power-up initialization inhibition
+   #InitTimer(IN := NOT #Init_Done, PT := T#5s);
+   IF #InitTimer.Q THEN
+      #Init_Done := TRUE;
+   END_IF;
+
+   // Gap debounce: only accumulates after initialization when no e-stop and gap present
+   #GapTimer(IN := #Init_Done AND #Weld_E_Stop_NC AND #Gap_Exceeded AND #Debounce_Valid,
+             PT := #DebounceTime);
+   #Gap_Ready := #GapTimer.Q;
+
+   // Emergency stop has priority: clear alarm and incomplete debounce timing
+   IF NOT #Weld_E_Stop_NC THEN
+      #Operator_Alert := FALSE;
+   ELSIF NOT #Gap_Exceeded THEN
+      #Operator_Alert := FALSE;
+   ELSIF NOT #Init_Done THEN
+      #Operator_Alert := FALSE;
+   ELSE
+      #Operator_Alert := #Gap_Ready;
+   END_IF;
+
+   #Weld_Soft_Start_Active := NOT #Init_Done;
+END_FUNCTION_BLOCK

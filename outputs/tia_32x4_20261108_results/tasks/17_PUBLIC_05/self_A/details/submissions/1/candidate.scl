@@ -1,0 +1,35 @@
+FUNCTION_BLOCK "Q05"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+    Gap_Exceeded : BOOL;
+    Weld_E_Stop_NC : BOOL;
+    DebounceTime : TIME;
+END_VAR
+VAR_OUTPUT
+    Operator_Alert : BOOL;
+    Weld_Soft_Start_Active : BOOL;
+END_VAR
+VAR
+    InitTimer : TON_TIME;
+    DebTimer : TON_TIME;
+    InitElapsed : BOOL;
+    DebouncePositive : BOOL;
+    DebounceDone : BOOL;
+END_VAR
+BEGIN
+    // 5 s power-up initialization inhibition
+    #InitTimer.TON(IN := NOT #InitElapsed,
+                   PT := T#5s);
+    #InitElapsed := #InitTimer.Q;
+
+    // Debounce timing only during normal monitoring with E-Stop inactive
+    #DebouncePositive := (#DebounceTime > T#0ms);
+    #DebTimer.TON(IN := #InitElapsed AND #Weld_E_Stop_NC AND #Gap_Exceeded AND #DebouncePositive,
+                  PT := #DebounceTime);
+    #DebounceDone := #DebTimer.Q AND #DebouncePositive;
+
+    // Outputs
+    #Weld_Soft_Start_Active := NOT #InitElapsed;
+    #Operator_Alert := #InitElapsed AND #Weld_E_Stop_NC AND #Gap_Exceeded AND #DebounceDone;
+END_FUNCTION_BLOCK

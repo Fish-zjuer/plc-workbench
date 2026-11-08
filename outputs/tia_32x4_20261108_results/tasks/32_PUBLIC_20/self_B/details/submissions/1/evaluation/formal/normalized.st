@@ -1,0 +1,153 @@
+FUNCTION_BLOCK Q20
+
+VAR_INPUT
+    Mode : BOOL; // 0 = Manual, 1 = Auto
+    ForwardButton : BOOL;
+    ReverseButton : BOOL;
+    SensorFeed : BOOL;
+    SensorWash : BOOL;
+    SensorWeight : BOOL;
+    SensorFiring : BOOL;
+    SensorOutput : BOOL;
+    washComplete : BOOL;
+    weightComplete : BOOL;
+    weight : REAL;
+    firingComplete : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    MotorForward : BOOL;
+    MotorReverse : BOOL;
+    kick : BOOL;
+    CompletionLight : BOOL;
+    firingTemp : REAL;
+END_VAR
+
+VAR
+    State : INT; // Internal state machine
+    // States:
+    // 0: Idle/Start
+    // 1: Moving to Wash
+    // 2: Waiting for Wash Complete
+    // 3: Moving to Weight
+    // 4: Waiting for Weight Complete (and processing)
+    // 5: Moving to Firing (if qualified)
+    // 6: Waiting for Firing Complete
+    // 7: Moving to Output
+    // 8: Finished Product (Waiting for removal)
+    // -1: Error/Kick Active (temporary)
+END_VAR
+
+     
+    // Default outputs
+    MotorForward := FALSE;
+    MotorReverse := FALSE;
+    kick := FALSE;
+    CompletionLight := FALSE;
+    // firingTemp is retained from last calculation or initialized if needed, but usually holds value.
+
+    IF Mode THEN
+        // --- Automatic Mode ---
+        CASE State OF
+            0: // Idle / Start
+                IF SensorFeed THEN
+                    MotorForward := TRUE;
+                    State := 1;
+                END_IF;
+
+            1: // Moving to Wash
+                MotorForward := TRUE;
+                IF SensorWash THEN
+                    MotorForward := FALSE;
+                    State := 2;
+                END_IF;
+
+            2: // Waiting for Wash Complete
+                IF washComplete THEN
+                    MotorForward := TRUE;
+                    State := 3;
+                END_IF;
+
+            3: // Moving to Weight
+                MotorForward := TRUE;
+                IF SensorWeight THEN
+                    MotorForward := FALSE;
+                    State := 4;
+                END_IF;
+
+            4: // Waiting for Weight Complete
+                IF weightComplete THEN
+                    // Check qualification: 100 <= weight <= 200
+                    IF (weight >= 100.0) AND (weight <= 200.0) THEN
+                        // Qualified
+                        // Calculate Temp: 500 + 0.5 * (weight - 100)
+                        firingTemp := 500.0 + 0.5 * (weight - 100.0);
+                        MotorForward := TRUE;
+                        State := 5;
+                    ELSE
+                        // Unqualified -> Kick
+                        kick := TRUE;
+                        // After kick, reset to idle or wait for next feed?
+                        // Requirement says "rejection command kick is initiated".
+                        // Usually implies the item is removed/rejected. 
+                        // We assume system resets to Idle waiting for new material at Feed sensor.
+                        State := 0; 
+                    END_IF;
+                END_IF;
+
+            5: // Moving to Firing
+                MotorForward := TRUE;
+                IF SensorFiring THEN
+                    MotorForward := FALSE;
+                    State := 6;
+                END_IF;
+
+            6: // Waiting for Firing Complete
+                IF firingComplete THEN
+                    MotorForward := TRUE;
+                    State := 7;
+                END_IF;
+
+            7: // Moving to Output
+                MotorForward := TRUE;
+                IF SensorOutput THEN
+                    MotorForward := FALSE;
+                    CompletionLight := TRUE;
+                    State := 8;
+                END_IF;
+
+            8: // Finished Product Station
+                CompletionLight := TRUE;
+                IF NOT SensorOutput THEN
+                    // Product taken away
+                    CompletionLight := FALSE;
+                    State := 0; // Return to Idle
+                END_IF;
+
+            ELSE
+                // Invalid state, reset to idle
+                State := 0;
+        END_CASE;
+
+    ELSE
+        // --- Manual Mode ---
+        // Interlock: Cannot be both forward and reverse
+        IF ForwardButton AND NOT ReverseButton THEN
+            MotorForward := TRUE;
+            MotorReverse := FALSE;
+        ELSIF ReverseButton AND NOT ForwardButton THEN
+            MotorReverse := TRUE;
+            MotorForward := FALSE;
+        ELSE
+            // Both pressed or neither pressed -> Stop motor
+            MotorForward := FALSE;
+            MotorReverse := FALSE;
+        END_IF;
+        
+        // Reset auto state when switching to manual to prevent unexpected behavior upon switch back
+        State := 0;
+        kick := FALSE;
+        CompletionLight := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

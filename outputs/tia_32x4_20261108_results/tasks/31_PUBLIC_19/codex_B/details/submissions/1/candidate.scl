@@ -1,0 +1,155 @@
+FUNCTION_BLOCK "MechArm"
+VERSION : 0.1
+VAR_INPUT
+    ManualMode : BOOL;
+    SingleStepMode : BOOL;
+    SingleCycleMode : BOOL;
+    ContinuousMode : BOOL;
+    EmergencyStop : BOOL;
+    Start : BOOL;
+    DownButton : BOOL;
+    UpButton : BOOL;
+    LeftButton : BOOL;
+    RightButton : BOOL;
+    GripButton : BOOL;
+    ReleaseButton : BOOL;
+    DownLimitSwitch : BOOL;
+    UpLimitSwitch : BOOL;
+    LeftLimitSwitch : BOOL;
+    RightLimitSwitch : BOOL;
+    GripLimitSwitch : BOOL;
+    ReleaseLimitSwitch : BOOL;
+END_VAR
+VAR_OUTPUT
+    MoveDown : BOOL;
+    MoveUp : BOOL;
+    MoveLeft : BOOL;
+    MoveRight : BOOL;
+    ActivateGrip : BOOL;
+    ActivateRelease : BOOL;
+END_VAR
+VAR
+    Step : INT := 0;
+    CycleDone : BOOL := FALSE;
+    StartPrev : BOOL := FALSE;
+    StartRise : BOOL := FALSE;
+    AutoRun : BOOL := FALSE;
+    ManualCmd : INT := 0;
+    SeqCmd : INT := 0;
+    ActiveCmd : INT := 0;
+    LimitOk : BOOL := FALSE;
+END_VAR
+BEGIN
+    #StartRise := #Start AND NOT #StartPrev;
+    #StartPrev := #Start;
+    IF #DownButton THEN
+        #ManualCmd := 1;
+    ELSIF #UpButton THEN
+        #ManualCmd := 2;
+    ELSIF #LeftButton THEN
+        #ManualCmd := 3;
+    ELSIF #RightButton THEN
+        #ManualCmd := 4;
+    ELSIF #GripButton THEN
+        #ManualCmd := 5;
+    ELSIF #ReleaseButton THEN
+        #ManualCmd := 6;
+    ELSE
+        #ManualCmd := 0;
+    END_IF;
+    IF #ManualMode THEN
+        #SeqCmd := #ManualCmd;
+    ELSE
+        CASE #Step OF
+            0: #SeqCmd := 0;
+            1: #SeqCmd := 1;
+            2: #SeqCmd := 5;
+            3: #SeqCmd := 2;
+            4: #SeqCmd := 4;
+            5: #SeqCmd := 1;
+            6: #SeqCmd := 6;
+            7: #SeqCmd := 2;
+            8: #SeqCmd := 3;
+            9: #SeqCmd := 0;
+            10: #SeqCmd := 0;
+        ELSE
+            #SeqCmd := 0;
+        END_CASE;
+    END_IF;
+    CASE #SeqCmd OF
+        1: #LimitOk := #DownLimitSwitch;
+        2: #LimitOk := #UpLimitSwitch;
+        3: #LimitOk := #LeftLimitSwitch;
+        4: #LimitOk := #RightLimitSwitch;
+        5: #LimitOk := #GripLimitSwitch;
+        6: #LimitOk := #ReleaseLimitSwitch;
+    ELSE
+        #LimitOk := TRUE;
+    END_CASE;
+    IF NOT #EmergencyStop THEN
+        #Step := 0;
+        #AutoRun := FALSE;
+        #CycleDone := FALSE;
+    ELSIF #ManualMode THEN
+        #Step := 0;
+        #AutoRun := FALSE;
+        #CycleDone := FALSE;
+    ELSIF #SingleStepMode THEN
+        #CycleDone := FALSE;
+        IF (#Step = 0) OR (#Step >= 9) THEN
+            IF #StartRise THEN
+                #Step := 1;
+            END_IF;
+        ELSIF #LimitOk THEN
+            #Step := #Step + 1;
+        END_IF;
+    ELSIF #SingleCycleMode THEN
+        IF (#Step = 0) OR (#Step >= 9) THEN
+            #AutoRun := FALSE;
+            #CycleDone := (#Step >= 9);
+            IF #StartRise THEN
+                #Step := 1;
+                #AutoRun := TRUE;
+                #CycleDone := FALSE;
+            END_IF;
+        ELSE
+            #CycleDone := FALSE;
+            IF #LimitOk THEN
+                #Step := #Step + 1;
+            END_IF;
+        END_IF;
+    ELSIF #ContinuousMode THEN
+        #CycleDone := FALSE;
+        IF #Step = 0 THEN
+            IF #StartRise OR #AutoRun THEN
+                #Step := 1;
+            END_IF;
+            #AutoRun := TRUE;
+        ELSIF #Step >= 9 THEN
+            #Step := 1;
+            #AutoRun := TRUE;
+        ELSIF #LimitOk THEN
+            #Step := #Step + 1;
+        END_IF;
+    ELSE
+        #Step := 0;
+        #AutoRun := FALSE;
+        #CycleDone := FALSE;
+    END_IF;
+    #ActiveCmd := #SeqCmd;
+    IF NOT #EmergencyStop THEN
+        #ActiveCmd := 0;
+    ELSIF #ManualMode THEN
+        IF #LimitOk THEN
+            #ActiveCmd := 0;
+        END_IF;
+    ELSIF (#Step <= 0) OR (#Step >= 9) THEN
+        #ActiveCmd := 0;
+    END_IF;
+    #MoveDown := (#ActiveCmd = 1);
+    #MoveUp := (#ActiveCmd = 2);
+    #MoveLeft := (#ActiveCmd = 3);
+    #MoveRight := (#ActiveCmd = 4);
+    #ActivateGrip := (#ActiveCmd = 5);
+    #ActivateRelease := (#ActiveCmd = 6);
+END_FUNCTION_BLOCK

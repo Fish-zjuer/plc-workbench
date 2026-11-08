@@ -1,0 +1,113 @@
+FUNCTION_BLOCK "FB_BuoyPowerBudget"
+  VERSION : 0.1
+  VAR_INPUT
+    Enable : BOOL;
+    BudgetW : UINT;
+    NeedSensor : BOOL;
+    NeedHeater : BOOL;
+    NeedRadio : BOOL;
+    MandatorySensor : BOOL;
+  END_VAR
+  VAR_OUTPUT
+    SelectedMask : USINT;
+    SensorOn : BOOL;
+    HeaterOn : BOOL;
+    RadioOn : BOOL;
+    PowerW : UINT;
+    Score : USINT;
+    BudgetShortage : BOOL;
+    Error : BOOL;
+  END_VAR
+  VAR_TEMP
+    i : INT;
+    Mask : USINT;
+    Eligible : USINT;
+    NotEligible : USINT;
+    Pow : UINT;
+    Scr : USINT;
+    Feasible : BOOL;
+    HaveBest : BOOL;
+    Better : BOOL;
+    BestMask : USINT;
+    BestPow : UINT;
+    BestScr : USINT;
+  END_VAR
+BEGIN
+    #SelectedMask := 0;
+    #SensorOn := FALSE;
+    #HeaterOn := FALSE;
+    #RadioOn := FALSE;
+    #PowerW := UINT#0;
+    #Score := 0;
+    #BudgetShortage := FALSE;
+    #Error := FALSE;
+    #HaveBest := FALSE;
+    #BestMask := 0;
+    #BestPow := UINT#0;
+    #BestScr := 0;
+    #Eligible := 0;
+    #NotEligible := 7;
+    IF (NOT #Enable) THEN
+        #Error := FALSE;
+    ELSIF (#BudgetW > UINT#200) THEN
+        #Error := TRUE;
+    ELSIF (#MandatorySensor AND (#BudgetW < UINT#40)) THEN
+        #BudgetShortage := TRUE;
+    ELSE
+        IF (#NeedSensor OR #MandatorySensor) THEN
+            #Eligible := #Eligible OR 1;
+        END_IF;
+        IF #NeedHeater THEN
+            #Eligible := #Eligible OR 2;
+        END_IF;
+        IF #NeedRadio THEN
+            #Eligible := #Eligible OR 4;
+        END_IF;
+        #NotEligible := 7 AND (NOT #Eligible);
+        FOR #i := INT#0 TO INT#7 DO
+            #Mask := INT_TO_USINT(#i);
+            #Pow := UINT#0;
+            #Scr := 0;
+            IF ((#Mask AND 1) <> 0) THEN
+                #Pow := #Pow + UINT#40;
+                #Scr := #Scr + 7;
+            END_IF;
+            IF ((#Mask AND 2) <> 0) THEN
+                #Pow := #Pow + UINT#70;
+                #Scr := #Scr + 10;
+            END_IF;
+            IF ((#Mask AND 4) <> 0) THEN
+                #Pow := #Pow + UINT#60;
+                #Scr := #Scr + 9;
+            END_IF;
+            #Feasible := ((#Mask AND #NotEligible) = 0) AND (#Pow <= #BudgetW);
+            IF (#MandatorySensor AND ((#Mask AND 1) = 0)) THEN
+                #Feasible := FALSE;
+            END_IF;
+            #Better := FALSE;
+            IF #Feasible THEN
+                IF NOT #HaveBest THEN
+                    #Better := TRUE;
+                ELSIF #Scr > #BestScr THEN
+                    #Better := TRUE;
+                ELSIF (#Scr = #BestScr) AND (#Pow < #BestPow) THEN
+                    #Better := TRUE;
+                ELSIF (#Scr = #BestScr) AND (#Pow = #BestPow) AND (#Mask < #BestMask) THEN
+                    #Better := TRUE;
+                END_IF;
+                IF #Better THEN
+                    #HaveBest := TRUE;
+                    #BestScr := #Scr;
+                    #BestPow := #Pow;
+                    #BestMask := #Mask;
+                END_IF;
+            END_IF;
+        END_FOR;
+        #SelectedMask := #BestMask;
+        #PowerW := #BestPow;
+        #Score := #BestScr;
+        #SensorOn := (#SelectedMask AND 1) <> 0;
+        #HeaterOn := (#SelectedMask AND 2) <> 0;
+        #RadioOn := (#SelectedMask AND 4) <> 0;
+    END_IF;
+END_FUNCTION_BLOCK

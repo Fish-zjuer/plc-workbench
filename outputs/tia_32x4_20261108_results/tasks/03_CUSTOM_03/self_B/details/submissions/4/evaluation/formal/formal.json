@@ -1,0 +1,49 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "c35b630a0960974d67eb3f88fcf01b17369f77cafedcee31bbdeebe90f2dd226",
+  "declared_ltl_total": 7,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(monitorMatch)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(RemoteWritePermit <-> permit)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(Reset -> (!Fresh & AgeMs=0 & CommFault & !RemoteWritePermit & !Error))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G((!Reset & !validTiming) -> (Error & CommFault & !Fresh & !RemoteWritePermit & ageHeld))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G((!Reset & validTiming & !fresh) -> (AgeMs=min(60000,pre.age+DtMs)))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G((!Reset & validTiming & fresh & Ack) -> (!CommFault & RemoteWritePermit))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G((!Reset & validTiming & pre.fault & !(fresh & Ack)) -> CommFault)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

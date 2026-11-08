@@ -1,0 +1,224 @@
+{
+  "status": "fail",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_05",
+  "source_sha256": "2c73316296e29bdde41458ced8ca2b5275a922cf9a3a2f63be94a88a2cdf1799",
+  "dataset_sha256": "7def035e4b5e536ac0043bb504abfed3a92ed7380b4d0086d0cceae5bd69f2bf",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "cases": [
+    {
+      "name": "startup_no_predebounce_and_estop",
+      "status": "fail",
+      "first_failure": {
+        "scan": 3,
+        "output": "Operator_Alert",
+        "expected": true,
+        "actual": 0.0
+      },
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false,
+            "Weld_Soft_Start_Active": true
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 4999,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false,
+            "Weld_Soft_Start_Active": true
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5000,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5101,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": true,
+            "Weld_Soft_Start_Active": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": [
+            {
+              "output": "Operator_Alert",
+              "expected": true,
+              "actual": 0.0
+            },
+            {
+              "output": "Weld_Soft_Start_Active",
+              "expected": false,
+              "actual": 1.0
+            }
+          ]
+        },
+        {
+          "time_ms": 5110,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": false,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5120,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5219,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 5220,
+          "inputs": {
+            "Gap_Exceeded": true,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": true
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": [
+            {
+              "output": "Operator_Alert",
+              "expected": true,
+              "actual": 0.0
+            }
+          ]
+        },
+        {
+          "time_ms": 5230,
+          "inputs": {
+            "Gap_Exceeded": false,
+            "Weld_E_Stop_NC": true,
+            "DebounceTime": 100
+          },
+          "expected": {
+            "Operator_Alert": false
+          },
+          "actual": {
+            "Operator_Alert": 0.0,
+            "Weld_Soft_Start_Active": 1.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 1,
+    "scans": 9,
+    "assertions": 12,
+    "failed": 1
+  },
+  "target_compile": "passed",
+  "ltl_status": "requirements_only_not_executed",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\17_PUBLIC_05\\self_B\\details\\submissions\\3\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "behavior_tested": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\17_PUBLIC_05\\self_B\\details\\submissions\\3\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    4999,
+    5000,
+    5101,
+    5110,
+    5120,
+    5219,
+    5220,
+    5230
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0",
+  "timing": {
+    "clock": "Siemens native",
+    "max_deviation_ms": 0,
+    "tolerance_ms": 1
+  }
+}

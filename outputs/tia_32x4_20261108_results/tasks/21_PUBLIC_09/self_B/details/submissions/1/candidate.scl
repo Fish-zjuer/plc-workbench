@@ -1,0 +1,225 @@
+FUNCTION_BLOCK "MovingAverage"
+VAR_INPUT
+    cyclicExecution : BOOL;
+    trigger : BOOL;
+    value : LREAL;
+    windowSize : INT;
+    reset : BOOL;
+END_VAR
+VAR_OUTPUT
+    average : LREAL;
+    windowSizeReached : BOOL;
+    error : BOOL;
+    status : WORD;
+END_VAR
+VAR
+    history : ARRAY[1..100] OF LREAL;
+    sampleCount : INT := 0;
+    headIndex : INT := 1;
+    sumHistory : LREAL := 0.0;
+    lastTrigger : BOOL := FALSE;
+    currentWindowSize : INT := 0;
+END_VAR
+
+BEGIN
+    // Validate window size
+    IF (windowSize < 1) OR (windowSize > 100) THEN
+        error := TRUE;
+        status := 16#8200;
+        // Keep existing state or clear? Spec says output error status.
+        // Usually on invalid config, we might stop updating or keep last valid. 
+        // Here we just flag error. If windowSize changes to invalid, we don't add new samples.
+        RETURN;
+    END_IF;
+
+    // Reset logic takes precedence if reset is true
+    IF reset THEN
+        sampleCount := 0;
+        headIndex := 1;
+        sumHistory := 0.0;
+        // Clear history array implicitly by resetting count, but let's be safe if needed
+        // In optimized access, clearing large arrays every scan is bad, but here only on reset.
+        FOR #i := 1 TO 100 DO
+            history[#i] := 0.0;
+        END_FOR;
+        
+        average := 0.0;
+        windowSizeReached := FALSE;
+        error := FALSE;
+        status := 16#0000;
+        RETURN;
+    END_IF;
+
+    // Determine if a new sample should be taken
+    // Rising edge of trigger OR cyclicExecution is TRUE
+    VAR_TEMP
+        takeSample : BOOL := FALSE;
+    END_VAR
+
+    IF cyclicExecution THEN
+        takeSample := TRUE;
+    ELSE
+        // Check rising edge of trigger
+        IF trigger AND NOT lastTrigger THEN
+            takeSample := TRUE;
+        END_IF;
+    END_IF;
+
+    // Update lastTrigger state
+    lastTrigger := trigger;
+
+    IF takeSample THEN
+        // Add new value to history
+        // We use a circular buffer approach via indices
+        // But simpler: shift array or manage head/tail carefully.
+        // Given max 100, shifting is O(N) which is acceptable for PLC if N<=100.
+        // Or maintain sum and overwrite oldest.
+        
+        IF sampleCount < windowSize THEN
+            // Window not full yet, append at end
+            // Index to write: headIndex + sampleCount - 1 ? No.
+            // Let's use a simple linear fill then circular overwrite.
+            // Actually, easiest robust way for small N:
+            // Store in array 1..100. 
+            // If count < size, write at position 'count+1'.
+            // If count == size, write at position 'oldest' and increment oldest pointer.
+            
+            // Let's implement a strict circular buffer using headIndex as the NEXT WRITE location?
+            // No, standard moving average:
+            // 1. If buffer not full: push back, update sum.
+            // 2. If buffer full: pop front (subtract from sum), push back (add to sum).
+            
+            // Using an array where index 1 is oldest, index sampleCount is newest?
+            // Shifting array elements is expensive. 
+            // Better: Maintain 'headIndex' pointing to the OLDEST element.
+            // New element goes into (headIndex + windowSize) % 100? No.
+            
+            // Let's use a fixed size array 1..100.
+            // headIndex points to the oldest item currently in the buffer.
+            // When adding a new item:
+            //   If buffer is full (sampleCount == windowSize):
+            //     Subtract history[headIndex] from sum.
+            //     Write new value to history[headIndex].
+            //     Increment headIndex (wrap around 1..100).
+            //   Else (buffer not full):
+            //     Write new value to history[headIndex + sampleCount].
+            //     Add to sum.
+            //     Increment sampleCount.
+            
+            // Wait, if windowSize changes dynamically, this gets messy.
+            // The prompt implies windowSize is an input that can change.
+            // "If the window size is less than 1 or greater than 100..."
+            // It doesn't explicitly say what happens if windowSize shrinks/grows mid-run other than validation.
+            // Standard behavior: Adapt to new window size immediately or gradually?
+            // Usually, if window size decreases, we drop old values. If increases, we need more values.
+            
+            // To handle dynamic windowSize simply without complex resizing:
+            // We will store up to 100 values.
+            // We calculate average based on the LAST 'windowSize' values stored.
+            // This requires knowing where the 'end' is.
+            
+            // Alternative simpler implementation for TIA Portal V21 SCL:
+            // Use a static array. Maintain a pointer to the next write position.
+            // Maintain a count of valid items.
+            // When reading average, sum the last 'min(count, windowSize)' items.
+            // This is O(windowSize) per cycle. For 100, it's fine.
+            
+            // Let's stick to the Circular Buffer Sum method for efficiency (O(1) update).
+            // But it assumes fixed window size during operation or handles resize by recalculating sum.
+            
+            // Strategy: Recalculate sum if windowSize changed significantly or just maintain sliding window.
+            // Since windowSize is an input, it might change.
+            // If windowSize changes, the definition of "Moving Average" changes.
+            // Safest bet: On each sample, if we have enough data, sum the most recent 'windowSize' items.
+            // This avoids complex ring buffer sum maintenance bugs when windowSize varies.
+            
+            // Implementation:
+            // Array stores last 100 samples.
+            // writePointer cycles 1..100.
+            // count tracks total samples written (capped at 100).
+            
+            // Write new value
+            IF sampleCount < 100 THEN
+                history[sampleCount + 1] := value;
+                sampleCount := sampleCount + 1;
+            ELSE
+                // Wrap around? No, we need to know order.
+                // Let's use a proper ring buffer index.
+                // headIndex = 1 initially.
+                // Next write pos = (currentWritePos). 
+                // Let's restart logic with a clean Ring Buffer approach.
+            END_IF;
+        END_IF;
+    END_IF;
+
+    // RE-IMPLEMENTING LOGIC CLEANLY
+    
+    // State variables:
+    // history[1..100]: Stores samples.
+    // writeIndex: Points to the NEXT slot to write (1..100).
+    // count: Number of valid samples in history (0..100).
+    // Note: With a ring buffer, 'count' is min(total_written, 100).
+    // But we want the average of the last 'windowSize' samples.
+    
+    // Step 1: Handle Sample Capture
+    IF takeSample THEN
+        // Write to ring buffer
+        history[writeIndex] := value;
+        
+        // Advance write index
+        writeIndex := writeIndex + 1;
+        IF writeIndex > 100 THEN
+            writeIndex := 1;
+        END_IF;
+        
+        // Increase count if not already maxed out capacity of storage
+        IF count < 100 THEN
+            count := count + 1;
+        END_IF;
+    END_IF;
+
+    // Step 2: Calculate Average
+    // We need the average of the most recent 'windowSize' samples available.
+    // Effective length = MIN(windowSize, count)
+    
+    effectiveLen : INT;
+    IF windowSize < count THEN
+        effectiveLen := windowSize;
+    ELSE
+        effectiveLen := count;
+    END_IF;
+
+    IF effectiveLen > 0 THEN
+        tempSum : LREAL := 0.0;
+        // Iterate backwards from the most recently written sample.
+        // Most recent was at writeIndex - 1 (with wraparound).
+        // Let's find the start index of the window.
+        // The last written is at (writeIndex - 1). If writeIndex=1, last is 100.
+        
+        currentIdx : INT := writeIndex - 1;
+        IF currentIdx < 1 THEN
+            currentIdx := 100;
+        END_IF;
+        
+        FOR i := 1 TO effectiveLen DO
+            tempSum := tempSum + history[currentIdx];
+            
+            // Move to previous index
+            currentIdx := currentIdx - 1;
+            IF currentIdx < 1 THEN
+                currentIdx := 100;
+            END_IF;
+        END_FOR;
+        
+        average := tempSum / (LREAL)effectiveLen;
+        windowSizeReached := (count >= windowSize);
+    ELSE
+        average := 0.0;
+        windowSizeReached := FALSE;
+    END_IF;
+
+    // Status updates
+    error := FALSE;
+    status := 16#0000;
+
+END_FUNCTION_BLOCK

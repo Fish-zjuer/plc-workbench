@@ -1,0 +1,58 @@
+FUNCTION_BLOCK "AlarmHandling"
+VERSION : 0.1
+   VAR_INPUT
+      Value : REAL;
+      hiLevel : REAL;
+      loLevel : REAL;
+      hystWindow : REAL;
+   END_VAR
+   VAR_OUTPUT
+      hiAlarm : BOOL;
+      loAlarm : BOOL;
+      error : BOOL;
+      status : WORD;
+   END_VAR
+   VAR_TEMP
+      validCfg : BOOL;
+      invalidLimits : BOOL;
+      invalidWindow : BOOL;
+      hiSet : BOOL;
+      hiReset : BOOL;
+      loSet : BOOL;
+      loReset : BOOL;
+   END_VAR
+BEGIN
+   invalidLimits := #loLevel >= #hiLevel;
+   invalidWindow := (NOT #invalidLimits) AND (#hystWindow >= (#hiLevel - #loLevel));
+   validCfg := (NOT #invalidLimits) AND (NOT #invalidWindow);
+
+   IF #invalidLimits THEN
+      #error := TRUE;
+      #status := 16#8001;
+      #hiAlarm := FALSE;
+      #loAlarm := FALSE;
+   ELSIF #invalidWindow THEN
+      #error := TRUE;
+      #status := 16#8002;
+   ELSE
+      #error := FALSE;
+      #status := 16#0000;
+      hiSet := #Value > #hiLevel;
+      hiReset := #Value < (#hiLevel - #hystWindow);
+      loSet := #Value < #loLevel;
+      loReset := #Value > (#loLevel + #hystWindow);
+
+      IF #hiSet THEN
+         #hiAlarm := TRUE;
+      ELSIF #hiReset THEN
+         #hiAlarm := FALSE;
+      END_IF;
+
+      IF #loSet THEN
+         #loAlarm := TRUE;
+      ELSIF #loReset THEN
+         #loAlarm := FALSE;
+      END_IF;
+   END_IF;
+END_FUNCTION_BLOCK
+

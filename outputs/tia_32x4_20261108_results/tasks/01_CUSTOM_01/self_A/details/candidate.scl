@@ -1,0 +1,126 @@
+FUNCTION_BLOCK "FB_ElevatorTarget"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      Enable : BOOL;
+      CurrentFloor : INT;
+      Direction : INT;
+      FullLoad : BOOL;
+      CabReq : ARRAY[1..6] OF BOOL;
+      HallReq : ARRAY[1..6] OF BOOL;
+   END_VAR
+   VAR_OUTPUT
+      HasTarget : BOOL;
+      TargetFloor : INT;
+      NextDirection : INT;
+   END_VAR
+   VAR_TEMP
+      i : INT;
+      eligible : BOOL;
+      anyEligible : BOOL;
+      found : BOOL;
+      bestFloor : INT;
+      upFloor : INT;
+      downFloor : INT;
+      absDiff : INT;
+      bestAbs : INT;
+   END_VAR
+BEGIN
+   #HasTarget := FALSE;
+   #TargetFloor := #CurrentFloor;
+   #NextDirection := 0;
+
+   #anyEligible := FALSE;
+   FOR #i := 1 TO 6 DO
+      #eligible := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+      IF #eligible THEN
+         #anyEligible := TRUE;
+      END_IF;
+   END_FOR;
+
+   IF NOT #Enable OR NOT #anyEligible THEN
+      #HasTarget := FALSE;
+      #TargetFloor := #CurrentFloor;
+      #NextDirection := 0;
+      RETURN;
+   END_IF;
+
+   #eligible := #CabReq[#CurrentFloor] OR (#HallReq[#CurrentFloor] AND NOT #FullLoad);
+   IF #eligible THEN
+      #HasTarget := TRUE;
+      #TargetFloor := #CurrentFloor;
+      #NextDirection := 0;
+      RETURN;
+   END_IF;
+
+   #upFloor := 0;
+   #downFloor := 0;
+   FOR #i := 1 TO 6 DO
+      #eligible := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+      IF #eligible AND (#i > #CurrentFloor) THEN
+         IF (#upFloor = 0) OR (#i < #upFloor) THEN
+            #upFloor := #i;
+         END_IF;
+      END_IF;
+      IF #eligible AND (#i < #CurrentFloor) THEN
+         IF (#downFloor = 0) OR (#i > #downFloor) THEN
+            #downFloor := #i;
+         END_IF;
+      END_IF;
+   END_FOR;
+
+   #bestFloor := #CurrentFloor;
+   #found := FALSE;
+
+   IF #Direction = 1 THEN
+      IF #upFloor > 0 THEN
+         #bestFloor := #upFloor;
+         #found := TRUE;
+      ELSIF #downFloor > 0 THEN
+         #bestFloor := #downFloor;
+         #found := TRUE;
+      END_IF;
+   ELSIF #Direction = -1 THEN
+      IF #downFloor > 0 THEN
+         #bestFloor := #downFloor;
+         #found := TRUE;
+      ELSIF #upFloor > 0 THEN
+         #bestFloor := #upFloor;
+         #found := TRUE;
+      END_IF;
+   ELSE
+      IF (#upFloor > 0) AND (#downFloor > 0) THEN
+         #absDiff := #upFloor - #CurrentFloor;
+         #bestAbs := #CurrentFloor - #downFloor;
+         IF #absDiff < #bestAbs THEN
+            #bestFloor := #upFloor;
+            #found := TRUE;
+         ELSE
+            #bestFloor := #downFloor;
+            #found := TRUE;
+         END_IF;
+      ELSIF #upFloor > 0 THEN
+         #bestFloor := #upFloor;
+         #found := TRUE;
+      ELSIF #downFloor > 0 THEN
+         #bestFloor := #downFloor;
+         #found := TRUE;
+      END_IF;
+   END_IF;
+
+   IF #found THEN
+      #HasTarget := TRUE;
+      #TargetFloor := #bestFloor;
+      IF #bestFloor > #CurrentFloor THEN
+         #NextDirection := 1;
+      ELSIF #bestFloor < #CurrentFloor THEN
+         #NextDirection := -1;
+      ELSE
+         #NextDirection := 0;
+      END_IF;
+   ELSE
+      #HasTarget := FALSE;
+      #TargetFloor := #CurrentFloor;
+      #NextDirection := 0;
+   END_IF;
+END_FUNCTION_BLOCK

@@ -1,0 +1,162 @@
+FUNCTION_BLOCK "FB_InspectionCapture"
+VAR_INPUT
+    Enable : BOOL;
+    Reset : BOOL;
+    DistanceMm : LREAL;
+    SpacingMm : LREAL;
+    CameraBusy : BOOL;
+END_VAR
+VAR_OUTPUT
+    CapturePulse : BOOL;
+    CaptureCount : UDINT;
+    MissedCount : UDINT;
+    Error : BOOL;
+END_VAR
+VAR
+    prevEnable : BOOL;
+    origin : LREAL;
+    latchedSpacing : LREAL;
+    lastDistance : LREAL;
+    previousCrossedCount : LREAL; // Using LREAL to store k value accurately before converting to integer logic if needed, but k is an index count.
+    initialized : BOOL;
+    internalError : BOOL;
+END_VAR
+VAR_TEMP
+    isInitScan : BOOL;
+    validData : BOOL;
+    currentK : REAL;
+    d : REAL;
+    intD : DINT;
+    tempCapture : BOOL;
+END_VAR
+
+BEGIN
+    // Determine if this scan is an initialization scan (First call, Reset, or Rising Edge of Enable)
+    // Note: Requirements say "On the first call...". We use 'initialized' flag for true first call.
+    // Also Reset forces init. Rising edge of Enable forces init.
+    
+    IF NOT initialized THEN
+        isInitScan := TRUE;
+        initialized := TRUE;
+    ELSIF Reset OR (Enable AND NOT prevEnable) THEN
+        isInitScan := TRUE;
+    ELSE
+        isInitScan := FALSE;
+    END_IF;
+
+    // Validate input data for initialization
+    // DistanceMm must be finite, nonnegative. SpacingMm must be finite, positive.
+    // In SCL, checking for NaN/Inf with LREAL requires specific handling or assuming standard IEEE behavior.
+    // Standard check: >=0 and >0. Assuming finite unless hardware gives Inf.
+    validData := (DistanceMm >= 0.0) AND (SpacingMm > 0.0);
+
+    IF isInitScan THEN
+        IF validData THEN
+            // Latch origin and spacing
+            origin := DistanceMm;
+            latchedSpacing := SpacingMm;
+            lastDistance := DistanceMm;
+            previousCrossedCount := 0.0; // k starts at 0 relative to origin? No, k = FLOOR((Dist-Origin)/Space). At init Dist=Origin, so k=0.
+            
+            // Clear counters
+            CaptureCount := 0;
+            MissedCount := 0;
+            CapturePulse := FALSE;
+            Error := FALSE;
+            internalError := FALSE;
+        ELSE
+            // Invalid initialization
+            Error := TRUE;
+            internalError := TRUE;
+            CapturePulse := FALSE;
+            // Counts retained as per requirement 5: "preserves counts and origin until a legal Reset". 
+            // But on *illegal* init, we latch error. The spec says "Do not capture... suppresses captures and preserves counts".
+            // If it's the very first call and invalid, counts are already 0.
+        END_IF;
+    ELSE
+        // Non-initialization scan
+        IF NOT Enable THEN
+            // While disabled, emit no capture and retain counts.
+            CapturePulse := FALSE;
+            // Error state persists if previously set?
+            // Req 2: "While disabled... retain counts". Req 5: "latches Error... suppresses captures".
+            // If Error was latched in previous scan, it stays TRUE until legal reset/re-enable.
+            IF internalError THEN
+                Error := TRUE;
+            END_IF;
+            
+        ELSIF internalError THEN
+            // Error latched from previous scan or this scan's start condition check below?
+            // If we are here, Enable is TRUE, but we had an error.
+            // Req 5: "suppresses captures and preserves counts and origin until a legal Reset or legal re-enable initialization."
+            // Since we are not in isInitScan (handled above), we just hold state.
+            CapturePulse := FALSE;
+            Error := TRUE;
+            
+        ELSE
+            // Valid enabled operation
+            // Check for runtime errors: Distance decrease or invalid values appearing now?
+            // Req 1 says DistanceMm is nondecreasing within a valid segment. 
+            // Req 5 says decrease below last valid position latches Error.
+            
+            IF DistanceMm < lastDistance THEN
+                Error := TRUE;
+                internalError := TRUE;
+                CapturePulse := FALSE;
+                // Preserve counts and origin
+            ELSIF (DistanceMm < 0.0) OR (NOT (DistanceMm <= 1.7976931348623157E+308)) THEN // Basic finiteness check approximation
+                 // Strictly speaking, checking for NaN/Inf in SCL LREAL can be tricky without specific libraries.
+                 // However, if DistanceMm becomes invalid during run, we latch error.
+                 Error := TRUE;
+                 internalError := TRUE;
+                 CapturePulse := FALSE;
+            ELSE
+                // Calculate k = FLOOR((DistanceMm - origin) / latched_spacing)
+                // Use REAL/LREAL arithmetic
+                currentK := TRUNC((DistanceMm - origin) / latchedSpacing);
+                
+                // Ensure currentK is not negative due to floating point precision issues near zero
+                IF currentK < 0.0 THEN
+                    currentK := 0.0;
+                END_IF;
+
+                d := currentK - previousCrossedCount;
+                
+                IF d <= 0.0 THEN
+                    // No new points crossed
+                    CapturePulse := FALSE;
+                    // Update lastDistance even if no crossing? Yes, to track monotonicity.
+                    lastDistance := DistanceMm;
+                    // previousCrossedCount remains same (or updated to currentK which is same)
+                    previousCrossedCount := currentK;
+                ELSE
+                    // Points crossed
+                    // Convert d to integer for counting. d should be close to integer.
+                    intD := TRUNC(d + 0.5); // Round to nearest int to handle FP noise
+                    IF intD < 0 THEN intD := 0; END_IF;
+
+                    IF CameraBusy THEN
+                        // Busy: Emit no capture, add d to MissedCount
+                        CapturePulse := FALSE;
+                        MissedCount := MissedCount + TO_UDINT(intD);
+                    ELSE
+                        // Available: Emit one capture, increment CaptureCount once, add d-1 to MissedCount
+                        CapturePulse := TRUE;
+                        CaptureCount := CaptureCount + 1;
+                        IF intD > 1 THEN
+                            MissedCount := MissedCount + TO_UDINT(intD - 1);
+                        END_IF;
+                    END_IF;
+                    
+                    // Update crossed-point count to k
+                    previousCrossedCount := currentK;
+                    lastDistance := DistanceMm;
+                END_IF;
+            END_IF;
+        END_IF;
+    END_IF;
+
+    // Update prevEnable for next scan edge detection
+    prevEnable := Enable;
+
+END_FUNCTION_BLOCK

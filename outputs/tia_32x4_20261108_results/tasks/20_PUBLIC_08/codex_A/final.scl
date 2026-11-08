@@ -1,0 +1,62 @@
+TYPE "ST_AnalogChannel"
+VERSION : 0.1
+   STRUCT
+      enable : BOOL;
+      hiLIM : REAL;
+      loLIM : REAL;
+      bipolar : BOOL;
+      measuringMode : INT;
+      retVal : WORD;
+      outputValue : REAL;
+   END_STRUCT;
+END_TYPE
+
+FUNCTION_BLOCK "Q08"
+VERSION : 0.1
+VAR_INPUT
+    count : DINT;
+END_VAR
+VAR_IN_OUT
+    analogValues : ARRAY[*] OF INT;
+    channels : ARRAY[*] OF ST_AnalogChannel;
+END_VAR
+VAR_TEMP
+    i : DINT;
+    n : DINT;
+    raw : REAL;
+    rng : REAL;
+    rawLo : REAL;
+    rawSpan : REAL;
+    offs : DINT;
+END_VAR
+BEGIN
+    #n := #count;
+    IF #n > 0 THEN
+        FOR #i := 0 TO #n - 1 DO
+            #offs := #i;
+            IF #channels[#offs].enable THEN
+                IF #channels[#offs].measuringMode = 0 THEN
+                    #rng := #channels[#offs].hiLIM - #channels[#offs].loLIM;
+                    IF #channels[#offs].bipolar THEN
+                        #rawLo := -27648.0;
+                        #rawSpan := 55296.0;
+                    ELSE
+                        #rawLo := 0.0;
+                        #rawSpan := 27648.0;
+                    END_IF;
+                    #raw := DINT_TO_REAL(INT_TO_DINT(#analogValues[#offs]));
+                    IF #raw < #rawLo THEN
+                        #raw := #rawLo;
+                    END_IF;
+                    IF #raw > #rawLo + #rawSpan THEN
+                        #raw := #rawLo + #rawSpan;
+                    END_IF;
+                    #channels[#offs].outputValue := #channels[#offs].loLIM + (#raw - #rawLo) * #rng / #rawSpan;
+                    #channels[#offs].retVal := 0;
+                ELSE
+                    #channels[#offs].retVal := 16#8002;
+                END_IF;
+            END_IF;
+        END_FOR;
+    END_IF;
+END_FUNCTION_BLOCK

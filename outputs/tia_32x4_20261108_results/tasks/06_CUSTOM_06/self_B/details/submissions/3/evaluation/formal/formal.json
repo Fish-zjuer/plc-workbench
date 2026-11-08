@@ -1,0 +1,49 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "978d6f0e7affc41e98d48a63306266cf7e75742318975413733a1b8daa2a2edf",
+  "declared_ltl_total": 7,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(pressureMatch)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(Reset -> (Integral=0 & CapacityPct=0 & !Saturated & !Error))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G((!Reset & !Enable) -> (Integral=pre.I & CapacityPct=0 & !Saturated & !Error))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G((!Reset & Enable & !valid) -> (Integral=pre.I & CapacityPct=0 & !Saturated & Error))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G((!Reset & Enable & valid & reject) -> (Integral=pre.I))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G((!Reset & Enable & valid) -> (Saturated <-> (U<0 | U>100)))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(0<=CapacityPct & CapacityPct<=100)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

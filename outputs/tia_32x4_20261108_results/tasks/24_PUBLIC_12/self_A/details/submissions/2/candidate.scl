@@ -1,0 +1,82 @@
+FUNCTION_BLOCK "Q12"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      THICKNESS_FAULT : BOOL;
+      THICKNESS_SIGNAL_VALID : BOOL;
+      CUTTING_RUN : BOOL;
+      FaultTimestamp : DINT;
+      CycleTime : TIME;
+   END_VAR 
+   VAR_OUTPUT 
+      THICKNESS_ALARM : BOOL;
+      Slab_Fault_Counter : UINT;
+      Slab_Runtime_Accumulator : TIME;
+      Slab_Fault_History : ARRAY[0..4] OF DINT;
+   END_VAR 
+   VAR 
+      InitDone : BOOL;
+      PrevValidFault : BOOL;
+      HoldActive : BOOL;
+      HoldTimer : TON_TIME;
+      i : INT;
+   END_VAR 
+
+   BEGIN
+      // 上电初始化：计数、累计运行时间及五个历史项清零
+      IF NOT #InitDone THEN
+         #InitDone := TRUE;
+         #Slab_Fault_Counter := 0;
+         #Slab_Runtime_Accumulator := T#0ms;
+         FOR #i := 0 TO 4 DO
+            #Slab_Fault_History[#i] := 0;
+         END_FOR;
+         #PrevValidFault := FALSE;
+         #HoldActive := FALSE;
+         #THICKNESS_ALARM := FALSE;
+         #HoldTimer(IN := FALSE, PT := T#500ms);
+      END_IF;
+
+      // 信号有效性处理
+      IF NOT #THICKNESS_SIGNAL_VALID THEN
+         // 信号无效：关闭报警并清除保持状态，不记录故障、不累加运行时间
+         #THICKNESS_ALARM := FALSE;
+         #HoldActive := FALSE;
+         #HoldTimer(IN := FALSE, PT := T#500ms);
+         #PrevValidFault := FALSE;
+      ELSE
+         // 有效故障上升沿：计数并刷新历史（索引 0 最新，向高索引移位）
+         IF #THICKNESS_FAULT AND NOT #PrevValidFault THEN
+            IF #Slab_Fault_Counter < 65535 THEN
+               #Slab_Fault_Counter := #Slab_Fault_Counter + 1;
+            END_IF;
+            FOR #i := 4 DOWNTO 1 DO
+               #Slab_Fault_History[#i] := #Slab_Fault_History[#i - 1];
+            END_FOR;
+            #Slab_Fault_History[0] := #FaultTimestamp;
+            // 每次触发重新开始 500ms 保持
+            #HoldActive := TRUE;
+            #HoldTimer(IN := FALSE, PT := T#500ms);
+         END_IF;
+         #PrevValidFault := #THICKNESS_FAULT;
+
+         // 定时器：保持阶段运行，500ms 到达后释放
+         #HoldTimer(IN := #HoldActive AND NOT #THICKNESS_FAULT, PT := T#500ms);
+         IF #HoldTimer.Q THEN
+            #HoldActive := FALSE;
+         END_IF;
+
+         // 报警：故障存在或保持时间未满
+         IF #THICKNESS_FAULT THEN
+            #THICKNESS_ALARM := TRUE;
+         ELSE
+            #THICKNESS_ALARM := #HoldActive;
+         END_IF;
+      END_IF;
+
+      // 正常运行时间累加：仅在切割运行、信号有效且无当前故障时
+      IF #CUTTING_RUN AND #THICKNESS_SIGNAL_VALID AND NOT #THICKNESS_FAULT THEN
+         #Slab_Runtime_Accumulator := #Slab_Runtime_Accumulator + #CycleTime;
+      END_IF;
+
+   END_FUNCTION_BLOCK

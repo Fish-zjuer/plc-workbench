@@ -1,0 +1,900 @@
+{
+  "status": "pass",
+  "errors": 0,
+  "warnings": 5,
+  "state": "Warning",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 5
+    },
+    {
+      "path": "Program blocks",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 5
+    },
+    {
+      "path": "FB_RollGeometry (FB2)",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 5
+    },
+    {
+      "path": "50",
+      "state": "Warning",
+      "description": "The parameter '#StoredLength' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "52",
+      "state": "Warning",
+      "description": "The parameter '#StoredLength' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "70",
+      "state": "Warning",
+      "description": "The parameter '#StoredLength' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "81",
+      "state": "Warning",
+      "description": "The parameter '#MotorRPM' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "83",
+      "state": "Warning",
+      "description": "The parameter '#MotorRPM' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Warning",
+      "description": "Compiling finished (errors: 0; warnings: 5)",
+      "errors": 0,
+      "warnings": 1
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "returncode": 0,
+  "source_sha256": "4bf7d206bad816199df3b7c2379cb6e72ab5bdb6e47e75c84df4570e69678cb1",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": true,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\04_CUSTOM_04\\self_B\\details\\submissions\\3\\evaluation\\compile",
+  "seconds": 43.101,
+  "queue_seconds": 272.911,
+  "dataset_sha256": "559aec50048e1ca03c8e575959ceab1f3edb46ba04ac16a061b2ff18562f15fa",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_04",
+  "cases": [
+    {
+      "name": "芯径初始化",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "一圈测量辊的收卷与转速",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 157.0796326794895,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.2665272406234,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "等量放卷与空卷限幅",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 157.0796326794895,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.2665272406234,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 2094.1439880512567,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": true
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 2094.1439880512567,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "非法脉冲保留估计",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "MotorRPM": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": true,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 157.07963267948966,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.266527240621
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 157.0796326794895,
+            "Diameter": 76.1774244773345,
+            "MotorRPM": 2089.2665272406234,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 2094.1439880512567,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 1024,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76,
+            "LimitHit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 2094.1439880512567,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": -1,
+            "SpeedMpm": 10
+          },
+          "expected": {
+            "Error": true,
+            "MotorRPM": 0,
+            "Diameter": 76,
+            "StoredLength": 0
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "长度上下限_非法保持_初始化忽略脉冲",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 140,
+            "Receiving": true,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 80424.7719318987,
+            "Diameter": 140,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 80424.77193189862,
+            "Diameter": 140.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": true,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 80424.7719318987,
+            "Diameter": 140.0,
+            "MotorRPM": 1705.2315331274501,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 80424.77193189862,
+            "Diameter": 140.0,
+            "MotorRPM": 1705.2315331274517,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.2159820768848,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.2159820768848,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.2159820768848,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 1000000,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.215982076882,
+            "LimitHit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 3141.2159820768848,
+            "LimitHit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": -1,
+            "SpeedMpm": 15
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "InitialD": 140,
+            "Receiving": false,
+            "EncoderDelta": 0,
+            "SpeedMpm": 15.001
+          },
+          "expected": {
+            "StoredLength": 0,
+            "Diameter": 76.0,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Reset": true,
+            "InitialD": 76,
+            "Receiving": false,
+            "EncoderDelta": 0,
+            "SpeedMpm": 0
+          },
+          "expected": {
+            "StoredLength": 0.0,
+            "Diameter": 76,
+            "MotorRPM": 0,
+            "LimitHit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "StoredLength": 0.0,
+            "Diameter": 76.0,
+            "MotorRPM": 0.0,
+            "LimitHit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 5,
+    "scans": 21,
+    "assertions": 82,
+    "failed": 0
+  },
+  "ltl_status": "unsupported",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\04_CUSTOM_04\\self_B\\details\\submissions\\3\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\04_CUSTOM_04\\self_B\\details\\submissions\\3\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    0,
+    10,
+    0,
+    10,
+    20,
+    30,
+    0,
+    10,
+    20,
+    30,
+    40,
+    0,
+    10,
+    21,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0",
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 5,
+    "state": "Warning",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 5
+      },
+      {
+        "path": "Program blocks",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 5
+      },
+      {
+        "path": "FB_RollGeometry (FB2)",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 5
+      },
+      {
+        "path": "50",
+        "state": "Warning",
+        "description": "The parameter '#StoredLength' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "52",
+        "state": "Warning",
+        "description": "The parameter '#StoredLength' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "70",
+        "state": "Warning",
+        "description": "The parameter '#StoredLength' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "81",
+        "state": "Warning",
+        "description": "The parameter '#MotorRPM' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "83",
+        "state": "Warning",
+        "description": "The parameter '#MotorRPM' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Warning",
+        "description": "Compiling finished (errors: 0; warnings: 5)",
+        "errors": 0,
+        "warnings": 1
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "4bf7d206bad816199df3b7c2379cb6e72ab5bdb6e47e75c84df4570e69678cb1",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\04_CUSTOM_04\\self_B\\details\\submissions\\3\\evaluation\\compile",
+    "seconds": 43.101,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "559aec50048e1ca03c8e575959ceab1f3edb46ba04ac16a061b2ff18562f15fa"
+  },
+  "formal_verification": {
+    "status": "unsupported",
+    "backend": "plcverif+cbmc",
+    "policy": "automatic",
+    "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_04",
+    "dataset_sha256": "559aec50048e1ca03c8e575959ceab1f3edb46ba04ac16a061b2ff18562f15fa",
+    "source_sha256": "4bf7d206bad816199df3b7c2379cb6e72ab5bdb6e47e75c84df4570e69678cb1",
+    "model_calls": 0,
+    "declared_ltl_total": 7,
+    "mapped_assertions_total": 7,
+    "proved_property_ids": [],
+    "full_ltl_proved": false,
+    "bounded_verified_property_ids": [],
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\04_CUSTOM_04\\self_B\\details\\submissions\\3\\evaluation\\formal\\shared",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(Error <-> !valid)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:27:16.708801900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (1 ms): Successful\n* Control-flow declaration generation (283 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P02",
+        "formula": "G(geometryMatch)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:27:16.708801900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (1 ms): Successful\n* Control-flow declaration generation (283 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P03",
+        "formula": "G((!valid) -> (MotorRPM=0 & !LimitHit & StoredLength=pre.length & Diameter=pre.diameter))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:27:16.708801900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (1 ms): Successful\n* Control-flow declaration generation (283 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P04",
+        "formula": "G((valid & init) -> (Diameter=InitialD & MotorRPM=0 & !LimitHit))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:27:16.708801900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (1 ms): Successful\n* Control-flow declaration generation (283 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P05",
+        "formula": "G((valid & !init) -> (LimitHit <-> (raw<0 | raw>Lmax)))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:27:16.708801900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (1 ms): Successful\n* Control-flow declaration generation (283 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P06",
+        "formula": "G(0<=StoredLength & StoredLength<=Lmax & 76<=Diameter & Diameter<=140)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:27:16.708801900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (1 ms): Successful\n* Control-flow declaration generation (283 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P07",
+        "formula": "G(-6000<=MotorRPM & MotorRPM<=6000)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:27:16.708801900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (1 ms): Successful\n* Control-flow declaration generation (283 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl\n\n\n== Executing Agents ==\n"
+      }
+    ],
+    "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+    "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+    "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+    "bound": 20,
+    "timeout_seconds": 120,
+    "scan_period_ms": 10,
+    "memory_limit_mb": 768,
+    "time_coverage": {
+      "scan_samples": 20,
+      "scan_period_ms": 10,
+      "first_sample_offset_ms": 10,
+      "last_sample_offset_ms": 200,
+      "maximum_elapsed_between_samples_ms": 190
+    },
+    "assumptions": [],
+    "observer_definitions": {
+      "init": "PVL_Init",
+      "valid": "PVL_Valid",
+      "pre.length": "PVL_PreLen",
+      "pre.diameter": "PVL_PreD",
+      "raw": "PVL_Raw",
+      "Lmax": "(3.141592653589793*(140*140-76*76)/(4*0.135))",
+      "geometryMatch": "StoredLength=PVL_Len & Diameter=PVL_D & MotorRPM=PVL_Rpm & LimitHit=PVL_Hit"
+    },
+    "source_adaptations": [],
+    "instrumented_sha256": "7543c544b588bfabac23c653cf555c9ac41f928795e2cf9bdfb790f3ece2d99b",
+    "tool_sha256": {
+      "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+      "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+      "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+    },
+    "plcverif_seconds": 3.976,
+    "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:27:16.708801900Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (1 ms): Successful\n* Control-flow declaration generation (283 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (174:71)\n- missing ';' at 'MIN' (174:72)\n- no viable alternative at input ',' (174:76)\n- missing ';' at 'PVL_Lmax' (174:84)\n- mismatched input ',' expecting ')' (175:23)\n- missing ';' at 'MIN' (175:24)\n- mismatched input ',' expecting ')' (175:34)\n- missing ';' at 'SpeedMpm' (175:35)\n- no viable alternative at input ')' (175:75).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_7w30_u0z\\candidate.scl\n\n\n== Executing Agents ==\n",
+    "seconds": 4.066,
+    "model_source_sha256": "01ab541301dae7be8357550729c092c668585a76b51284674ff59bc4ff907ac2",
+    "platform_adaptations": [
+      {
+        "kind": "symbol_spelling",
+        "symbol": "FB_RollGeometry"
+      },
+      {
+        "kind": "pou_begin_delimiter",
+        "count": 1
+      }
+    ],
+    "source_dialect": "siemens_scl",
+    "platform_assumptions": []
+  },
+  "finite_test_status": "pass"
+}

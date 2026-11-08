@@ -1,0 +1,100 @@
+FUNCTION_BLOCK "Q07" VERSION : 0.1
+
+VAR_INPUT
+    mode : BOOL;
+    start : BOOL;
+    stop : BOOL;
+END_VAR
+
+VAR_INPUT
+    pumpGroup : ARRAY[1..5] OF ST_Pump;
+END_VAR
+
+VAR
+    enabled : BOOL := FALSE;
+    pri : ARRAY[1..5] OF INT;
+    sel : ARRAY[1..5] OF BOOL;
+    run : ARRAY[1..5] OF BOOL;
+    rank : ARRAY[1..5] OF INT;
+    nRun : INT;
+    i : INT;
+    j : INT;
+    k : INT;
+    higher : INT;
+    pos : INT;
+    shifted : BOOL;
+END_VAR
+
+BEGIN
+    FOR i := 1 TO 5 DO
+        pri[i] := pumpGroup[i].priority;
+        sel[i] := pumpGroup[i].selection;
+    END_FOR;
+
+    IF stop THEN
+        enabled := FALSE;
+    ELSIF start AND NOT stop THEN
+        enabled := TRUE;
+    END_IF;
+
+    IF NOT enabled THEN
+        FOR i := 1 TO 5 DO
+            run[i] := FALSE;
+        END_FOR;
+    ELSE
+        IF NOT mode THEN
+            FOR i := 1 TO 5 DO
+                run[i] := sel[i];
+            END_FOR;
+        ELSE
+            FOR i := 1 TO 5 DO
+                higher := 0;
+                FOR j := 1 TO 5 DO
+                    IF (j <> i) AND (pri[j] > pri[i]) THEN
+                        higher := higher + 1;
+                    END_IF;
+                END_FOR;
+                rank[i] := higher;
+                pos := higher;
+                shifted := TRUE;
+                WHILE shifted AND (pos < 4) DO
+                    shifted := FALSE;
+                    FOR j := 1 TO 5 DO
+                        IF (j <> i) AND (pri[j] = pri[i]) AND (rank[j] = pos) THEN
+                            rank[j] := pos + 1;
+                            pos := pos + 1;
+                            shifted := TRUE;
+                        END_IF;
+                    END_FOR;
+                END_WHILE;
+                IF pos >= 3 THEN
+                    rank[i] := 99;
+                END_IF;
+            END_FOR;
+
+            nRun := 0;
+            FOR i := 1 TO 5 DO
+                IF rank[i] < 3 THEN
+                    nRun := nRun + 1;
+                END_IF;
+            END_FOR;
+            k := nRun;
+            i := 5;
+            WHILE (k < 3) AND (i >= 1) DO
+                IF rank[i] >= 3 THEN
+                    rank[i] := k;
+                    k := k + 1;
+                END_IF;
+                i := i - 1;
+            END_WHILE;
+
+            FOR i := 1 TO 5 DO
+                run[i] := rank[i] < 3;
+            END_FOR;
+        END_IF;
+    END_IF;
+
+    FOR i := 1 TO 5 DO
+        pumpGroup[i].RunComd := run[i];
+    END_FOR;
+END_FUNCTION_BLOCK

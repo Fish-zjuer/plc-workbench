@@ -1,0 +1,49 @@
+{
+  "status": "invalid_candidate",
+  "target_compile": "not_executed",
+  "message": "Need one complete Siemens FUNCTION_BLOCK \"Q07\" with BEGIN",
+  "target": "tia",
+  "behavior_tested": false,
+  "queue_seconds": 196.247,
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "5a2517ccc9ca2e1d02f1b94fe0271a99c35c6a36947da0266a6975a5162566a1",
+    "declared_ltl_total": 5,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(stop -> allPumpsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!enabled -> allPumpsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!mode & enabled -> manualSelectionOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(mode & enabled -> topThreeOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(configPreserved)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "invalid_candidate"
+}

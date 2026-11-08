@@ -1,0 +1,109 @@
+FUNCTION_BLOCK "Q20"
+VERSION : 0.1
+   VAR_INPUT
+      Mode : Bool;
+      ForwardButton : Bool;
+      ReverseButton : Bool;
+      SensorFeed : Bool;
+      SensorWash : Bool;
+      SensorWeight : Bool;
+      SensorFiring : Bool;
+      SensorOutput : Bool;
+      washComplete : Bool;
+      weightComplete : Bool;
+      weight : Real;
+      firingComplete : Bool;
+   END_VAR
+   VAR_OUTPUT
+      MotorForward : Bool;
+      MotorReverse : Bool;
+      kick : Bool;
+      CompletionLight : Bool;
+      firingTemp : Real;
+   END_VAR
+   VAR
+      step : Int;
+      ModeOld : Bool;
+   END_VAR
+
+BEGIN
+	// Mode change resets the automatic sequence
+	IF #Mode <> #ModeOld THEN
+	    #ModeOld := #Mode;
+	    #step := 0;
+	END_IF;
+
+	IF NOT #Mode THEN
+	    // Manual mode: buttons with interlock
+	    #MotorForward := #ForwardButton AND NOT #ReverseButton;
+	    #MotorReverse := #ReverseButton AND NOT #ForwardButton;
+	    #CompletionLight := #SensorOutput;
+	ELSE
+        #MotorForward := FALSE;
+        #MotorReverse := FALSE;
+        CASE #step OF
+        0:
+        IF #SensorWash THEN
+        #MotorForward := TRUE;
+        #step := 20;
+        ELSIF #SensorFeed THEN
+        #MotorForward := TRUE;
+        #step := 10;
+        END_IF;
+        10:
+        IF #SensorWash THEN
+        #MotorForward := FALSE;
+        #step := 20;
+        END_IF;
+        20:
+        IF #washComplete THEN
+        #MotorForward := TRUE;
+        #step := 30;
+        END_IF;
+        30:
+        IF #SensorWeight THEN
+        #MotorForward := FALSE;
+        #step := 40;
+        END_IF;
+        40:
+        IF #weightComplete THEN
+        IF #weight >= 100.0 AND #weight <= 200.0 THEN
+        #firingTemp := 500.0 + 0.5 * (#weight - 100.0);
+        #MotorForward := TRUE;
+        #step := 50;
+        ELSE
+        #kick := TRUE;
+        #step := 0;
+        END_IF;
+        END_IF;
+        50:
+        IF #SensorFiring THEN
+        #MotorForward := FALSE;
+        #step := 60;
+        END_IF;
+        60:
+        IF #firingComplete THEN
+        #MotorForward := TRUE;
+        #step := 70;
+        END_IF;
+        70:
+        IF #SensorOutput THEN
+        #MotorForward := FALSE;
+        #CompletionLight := TRUE;
+        #step := 80;
+        END_IF;
+        80:
+        IF NOT #SensorOutput THEN
+        #CompletionLight := FALSE;
+        #step := 0;
+        END_IF;
+        ELSE
+        #step := 0;
+        END_CASE;
+	END_IF;
+
+	IF NOT #kick AND #step <> 40 THEN
+	    #kick := FALSE;
+	END_IF;
+
+END_FUNCTION_BLOCK

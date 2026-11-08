@@ -1,0 +1,181 @@
+FUNCTION_BLOCK FB_WeighbridgeVote
+
+VAR_INPUT
+    LoadA : DINT;
+    LoadB : DINT;
+    LoadC : DINT;
+    ReleaseReq : BOOL;
+    BarrierReady : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    PairMask : USINT;
+    VotedKg : LREAL;
+    LoadFault : BOOL;
+    Overload : BOOL;
+    ReleasePermit : BOOL;
+END_VAR
+
+VAR
+    ValidA : BOOL;
+    ValidB : BOOL;
+    ValidC : BOOL;
+    
+    DiffAB : DINT;
+    DiffAC : DINT;
+    DiffBC : DINT;
+    
+    ConsistentAB : BOOL;
+    ConsistentAC : BOOL;
+    ConsistentBC : BOOL;
+    
+    MinDiff : DINT;
+    BestPair : USINT;
+    FoundValidPair : BOOL;
+END_VAR
+VAR_INPUT
+WBTEMP_0 : BOOL;
+WBTEMP_1 : BOOL;
+WBTEMP_2 : BOOL;
+WBTEMP_3 : DINT;
+WBTEMP_4 : DINT;
+WBTEMP_5 : DINT;
+WBTEMP_6 : BOOL;
+WBTEMP_7 : BOOL;
+WBTEMP_8 : BOOL;
+WBTEMP_9 : DINT;
+WBTEMP_10 : USINT;
+WBTEMP_11 : BOOL;
+END_VAR
+
+
+     
+ValidA := WBTEMP_0;
+ValidB := WBTEMP_1;
+ValidC := WBTEMP_2;
+DiffAB := WBTEMP_3;
+DiffAC := WBTEMP_4;
+DiffBC := WBTEMP_5;
+ConsistentAB := WBTEMP_6;
+ConsistentAC := WBTEMP_7;
+ConsistentBC := WBTEMP_8;
+MinDiff := WBTEMP_9;
+BestPair := WBTEMP_10;
+FoundValidPair := WBTEMP_11;
+    // 1. Validate ranges (0..20000 kg)
+    ValidA := (LoadA >= 0 AND LoadA <= 20000);
+    ValidB := (LoadB >= 0 AND LoadB <= 20000);
+    ValidC := (LoadC >= 0 AND LoadC <= 20000);
+
+    // Initialize outputs for default state (no valid pair found yet)
+    PairMask := 0;
+    VotedKg := 0.0;
+    LoadFault := TRUE;
+    Overload := FALSE;
+    ReleasePermit := FALSE;
+    FoundValidPair := FALSE;
+    
+    // Initialize temporary variables to avoid undefined behavior
+    MinDiff := 999999;
+    BestPair := 0;
+
+    // 2. Check consistency for pairs (A,B), (A,C) and (B,C)
+    // Consistency rule: Both valid AND Absolute Difference <= 200
+    
+    // Pair AB
+    IF ValidA AND ValidB THEN
+        DiffAB := ABS(LoadA - LoadB);
+        ConsistentAB := (DiffAB <= 200);
+    ELSE
+        ConsistentAB := FALSE;
+        DiffAB := 999999; // Large value
+    END_IF;
+
+    // Pair AC
+    IF ValidA AND ValidC THEN
+        DiffAC := ABS(LoadA - LoadC);
+        ConsistentAC := (DiffAC <= 200);
+    ELSE
+        ConsistentAC := FALSE;
+        DiffAC := 999999;
+    END_IF;
+
+    // Pair BC
+    IF ValidB AND ValidC THEN
+        DiffBC := ABS(LoadB - LoadC);
+        ConsistentBC := (DiffBC <= 200);
+    ELSE
+        ConsistentBC := FALSE;
+        DiffBC := 999999;
+    END_IF;
+
+    // 3. Select the consistent pair with minimum difference; break ties in order AB, AC, BC
+    
+    // Check AB first (Priority 1)
+    IF ConsistentAB THEN
+        MinDiff := DiffAB;
+        BestPair := 3;
+        FoundValidPair := TRUE;
+    END_IF;
+
+    // Check AC (Priority 2)
+    // Update only if strictly smaller than current best, or if no best found yet
+    IF ConsistentAC THEN
+        IF NOT FoundValidPair OR (DiffAC < MinDiff) THEN
+            MinDiff := DiffAC;
+            BestPair := 5;
+            FoundValidPair := TRUE;
+        END_IF;
+    END_IF;
+
+    // Check BC (Priority 3)
+    // Update only if strictly smaller than current best, or if no best found yet
+    IF ConsistentBC THEN
+        IF NOT FoundValidPair OR (DiffBC < MinDiff) THEN
+            MinDiff := DiffBC;
+            BestPair := 6;
+            FoundValidPair := TRUE;
+        END_IF;
+    END_IF;
+
+    // 4. Compute Voted Mass and Fault/Overload flags
+    IF FoundValidPair THEN
+        LoadFault := FALSE;
+        PairMask := BestPair;
+        
+        // Calculate average based on selected pair using LREAL arithmetic
+        CASE BestPair OF
+            3: // AB
+                VotedKg := (DINT_TO_LREAL(LoadA) + DINT_TO_LREAL(LoadB)) / 2.0;
+            5: // AC
+                VotedKg := (DINT_TO_LREAL(LoadA) + DINT_TO_LREAL(LoadC)) / 2.0;
+            6: // BC
+                VotedKg := (DINT_TO_LREAL(LoadB) + DINT_TO_LREAL(LoadC)) / 2.0;
+            ELSE
+                VotedKg := 0.0;
+        END_CASE;
+        
+        // Check Overload: VotedKg > 10000
+        IF VotedKg > 10000.0 THEN
+            Overload := TRUE;
+        ELSE
+            Overload := FALSE;
+        END_IF;
+        
+        // Release Permit: ReleaseReq AND BarrierReady AND NOT Overload
+        IF ReleaseReq AND BarrierReady AND NOT Overload THEN
+            ReleasePermit := TRUE;
+        ELSE
+            ReleasePermit := FALSE;
+        END_IF;
+        
+    ELSE
+        // No consistent pair found
+        LoadFault := TRUE;
+        PairMask := 0;
+        VotedKg := 0.0;
+        Overload := FALSE;
+        ReleasePermit := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

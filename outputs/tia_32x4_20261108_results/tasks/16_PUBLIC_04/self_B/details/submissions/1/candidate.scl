@@ -1,0 +1,60 @@
+FUNCTION_BLOCK "Q04"
+VAR_INPUT
+    VISCOSITY_OK : BOOL;
+    PASTE_E_STOP_NC : BOOL;
+    DebounceTime : TIME;
+    CycleTime : TIME;
+END_VAR
+VAR_OUTPUT
+    VFD_RUN : BOOL;
+    PUMP_MAINT_DUE : BOOL;
+    PUMP_RUNTIME_ACC : LTIME;
+END_VAR
+VAR
+    timerDebounce : TON_TIME;
+    viscConditionValid : BOOL;
+END_VAR
+
+BEGIN
+    // 1. Emergency Stop Priority & Debounce Reset
+    // If E-Stop is active (FALSE), immediately disable run and reset debounce timer.
+    IF NOT PASTE_E_STOP_NC THEN
+        VFD_RUN := FALSE;
+        viscConditionValid := FALSE;
+        // Reset the timer by calling it with IN=FALSE
+        #timerDebounce(IN := FALSE, PT := #DebounceTime);
+    ELSE
+        // 2. Viscosity Debouncing Logic
+        // The timer starts when VISCOSITY_OK is TRUE.
+        // It resets immediately if VISCOSITY_OK becomes FALSE.
+        #timerDebounce(IN := #VISCOSITY_OK, PT := #DebounceTime);
+        
+        // The condition is valid only if the timer has finished (Q = TRUE)
+        viscConditionValid := #timerDebounce.Q;
+        
+        // 3. Run Command Logic
+        // Allow VFD_RUN only if E-Stop is clear AND viscosity condition is valid.
+        IF viscConditionValid THEN
+            VFD_RUN := TRUE;
+        ELSE
+            VFD_RUN := FALSE;
+        END_IF;
+    END_IF;
+
+    // 4. Runtime Accumulation
+    // Accumulate time only while VFD_RUN is TRUE.
+    IF VFD_RUN THEN
+        // Convert TIME to LTIME for addition
+        PUMP_RUNTIME_ACC := PUMP_RUNTIME_ACC + TIME_TO_LTIME(#CycleTime);
+    END_IF;
+
+    // 5. Maintenance Due Indication
+    // Set PUMP_MAINT_DUE when accumulated runtime reaches 500 hours.
+    // 500 hours = 500 * 3600 seconds = 1,800,000 seconds = 1,800,000,000 ms
+    // LTIME constant syntax: T#500h or specific calculation
+    IF PUMP_RUNTIME_ACC >= LT#500H THEN
+        PUMP_MAINT_DUE := TRUE;
+    ELSE
+        PUMP_MAINT_DUE := FALSE;
+    END_IF;
+END_FUNCTION_BLOCK

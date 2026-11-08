@@ -1,0 +1,79 @@
+FUNCTION_BLOCK "Q05"
+VAR_INPUT
+    Gap_Exceeded : BOOL;
+    Weld_E_Stop_NC : BOOL;
+    DebounceTime : TIME;
+END_VAR
+VAR_OUTPUT
+    Operator_Alert : BOOL;
+    Weld_Soft_Start_Active : BOOL;
+END_VAR
+VAR
+    // Timer for power-up initialization (5 seconds)
+    tonInit : TON_TIME;
+    // Timer for gap signal debouncing
+    tonDebounce : TON_TIME;
+    // Flag to ensure init timer is only started once per power cycle
+    bInitStarted : BOOL;
+END_VAR
+VAR_TEMP
+    bStartDebounce : BOOL;
+END_VAR
+BEGIN
+    // 1. Initialization Period Handling
+    // Start the 5-second timer only if it hasn't been started yet (power-up detection)
+    IF NOT #bInitStarted THEN
+        #tonInit(IN := TRUE, PT := T#5s);
+        IF #tonInit.Q THEN
+            #bInitStarted := TRUE;
+        END_IF;
+    ELSE
+        // Keep IN FALSE to reset/hold Q=TRUE state properly or just leave it running with IN=FALSE
+        // Actually, once started and finished, we want Weld_Soft_Start_Active to be FALSE.
+        // We can stop feeding IN to prevent re-triggering issues, but since we have bInitStarted,
+        // we can just force the output based on the flag.
+        #tonInit(IN := FALSE, PT := T#5s);
+    END_IF;
+
+    // Weld_Soft_Start_Active is TRUE during the 5-second initialization period.
+    // It becomes FALSE once the timer completes (Q is TRUE) OR if we consider 'started' logic.
+    // Strictly: Active while initializing. Initializing ends when tonInit.Q is true.
+    // However, due to scan cycle nature, at t=5000ms exactly, Q might become true in that scan.
+    // Requirement: Resume monitoring AFTER initialization.
+    #Weld_Soft_Start_Active := NOT #tonInit.Q;
+
+    // 2. Emergency Stop Priority
+    // If Weld_E_Stop_NC is FALSE (E-Stop active), inhibit alarm and clear debounce.
+    IF NOT #Weld_E_Stop_NC THEN
+        #Operator_Alert := FALSE;
+        // Reset debounce timer immediately by passing FALSE to IN
+        #tonDebounce(IN := FALSE, PT := #DebounceTime);
+        RETURN;
+    END_IF;
+
+    // 3. Normal Monitoring & Debounce Logic
+    // Debounce accumulates ONLY when:
+    // - Not initializing (Weld_Soft_Start_Active is FALSE)
+    // - E-Stop is inactive (already checked above)
+    // - Gap_Exceeded is TRUE
+    
+    bStartDebounce := #Gap_Exceeded AND NOT #Weld_Soft_Start_Active;
+
+    // Call debounce timer
+    // If bStartDebounce is FALSE, the timer resets (IN=FALSE clears ET/Q).
+    #tonDebounce(IN := bStartDebounce, PT := #DebounceTime);
+
+    // 4. Output Generation
+    // Operator_Alert is TRUE only if:
+    // - Not initializing
+    // - E-Stop is inactive
+    // - Debounce time has elapsed (tonDebounce.Q is TRUE)
+    // - Gap_Exceeded is currently TRUE
+    
+    IF #tonDebounce.Q AND #Gap_Exceeded AND NOT #Weld_Soft_Start_Active THEN
+        #Operator_Alert := TRUE;
+    ELSE
+        #Operator_Alert := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

@@ -1,0 +1,154 @@
+FUNCTION_BLOCK "FB_ElevatorTarget"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      Enable : BOOL;
+      CurrentFloor : INT;
+      Direction : INT;
+      FullLoad : BOOL;
+      CabReq : ARRAY[1..6] OF BOOL;
+      HallReq : ARRAY[1..6] OF BOOL;
+   END_VAR
+   VAR_OUTPUT 
+      HasTarget : BOOL;
+      TargetFloor : INT;
+      NextDirection : INT;
+   END_VAR
+   VAR_TEMP 
+      i : INT;
+      eligible : BOOL;
+      anyEligible : BOOL;
+      found : BOOL;
+      bestAbs : INT;
+      absDiff : INT;
+      bestFloor : INT;
+   END_VAR
+BEGIN
+   // Default result: no target
+   #HasTarget := FALSE;
+   #TargetFloor := #CurrentFloor;
+   #NextDirection := 0;
+
+   // Eligibility helper is evaluated inline; compute anyEligible first
+   #anyEligible := FALSE;
+   FOR #i := 1 TO 6 DO
+      #eligible := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+      IF #eligible THEN
+         #anyEligible := TRUE;
+      END_IF;
+   END_FOR;
+
+   // Rule 3: disabled or no eligible request
+   IF NOT #Enable OR NOT #anyEligible THEN
+      #HasTarget := FALSE;
+      #TargetFloor := #CurrentFloor;
+      #NextDirection := 0;
+      RETURN;
+   END_IF
+
+   // Rule 3: eligible request at current floor takes priority
+   #eligible := #CabReq[#CurrentFloor] OR (#HallReq[#CurrentFloor] AND NOT #FullLoad);
+   IF #eligible THEN
+      #HasTarget := TRUE;
+      #TargetFloor := #CurrentFloor;
+      #NextDirection := 0;
+      RETURN;
+   END_IF
+
+   // Rule 4/5: direction-biased selection with fallback to the other side
+   #bestFloor := #CurrentFloor;
+   #bestAbs := 0;
+   #found := FALSE;
+
+   IF #Direction = 1 THEN
+      // nearest eligible above
+      FOR #i := 1 TO 6 DO
+         IF #i > #CurrentFloor THEN
+            #eligible := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+            IF #eligible THEN
+               IF NOT #found THEN
+                  #bestFloor := #i;
+                  #found := TRUE;
+               END_IF;
+            END_IF;
+         END_IF;
+      END_FOR;
+      // if none above, nearest below
+      IF NOT #found THEN
+         FOR #i := 6 TO 1 BY -1 DO
+            IF #i < #CurrentFloor THEN
+               #eligible := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+               IF #eligible THEN
+                  IF NOT #found THEN
+                     #bestFloor := #i;
+                     #found := TRUE;
+                  END_IF;
+               END_IF;
+            END_IF;
+         END_FOR;
+      END_IF;
+   ELSIF #Direction = -1 THEN
+      // nearest eligible below
+      FOR #i := 6 TO 1 BY -1 DO
+         IF #i < #CurrentFloor THEN
+            #eligible := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+            IF #eligible THEN
+               IF NOT #found THEN
+                  #bestFloor := #i;
+                  #found := TRUE;
+               END_IF;
+            END_IF;
+         END_IF;
+      END_FOR;
+      // if none below, nearest above
+      IF NOT #found THEN
+         FOR #i := 1 TO 6 DO
+            IF #i > #CurrentFloor THEN
+               #eligible := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+               IF #eligible THEN
+                  IF NOT #found THEN
+                     #bestFloor := #i;
+                     #found := TRUE;
+                  END_IF;
+               END_IF;
+            END_IF;
+         END_FOR;
+      END_IF;
+   ELSE
+      // Direction = 0: nearest on either side, tie goes to lower floor
+      #bestAbs := 0;
+      FOR #i := 1 TO 6 DO
+         #eligible := #CabReq[#i] OR (#HallReq[#i] AND NOT #FullLoad);
+         IF #eligible THEN
+            #absDiff := #i - #CurrentFloor;
+            IF #absDiff < 0 THEN
+               #absDiff := -#absDiff;
+            END_IF;
+            IF NOT #found
+               OR (#absDiff < #bestAbs)
+               OR ((#absDiff = #bestAbs) AND (#i < #bestFloor)) THEN
+               #bestFloor := #i;
+               #bestAbs := #absDiff;
+               #found := TRUE;
+            END_IF;
+         END_IF;
+      END_FOR;
+   END_IF;
+
+   IF #found THEN
+      #HasTarget := TRUE;
+      #TargetFloor := #bestFloor;
+      IF #bestFloor > #CurrentFloor THEN
+         #NextDirection := 1;
+      ELSIF #bestFloor < #CurrentFloor THEN
+         #NextDirection := -1;
+      ELSE
+         #NextDirection := 0;
+      END_IF;
+   ELSE
+      // should not occur when anyEligible is TRUE, keep safe defaults
+      #HasTarget := FALSE;
+      #TargetFloor := #CurrentFloor;
+      #NextDirection := 0;
+   END_IF;
+END_FUNCTION_BLOCK

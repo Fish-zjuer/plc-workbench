@@ -1,0 +1,212 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_05",
+  "dataset_sha256": "7def035e4b5e536ac0043bb504abfed3a92ed7380b4d0086d0cceae5bd69f2bf",
+  "source_sha256": "c24d394daed388f2977b7a1d7b32062b3344415092a8c8a84e881f4d99fe84e1",
+  "model_calls": 0,
+  "declared_ltl_total": 7,
+  "mapped_assertions_total": 7,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\17_PUBLIC_05\\codex_A\\details\\submissions\\2\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(initializing -> !Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance GapTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P02",
+      "formula": "G(initializing -> Weld_Soft_Start_Active)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance GapTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P03",
+      "formula": "G(!initializing -> !Weld_Soft_Start_Active)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance GapTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P04",
+      "formula": "G(!Weld_E_Stop_NC -> !Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance GapTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P05",
+      "formula": "G(!Gap_Exceeded -> !Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance GapTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P06",
+      "formula": "G(!initializing & Weld_E_Stop_NC & gapReady -> Operator_Alert)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance GapTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    },
+    {
+      "id": "P07",
+      "formula": "G(Operator_Alert -> !initializing & Weld_E_Stop_NC & gapReady)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance GapTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [],
+  "observer_definitions": {
+    "initializing": "PVL_NowMs<5000",
+    "gapReady": "PVL_GapReady"
+  },
+  "message": "TON instance GapTimer requires named IN and a fixed TIME-literal PT for an exact PLCverif model",
+  "seconds": 0.004,
+  "model_source_sha256": "ae7cf78e37048897abf761036472fbc57399c1e3dca31ddf10ece9d3e65f1bb1",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q05"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Debounce_Valid"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebounceTime"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "InitTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Init_Done"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "InitTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Init_Done"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "GapTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Init_Done"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Weld_E_Stop_NC"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Gap_Exceeded"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Debounce_Valid"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "DebounceTime"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Gap_Ready"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "GapTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Weld_E_Stop_NC"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Operator_Alert"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Gap_Exceeded"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Operator_Alert"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Init_Done"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Operator_Alert"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Operator_Alert"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Gap_Ready"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Weld_Soft_Start_Active"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Init_Done"
+    },
+    {
+      "kind": "timer_spelling",
+      "count": 2,
+      "semantics": "Delegated to shared ST adapter"
+    },
+    {
+      "kind": "fresh_temporary_inputs",
+      "interface_additions": [
+        {
+          "direction": "Input",
+          "name": "WBTEMP_0",
+          "type": "BOOL"
+        }
+      ],
+      "semantics": "Fresh independent scalar values at each entry FB call; exact fixed array/struct members, no zero or retained-state assumption"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

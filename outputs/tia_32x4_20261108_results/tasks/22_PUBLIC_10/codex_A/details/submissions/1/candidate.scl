@@ -1,0 +1,65 @@
+FUNCTION_BLOCK "TempControl"
+VERSION : 0.1
+   VAR_INPUT
+      TemperatureSensorInput : REAL;
+      SetTemperature : REAL;
+   END_VAR
+   VAR_OUTPUT
+      CurrentTemperature : REAL;
+      SetTempDisplay : REAL;
+      HeaterStatus : BOOL;
+      OverheatProtection : BOOL;
+      HeaterOutput : BOOL;
+   END_VAR
+   VAR
+      tonHeat : TON;
+      tonCool : TON;
+      rtHeat : REAL;
+      rtSet : REAL;
+      bFault : BOOL;
+      bDemand : BOOL;
+      bOverrun : BOOL;
+      bCooling : BOOL;
+      bProtRel : BOOL;
+   END_VAR
+   VAR_TEMP
+      tmp : BOOL;
+   END_VAR
+
+BEGIN
+      #rtHeat := #TemperatureSensorInput;
+      #rtSet := #SetTemperature;
+      #bFault := (#rtHeat < 0.0) OR (#rtHeat > 100.0);
+      #bDemand := #rtHeat < #rtSet;
+
+      #bOverrun := #HeaterOutput AND NOT #OverheatProtection AND (#tonHeat.Q = FALSE);
+      #bCooling := #OverheatProtection;
+      #bProtRel := NOT #OverheatProtection;
+
+      #tonHeat(IN := #HeaterOutput AND NOT #OverheatProtection,
+               PT := T#5S);
+      IF (#tonHeat.Q AND NOT #OverheatProtection) THEN
+         #OverheatProtection := TRUE;
+         #HeaterOutput := FALSE;
+      END_IF;
+
+      #tonCool(IN := #OverheatProtection,
+               PT := T#3S);
+      IF (#OverheatProtection AND #tonCool.Q) THEN
+         #OverheatProtection := FALSE;
+      END_IF;
+
+      IF #OverheatProtection THEN
+         #HeaterOutput := FALSE;
+      ELSIF #bFault THEN
+         #HeaterOutput := FALSE;
+      ELSIF NOT #bDemand THEN
+         #HeaterOutput := FALSE;
+      ELSE
+         #HeaterOutput := TRUE;
+      END_IF;
+
+      #CurrentTemperature := #rtHeat;
+      #SetTempDisplay := #rtSet;
+      #HeaterStatus := #HeaterOutput;
+END_FUNCTION_BLOCK

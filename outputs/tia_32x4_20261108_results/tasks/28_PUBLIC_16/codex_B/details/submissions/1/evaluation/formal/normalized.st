@@ -1,0 +1,120 @@
+FUNCTION_BLOCK Q16
+
+  VAR_INPUT
+    processLength : USINT;
+    sensor1 : BOOL;
+    sensor2 : BOOL;
+    sensor3 : BOOL;
+    sensor4 : BOOL;
+    sensor5 : BOOL;
+    station1Start : BOOL;
+    station2Complete : BOOL;
+    station3Complete : BOOL;
+    station4Complete : BOOL;
+    processSequence : ARRAY[1 .. 8] OF USINT;
+  END_VAR
+
+  VAR_OUTPUT
+    conveyorLeft : BOOL;
+    conveyorRight : BOOL;
+  END_VAR
+
+  VAR
+    state : USINT := 0;
+    cursor : USINT := 1;
+    target : USINT := 0;
+    startPos : USINT := 0;
+    lastStart : BOOL := FALSE;
+    stopPending : BOOL := FALSE;
+  END_VAR
+
+     
+    // ---- read target station for the current cursor -------------------
+    IF (cursor >= 1) AND (cursor <= 8) THEN
+        target := processSequence[cursor];
+    ELSE
+        target := 0;
+    END_IF;
+
+    // ---- edge detection on the start button ---------------------------
+    IF station1Start AND NOT lastStart THEN
+        IF (state = 0) AND (sensor1 = TRUE) THEN
+            startPos := 1;
+            cursor := 1;
+            IF (cursor >= 1) AND (cursor <= 8) THEN
+                target := processSequence[cursor];
+            ELSE
+                target := 0;
+            END_IF;
+            stopPending := FALSE;
+            state := 10;
+        END_IF;
+    END_IF;
+    lastStart := station1Start;
+
+    // ---- state machine -------------------------------------------------
+    CASE state OF
+        0:  // idle, waiting for raw material + start button
+            conveyorLeft := FALSE;
+            conveyorRight := FALSE;
+
+        10: // move to target
+            IF target <> startPos THEN
+                IF target > startPos THEN
+                    conveyorRight := TRUE;
+                    conveyorLeft := FALSE;
+                ELSE
+                    conveyorLeft := TRUE;
+                    conveyorRight := FALSE;
+                END_IF;
+                IF (target = 2 AND sensor2) OR (target = 3 AND sensor3) OR (target = 4 AND sensor4) OR (target = 5 AND sensor5) THEN
+                    conveyorLeft := FALSE;
+                    conveyorRight := FALSE;
+                    stopPending := TRUE;
+                    state := 20;
+                END_IF;
+            ELSE
+                conveyorLeft := FALSE;
+                conveyorRight := FALSE;
+                IF (target = 2 AND sensor2) OR (target = 3 AND sensor3) OR (target = 4 AND sensor4) OR (target = 5 AND sensor5) THEN
+                    stopPending := TRUE;
+                    state := 20;
+                END_IF;
+            END_IF;
+
+        20: // arrived at target -> stop the conveyor
+            IF stopPending THEN
+                conveyorLeft := FALSE;
+                conveyorRight := FALSE;
+                stopPending := FALSE;
+            ELSE
+                conveyorLeft := FALSE;
+                conveyorRight := FALSE;
+            END_IF;
+            IF target = 5 THEN
+                state := 90;
+            ELSE
+                state := 30;
+            END_IF;
+
+        30: // waiting for the processing completion of the target station
+            conveyorLeft := FALSE;
+            conveyorRight := FALSE;
+            IF (target = 2 AND station2Complete) OR (target = 3 AND station3Complete) OR (target = 4 AND station4Complete) THEN
+                startPos := target;
+                cursor := cursor + 1;
+                IF (cursor >= 1) AND (cursor <= 8) THEN
+                    target := processSequence[cursor];
+                ELSE
+                    target := 0;
+                END_IF;
+                stopPending := FALSE;
+                state := 10;
+            END_IF;
+
+        90: // finished
+            conveyorLeft := FALSE;
+            conveyorRight := FALSE;
+
+    END_CASE;
+END_FUNCTION_BLOCK

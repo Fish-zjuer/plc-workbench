@@ -1,0 +1,55 @@
+FUNCTION_BLOCK "EdgeDetection"
+  VERSION : 0.1
+
+VAR_INPUT
+    value : DWORD;
+END_VAR
+
+VAR_OUTPUT
+    hasChanged : BOOL;
+    hasRisingEdges : BOOL;
+    risingBits : DWORD;
+    noOfRisingBits : USINT;
+    hasFallingEdges : BOOL;
+    fallingBits : DWORD;
+    noOfFallingBits : USINT;
+END_VAR
+
+VAR
+    prevValue : DWORD;
+    historyReady : BOOL := FALSE;
+    idx : INT;
+    riseCount : INT;
+    fallCount : INT;
+END_VAR
+
+BEGIN
+    #risingBits := #value AND NOT(#prevValue);
+    #fallingBits := #prevValue AND NOT(#value);
+
+    #riseCount := 0;
+    #fallCount := 0;
+    FOR #idx := 0 TO 31 DO
+        IF (#risingBits AND SHL(IN := DWORD#1, N := #idx)) <> DWORD#0 THEN
+            #riseCount := #riseCount + 1;
+        END_IF;
+        IF (#fallingBits AND SHL(IN := DWORD#1, N := #idx)) <> DWORD#0 THEN
+            #fallCount := #fallCount + 1;
+        END_IF;
+    END_FOR;
+
+    #noOfRisingBits := USINT(#riseCount);
+    #noOfFallingBits := USINT(#fallCount);
+
+    #hasRisingEdges := #risingBits <> DWORD#0;
+    #hasFallingEdges := #fallingBits <> DWORD#0;
+
+    IF #historyReady THEN
+        #hasChanged := #value <> #prevValue;
+    ELSE
+        #hasChanged := FALSE;
+        #historyReady := TRUE;
+    END_IF;
+
+    #prevValue := #value;
+END_FUNCTION_BLOCK

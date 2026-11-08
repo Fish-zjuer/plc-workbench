@@ -1,0 +1,54 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "0a574ef88cb33c15dccb257a2cc1be878169e646f7cf5539622aa1c522490d6f",
+  "declared_ltl_total": 8,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(!EmergencyStop -> allArmCommandsOff)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(manualMode & EmergencyStop -> manualCommandMapOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(actionActive & actionLimitReached -> R1(actionCommandOff))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(singleStepActionDone & noNewStart -> noNextAction)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(singleStepReady & startRise -> R1(exactNextAction))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "A19 -> G(singleCycleStarted -> F(cycleDone))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(singleCycleDone & noNewStart -> allArmCommandsOff)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P08",
+      "formula": "G(continuousRunning & cycleDone & EmergencyStop -> R1(firstAction))",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

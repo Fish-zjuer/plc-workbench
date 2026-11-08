@@ -1,0 +1,96 @@
+FUNCTION_BLOCK "FB_GateTelemetry"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+   Reset : BOOL;
+   FrameValid : BOOL;
+   FrameSeq : UDINT;
+   Ack : BOOL;
+   DtMs : UDINT;
+   TimeoutMs : UDINT;
+END_VAR
+
+VAR_OUTPUT
+   Fresh : BOOL;
+   AgeMs : UDINT;
+   CommFault : BOOL;
+   RemoteWritePermit : BOOL;
+   Error : BOOL;
+END_VAR
+
+VAR
+   statKnown : BOOL;
+   statSeq : UDINT;
+   statAge : UDINT;
+   statFault : BOOL;
+   tmpFresh : BOOL;
+   tmpValid : BOOL;
+END_VAR
+
+BEGIN
+   // --- Reset takes priority, ignores other inputs ---
+   IF #Reset THEN
+      #statKnown := FALSE;
+      #statSeq := 0;
+      #statAge := 0;
+      #statFault := TRUE;
+
+      #Fresh := FALSE;
+      #AgeMs := 0;
+      #CommFault := TRUE;
+      #RemoteWritePermit := FALSE;
+      #Error := FALSE;
+      RETURN;
+   END_IF;
+
+   // --- Timing parameter validity check ---
+   #tmpValid := (#DtMs >= 1) AND (#DtMs <= 1000)
+                AND (#TimeoutMs >= 1) AND (#TimeoutMs <= 60000);
+
+   IF NOT #tmpValid THEN
+      // Illegal parameters: preserve history and age, ignore Ack
+      #statFault := TRUE;
+
+      #Fresh := FALSE;
+      #AgeMs := #statAge;
+      #CommFault := #statFault;
+      #RemoteWritePermit := FALSE;
+      #Error := TRUE;
+      RETURN;
+   END_IF;
+
+   // --- Legal call: clear Error ---
+   #Error := FALSE;
+
+   // --- Freshness first ---
+   #tmpFresh := #FrameValid AND (NOT #statKnown OR (#FrameSeq <> #statSeq));
+
+   IF #tmpFresh THEN
+      #statKnown := TRUE;
+      #statSeq := #FrameSeq;
+      #statAge := 0;
+   ELSE
+      // Add DtMs, saturate at 60000
+      IF (#statAge + #DtMs) >= 60000 THEN
+         #statAge := 60000;
+      ELSE
+         #statAge := #statAge + #DtMs;
+      END_IF;
+   END_IF;
+
+   // --- Fault latch: set when age reaches timeout; clear only on Fresh AND Ack ---
+   IF #statAge >= #TimeoutMs THEN
+      #statFault := TRUE;
+   END_IF;
+   IF #tmpFresh AND #Ack THEN
+      #statFault := FALSE;
+   END_IF;
+
+   // --- Outputs ---
+   #Fresh := #tmpFresh;
+   #AgeMs := #statAge;
+   #CommFault := #statFault;
+   #RemoteWritePermit := (NOT #statFault) AND (#statAge < #TimeoutMs);
+
+END_FUNCTION_BLOCK

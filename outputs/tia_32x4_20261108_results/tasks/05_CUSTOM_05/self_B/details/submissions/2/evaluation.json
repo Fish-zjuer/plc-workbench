@@ -1,0 +1,138 @@
+{
+  "status": "compile_failed",
+  "errors": 2,
+  "warnings": 3,
+  "state": "Error",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Error",
+      "description": "",
+      "errors": 2,
+      "warnings": 3
+    },
+    {
+      "path": "Program blocks",
+      "state": "Error",
+      "description": "",
+      "errors": 2,
+      "warnings": 3
+    },
+    {
+      "path": "FB_InspectionCapture (FB2)",
+      "state": "Error",
+      "description": "",
+      "errors": 2,
+      "warnings": 3
+    },
+    {
+      "path": "49",
+      "state": "Warning",
+      "description": "The parameter '#Error' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "94",
+      "state": "Error",
+      "description": "Tag TO_UDINT not defined.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "99",
+      "state": "Warning",
+      "description": "The parameter '#CaptureCount' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "102",
+      "state": "Error",
+      "description": "Tag TO_UDINT not defined.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "103",
+      "state": "Warning",
+      "description": "The parameter '#MissedCount' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": null,
+      "state": "Error",
+      "description": "Compiling finished (errors: 2; warnings: 3)",
+      "errors": 1,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+  "returncode": 1,
+  "source_sha256": "107d15e452c03449915df94ad77f725f18a5806125b150a6dd4b7751af1c05a5",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "failed",
+  "behavior_tested": false,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\05_CUSTOM_05\\self_B\\details\\submissions\\2\\evaluation\\compile",
+  "seconds": 41.983,
+  "queue_seconds": 336.543,
+  "dataset_sha256": "fe8812537417eaeb1d18a9a57f021849a3a39c6eabdf4b8785f334c82052483c",
+  "target": "tia",
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "107d15e452c03449915df94ad77f725f18a5806125b150a6dd4b7751af1c05a5",
+    "declared_ltl_total": 7,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(captureMatch)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G((init & validInit) -> (!CapturePulse & CaptureCount=0 & MissedCount=0 & !Error))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!Enable -> !CapturePulse)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G((validRun & d=0) -> (!CapturePulse & CaptureCount=pre.issued & MissedCount=pre.missed))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G((validRun & d>0 & !CameraBusy) -> (CapturePulse & CaptureCount=pre.issued+1 & MissedCount=pre.missed+d-1))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G((validRun & CameraBusy) -> (!CapturePulse & CaptureCount=pre.issued & MissedCount=pre.missed+d))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G((pre.err & !(init & validInit)) -> Error)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "compile_failed"
+}

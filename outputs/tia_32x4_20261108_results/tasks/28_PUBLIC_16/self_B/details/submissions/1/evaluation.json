@@ -1,0 +1,110 @@
+{
+  "status": "compile_failed",
+  "errors": 1,
+  "warnings": 0,
+  "state": "Error",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Error",
+      "description": "",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "Program blocks",
+      "state": "Error",
+      "description": "",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "Q16 (FB2)",
+      "state": "Error",
+      "description": "",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": "12",
+      "state": "Error",
+      "description": "Compound part of instruction expected.",
+      "errors": 1,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Error",
+      "description": "Compiling finished (errors: 1; warnings: 0)",
+      "errors": 1,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+  "returncode": 1,
+  "source_sha256": "5aa74372e8c2ea99917bd50bdfaa7f64f934e1d8dde5028028bb5e540fe5521b",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "failed",
+  "behavior_tested": false,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\28_PUBLIC_16\\self_B\\details\\submissions\\1\\evaluation\\compile",
+  "seconds": 34.38,
+  "queue_seconds": 0.031,
+  "dataset_sha256": "f48cbea3a73cc90a1c17ccb0dad3538151ed04adec3b29c8847539c7ec4840c1",
+  "target": "tia",
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "5aa74372e8c2ea99917bd50bdfaa7f64f934e1d8dde5028028bb5e540fe5521b",
+    "declared_ltl_total": 7,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(!(conveyorLeft & conveyorRight))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(routeStart -> R1(firstTargetSelected))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(transporting & !targetReached -> directionOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(targetReached -> R1(conveyorStopped))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G(waitingProcessing & targetComplete -> R1(nextTargetSelected))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(finalStationReached -> R1(conveyorStopped))",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "compile_failed"
+}

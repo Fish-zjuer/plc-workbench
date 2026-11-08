@@ -1,0 +1,128 @@
+TYPE "ST_Recipe"
+VERSION : 0.1
+   STRUCT
+      recipeID : INT;
+      ingredientType : INT;
+      ingredientRatio : REAL;
+      productionTemperature : REAL;
+   END_STRUCT;
+END_TYPE
+
+FUNCTION_BLOCK "Q17"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    addRecipe : BOOL;
+    deleteRecipe : BOOL;
+    modifyRecipe : BOOL;
+    queryRecipe : BOOL;
+    recipeIn : "ST_Recipe";
+END_VAR
+
+VAR_OUTPUT
+    recipeAdded : BOOL;
+    recipeDeleted : BOOL;
+    recipeModified : BOOL;
+    recipeQueryResult : "ST_Recipe";
+    error : BOOL;
+    status : WORD;
+END_VAR
+
+VAR_IN_OUT
+    recipe : ARRAY[1..10] OF "ST_Recipe";
+END_VAR
+
+VAR
+    addEdge : BOOL;
+    deleteEdge : BOOL;
+    modifyEdge : BOOL;
+    queryEdge : BOOL;
+END_VAR
+
+VAR_TEMP
+    i : INT;
+    foundIndex : INT;
+    freeIndex : INT;
+    exists : BOOL;
+    freeFound : BOOL;
+END_VAR
+
+BEGIN
+    // 边沿检测：每个请求使用上升沿触发一次操作
+    #addEdge := #addRecipe AND NOT #addEdge;
+    #deleteEdge := #deleteRecipe AND NOT #deleteEdge;
+    #modifyEdge := #modifyRecipe AND NOT #modifyEdge;
+    #queryEdge := #queryRecipe AND NOT #queryEdge;
+
+    // 每次调用复位输出
+    #recipeAdded := FALSE;
+    #recipeDeleted := FALSE;
+    #recipeModified := FALSE;
+    #error := FALSE;
+    #status := 16#0000;
+
+    // 数据库查找：存在性、匹配索引和最小空槽
+    #exists := FALSE;
+    #foundIndex := 0;
+    #freeFound := FALSE;
+    #freeIndex := 0;
+
+    FOR #i := 1 TO 10 DO
+        IF (#recipe[#i].recipeID <> 0) AND (#recipe[#i].recipeID = #recipeIn.recipeID) THEN
+            #exists := TRUE;
+            #foundIndex := #i;
+        END_IF;
+        IF (#recipe[#i].recipeID = 0) AND NOT #freeFound THEN
+            #freeFound := TRUE;
+            #freeIndex := #i;
+        END_IF;
+    END_FOR;
+
+    // 查询请求
+    IF #queryEdge THEN
+        IF NOT #exists THEN
+            #error := TRUE;
+            #status := 16#8001;
+        ELSE
+            #recipeQueryResult := #recipe[#foundIndex];
+        END_IF;
+    END_IF;
+
+    // 添加请求
+    IF #addEdge THEN
+        IF #exists THEN
+            #error := TRUE;
+            #status := 16#8002;
+        ELSIF NOT #freeFound THEN
+            #error := TRUE;
+            #status := 16#8003;
+        ELSE
+            #recipe[#freeIndex] := #recipeIn;
+            #recipeAdded := TRUE;
+        END_IF;
+    END_IF;
+
+    // 删除请求
+    IF #deleteEdge THEN
+        IF NOT #exists THEN
+            #error := TRUE;
+            #status := 16#8004;
+        ELSE
+            #recipe[#foundIndex].recipeID := 0;
+            #recipeDeleted := TRUE;
+        END_IF;
+    END_IF;
+
+    // 修改请求
+    IF #modifyEdge THEN
+        IF NOT #exists THEN
+            #error := TRUE;
+            #status := 16#8005;
+        ELSE
+            #recipe[#foundIndex] := #recipeIn;
+            #recipeModified := TRUE;
+        END_IF;
+    END_IF;
+
+END_FUNCTION_BLOCK

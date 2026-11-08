@@ -1,0 +1,59 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "e8ef906d15b9d61ac52fd23f986fd56e7c149964bb92a6930d1a77242ca30081",
+  "declared_ltl_total": 9,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(invalidLimits -> error8001)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(invalidWindow -> error8002)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(valid -> normalStatus)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(valid & highSet -> hiAlarm)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(valid & highReset -> !hiAlarm)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(valid & highBand -> highAlarmHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(valid & lowSet -> loAlarm)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P08",
+      "formula": "G(valid & lowReset -> !loAlarm)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P09",
+      "formula": "G(valid & lowBand -> lowAlarmHeld)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

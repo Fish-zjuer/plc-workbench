@@ -1,0 +1,72 @@
+FUNCTION_BLOCK "IPv4Parser"
+
+VAR_INPUT
+    ipText : STRING(254);
+END_VAR
+
+VAR_OUTPUT
+    ipValue : UDINT;
+END_VAR
+
+VAR_TEMP
+    iLen : INT;
+    iIdx : INT;
+    iSeg : INT;
+    iDigits : INT;
+    iVal : DINT;
+    dwAcc : DWORD;
+    charCur : CHAR;
+    bOk : BOOL;
+END_VAR
+
+BEGIN
+    bOk := TRUE;
+    dwAcc := 0;
+    iLen := LEN(#ipText);
+    iIdx := 1;
+    iSeg := 0;
+
+    WHILE (iSeg < 4) AND bOk DO
+        iDigits := 0;
+        iVal := 0;
+
+        WHILE iIdx <= iLen DO
+            charCur := #ipText[iIdx];
+            IF (charCur >= '0') AND (charCur <= '9') THEN
+                iDigits := iDigits + 1;
+                iVal := (iVal * 10) + (CHAR_TO_DINT(charCur) - 48);
+                IF iVal > 255 THEN
+                    bOk := FALSE;
+                END_IF;
+                iIdx := iIdx + 1;
+            ELSE
+                EXIT;
+            END_IF;
+        END_WHILE;
+
+        IF (iDigits = 0) OR (iVal > 255) THEN
+            bOk := FALSE;
+        END_IF;
+
+        IF bOk AND (iSeg < 3) THEN
+            IF (iIdx <= iLen) AND (#ipText[iIdx] = '.') THEN
+                iIdx := iIdx + 1;
+            ELSE
+                bOk := FALSE;
+            END_IF;
+        END_IF;
+
+        dwAcc := SHL(IN := dwAcc, N := 8) OR INT_TO_DWORD(iVal);
+        iSeg := iSeg + 1;
+    END_WHILE;
+
+    IF iIdx <= iLen THEN
+        bOk := FALSE;
+    END_IF;
+
+    IF bOk THEN
+        #ipValue := DWORD_TO_UDINT(dwAcc);
+    ELSE
+        #ipValue := 0;
+    END_IF;
+END_FUNCTION_BLOCK

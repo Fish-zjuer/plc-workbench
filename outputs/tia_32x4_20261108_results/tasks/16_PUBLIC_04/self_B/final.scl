@@ -1,0 +1,87 @@
+FUNCTION_BLOCK "Q04"
+VAR_INPUT
+    VISCOSITY_OK : BOOL;
+    PASTE_E_STOP_NC : BOOL;
+    DebounceTime : TIME;
+    CycleTime : TIME;
+END_VAR
+VAR_OUTPUT
+    VFD_RUN : BOOL;
+    PUMP_MAINT_DUE : BOOL;
+    PUMP_RUNTIME_ACC : LTIME;
+END_VAR
+VAR
+    timerDebounce : TON_TIME;
+    viscConditionValid : BOOL;
+    cycleTimeLtime : LTIME;
+END_VAR
+VERSION : 0.1
+
+BEGIN
+    // 1. Emergency Stop Priority & Debounce Reset
+    // If E-Stop is active (FALSE), immediately disable run and reset debounce timer.
+    IF NOT PASTE_E_STOP_NC THEN
+        VFD_RUN := FALSE;
+        viscConditionValid := FALSE;
+        // Reset the timer by calling it with IN=FALSE
+        #timerDebounce(IN := FALSE, PT := #DebounceTime);
+    ELSE
+        // 2. Viscosity Debouncing Logic
+        // The timer starts when VISCOSITY_OK is TRUE.
+        // It resets immediately if VISCOSITY_OK becomes FALSE.
+        #timerDebounce(IN := #VISCOSITY_OK, PT := #DebounceTime);
+        
+        // The condition is valid only if the timer has finished (Q = TRUE)
+        viscConditionValid := #timerDebounce.Q;
+        
+        // 3. Run Command Logic
+        // Allow VFD_RUN only if viscosity condition is valid
+        IF viscConditionValid THEN
+            VFD_RUN := TRUE;
+        ELSE
+            VFD_RUN := FALSE;
+        END_IF;
+    END_IF;
+
+    // 4. Runtime Accumulation
+    // Accumulate time only while VFD_RUN is TRUE.
+    IF VFD_RUN THEN
+        // Convert CycleTime (ms) to LTIME (ns).
+        // In Siemens SCL, direct arithmetic between TIME and LTIME may require casting or specific handling.
+        // Safe conversion: Extract milliseconds from TIME and multiply by 1,000,000 to get nanoseconds for LTIME.
+        // Note: TIME internal representation is ms. LTIME is ns.
+        // Using CAST or explicit multiplication depending on compiler strictness.
+        // Standard approach in modern TIA Portal:
+        #cycleTimeLtime := TO_LTIME(#CycleTime); 
+        // If TO_LTIME is not supported directly for TIME->LTIME scaling correctly in all contexts,
+        // we can use: #cycleTimeLtime := DTL_TO_LTIME(...) but that's complex.
+        // Simpler robust method for Siemens SCL:
+        // LTIME is 64-bit integer representing nanoseconds.
+        // TIME is 32-bit integer representing milliseconds.
+        // We can cast TIME to DInt (or similar) then multiply? No, types are strict.
+        // Use built-in conversion function if available, else manual calculation via intermediate types.
+        // Let's try the most compatible way: Multiply by constant factor using type conversion helpers if needed.
+        // Actually, in TIA Portal V15+, you can often do: #ltmVar := #timeVar * 1000000; but this might fail type check.
+        // Correct Siemens way: 
+        // #cycleTimeLtime := LT#0S + #CycleTime * 1000000; -- This often fails.
+        // Best practice: Use a helper or assume implicit conversion works in optimized blocks, but here we force it.
+        // Let's use the explicit assignment which usually handles scaling in newer compilers, or fallback to math.
+        // To be safe against version differences:
+        #cycleTimeLtime := TO_LTIME(#CycleTime);
+        
+        // Add to accumulator
+        #PUMP_RUNTIME_ACC := #PUMP_RUNTIME_ACC + #cycleTimeLtime;
+    END_IF;
+
+    // 5. Maintenance Due Indication
+    // Set PUMP_MAINT_DUE when accumulated runtime reaches 500 hours.
+    // 500 hours in LTIME (nanoseconds):
+    // 500 * 3600 * 1000 * 1000 * 1000 = 1,800,000,000,000,000 ns
+    // Or simply compare with LT#500H
+    IF #PUMP_RUNTIME_ACC >= LT#500H THEN
+        PUMP_MAINT_DUE := TRUE;
+    ELSE
+        PUMP_MAINT_DUE := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

@@ -1,0 +1,64 @@
+{
+  "status": "invalid_candidate",
+  "target_compile": "not_executed",
+  "message": "Need one complete Siemens FUNCTION_BLOCK \"Q19\" with BEGIN",
+  "target": "tia",
+  "behavior_tested": false,
+  "queue_seconds": 235.197,
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "5ace4d3e93ef04f90b36a10dd07915050233c91a19882eb7d9aeb03f4bf4b5b3",
+    "declared_ltl_total": 8,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(!EmergencyStop -> allArmCommandsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(manualMode & EmergencyStop -> manualCommandMapOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(actionActive & actionLimitReached -> R1(actionCommandOff))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(singleStepActionDone & noNewStart -> noNextAction)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(singleStepReady & startRise -> R1(exactNextAction))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "A19 -> G(singleCycleStarted -> F(cycleDone))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(singleCycleDone & noNewStart -> allArmCommandsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P08",
+        "formula": "G(continuousRunning & cycleDone & EmergencyStop -> R1(firstAction))",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "invalid_candidate"
+}

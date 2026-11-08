@@ -1,0 +1,1695 @@
+{
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_10",
+  "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+  "target": "tia",
+  "model": "deepseek-v4.1-flash-1017",
+  "inference_parameters": {
+    "thinking": {
+      "type": "disabled"
+    }
+  },
+  "status": "finite_pass",
+  "model_calls": 3,
+  "token_usage": {
+    "prompt_tokens": 10199,
+    "completion_tokens": 2245,
+    "total_tokens": 12444,
+    "cost": null,
+    "usage_calls": 3,
+    "complete": true,
+    "cost_complete": false,
+    "recorded_cost": 0.0
+  },
+  "metrics": [
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 696,
+        "prompt_tokens": 1665,
+        "total_tokens": 2361,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.003514"
+      },
+      "seconds": 5.59
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 750,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 3585,
+        "prompt_tokens": 3585,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 4335,
+        "cost": "¥0.005202"
+      },
+      "seconds": 9.457
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 799,
+        "prompt_tokens": 4949,
+        "total_tokens": 5748,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.006434"
+      },
+      "seconds": 8.861
+    }
+  ],
+  "seconds": 1344.829,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details",
+  "submissions": [
+    {
+      "status": "compile_failed",
+      "errors": 1,
+      "warnings": 1,
+      "state": "Error",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Error",
+          "description": "",
+          "errors": 1,
+          "warnings": 1
+        },
+        {
+          "path": "Program blocks",
+          "state": "Error",
+          "description": "",
+          "errors": 1,
+          "warnings": 1
+        },
+        {
+          "path": "Q10 (FB2)",
+          "state": "Error",
+          "description": "",
+          "errors": 1,
+          "warnings": 1
+        },
+        {
+          "path": "26",
+          "state": "Error",
+          "description": "Semicolon missing.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "44",
+          "state": "Warning",
+          "description": "The parameter '#HeaterOutput' might not be initialized.",
+          "errors": 0,
+          "warnings": 1
+        },
+        {
+          "path": null,
+          "state": "Error",
+          "description": "Compiling finished (errors: 1; warnings: 1)",
+          "errors": 1,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 1,
+      "source_sha256": "b4884028e7c6da83e048e26a0abe58a9d54b3d3d2a57d8875a3344928e81eb0d",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\1\\evaluation\\compile",
+      "seconds": 38.574,
+      "queue_seconds": 409.317,
+      "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "b4884028e7c6da83e048e26a0abe58a9d54b3d3d2a57d8875a3344928e81eb0d",
+        "declared_ltl_total": 6,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(sensorFault -> !HeaterOutput)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(temperatureAboveSetpoint -> !HeaterOutput)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(overrun -> !HeaterOutput & OverheatProtection)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(cooling -> !HeaterOutput & OverheatProtection)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(validSensor & demand & protectionReleased -> HeaterOutput)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(displayOK)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "compile_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 4,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 4,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "compile_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 6,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 6,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "fail",
+      "errors": 0,
+      "warnings": 0,
+      "state": "Success",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Q10 (FB2)",
+          "state": "Success",
+          "description": "Block was successfully compiled.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Success",
+          "description": "Compiling finished (errors: 0; warnings: 0)",
+          "errors": 0,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+      "returncode": 0,
+      "source_sha256": "b6a325923c9694f18df8d519c9d7a716f5425289993ce6df5641396a2ed18203",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+        "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+        "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "passed",
+      "behavior_tested": true,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\2\\evaluation\\compile",
+      "seconds": 41.425,
+      "queue_seconds": 114.557,
+      "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+      "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_10",
+      "summary": {
+        "scenarios": 4,
+        "scans": 8,
+        "assertions": 21,
+        "failed": 1
+      },
+      "ltl_status": "not_executed",
+      "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\2\\evaluation\\simulation\\result.json",
+      "test_backend": "tia",
+      "target": "tia",
+      "vendor": "Siemens",
+      "simulation": true,
+      "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\2\\evaluation\\simulation",
+      "actual_scan_times_ms": [
+        0,
+        4999,
+        5001,
+        7999,
+        8010,
+        0,
+        0,
+        0
+      ],
+      "simulation_cpu": "6ES7 511-1AK02-0AB0",
+      "timing": {
+        "clock": "Siemens native",
+        "max_deviation_ms": 0,
+        "tolerance_ms": 1
+      },
+      "compile_result": {
+        "status": "compile_passed",
+        "errors": 0,
+        "warnings": 0,
+        "state": "Success",
+        "diagnostics": [
+          {
+            "path": "PLC_1",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Program blocks",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Q10 (FB2)",
+            "state": "Success",
+            "description": "Block was successfully compiled.",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": null,
+            "state": "Success",
+            "description": "Compiling finished (errors: 0; warnings: 0)",
+            "errors": 0,
+            "warnings": 0
+          }
+        ],
+        "platform": "TIA Portal V21",
+        "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+        "returncode": 0,
+        "source_sha256": "b6a325923c9694f18df8d519c9d7a716f5425289993ce6df5641396a2ed18203",
+        "execution_fingerprint": {
+          "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+          "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+          "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+        },
+        "target_compile": "passed",
+        "behavior_tested": false,
+        "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\2\\evaluation\\compile",
+        "seconds": 41.425,
+        "queue_seconds": 0.0,
+        "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1"
+      },
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "b6a325923c9694f18df8d519c9d7a716f5425289993ce6df5641396a2ed18203",
+        "declared_ltl_total": 6,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(sensorFault -> !HeaterOutput)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(temperatureAboveSetpoint -> !HeaterOutput)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(overrun -> !HeaterOutput & OverheatProtection)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(cooling -> !HeaterOutput & OverheatProtection)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(validSensor & demand & protectionReleased -> HeaterOutput)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(displayOK)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "finite_test_status": "fail",
+      "counterexample": {
+        "name": "heating_and_cooldown",
+        "first_failure": {
+          "scan": 4,
+          "output": "HeaterOutput",
+          "expected": true,
+          "actual": 0.0
+        },
+        "rows": [
+          {
+            "time_ms": 4999,
+            "inputs": {
+              "TemperatureSensorInput": 20,
+              "SetTemperature": 30
+            },
+            "expected": {
+              "HeaterOutput": true
+            },
+            "actual": {
+              "CurrentTemperature": 20.0,
+              "SetTempDisplay": 30.0,
+              "HeaterStatus": 1.0,
+              "OverheatProtection": 0.0,
+              "HeaterOutput": 1.0
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 5001,
+            "inputs": {
+              "TemperatureSensorInput": 20,
+              "SetTemperature": 30
+            },
+            "expected": {
+              "HeaterOutput": false,
+              "OverheatProtection": true
+            },
+            "actual": {
+              "CurrentTemperature": 20.0,
+              "SetTempDisplay": 30.0,
+              "HeaterStatus": 0.0,
+              "OverheatProtection": 1.0,
+              "HeaterOutput": 0.0
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 7999,
+            "inputs": {
+              "TemperatureSensorInput": 20,
+              "SetTemperature": 30
+            },
+            "expected": {
+              "HeaterOutput": false,
+              "OverheatProtection": true
+            },
+            "actual": {
+              "CurrentTemperature": 20.0,
+              "SetTempDisplay": 30.0,
+              "HeaterStatus": 0.0,
+              "OverheatProtection": 1.0,
+              "HeaterOutput": 0.0
+            },
+            "violations": []
+          },
+          {
+            "time_ms": 8010,
+            "inputs": {
+              "TemperatureSensorInput": 20,
+              "SetTemperature": 30
+            },
+            "expected": {
+              "HeaterOutput": true,
+              "OverheatProtection": false
+            },
+            "actual": {
+              "CurrentTemperature": 20.0,
+              "SetTempDisplay": 30.0,
+              "HeaterStatus": 0.0,
+              "OverheatProtection": 0.0,
+              "HeaterOutput": 0.0
+            },
+            "violations": [
+              {
+                "output": "HeaterOutput",
+                "expected": true,
+                "actual": 0.0
+              }
+            ]
+          }
+        ]
+      },
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "passed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 4,
+        "test_cases_executed": 4,
+        "test_cases_not_executed": 0,
+        "test_cases_passed": 3,
+        "test_case_pass_rate": 0.75,
+        "finite_test_status": "fail",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 6,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 6,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "pass",
+      "errors": 0,
+      "warnings": 0,
+      "state": "Success",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Q10 (FB2)",
+          "state": "Success",
+          "description": "Block was successfully compiled.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Success",
+          "description": "Compiling finished (errors: 0; warnings: 0)",
+          "errors": 0,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+      "returncode": 0,
+      "source_sha256": "6d6449c37f23c51e0eec9369f45cf8c4114f8f90b509c27eaf3514accbb46257",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+        "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+        "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "passed",
+      "behavior_tested": true,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\compile",
+      "seconds": 44.386,
+      "queue_seconds": 435.664,
+      "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+      "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_10",
+      "summary": {
+        "scenarios": 4,
+        "scans": 8,
+        "assertions": 21,
+        "failed": 0
+      },
+      "ltl_status": "unsupported",
+      "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\simulation\\result.json",
+      "test_backend": "tia",
+      "target": "tia",
+      "vendor": "Siemens",
+      "simulation": true,
+      "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\simulation",
+      "actual_scan_times_ms": [
+        0,
+        4999,
+        5001,
+        7999,
+        8010,
+        0,
+        0,
+        0
+      ],
+      "simulation_cpu": "6ES7 511-1AK02-0AB0",
+      "timing": {
+        "clock": "Siemens native",
+        "max_deviation_ms": 0,
+        "tolerance_ms": 1
+      },
+      "compile_result": {
+        "status": "compile_passed",
+        "errors": 0,
+        "warnings": 0,
+        "state": "Success",
+        "diagnostics": [
+          {
+            "path": "PLC_1",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Program blocks",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Q10 (FB2)",
+            "state": "Success",
+            "description": "Block was successfully compiled.",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": null,
+            "state": "Success",
+            "description": "Compiling finished (errors: 0; warnings: 0)",
+            "errors": 0,
+            "warnings": 0
+          }
+        ],
+        "platform": "TIA Portal V21",
+        "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+        "returncode": 0,
+        "source_sha256": "6d6449c37f23c51e0eec9369f45cf8c4114f8f90b509c27eaf3514accbb46257",
+        "execution_fingerprint": {
+          "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+          "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+          "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+        },
+        "target_compile": "passed",
+        "behavior_tested": false,
+        "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\compile",
+        "seconds": 44.386,
+        "queue_seconds": 0.0,
+        "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1"
+      },
+      "formal_verification": {
+        "status": "unsupported",
+        "backend": "plcverif+cbmc",
+        "policy": "automatic",
+        "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_10",
+        "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+        "source_sha256": "6d6449c37f23c51e0eec9369f45cf8c4114f8f90b509c27eaf3514accbb46257",
+        "model_calls": 0,
+        "declared_ltl_total": 6,
+        "mapped_assertions_total": 6,
+        "proved_property_ids": [],
+        "full_ltl_proved": false,
+        "bounded_verified_property_ids": [],
+        "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\formal\\shared",
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(sensorFault -> !HeaterOutput)",
+            "status": "unsupported_model",
+            "temporal_boundary_sensitive": false,
+            "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+          },
+          {
+            "id": "P02",
+            "formula": "G(temperatureAboveSetpoint -> !HeaterOutput)",
+            "status": "unsupported_model",
+            "temporal_boundary_sensitive": false,
+            "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+          },
+          {
+            "id": "P03",
+            "formula": "G(overrun -> !HeaterOutput & OverheatProtection)",
+            "status": "unsupported_model",
+            "temporal_boundary_sensitive": false,
+            "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+          },
+          {
+            "id": "P04",
+            "formula": "G(cooling -> !HeaterOutput & OverheatProtection)",
+            "status": "unsupported_model",
+            "temporal_boundary_sensitive": false,
+            "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+          },
+          {
+            "id": "P05",
+            "formula": "G(validSensor & demand & protectionReleased -> HeaterOutput)",
+            "status": "unsupported_model",
+            "temporal_boundary_sensitive": false,
+            "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+          },
+          {
+            "id": "P06",
+            "formula": "G(displayOK)",
+            "status": "unsupported_model",
+            "temporal_boundary_sensitive": false,
+            "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+          }
+        ],
+        "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+        "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+        "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+        "bound": 20,
+        "timeout_seconds": 120,
+        "scan_period_ms": 10,
+        "memory_limit_mb": 768,
+        "time_coverage": {
+          "scan_samples": 20,
+          "scan_period_ms": 10,
+          "first_sample_offset_ms": 10,
+          "last_sample_offset_ms": 200,
+          "maximum_elapsed_between_samples_ms": 190
+        },
+        "assumptions": [],
+        "observer_definitions": {
+          "sensorFault": "TemperatureSensorInput<0 | TemperatureSensorInput>100",
+          "temperatureAboveSetpoint": "TemperatureSensorInput>SetTemperature",
+          "validSensor": "!sensorFault",
+          "demand": "TemperatureSensorInput<SetTemperature",
+          "overrun": "PVL_Overrun",
+          "cooling": "PVL_Protect",
+          "protectionReleased": "!PVL_Protect",
+          "displayOK": "CurrentTemperature=TemperatureSensorInput & SetTempDisplay=SetTemperature & HeaterStatus=HeaterOutput"
+        },
+        "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model",
+        "seconds": 0.073,
+        "model_source_sha256": "62fec27d5515a2755fcafa9658749f1efec0f2e22869fb7b8f0660729d5fb01a",
+        "platform_adaptations": [
+          {
+            "kind": "symbol_spelling",
+            "symbol": "Q10"
+          },
+          {
+            "kind": "layout_attribute",
+            "attribute": "S7_Optimized_Access",
+            "reason": "No absolute memory, pointers or references admitted by this adapter"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "CurrentTemperature"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "TemperatureSensorInput"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "SetTempDisplay"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "SetTemperature"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensorFault"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "TemperatureSensorInput"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "TemperatureSensorInput"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "heatDemand"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensorFault"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "TemperatureSensorInput"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "SetTemperature"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "HeaterOutput"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "protectionReleased"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "sensorFault"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "heaterTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "coolTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "protectionLatched"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "protectionLatched"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "heaterTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "coolTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "coolTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "protectionLatched"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "protectionReleased"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "coolTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "coolTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "protectionLatched"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "HeaterOutput"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "heatDemand"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "heaterTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "HeaterOutput"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "heaterTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "protectionLatched"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "protectionReleased"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "HeaterOutput"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "heaterTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "coolTimer"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "OverheatProtection"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "protectionLatched"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "HeaterStatus"
+          },
+          {
+            "kind": "local_symbol_prefix",
+            "symbol": "HeaterOutput"
+          },
+          {
+            "kind": "timer_spelling",
+            "count": 11,
+            "semantics": "Delegated to shared ST adapter"
+          },
+          {
+            "kind": "pou_begin_delimiter",
+            "count": 1
+          }
+        ],
+        "source_dialect": "siemens_scl",
+        "platform_assumptions": []
+      },
+      "finite_test_status": "pass",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "passed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 4,
+        "test_cases_executed": 4,
+        "test_cases_not_executed": 0,
+        "test_cases_passed": 4,
+        "test_case_pass_rate": 1.0,
+        "finite_test_status": "pass",
+        "formal_status": "unsupported",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 6,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 6,
+        "formal_full_ltl_proved": false,
+        "formal_bound": 20,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 6,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 6,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    }
+  ],
+  "limits": {
+    "source_versions": 6,
+    "model_requests": 24,
+    "seconds": 1800
+  },
+  "formal_policy": "automatic",
+  "final_evaluation": {
+    "status": "pass",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Q10 (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+    "returncode": 0,
+    "source_sha256": "6d6449c37f23c51e0eec9369f45cf8c4114f8f90b509c27eaf3514accbb46257",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+      "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+      "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": true,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\compile",
+    "seconds": 44.386,
+    "queue_seconds": 435.664,
+    "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+    "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_10",
+    "summary": {
+      "scenarios": 4,
+      "scans": 8,
+      "assertions": 21,
+      "failed": 0
+    },
+    "ltl_status": "unsupported",
+    "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\simulation\\result.json",
+    "test_backend": "tia",
+    "target": "tia",
+    "vendor": "Siemens",
+    "simulation": true,
+    "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\simulation",
+    "actual_scan_times_ms": [
+      0,
+      4999,
+      5001,
+      7999,
+      8010,
+      0,
+      0,
+      0
+    ],
+    "simulation_cpu": "6ES7 511-1AK02-0AB0",
+    "timing": {
+      "clock": "Siemens native",
+      "max_deviation_ms": 0,
+      "tolerance_ms": 1
+    },
+    "compile_result": {
+      "status": "compile_passed",
+      "errors": 0,
+      "warnings": 0,
+      "state": "Success",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Q10 (FB2)",
+          "state": "Success",
+          "description": "Block was successfully compiled.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Success",
+          "description": "Compiling finished (errors: 0; warnings: 0)",
+          "errors": 0,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 0,
+      "source_sha256": "6d6449c37f23c51e0eec9369f45cf8c4114f8f90b509c27eaf3514accbb46257",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "passed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\compile",
+      "seconds": 44.386,
+      "queue_seconds": 0.0,
+      "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1"
+    },
+    "formal_verification": {
+      "status": "unsupported",
+      "backend": "plcverif+cbmc",
+      "policy": "automatic",
+      "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_10",
+      "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+      "source_sha256": "6d6449c37f23c51e0eec9369f45cf8c4114f8f90b509c27eaf3514accbb46257",
+      "model_calls": 0,
+      "declared_ltl_total": 6,
+      "mapped_assertions_total": 6,
+      "proved_property_ids": [],
+      "full_ltl_proved": false,
+      "bounded_verified_property_ids": [],
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\formal\\shared",
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(sensorFault -> !HeaterOutput)",
+          "status": "unsupported_model",
+          "temporal_boundary_sensitive": false,
+          "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+        },
+        {
+          "id": "P02",
+          "formula": "G(temperatureAboveSetpoint -> !HeaterOutput)",
+          "status": "unsupported_model",
+          "temporal_boundary_sensitive": false,
+          "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+        },
+        {
+          "id": "P03",
+          "formula": "G(overrun -> !HeaterOutput & OverheatProtection)",
+          "status": "unsupported_model",
+          "temporal_boundary_sensitive": false,
+          "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+        },
+        {
+          "id": "P04",
+          "formula": "G(cooling -> !HeaterOutput & OverheatProtection)",
+          "status": "unsupported_model",
+          "temporal_boundary_sensitive": false,
+          "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+        },
+        {
+          "id": "P05",
+          "formula": "G(validSensor & demand & protectionReleased -> HeaterOutput)",
+          "status": "unsupported_model",
+          "temporal_boundary_sensitive": false,
+          "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+        },
+        {
+          "id": "P06",
+          "formula": "G(displayOK)",
+          "status": "unsupported_model",
+          "temporal_boundary_sensitive": false,
+          "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+        }
+      ],
+      "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+      "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+      "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+      "bound": 20,
+      "timeout_seconds": 120,
+      "scan_period_ms": 10,
+      "memory_limit_mb": 768,
+      "time_coverage": {
+        "scan_samples": 20,
+        "scan_period_ms": 10,
+        "first_sample_offset_ms": 10,
+        "last_sample_offset_ms": 200,
+        "maximum_elapsed_between_samples_ms": 190
+      },
+      "assumptions": [],
+      "observer_definitions": {
+        "sensorFault": "TemperatureSensorInput<0 | TemperatureSensorInput>100",
+        "temperatureAboveSetpoint": "TemperatureSensorInput>SetTemperature",
+        "validSensor": "!sensorFault",
+        "demand": "TemperatureSensorInput<SetTemperature",
+        "overrun": "PVL_Overrun",
+        "cooling": "PVL_Protect",
+        "protectionReleased": "!PVL_Protect",
+        "displayOK": "CurrentTemperature=TemperatureSensorInput & SetTempDisplay=SetTemperature & HeaterStatus=HeaterOutput"
+      },
+      "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model",
+      "seconds": 0.073,
+      "model_source_sha256": "62fec27d5515a2755fcafa9658749f1efec0f2e22869fb7b8f0660729d5fb01a",
+      "platform_adaptations": [
+        {
+          "kind": "symbol_spelling",
+          "symbol": "Q10"
+        },
+        {
+          "kind": "layout_attribute",
+          "attribute": "S7_Optimized_Access",
+          "reason": "No absolute memory, pointers or references admitted by this adapter"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "CurrentTemperature"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "TemperatureSensorInput"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "SetTempDisplay"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "SetTemperature"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensorFault"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "TemperatureSensorInput"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "TemperatureSensorInput"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "heatDemand"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensorFault"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "TemperatureSensorInput"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "SetTemperature"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "HeaterOutput"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "protectionReleased"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "sensorFault"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "heaterTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "coolTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "protectionLatched"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "protectionLatched"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "heaterTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "coolTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "coolTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "protectionLatched"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "protectionReleased"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "coolTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "coolTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "protectionLatched"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "HeaterOutput"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "heatDemand"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "heaterTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "HeaterOutput"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "heaterTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "protectionLatched"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "protectionReleased"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "HeaterOutput"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "heaterTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "coolTimer"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "OverheatProtection"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "protectionLatched"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "HeaterStatus"
+        },
+        {
+          "kind": "local_symbol_prefix",
+          "symbol": "HeaterOutput"
+        },
+        {
+          "kind": "timer_spelling",
+          "count": 11,
+          "semantics": "Delegated to shared ST adapter"
+        },
+        {
+          "kind": "pou_begin_delimiter",
+          "count": 1
+        }
+      ],
+      "source_dialect": "siemens_scl",
+      "platform_assumptions": []
+    },
+    "finite_test_status": "pass",
+    "metrics_summary": {
+      "target_platform": "tia",
+      "target_compile": "passed",
+      "codesys_compile": "not_executed",
+      "test_cases_total": 4,
+      "test_cases_executed": 4,
+      "test_cases_not_executed": 0,
+      "test_cases_passed": 4,
+      "test_case_pass_rate": 1.0,
+      "finite_test_status": "pass",
+      "formal_status": "unsupported",
+      "formal_backend": "plcverif+cbmc",
+      "formal_unwind": null,
+      "formal_unwind_complete": null,
+      "formal_valid_domain_witness": null,
+      "mapped_assertions_total": 6,
+      "mapped_assertions_proved": 0,
+      "declared_ltl_total": 6,
+      "formal_full_ltl_proved": false,
+      "formal_bound": 20,
+      "formal_properties_verified": 0,
+      "formal_properties_total": 6,
+      "formal_properties_executed": 0,
+      "formal_properties_unsupported": 6,
+      "formal_counterexamples": 0,
+      "formal_property_pass_rate": 0.0,
+      "formal_all_properties_verified": false,
+      "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+    }
+  },
+  "target_compile": "passed",
+  "formal_verification": {
+    "status": "unsupported",
+    "backend": "plcverif+cbmc",
+    "policy": "automatic",
+    "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_10",
+    "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+    "source_sha256": "6d6449c37f23c51e0eec9369f45cf8c4114f8f90b509c27eaf3514accbb46257",
+    "model_calls": 0,
+    "declared_ltl_total": 6,
+    "mapped_assertions_total": 6,
+    "proved_property_ids": [],
+    "full_ltl_proved": false,
+    "bounded_verified_property_ids": [],
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\formal\\shared",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(sensorFault -> !HeaterOutput)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P02",
+        "formula": "G(temperatureAboveSetpoint -> !HeaterOutput)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P03",
+        "formula": "G(overrun -> !HeaterOutput & OverheatProtection)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P04",
+        "formula": "G(cooling -> !HeaterOutput & OverheatProtection)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P05",
+        "formula": "G(validSensor & demand & protectionReleased -> HeaterOutput)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+      },
+      {
+        "id": "P06",
+        "formula": "G(displayOK)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+      }
+    ],
+    "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+    "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+    "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+    "bound": 20,
+    "timeout_seconds": 120,
+    "scan_period_ms": 10,
+    "memory_limit_mb": 768,
+    "time_coverage": {
+      "scan_samples": 20,
+      "scan_period_ms": 10,
+      "first_sample_offset_ms": 10,
+      "last_sample_offset_ms": 200,
+      "maximum_elapsed_between_samples_ms": 190
+    },
+    "assumptions": [],
+    "observer_definitions": {
+      "sensorFault": "TemperatureSensorInput<0 | TemperatureSensorInput>100",
+      "temperatureAboveSetpoint": "TemperatureSensorInput>SetTemperature",
+      "validSensor": "!sensorFault",
+      "demand": "TemperatureSensorInput<SetTemperature",
+      "overrun": "PVL_Overrun",
+      "cooling": "PVL_Protect",
+      "protectionReleased": "!PVL_Protect",
+      "displayOK": "CurrentTemperature=TemperatureSensorInput & SetTempDisplay=SetTemperature & HeaterStatus=HeaterOutput"
+    },
+    "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model",
+    "seconds": 0.073,
+    "model_source_sha256": "62fec27d5515a2755fcafa9658749f1efec0f2e22869fb7b8f0660729d5fb01a",
+    "platform_adaptations": [
+      {
+        "kind": "symbol_spelling",
+        "symbol": "Q10"
+      },
+      {
+        "kind": "layout_attribute",
+        "attribute": "S7_Optimized_Access",
+        "reason": "No absolute memory, pointers or references admitted by this adapter"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "CurrentTemperature"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "TemperatureSensorInput"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "SetTempDisplay"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "SetTemperature"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensorFault"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "TemperatureSensorInput"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "TemperatureSensorInput"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "heatDemand"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensorFault"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "TemperatureSensorInput"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "SetTemperature"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "HeaterOutput"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "protectionReleased"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "sensorFault"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "heaterTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "coolTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "protectionLatched"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "protectionLatched"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "heaterTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "coolTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "coolTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "protectionLatched"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "protectionReleased"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "coolTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "coolTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "protectionLatched"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "HeaterOutput"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "heatDemand"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "heaterTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "HeaterOutput"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "heaterTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "protectionLatched"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "protectionReleased"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "HeaterOutput"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "heaterTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "coolTimer"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "OverheatProtection"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "protectionLatched"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "HeaterStatus"
+      },
+      {
+        "kind": "local_symbol_prefix",
+        "symbol": "HeaterOutput"
+      },
+      {
+        "kind": "timer_spelling",
+        "count": 11,
+        "semantics": "Delegated to shared ST adapter"
+      },
+      {
+        "kind": "pou_begin_delimiter",
+        "count": 1
+      }
+    ],
+    "source_dialect": "siemens_scl",
+    "platform_assumptions": []
+  },
+  "ltl_status": "unsupported",
+  "behavior_tested": true,
+  "source_sha256": "6d6449c37f23c51e0eec9369f45cf8c4114f8f90b509c27eaf3514accbb46257",
+  "metrics_summary": {
+    "target_platform": "tia",
+    "target_compile": "passed",
+    "codesys_compile": "not_executed",
+    "test_cases_total": 4,
+    "test_cases_executed": 4,
+    "test_cases_not_executed": 0,
+    "test_cases_passed": 4,
+    "test_case_pass_rate": 1.0,
+    "finite_test_status": "pass",
+    "formal_status": "unsupported",
+    "formal_backend": "plcverif+cbmc",
+    "formal_unwind": null,
+    "formal_unwind_complete": null,
+    "formal_valid_domain_witness": null,
+    "mapped_assertions_total": 6,
+    "mapped_assertions_proved": 0,
+    "declared_ltl_total": 6,
+    "formal_full_ltl_proved": false,
+    "formal_bound": 20,
+    "formal_properties_verified": 0,
+    "formal_properties_total": 6,
+    "formal_properties_executed": 0,
+    "formal_properties_unsupported": 6,
+    "formal_counterexamples": 0,
+    "formal_property_pass_rate": 0.0,
+    "formal_all_properties_verified": false,
+    "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+  },
+  "output_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A"
+}

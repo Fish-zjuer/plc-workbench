@@ -1,0 +1,3113 @@
+{
+  "status": "pass",
+  "errors": 0,
+  "warnings": 5,
+  "state": "Warning",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 5
+    },
+    {
+      "path": "Program blocks",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 5
+    },
+    {
+      "path": "FB_GateTelemetry (FB2)",
+      "state": "Warning",
+      "description": "",
+      "errors": 0,
+      "warnings": 5
+    },
+    {
+      "path": "26",
+      "state": "Warning",
+      "description": "The parameter '#AgeMs' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "27",
+      "state": "Warning",
+      "description": "The parameter '#AgeMs' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "32",
+      "state": "Warning",
+      "description": "The parameter '#AgeMs' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "35",
+      "state": "Warning",
+      "description": "The parameter '#AgeMs' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": "35",
+      "state": "Warning",
+      "description": "The parameter '#CommFault' might not be initialized.",
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Warning",
+      "description": "Compiling finished (errors: 0; warnings: 5)",
+      "errors": 0,
+      "warnings": 1
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Native PLCSIM Advanced finite scenarios, no physical PLC claim",
+  "returncode": 0,
+  "source_sha256": "a713bcf60b64e2e74fd9e0ed6a99ff1b2ff0e8873b066ecc0b7351c191b8200f",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "f39d9d217aa1fcb5c8315c02f6ec2853a17b041ee330758f410f2172d7314cdc",
+    "runtime_host_sha256": "dd64a6309f8d832ef6a00cfd2b6be7f2a6adc5071c2f76a57bf4fdc3b6ab898d",
+    "simulation_api_sha256": "8349ff379efaa89a094ec79ceeab376fce6464359f2af8b64c7b2d9b62ddeb46",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": true,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\03_CUSTOM_03\\codex_B\\details\\submissions\\3\\evaluation\\compile",
+  "seconds": 46.167,
+  "queue_seconds": 166.87,
+  "dataset_sha256": "c9ce4fb5131df9b12daa3719fa946e7776599073695e4b3d7ca1aa9c7ca48684",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_03",
+  "cases": [
+    {
+      "name": "首次新帧必须确认",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "AgeMs": 0
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "重复帧触发精确超时",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "AgeMs": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 100,
+            "RemoteWritePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 200,
+            "RemoteWritePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 200.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 300,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 300.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "新帧与确认必须同轮",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "AgeMs": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 100,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 200,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 200.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 300,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 300.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 2,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 2,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 3,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "非法间隔保持状态",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "AgeMs": 0
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 100,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 200,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 200.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "AgeMs": 300,
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 300.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 2,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 2,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": true,
+            "RemoteWritePermit": false
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 3,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "CommFault": false,
+            "RemoteWritePermit": true
+          },
+          "phase": "setup",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 3,
+            "Ack": true,
+            "DtMs": 0,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Error": true,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "AgeMs": 0
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "序号回绕_重复序号_精确超时_复位优先",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 4294967295,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 100,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 100.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 200,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 200.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 300,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 300.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 0,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 400,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 400.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 100,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 1,
+            "Ack": true,
+            "DtMs": 0,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": true
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 1.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 2,
+            "Ack": false,
+            "DtMs": 1,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 3,
+            "Ack": true,
+            "DtMs": 1,
+            "TimeoutMs": 300
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    },
+    {
+      "name": "年龄饱和_新帧恢复",
+      "status": "pass",
+      "first_failure": null,
+      "rows": [
+        {
+          "time_ms": 0,
+          "inputs": {
+            "Reset": true,
+            "FrameValid": false,
+            "FrameSeq": 0,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 0,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 0.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 10,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 9,
+            "Ack": true,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 20,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 1000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 1000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 30,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 2000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 2000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 40,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 3000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 3000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 50,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 4000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 4000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 60,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 5000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 5000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 70,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 6000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 6000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 80,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 7000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 7000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 90,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 8000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 8000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 100,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 9000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 9000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 110,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 10000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 10000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 120,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 11000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 11000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 130,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 12000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 12000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 140,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 13000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 13000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 150,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 14000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 14000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 160,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 15000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 15000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 170,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 16000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 16000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 180,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 17000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 17000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 190,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 18000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 18000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 200,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 19000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 19000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 210,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 20000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 20000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 220,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 21000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 21000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 230,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 22000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 22000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 240,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 23000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 23000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 250,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 24000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 24000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 260,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 25000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 25000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 270,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 26000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 26000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 280,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 27000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 27000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 290,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 28000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 28000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 300,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 29000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 29000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 310,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 30000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 30000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 320,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 31000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 31000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 330,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 32000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 32000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 340,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 33000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 33000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 350,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 34000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 34000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 360,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 35000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 35000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 370,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 36000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 36000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 380,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 37000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 37000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 390,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 38000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 38000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 400,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 39000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 39000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 410,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 40000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 40000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 420,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 41000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 41000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 430,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 42000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 42000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 440,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 43000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 43000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 450,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 44000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 44000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 460,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 45000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 45000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 470,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 46000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 46000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 480,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 47000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 47000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 490,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 48000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 48000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 500,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 49000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 49000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 510,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 50000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 50000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 520,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 51000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 51000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 530,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 52000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 52000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 540,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 53000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 53000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 550,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 54000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 54000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 560,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 55000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 55000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 570,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 56000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 56000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 580,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 57000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 57000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 590,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 58000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 58000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 600,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 59000,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 59000.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 610,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 60000,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 60000.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 620,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 60000,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 60000.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 630,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": false,
+            "FrameSeq": 9,
+            "Ack": false,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": false,
+            "AgeMs": 60000,
+            "CommFault": true,
+            "RemoteWritePermit": false,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 0.0,
+            "AgeMs": 60000.0,
+            "CommFault": 1.0,
+            "RemoteWritePermit": 0.0,
+            "Error": 0.0
+          },
+          "violations": []
+        },
+        {
+          "time_ms": 640,
+          "inputs": {
+            "Reset": false,
+            "FrameValid": true,
+            "FrameSeq": 10,
+            "Ack": true,
+            "DtMs": 1000,
+            "TimeoutMs": 60000
+          },
+          "expected": {
+            "Fresh": true,
+            "AgeMs": 0,
+            "CommFault": false,
+            "RemoteWritePermit": true,
+            "Error": false
+          },
+          "phase": "test",
+          "actual": {
+            "Fresh": 1.0,
+            "AgeMs": 0.0,
+            "CommFault": 0.0,
+            "RemoteWritePermit": 1.0,
+            "Error": 0.0
+          },
+          "violations": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "scenarios": 6,
+    "scans": 100,
+    "assertions": 450,
+    "failed": 0
+  },
+  "ltl_status": "unsupported",
+  "build_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\03_CUSTOM_03\\codex_B\\details\\submissions\\3\\evaluation\\simulation\\result.json",
+  "test_backend": "tia",
+  "target": "tia",
+  "vendor": "Siemens",
+  "simulation": true,
+  "vendor_evidence": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\03_CUSTOM_03\\codex_B\\details\\submissions\\3\\evaluation\\simulation",
+  "actual_scan_times_ms": [
+    0,
+    10,
+    0,
+    10,
+    20,
+    30,
+    40,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    81,
+    90,
+    100,
+    0,
+    10,
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120,
+    130,
+    140,
+    150,
+    160,
+    170,
+    180,
+    190,
+    200,
+    210,
+    220,
+    230,
+    240,
+    250,
+    260,
+    270,
+    280,
+    290,
+    300,
+    310,
+    320,
+    330,
+    340,
+    350,
+    360,
+    370,
+    380,
+    390,
+    400,
+    411,
+    420,
+    430,
+    440,
+    450,
+    460,
+    470,
+    480,
+    490,
+    500,
+    510,
+    520,
+    532,
+    540,
+    550,
+    562,
+    570,
+    580,
+    590,
+    600,
+    610,
+    620,
+    630,
+    640
+  ],
+  "simulation_cpu": "6ES7 511-1AK02-0AB0",
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 5,
+    "state": "Warning",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 5
+      },
+      {
+        "path": "Program blocks",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 5
+      },
+      {
+        "path": "FB_GateTelemetry (FB2)",
+        "state": "Warning",
+        "description": "",
+        "errors": 0,
+        "warnings": 5
+      },
+      {
+        "path": "26",
+        "state": "Warning",
+        "description": "The parameter '#AgeMs' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "27",
+        "state": "Warning",
+        "description": "The parameter '#AgeMs' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "32",
+        "state": "Warning",
+        "description": "The parameter '#AgeMs' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "35",
+        "state": "Warning",
+        "description": "The parameter '#AgeMs' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": "35",
+        "state": "Warning",
+        "description": "The parameter '#CommFault' might not be initialized.",
+        "errors": 0,
+        "warnings": 1
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Warning",
+        "description": "Compiling finished (errors: 0; warnings: 5)",
+        "errors": 0,
+        "warnings": 1
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "a713bcf60b64e2e74fd9e0ed6a99ff1b2ff0e8873b066ecc0b7351c191b8200f",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\03_CUSTOM_03\\codex_B\\details\\submissions\\3\\evaluation\\compile",
+    "seconds": 46.167,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "c9ce4fb5131df9b12daa3719fa946e7776599073695e4b3d7ca1aa9c7ca48684"
+  },
+  "formal_verification": {
+    "status": "unsupported",
+    "backend": "plcverif+cbmc",
+    "policy": "automatic",
+    "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_03",
+    "dataset_sha256": "c9ce4fb5131df9b12daa3719fa946e7776599073695e4b3d7ca1aa9c7ca48684",
+    "source_sha256": "a713bcf60b64e2e74fd9e0ed6a99ff1b2ff0e8873b066ecc0b7351c191b8200f",
+    "model_calls": 0,
+    "declared_ltl_total": 7,
+    "mapped_assertions_total": 7,
+    "proved_property_ids": [],
+    "full_ltl_proved": false,
+    "bounded_verified_property_ids": [],
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\03_CUSTOM_03\\codex_B\\details\\submissions\\3\\evaluation\\formal\\shared",
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(monitorMatch)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:10:55.870854100Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (289 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P02",
+        "formula": "G(RemoteWritePermit <-> permit)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:10:55.870854100Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (289 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P03",
+        "formula": "G(Reset -> (!Fresh & AgeMs=0 & CommFault & !RemoteWritePermit & !Error))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:10:55.870854100Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (289 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P04",
+        "formula": "G((!Reset & !validTiming) -> (Error & CommFault & !Fresh & !RemoteWritePermit & ageHeld))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:10:55.870854100Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (289 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P05",
+        "formula": "G((!Reset & validTiming & !fresh) -> (AgeMs=min(60000,pre.age+DtMs)))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:10:55.870854100Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (289 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P06",
+        "formula": "G((!Reset & validTiming & fresh & Ack) -> (!CommFault & RemoteWritePermit))",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:10:55.870854100Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (289 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl\n\n\n== Executing Agents ==\n"
+      },
+      {
+        "id": "P07",
+        "formula": "G((!Reset & validTiming & pre.fault & !(fresh & Ack)) -> CommFault)",
+        "status": "unsupported_model",
+        "temporal_boundary_sensitive": false,
+        "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:10:55.870854100Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (289 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl\n\n\n== Executing Agents ==\n"
+      }
+    ],
+    "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+    "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+    "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+    "bound": 20,
+    "timeout_seconds": 120,
+    "scan_period_ms": 10,
+    "memory_limit_mb": 768,
+    "time_coverage": {
+      "scan_samples": 20,
+      "scan_period_ms": 10,
+      "first_sample_offset_ms": 10,
+      "last_sample_offset_ms": 200,
+      "maximum_elapsed_between_samples_ms": 190
+    },
+    "assumptions": [],
+    "observer_definitions": {
+      "validTiming": "PVL_Timing",
+      "fresh": "PVL_Fresh",
+      "pre.age": "PVL_PreAge",
+      "pre.fault": "PVL_PreFault",
+      "ageHeld": "AgeMs=PVL_PreAge",
+      "monitorMatch": "Fresh=PVL_Fresh & AgeMs=PVL_Age & CommFault=PVL_Fault & Error=PVL_Err",
+      "permit": "!Reset & !PVL_Err & !PVL_Fault & PVL_Age<TimeoutMs"
+    },
+    "source_adaptations": [],
+    "instrumented_sha256": "469467a6977438726befbd2a643db398aa4eb069b565d5b4cd81677458fc0099",
+    "tool_sha256": {
+      "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+      "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+      "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+    },
+    "plcverif_seconds": 3.902,
+    "message": "PLCverif could not build a structured C model: PLCverif    by CERN BE-ICS-TMA, (c) 2013-2024\n   CLI version: 1.0.0.202607060841\n--------------------------------------------\nArguments: C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model.vc3\nProgram directory: E:\\lab\\GenAI\\plc-workbench\\.runtime\\plcverif\n2026-11-08T11:10:55.870854100Z main ERROR Log4j API could not find a logging provider.\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/E:/lab/GenAI/plc-workbench/.runtime/plcverif/plugins/com.google.inject_7.0.0.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release\n== Parsing source code ==\n== Control-flow declaration generation ==\nlog4j:WARN No appenders could be found for logger (org.eclipse.xtext.parser.antlr.AbstractInternalAntlrParser).\nlog4j:WARN Please initialize the log4j system properly.\nlog4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.\nError: The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129). [Control-flow declaration generation]\nError: Unable to generate the CFA due to errors in parsing the source file. [Control-flow declaration generation]\n== Reporting ==\nunnamed\n=======\n\n** THE VERIFICATION PROBLEM IS NOT AVAILABLE. **\n\n**Result: the requirement is ERROR**\n\nBackend: unknown\nParameters: \nInput bindings: \n\n\n\nStages\n------\n* Parsing source code (0 ms): Successful\n* Control-flow declaration generation (289 ms): Successful\n    - [Error] The file 'C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl' contains the following errors: \n- mismatched input ',' expecting ')' (127:102)\n- extraneous input 'PVL_PreAge' expecting ')' (127:106)\n- mismatched input ')' expecting ';' (127:129).\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_A6\n  -job.req.pattern_params.8 = instance.PVL_Active\n  -job.req.pattern_params.9 = instance.PVL_Done\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_0ruty7j4\\candidate.scl\n\n\n== Executing Agents ==\n",
+    "seconds": 3.95,
+    "model_source_sha256": "7d7e0b4037a3901ea27c40d7780adb7c778e6aa904f2f6db3ed8dbe67f0d210a",
+    "platform_adaptations": [
+      {
+        "kind": "symbol_spelling",
+        "symbol": "FB_GateTelemetry"
+      },
+      {
+        "kind": "pou_begin_delimiter",
+        "count": 1
+      }
+    ],
+    "source_dialect": "siemens_scl",
+    "platform_assumptions": []
+  },
+  "finite_test_status": "pass"
+}

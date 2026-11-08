@@ -1,0 +1,185 @@
+FUNCTION_BLOCK "FB_WeighbridgeVote"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    LoadA : DINT; // Independent whole-vehicle mass A, 0..20000 kg.
+    LoadB : DINT; // Independent whole-vehicle mass B, 0..20000 kg.
+    LoadC : DINT; // Independent whole-vehicle mass C, 0..20000 kg.
+    ReleaseReq : BOOL; // Release request.
+    BarrierReady : BOOL; // Barrier-control readiness condition.
+END_VAR
+
+VAR_OUTPUT
+    PairMask : USINT; // 0 no pair, 3 AB, 5 AC, 6 BC.
+    VotedKg : LREAL; // Fused whole-vehicle mass, kg.
+    LoadFault : BOOL; // No valid consistent measurement pair.
+    Overload : BOOL; // Fused mass strictly above 10000 kg.
+    ReleasePermit : BOOL; // Ordinary benchmark release condition.
+END_VAR
+
+VAR_TEMP
+    ValidA : BOOL;
+    ValidB : BOOL;
+    ValidC : BOOL;
+    
+    DiffAB : DINT;
+    DiffAC : DINT;
+    DiffBC : DINT;
+    
+    ConsistentAB : BOOL;
+    ConsistentAC : BOOL;
+    ConsistentBC : BOOL;
+    
+    MinDiff : DINT;
+    BestPair : USINT; // Temporary storage for selected pair mask
+    FoundValidPair : BOOL;
+    
+    TempLoadA : LREAL;
+    TempLoadB : LREAL;
+    TempLoadC : LREAL;
+END_VAR
+
+BEGIN
+    // 1. Validate ranges (0..20000 kg)
+    #ValidA := (#LoadA >= 0 AND #LoadA <= 20000);
+    #ValidB := (#LoadB >= 0 AND #LoadB <= 20000);
+    #ValidC := (#LoadC >= 0 AND #LoadC <= 20000);
+
+    // Initialize outputs for default state (no valid pair found yet)
+    #PairMask := 0;
+    #VotedKg := 0.0;
+    #LoadFault := TRUE;
+    #Overload := FALSE;
+    #ReleasePermit := FALSE;
+    #FoundValidPair := FALSE;
+
+    // Convert inputs to LREAL for arithmetic mean calculation later if needed
+    #TempLoadA := INT_TO_LREAL(#LoadA); // Note: DINT to LREAL conversion might need explicit cast depending on compiler strictness, usually implicit or via REAL/LREAL constructor. Using LREAL() or similar is safer in some contexts, but standard TIA allows assignment. Let's use standard assignment logic or explicit conversion if required. In TIA SCL, direct assignment of DINT to LREAL works.
+    #TempLoadB := INT_TO_LREAL(#LoadB);
+    #TempLoadC := INT_TO_LREAL(#LoadC);
+    
+    // Actually, DINT to LREAL assignment is implicit in TIA Portal V21 usually, but let's be safe with explicit casting syntax if available or just rely on type compatibility. 
+    // Correction: Use LREAL conversion explicitly to avoid any ambiguity.
+    #TempLoadA := LREAL(#LoadA);
+    #TempLoadB := LREAL(#LoadB);
+    #TempLoadC := LREAL(#LoadC);
+
+    // 2. Check consistency for pairs (A,B), (A,C), (B,C)
+    // Consistency rule: Both valid AND Absolute Difference <= 200
+    
+    // Pair AB
+    IF #ValidA AND #ValidB THEN
+        #DiffAB := ABS(#LoadA - #LoadB);
+        #ConsistentAB := (#DiffAB <= 200);
+    ELSE
+        #ConsistentAB := FALSE;
+        #DiffAB := 999999; // Large value to ensure it's not picked as min if inconsistent
+    END_IF;
+
+    // Pair AC
+    IF #ValidA AND #ValidC THEN
+        #DiffAC := ABS(#LoadA - #LoadC);
+        #ConsistentAC := (#DiffAC <= 200);
+    ELSE
+        #ConsistentAC := FALSE;
+        #DiffAC := 999999;
+    END_IF;
+
+    // Pair BC
+    IF #ValidB AND #ValidC THEN
+        #DiffBC := ABS(#LoadB - #LoadC);
+        #ConsistentBC := (#DiffBC <= 200);
+    ELSE
+        #ConsistentBC := FALSE;
+        #DiffBC := 999999;
+    END_IF;
+
+    // 3. Select the consistent pair with minimum difference; break ties in order AB, AC, BC
+    // We look for the minimum diff among consistent pairs.
+    // Tie-breaking: If diffs are equal, prefer AB > AC > BC.
+    
+    // Initialize best candidate
+    #MinDiff := 999999;
+    #BestPair := 0;
+
+    // Check AB first
+    IF #ConsistentAB THEN
+        #MinDiff := #DiffAB;
+        #BestPair := 3;
+        #FoundValidPair := TRUE;
+    END_IF;
+
+    // Check AC
+    IF #ConsistentAC THEN
+        // Update if AC has smaller difference OR same difference (tie-break handled by processing order? 
+        // Requirement: "break ties in order AB, AC, BC". This means if AB and AC have same diff, pick AB.
+        // So we only update from AB to AC if AC diff is STRICTLY LESS than current MinDiff.
+        IF #DiffAC < #MinDiff THEN
+            #MinDiff := #DiffAC;
+            #BestPair := 5;
+            #FoundValidPair := TRUE;
+        ELSIF #BestPair = 0 THEN
+            // No previous valid pair found, so take this one
+            #MinDiff := #DiffAC;
+            #BestPair := 5;
+            #FoundValidPair := TRUE;
+        END_IF;
+    END_IF;
+
+    // Check BC
+    IF #ConsistentBC THEN
+        // Update if BC has smaller difference than current best
+        IF #DiffBC < #MinDiff THEN
+            #MinDiff := #DiffBC;
+            #BestPair := 6;
+            #FoundValidPair := TRUE;
+        ELSIF #BestPair = 0 THEN
+             // No previous valid pair found
+            #MinDiff := #DiffBC;
+            #BestPair := 6;
+            #FoundValidPair := TRUE;
+        END_IF;
+    END_IF;
+
+    // 4. Compute Voted Mass and Fault/Overload flags
+    IF #FoundValidPair THEN
+        #LoadFault := FALSE;
+        #PairMask := #BestPair;
+        
+        // Calculate average based on selected pair
+        CASE #BestPair OF
+            3: // AB
+                #VotedKg := (#TempLoadA + #TempLoadB) / 2.0;
+            5: // AC
+                #VotedKg := (#TempLoadA + #TempLoadC) / 2.0;
+            6: // BC
+                #VotedKg := (#TempLoadB + #TempLoadC) / 2.0;
+            ELSE
+                #VotedKg := 0.0;
+        END_CASE;
+        
+        // Check Overload: VotedKg > 10000
+        IF #VotedKg > 10000.0 THEN
+            #Overload := TRUE;
+        ELSE
+            #Overload := FALSE;
+        END_IF;
+        
+        // Release Permit: ReleaseReq AND BarrierReady AND NOT Overload
+        IF #ReleaseReq AND #BarrierReady AND NOT #Overload THEN
+            #ReleasePermit := TRUE;
+        ELSE
+            #ReleasePermit := FALSE;
+        END_IF;
+        
+    ELSE
+        // No consistent pair found
+        #LoadFault := TRUE;
+        #PairMask := 0;
+        #VotedKg := 0.0;
+        #Overload := FALSE;
+        #ReleasePermit := FALSE;
+    END_IF;
+
+END_FUNCTION_BLOCK

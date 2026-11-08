@@ -1,0 +1,84 @@
+FUNCTION_BLOCK "FB_RollGeometry"
+  VAR_INPUT
+    Reset : BOOL;
+    InitialD : LREAL;
+    Receiving : BOOL;
+    EncoderDelta : DINT;
+    SpeedMpm : LREAL;
+  END_VAR
+  VAR_OUTPUT
+    StoredLength : LREAL := 0.0;
+    Diameter : LREAL := 76.0;
+    MotorRPM : LREAL := 0.0;
+    LimitHit : BOOL := FALSE;
+    Error : BOOL := FALSE;
+  END_VAR
+  VAR
+    PiConst : LREAL := 3.141592653589793;
+    CoreD : LREAL := 76.0;
+    MaxD : LREAL := 140.0;
+    Thickness : LREAL := 0.135;
+    RollerD : LREAL := 50.0;
+    PulsesPerRev : LREAL := 1024.0;
+    MinPulses : DINT := 0;
+    MaxPulses : DINT := 1000000;
+    MinInitD : LREAL := 76.0;
+    MaxInitD : LREAL := 140.0;
+    RpmLimit : LREAL := 6000.0;
+    Initialized : BOOL := FALSE;
+    LengthMax : LREAL := 0.0;
+    RawLength : LREAL := 0.0;
+    DeltaPulses : LREAL := 0.0;
+  END_VAR
+
+  BEGIN
+    IF (#LengthMax <= 0.0) THEN
+      #LengthMax := #PiConst * (#MaxD * #MaxD - #CoreD * #CoreD) / (4.0 * #Thickness);
+    END_IF;
+
+    IF (#Reset OR NOT #Initialized) THEN
+      IF (#InitialD < #MinInitD) OR (#InitialD > #MaxInitD) THEN
+        #Error := TRUE;
+        #MotorRPM := 0.0;
+        #LimitHit := FALSE;
+      ELSE
+        #Error := FALSE;
+        #StoredLength := #PiConst * (#InitialD * #InitialD - #CoreD * #CoreD) / (4.0 * #Thickness);
+        #Diameter := #InitialD;
+        #MotorRPM := 0.0;
+        #LimitHit := FALSE;
+        #Initialized := TRUE;
+      END_IF;
+    ELSE
+      IF (#EncoderDelta < #MinPulses) OR (#EncoderDelta > #MaxPulses) THEN
+        #Error := TRUE;
+        #MotorRPM := 0.0;
+        #LimitHit := FALSE;
+      ELSE
+        #Error := FALSE;
+        #DeltaPulses := DINT_TO_LREAL(#EncoderDelta);
+        IF #Receiving THEN
+          #RawLength := #StoredLength + #DeltaPulses * #PiConst * #RollerD / #PulsesPerRev;
+        ELSE
+          #RawLength := #StoredLength - #DeltaPulses * #PiConst * #RollerD / #PulsesPerRev;
+        END_IF;
+        IF #RawLength < 0.0 THEN
+          #StoredLength := 0.0;
+          #LimitHit := TRUE;
+        ELSIF #RawLength > #LengthMax THEN
+          #StoredLength := #LengthMax;
+          #LimitHit := TRUE;
+        ELSE
+          #StoredLength := #RawLength;
+          #LimitHit := FALSE;
+        END_IF;
+        #Diameter := SQRT(#CoreD * #CoreD + 4.0 * #Thickness * #StoredLength / #PiConst);
+        #MotorRPM := #SpeedMpm * 1000.0 * #RollerD / (#PiConst * #Diameter);
+        IF #MotorRPM > #RpmLimit THEN
+          #MotorRPM := #RpmLimit;
+        ELSIF #MotorRPM < -#RpmLimit THEN
+          #MotorRPM := -#RpmLimit;
+        END_IF;
+      END_IF;
+    END_IF;
+  END_FUNCTION_BLOCK

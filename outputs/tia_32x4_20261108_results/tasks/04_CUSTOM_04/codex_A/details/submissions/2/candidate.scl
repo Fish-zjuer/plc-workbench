@@ -1,0 +1,77 @@
+FUNCTION_BLOCK "FB_RollGeometry"
+VERSION : 0.1
+   VAR_INPUT
+      Reset : BOOL;
+      InitialD : LREAL;
+      Receiving : BOOL;
+      EncoderDelta : DINT;
+      SpeedMpm : LREAL;
+   END_VAR
+   VAR_OUTPUT
+      StoredLength : LREAL;
+      Diameter : LREAL;
+      MotorRPM : LREAL;
+      LimitHit : BOOL;
+      Error : BOOL;
+   END_VAR
+   VAR
+      InitDone : BOOL;
+      RawLength : LREAL;
+      DeltaL : LREAL;
+   END_VAR
+   VAR_TEMP
+      InitReq : BOOL;
+      ValidInit : BOOL;
+      Valid : BOOL;
+   END_VAR
+
+BEGIN
+	// Geometric constants: PI = 3.141592653589793, CoreD = 76, MaxD = 140, Thickness = 0.135
+	#StoredLength := 0.0;
+	#Diameter := 76.0;
+	#InitReq := (NOT #InitDone) OR #Reset;
+	#ValidInit := ((#InitialD >= 76.0) AND (#InitialD <= 140.0));
+	#Valid := ((#SpeedMpm >= -15.0) AND (#SpeedMpm <= 15.0))
+	          AND ((#EncoderDelta >= 0) AND (#EncoderDelta <= 1000000))
+	          AND ((NOT #InitReq) OR #ValidInit);
+
+	IF #Valid THEN
+	    #Error := FALSE;
+	    IF #InitReq THEN
+	        #StoredLength := 3.141592653589793 * (#InitialD * #InitialD - 76.0 * 76.0) / (4.0 * 0.135);
+	        #Diameter := #InitialD;
+	        #MotorRPM := 0.0;
+	        #LimitHit := FALSE;
+	        #InitDone := TRUE;
+	    ELSE
+	        #DeltaL := DINT_TO_LREAL(#EncoderDelta) * 3.141592653589793 * 50.0 / 1024.0;
+	        IF #Receiving THEN
+	            #RawLength := #StoredLength + #DeltaL;
+	        ELSE
+	            #RawLength := #StoredLength - #DeltaL;
+	        END_IF;
+	        IF #RawLength < 0.0 THEN
+	            #StoredLength := 0.0;
+	            #LimitHit := TRUE;
+	        ELSIF #RawLength > 3.141592653589793 * (140.0 * 140.0 - 76.0 * 76.0) / (4.0 * 0.135) THEN
+	            #StoredLength := 3.141592653589793 * (140.0 * 140.0 - 76.0 * 76.0) / (4.0 * 0.135);
+	            #LimitHit := TRUE;
+	        ELSE
+	            #StoredLength := #RawLength;
+	            #LimitHit := FALSE;
+	        END_IF;
+	        #Diameter := SQRT(76.0 * 76.0 + 4.0 * 0.135 * #StoredLength / 3.141592653589793);
+	        #MotorRPM := #SpeedMpm * 1000.0 * 50.0 / (3.141592653589793 * #Diameter);
+	        IF #MotorRPM > 6000.0 THEN
+	            #MotorRPM := 6000.0;
+	        ELSIF #MotorRPM < -6000.0 THEN
+	            #MotorRPM := -6000.0;
+	        END_IF;
+	    END_IF;
+	ELSE
+	    #Error := TRUE;
+	    #MotorRPM := 0.0;
+	    #LimitHit := FALSE;
+	END_IF;
+
+END_FUNCTION_BLOCK

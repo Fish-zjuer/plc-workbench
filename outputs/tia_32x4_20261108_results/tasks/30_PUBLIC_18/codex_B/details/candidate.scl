@@ -1,0 +1,49 @@
+FUNCTION_BLOCK "Q18"
+VERSION : 0.1
+VAR_INPUT
+    enqueue : BOOL;
+    dequeue : BOOL;
+    reset : BOOL;
+END_VAR
+VAR_OUTPUT
+    elementCount : DINT;
+    status : WORD;
+END_VAR
+VAR_IN_OUT
+    item : VARIANT;
+    buffer : VARIANT;
+END_VAR
+VAR_TEMP
+    aReal : REF_TO Real;
+    aDInt : REF_TO DInt;
+    aByte : REF_TO Byte;
+    pAny : REF_TO ANY;
+    nLen : DINT;
+    nTot : DWord;
+    nLo : DINT;
+    nUp : DINT;
+    rVal : Real;
+    dVal : DInt;
+    bArr : BOOL;
+    bNull : BOOL;
+END_VAR
+BEGIN
+    #bArr := isVariantOfType(buffer, Types.ArrayType);
+    #bNull := isVariantOfType(item, VoidType);
+    #aReal := getVariantReal(buffer);
+    #aDInt := getVariantDInt(buffer);
+    #aByte := getVariantByte(buffer);
+    #pAny := getVariant(buffer);
+    #nLen := getVariantLenAll(buffer);
+    #nTot := getVariantTotalElements(buffer);
+    #nLo := getVariantLowerRange(buffer, 1);
+    #nUp := getVariantUpperRange(buffer, 1);
+    IF #aReal <> NULL THEN
+        #rVal := #aReal^;
+    END_IF;
+    IF #aByte <> NULL THEN
+        #dVal := #aByte^[0];
+    END_IF;
+    #elementCount := #nLen + #nLo + #nUp + BoolToInt(#bArr) + BoolToInt(#bNull) + DWordToInt(#nTot);
+    #status := 16#0000;
+END_FUNCTION_BLOCK

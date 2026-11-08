@@ -1,0 +1,176 @@
+FUNCTION_BLOCK Q16
+
+VAR_INPUT
+    processLength : USINT; // Active process-sequence length, 1..8
+    sensor1 : BOOL;        // Sensor at 1# station
+    sensor2 : BOOL;        // Sensor at 2# station
+    sensor3 : BOOL;        // Sensor at 3# station
+    sensor4 : BOOL;        // Sensor at 4# station
+    sensor5 : BOOL;        // Sensor at 5# station
+    station1Start : BOOL;  // Start button at 1# station
+    station2Complete : BOOL; // Processing completion signal at 2# station
+    station3Complete : BOOL; // Processing completion signal at 3# station
+    station4Complete : BOOL; // Processing completion signal at 4# station
+    processSequence : ARRAY[1 .. 8] OF USINT; // Processing sequence
+END_VAR
+
+VAR_OUTPUT
+    conveyorLeft : BOOL;   // Conveyor turns left
+    conveyorRight : BOOL;  // Conveyor turns right
+END_VAR
+
+VAR
+    stateIdle : BOOL := TRUE;
+    stateMoving : BOOL := FALSE;
+    stateProcessing : BOOL := FALSE;
+    stateDone : BOOL := FALSE;
+    
+    cursor : USINT;
+    currentStation : USINT;
+    targetStation : USINT;
+    
+    prevStation1Start : BOOL;
+    prevStation2Complete : BOOL;
+    prevStation3Complete : BOOL;
+    prevStation4Complete : BOOL;
+END_VAR
+
+     
+    // Determine current physical station based on sensors
+    // Priority check to ensure one station is detected
+    IF sensor1 THEN
+        currentStation := 1;
+    ELSIF sensor2 THEN
+        currentStation := 2;
+    ELSIF sensor3 THEN
+        currentStation := 3;
+    ELSIF sensor4 THEN
+        currentStation := 4;
+    ELSIF sensor5 THEN
+        currentStation := 5;
+    END_IF;
+
+    // State Machine Logic using Booleans for robustness against specific compiler quirks with numeric CASE labels
+    
+    IF stateIdle THEN
+        conveyorLeft := FALSE;
+        conveyorRight := FALSE;
+        
+        // Rising edge detection for station1Start
+        IF station1Start AND NOT prevStation1Start THEN
+            IF sensor1 THEN
+                cursor := 1;
+                IF processLength >= 1 THEN
+                    targetStation := processSequence[cursor];
+                    stateIdle := FALSE;
+                    stateMoving := TRUE;
+                ELSE
+                    // Invalid length, stay idle
+                    stateIdle := TRUE;
+                END_IF;
+            END_IF;
+        END_IF;
+        
+    ELSIF stateMoving THEN
+        // Stop conveyor if target reached
+        IF currentStation = targetStation THEN
+            conveyorLeft := FALSE;
+            conveyorRight := FALSE;
+            
+            // Check if this was the final station (output/storage)
+            IF targetStation = 5 THEN
+                // Final delivery achieved
+                stateMoving := FALSE;
+                stateDone := TRUE;
+            ELSE
+                // Need to wait for processing completion at this station
+                stateMoving := FALSE;
+                stateProcessing := TRUE;
+            END_IF;
+        ELSE
+            // Determine direction
+            // Stations are numbered 1 to 5 left to right.
+            // Left decreases index, Right increases index.
+            IF targetStation > currentStation THEN
+                // Need to move Right
+                conveyorRight := TRUE;
+                conveyorLeft := FALSE;
+            ELSIF targetStation < currentStation THEN
+                // Need to move Left
+                conveyorLeft := TRUE;
+                conveyorRight := FALSE;
+            ELSE
+                // Should not happen as we checked equality above
+                conveyorLeft := FALSE;
+                conveyorRight := FALSE;
+            END_IF;
+        END_IF;
+        
+    ELSIF stateProcessing THEN
+        conveyorLeft := FALSE;
+        conveyorRight := FALSE;
+        
+        // Check completion signals based on which station we are currently at
+        // Using rising edges or level? Problem says "Upon receiving...". 
+        // To be safe and prevent multiple triggers in one scan if signal stays high,
+        // we rely on the state transition. Once we leave Processing, we don't re-enter until next step.
+        // However, standard PLC practice often uses level detection for simple sequential control 
+        // unless specified otherwise. Given the LTL requirement "waitingProcessing & !targetComplete -> cursorHeld",
+        // we assume the signal must be present to advance.
+        
+        IF targetStation = 2 AND station2Complete THEN
+             IF cursor < processLength THEN
+                cursor := cursor + 1;
+                targetStation := processSequence[cursor];
+                stateProcessing := FALSE;
+                stateMoving := TRUE;
+            ELSE
+                stateProcessing := FALSE;
+                stateDone := TRUE;
+            END_IF;
+        ELSIF targetStation = 3 AND station3Complete THEN
+            IF cursor < processLength THEN
+                cursor := cursor + 1;
+                targetStation := processSequence[cursor];
+                stateProcessing := FALSE;
+                stateMoving := TRUE;
+            ELSE
+                stateProcessing := FALSE;
+                stateDone := TRUE;
+            END_IF;
+        ELSIF targetStation = 4 AND station4Complete THEN
+            IF cursor < processLength THEN
+                cursor := cursor + 1;
+                targetStation := processSequence[cursor];
+                stateProcessing := FALSE;
+                stateMoving := TRUE;
+            ELSE
+                stateProcessing := FALSE;
+                stateDone := TRUE;
+            END_IF;
+        END_IF;
+        
+    ELSIF stateDone THEN
+        conveyorLeft := FALSE;
+        conveyorRight := FALSE;
+        
+        // Reset if new start requested
+        IF sensor1 THEN
+             IF station1Start AND NOT prevStation1Start THEN
+                 cursor := 1;
+                 IF processLength >= 1 THEN
+                     targetStation := processSequence[cursor];
+                     stateDone := FALSE;
+                     stateMoving := TRUE;
+                 END_IF;
+             END_IF;
+        END_IF;
+    END_IF;
+
+    // Update previous edge detectors
+    prevStation1Start := station1Start;
+    prevStation2Complete := station2Complete;
+    prevStation3Complete := station3Complete;
+    prevStation4Complete := station4Complete;
+
+END_FUNCTION_BLOCK

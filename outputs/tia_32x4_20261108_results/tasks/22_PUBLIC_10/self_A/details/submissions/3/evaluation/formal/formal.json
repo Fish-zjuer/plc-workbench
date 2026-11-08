@@ -1,0 +1,269 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_10",
+  "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+  "source_sha256": "6d6449c37f23c51e0eec9369f45cf8c4114f8f90b509c27eaf3514accbb46257",
+  "model_calls": 0,
+  "declared_ltl_total": 6,
+  "mapped_assertions_total": 6,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_A\\details\\submissions\\3\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(sensorFault -> !HeaterOutput)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P02",
+      "formula": "G(temperatureAboveSetpoint -> !HeaterOutput)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P03",
+      "formula": "G(overrun -> !HeaterOutput & OverheatProtection)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P04",
+      "formula": "G(cooling -> !HeaterOutput & OverheatProtection)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P05",
+      "formula": "G(validSensor & demand & protectionReleased -> HeaterOutput)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P06",
+      "formula": "G(displayOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [],
+  "observer_definitions": {
+    "sensorFault": "TemperatureSensorInput<0 | TemperatureSensorInput>100",
+    "temperatureAboveSetpoint": "TemperatureSensorInput>SetTemperature",
+    "validSensor": "!sensorFault",
+    "demand": "TemperatureSensorInput<SetTemperature",
+    "overrun": "PVL_Overrun",
+    "cooling": "PVL_Protect",
+    "protectionReleased": "!PVL_Protect",
+    "displayOK": "CurrentTemperature=TemperatureSensorInput & SetTempDisplay=SetTemperature & HeaterStatus=HeaterOutput"
+  },
+  "message": "TON instance heaterTimer must be called exactly once per scan for an exact PLCverif model",
+  "seconds": 0.073,
+  "model_source_sha256": "62fec27d5515a2755fcafa9658749f1efec0f2e22869fb7b8f0660729d5fb01a",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q10"
+    },
+    {
+      "kind": "layout_attribute",
+      "attribute": "S7_Optimized_Access",
+      "reason": "No absolute memory, pointers or references admitted by this adapter"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentTemperature"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "TemperatureSensorInput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SetTempDisplay"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SetTemperature"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensorFault"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "TemperatureSensorInput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "TemperatureSensorInput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "heatDemand"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensorFault"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "TemperatureSensorInput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "SetTemperature"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HeaterOutput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "protectionReleased"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "sensorFault"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "heaterTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "coolTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "protectionLatched"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "protectionLatched"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "heaterTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "coolTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "coolTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "protectionLatched"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "protectionReleased"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "coolTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "coolTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "protectionLatched"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HeaterOutput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "heatDemand"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "heaterTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HeaterOutput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "heaterTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "protectionLatched"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "protectionReleased"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HeaterOutput"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "heaterTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "coolTimer"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "OverheatProtection"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "protectionLatched"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HeaterStatus"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HeaterOutput"
+    },
+    {
+      "kind": "timer_spelling",
+      "count": 11,
+      "semantics": "Delegated to shared ST adapter"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

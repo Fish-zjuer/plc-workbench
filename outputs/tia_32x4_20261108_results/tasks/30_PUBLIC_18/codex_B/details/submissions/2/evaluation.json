@@ -1,0 +1,82 @@
+{
+  "status": "generation_failed",
+  "phase": "generate_blocks",
+  "message": "Siemens.Engineering.EngineeringTargetInvocationException: Error when calling method 'GenerateBlocksFromSource' of type 'Siemens.Engineering.SW.ExternalSources.PlcExternalSource'.\r\n\r\nAn error occurred during code generation. 外部源文件 WB_63baabc5 正在生成块 \"Q18\"... Interface: 数据类型 TO_VARIANT 未知。  Interface: 数据类型 TO_VARIANT 未知。  Interface: 数据类型 VariantType 未知。  Interface: 数据类型 VariantType 未知。  Interface: 数据类型 VariantInfo 未知。  Interface: 数据类型 ArrayInfoConst 未知。  Interface: 该块不支持引用。  Interface: 该块不支持引用。   8 个错误，1 个警告：导入“WB_63baabc5”完成，但存在错误。     行 000058: 块“ Q18” 将创建为具有“优化的块访问”属性。  \r\n   在 Siemens.Engineering.Private.Session.Siemens.Engineering.Private.IInstanceSession.InvokeAction[TC](LifetimeContractHandle`1 lifetimeContractHandle, String name, IEnumerable`1 parameters, String fullName)\r\n   在 Siemens.Engineering.Private.InternalInstanceAccess`2.InvokeAction(String name, IEnumerable`1 parameters)\r\n   在 CompileJob.Run(String projectFile, String sclFile) 位置 E:\\lab\\GenAI\\plc-workbench\\integrations\\tia_bridge\\Program.cs:行号 97",
+  "platform": "TIA Portal V21",
+  "returncode": 1,
+  "source_sha256": "30d63deae9425a1b0cfddddab13079b9cac19993dd674bd23e63d7bda8f43ab4",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "failed",
+  "behavior_tested": false,
+  "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\codex_B\\details\\submissions\\2\\evaluation\\compile",
+  "seconds": 35.358,
+  "queue_seconds": 102.991,
+  "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af",
+  "target": "tia",
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "30d63deae9425a1b0cfddddab13079b9cac19993dd674bd23e63d7bda8f43ab4",
+    "declared_ltl_total": 9,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> queueEmpty)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P08",
+        "formula": "G(countMatchesQueue)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P09",
+        "formula": "G(countWithinCapacity)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "generation_failed"
+}

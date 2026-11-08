@@ -1,0 +1,50 @@
+FUNCTION_BLOCK "IPv4Parser"
+VERSION : 0.1
+
+VAR_INPUT
+    ipText : STRING(254);
+END_VAR
+
+VAR_OUTPUT
+    ipValue : UDINT;
+END_VAR
+
+VAR_TEMP
+    i : INT;
+    len : INT;
+    segIndex : INT;
+    segValue : UDINT;
+    charCode : BYTE;
+    digitsInSeg : INT;
+    segCount : INT;
+    value1 : UDINT;
+    value2 : UDINT;
+    value3 : UDINT;
+    value4 : UDINT;
+    invalid : BOOL;
+    finished : BOOL;
+    numberOfChars : INT;
+END_VAR
+
+VAR_TEMP
+    currentSeg : UDINT;
+    idx : INT;
+    c : BYTE;
+    digitCount : INT;
+    valueOut : UDINT;
+    addrLen : INT;
+    segNo : INT;
+    segVal : UDINT;
+    digitCnt : INT;
+    bad : BOOL;
+    done : BOOL;
+    c3 : INT;
+    v1 : UDINT;
+    v2 : UDINT;
+    v3 : UDINT;
+    v4 : UDINT;
+END_VAR
+
+BEGIN
+    #ipValue := 0;
+END_FUNCTION_BLOCK

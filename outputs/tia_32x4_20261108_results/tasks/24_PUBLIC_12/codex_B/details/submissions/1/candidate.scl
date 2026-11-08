@@ -1,0 +1,73 @@
+FUNCTION_BLOCK "SlabThicknessMonitor"
+VERSION : 0.1
+
+VAR_INPUT
+    THICKNESS_FAULT : BOOL;
+    THICKNESS_SIGNAL_VALID : BOOL;
+    CUTTING_RUN : BOOL;
+    FaultTimestamp : DINT;
+    CycleTime : TIME := T#10ms;
+END_VAR
+
+VAR_OUTPUT
+    THICKNESS_ALARM : BOOL;
+    Slab_Fault_Counter : UINT;
+    Slab_Runtime_Accumulator : LTIME;
+    Slab_Fault_History AT %QW* : ARRAY[0..4] OF DINT;
+END_VAR
+
+VAR
+    PreviousValidFault : BOOL := FALSE;
+    HoldElapsed : LTIME := LTIME#0ms;
+    HoldActive : BOOL := FALSE;
+    HistoryIndex : INT := 0;
+END_VAR
+
+BEGIN
+    IF NOT THICKNESS_SIGNAL_VALID THEN
+        // Signal lost: switch the alarm off and clear its holding state.
+        THICKNESS_ALARM := FALSE;
+        HoldActive := FALSE;
+        HoldElapsed := LTIME#0ms;
+        PreviousValidFault := FALSE;
+    ELSE
+        IF HoldActive THEN
+            HoldElapsed := HoldElapsed + DINT_TO_LTIME(TIME_TO_DINT(CycleTime) * 1000);
+            IF HoldElapsed >= DINT_TO_LTIME(500000) THEN
+                HoldActive := FALSE;
+                HoldElapsed := LTIME#0ms;
+            END_IF;
+        END_IF;
+
+        IF THICKNESS_FAULT AND (NOT PreviousValidFault) THEN
+            // New valid fault occurrence: count it and log the timestamp.
+            IF Slab_Fault_Counter < 65535 THEN
+                Slab_Fault_Counter := Slab_Fault_Counter + 1;
+            END_IF;
+            IF HistoryIndex < 5 THEN
+                Slab_Fault_History[HistoryIndex] := FaultTimestamp;
+                HistoryIndex := HistoryIndex + 1;
+            ELSE
+                Slab_Fault_History[4] := Slab_Fault_History[3];
+                Slab_Fault_History[3] := Slab_Fault_History[2];
+                Slab_Fault_History[2] := Slab_Fault_History[1];
+                Slab_Fault_History[1] := Slab_Fault_History[0];
+                Slab_Fault_History[0] := FaultTimestamp;
+            END_IF;
+            HoldActive := TRUE;
+            HoldElapsed := LTIME#0ms;
+        END_IF;
+
+        PreviousValidFault := THICKNESS_FAULT;
+
+        IF THICKNESS_FAULT OR HoldActive THEN
+            THICKNESS_ALARM := TRUE;
+        ELSE
+            THICKNESS_ALARM := FALSE;
+        END_IF;
+
+        IF CUTTING_RUN AND (NOT THICKNESS_FAULT) THEN
+            Slab_Runtime_Accumulator := Slab_Runtime_Accumulator + DINT_TO_LTIME(TIME_TO_DINT(CycleTime) * 1000);
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

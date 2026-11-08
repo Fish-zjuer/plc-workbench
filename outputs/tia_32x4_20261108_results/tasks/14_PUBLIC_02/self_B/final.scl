@@ -1,0 +1,77 @@
+FUNCTION_BLOCK "EdgeDetection"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      value : DWORD; // The input value to be checked for changes and edge triggering
+   END_VAR
+
+   VAR_OUTPUT
+      hasChanged : BOOL; // True indicates that the input value has changed
+      hasRisingEdges : BOOL; // True indicates that rising edges have occurred in the input value
+      risingBits : DWORD; // The bit stream of rising edges
+      noOfRisingBits : USINT; // The number of rising edges in the input value
+      hasFallingEdges : BOOL; // True indicates that falling edges have occurred in the input value
+      fallingBits : DWORD; // The bit stream of falling edges
+      noOfFallingBits : USINT; // The number of falling edges in the input value
+   END_VAR
+
+   VAR
+      prevValue : DWORD;
+      firstCall : BOOL := TRUE;
+      i : INT;
+      mask : DWORD;
+      tempRising : DWORD;
+      tempFalling : DWORD;
+   END_VAR
+
+BEGIN
+    IF #firstCall THEN
+        #prevValue := #value;
+        #firstCall := FALSE;
+        #hasChanged := FALSE;
+        #risingBits := 0;
+        #fallingBits := 0;
+        #noOfRisingBits := 0;
+        #noOfFallingBits := 0;
+        #hasRisingEdges := FALSE;
+        #hasFallingEdges := FALSE;
+    ELSE
+        // Calculate change
+        #hasChanged := (#value <> #prevValue);
+
+        // Calculate Rising Edges: Bit was 0 in prev, is 1 in current
+        // Formula: value AND NOT(prevValue)
+        #tempRising := #value AND (NOT #prevValue);
+        #risingBits := #tempRising;
+        #hasRisingEdges := (#tempRising <> 0);
+
+        // Calculate Falling Edges: Bit was 1 in prev, is 0 in current
+        // Formula: prevValue AND NOT(value)
+        #tempFalling := #prevValue AND (NOT #value);
+        #fallingBits := #tempFalling;
+        #hasFallingEdges := (#tempFalling <> 0);
+
+        // Count Rising Bits (Popcount)
+        #noOfRisingBits := 0;
+        FOR #i := 0 TO 31 DO
+            // Explicitly cast literal 1 to DWORD to avoid type mismatch error in SHL
+            #mask := SHL(IN := DWORD#1, N := #i);
+            IF (#tempRising AND #mask) <> 0 THEN
+                #noOfRisingBits := #noOfRisingBits + 1;
+            END_IF;
+        END_FOR;
+
+        // Count Falling Bits (Popcount)
+        #noOfFallingBits := 0;
+        FOR #i := 0 TO 31 DO
+            // Explicitly cast literal 1 to DWORD to avoid type mismatch error in SHL
+            #mask := SHL(IN := DWORD#1, N := #i);
+            IF (#tempFalling AND #mask) <> 0 THEN
+                #noOfFallingBits := #noOfFallingBits + 1;
+            END_IF;
+        END_FOR;
+
+        // Update previous value for next cycle
+        #prevValue := #value;
+    END_IF;
+END_FUNCTION_BLOCK

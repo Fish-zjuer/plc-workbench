@@ -1,0 +1,113 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_13",
+  "dataset_sha256": "16f9d7d46ea2ea1501bcceae00d4bdb0c5a85d7318ce4d6947ff5669a9687b18",
+  "source_sha256": "82fc4d8c1265efe922673840c2192b81f42243db38099b8a5a49079f908f6026",
+  "model_calls": 0,
+  "declared_ltl_total": 6,
+  "mapped_assertions_total": 6,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\25_PUBLIC_13\\codex_B\\details\\submissions\\2\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(initial -> hvacInitialOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P02",
+      "formula": "G(!eligible -> !SUPPLY_FAN_RUN)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P03",
+      "formula": "G(SUPPLY_FAN_RUN -> eligible & fanReady)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P04",
+      "formula": "G(eligible & fanReady -> SUPPLY_FAN_RUN)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P05",
+      "formula": "G(normalCalculation -> adjustmentOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+    },
+    {
+      "id": "P06",
+      "formula": "G(adjustmentWithinFourDegrees)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190,
+    "observer_thresholds": [
+      {
+        "binding": "fanReady",
+        "threshold_ms": 30000,
+        "minimum_scan_bound": 3001,
+        "covered": false
+      }
+    ]
+  },
+  "assumptions": [
+    "0<=HVAC_MODE_SELECTOR & HVAC_MODE_SELECTOR<=3"
+  ],
+  "observer_definitions": {
+    "initial": "PVL_First",
+    "hvacInitialOK": "PVL_InitOK",
+    "eligible": "OCCUPANCY_DETECTED & HVAC_MODE_SELECTOR<>3",
+    "fanReady": "PVL_Started & PVL_NowMs-PVL_StartMs>=30000",
+    "normalCalculation": "true",
+    "adjustmentOK": "TEMP_SETPOINT_ADJUST=PVL_Adjust",
+    "adjustmentWithinFourDegrees": "0<=TEMP_SETPOINT_ADJUST & TEMP_SETPOINT_ADJUST<=4"
+  },
+  "message": "TON instance StartTimer must be called exactly once per scan for an exact PLCverif model",
+  "seconds": 0.005,
+  "model_source_sha256": "be2214fe6a0a8142bbd0746c1eeae4974846bb2099dc328eacc629b57225d7e1",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q13"
+    },
+    {
+      "kind": "timer_spelling",
+      "count": 1,
+      "semantics": "Delegated to shared ST adapter"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

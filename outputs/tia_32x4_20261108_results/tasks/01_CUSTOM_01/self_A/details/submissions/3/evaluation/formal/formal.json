@@ -1,0 +1,632 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__CUSTOM_01",
+  "dataset_sha256": "1466909fed26dd6b969442629d47b71650b1f141b79137869f695a852a72ae2b",
+  "source_sha256": "76cfbcaf4bce4d3cde59e253e845b0f020f674265b0a9becd5036e7f80b3d301",
+  "model_calls": 0,
+  "declared_ltl_total": 6,
+  "mapped_assertions_total": 6,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\01_CUSTOM_01\\self_A\\details\\submissions\\3\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(HasTarget <-> (Enable & nonempty(E)))",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif could not build a structured C model: .\n    - [Error] The called unit '' is not a valid function or function block. Line: 215, offset: 5851.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 215, offset: 5855.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5907.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5911.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5973.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5977.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6029.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6033.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6095.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6099.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6151.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6155.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6217.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6221.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6273.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6277.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6339.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6343.\n    - [Warning] Too deeply nested IF statement. Line: 221, offset: 6427.\n    - [Warning] Too deeply nested IF statement. Line: 222, offset: 6491.\n    - [Warning] Too deeply nested IF statement. Line: 223, offset: 6555.\n    - [Warning] Too deeply nested IF statement. Line: 224, offset: 6619.\n    - [Warning] Too deeply nested IF statement. Line: 225, offset: 6683.\n    - [Warning] Too deeply nested IF statement. Line: 226, offset: 6747.\n    - [Warning] Too deeply nested IF statement. Line: 228, offset: 6838.\n    - [Warning] Too deeply nested IF statement. Line: 229, offset: 6902.\n    - [Warning] Too deeply nested IF statement. Line: 230, offset: 6966.\n    - [Warning] Too deeply nested IF statement. Line: 231, offset: 7030.\n    - [Warning] Too deeply nested IF statement. Line: 232, offset: 7094.\n    - [Warning] Too deeply nested IF statement. Line: 233, offset: 7158.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_Active\n  -job.req.pattern_params.8 = instance.PVL_Done\n  -job.req.pattern_params.9 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P02",
+      "formula": "G(selectedOK)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif could not build a structured C model: .\n    - [Error] The called unit '' is not a valid function or function block. Line: 215, offset: 5851.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 215, offset: 5855.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5907.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5911.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5973.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5977.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6029.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6033.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6095.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6099.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6151.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6155.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6217.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6221.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6273.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6277.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6339.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6343.\n    - [Warning] Too deeply nested IF statement. Line: 221, offset: 6427.\n    - [Warning] Too deeply nested IF statement. Line: 222, offset: 6491.\n    - [Warning] Too deeply nested IF statement. Line: 223, offset: 6555.\n    - [Warning] Too deeply nested IF statement. Line: 224, offset: 6619.\n    - [Warning] Too deeply nested IF statement. Line: 225, offset: 6683.\n    - [Warning] Too deeply nested IF statement. Line: 226, offset: 6747.\n    - [Warning] Too deeply nested IF statement. Line: 228, offset: 6838.\n    - [Warning] Too deeply nested IF statement. Line: 229, offset: 6902.\n    - [Warning] Too deeply nested IF statement. Line: 230, offset: 6966.\n    - [Warning] Too deeply nested IF statement. Line: 231, offset: 7030.\n    - [Warning] Too deeply nested IF statement. Line: 232, offset: 7094.\n    - [Warning] Too deeply nested IF statement. Line: 233, offset: 7158.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_Active\n  -job.req.pattern_params.8 = instance.PVL_Done\n  -job.req.pattern_params.9 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P03",
+      "formula": "G((!Enable | empty(E)) -> (!HasTarget & TargetFloor=CurrentFloor & NextDirection=0))",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif could not build a structured C model: .\n    - [Error] The called unit '' is not a valid function or function block. Line: 215, offset: 5851.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 215, offset: 5855.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5907.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5911.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5973.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5977.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6029.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6033.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6095.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6099.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6151.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6155.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6217.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6221.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6273.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6277.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6339.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6343.\n    - [Warning] Too deeply nested IF statement. Line: 221, offset: 6427.\n    - [Warning] Too deeply nested IF statement. Line: 222, offset: 6491.\n    - [Warning] Too deeply nested IF statement. Line: 223, offset: 6555.\n    - [Warning] Too deeply nested IF statement. Line: 224, offset: 6619.\n    - [Warning] Too deeply nested IF statement. Line: 225, offset: 6683.\n    - [Warning] Too deeply nested IF statement. Line: 226, offset: 6747.\n    - [Warning] Too deeply nested IF statement. Line: 228, offset: 6838.\n    - [Warning] Too deeply nested IF statement. Line: 229, offset: 6902.\n    - [Warning] Too deeply nested IF statement. Line: 230, offset: 6966.\n    - [Warning] Too deeply nested IF statement. Line: 231, offset: 7030.\n    - [Warning] Too deeply nested IF statement. Line: 232, offset: 7094.\n    - [Warning] Too deeply nested IF statement. Line: 233, offset: 7158.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_Active\n  -job.req.pattern_params.8 = instance.PVL_Done\n  -job.req.pattern_params.9 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P04",
+      "formula": "G((Enable & CurrentFloor_in_E) -> (HasTarget & TargetFloor=CurrentFloor & NextDirection=0))",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif could not build a structured C model: .\n    - [Error] The called unit '' is not a valid function or function block. Line: 215, offset: 5851.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 215, offset: 5855.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5907.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5911.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5973.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5977.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6029.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6033.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6095.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6099.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6151.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6155.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6217.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6221.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6273.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6277.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6339.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6343.\n    - [Warning] Too deeply nested IF statement. Line: 221, offset: 6427.\n    - [Warning] Too deeply nested IF statement. Line: 222, offset: 6491.\n    - [Warning] Too deeply nested IF statement. Line: 223, offset: 6555.\n    - [Warning] Too deeply nested IF statement. Line: 224, offset: 6619.\n    - [Warning] Too deeply nested IF statement. Line: 225, offset: 6683.\n    - [Warning] Too deeply nested IF statement. Line: 226, offset: 6747.\n    - [Warning] Too deeply nested IF statement. Line: 228, offset: 6838.\n    - [Warning] Too deeply nested IF statement. Line: 229, offset: 6902.\n    - [Warning] Too deeply nested IF statement. Line: 230, offset: 6966.\n    - [Warning] Too deeply nested IF statement. Line: 231, offset: 7030.\n    - [Warning] Too deeply nested IF statement. Line: 232, offset: 7094.\n    - [Warning] Too deeply nested IF statement. Line: 233, offset: 7158.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_Active\n  -job.req.pattern_params.8 = instance.PVL_Done\n  -job.req.pattern_params.9 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P05",
+      "formula": "G(HasTarget -> targetInE)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif could not build a structured C model: .\n    - [Error] The called unit '' is not a valid function or function block. Line: 215, offset: 5851.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 215, offset: 5855.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5907.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5911.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5973.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5977.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6029.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6033.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6095.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6099.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6151.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6155.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6217.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6221.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6273.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6277.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6339.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6343.\n    - [Warning] Too deeply nested IF statement. Line: 221, offset: 6427.\n    - [Warning] Too deeply nested IF statement. Line: 222, offset: 6491.\n    - [Warning] Too deeply nested IF statement. Line: 223, offset: 6555.\n    - [Warning] Too deeply nested IF statement. Line: 224, offset: 6619.\n    - [Warning] Too deeply nested IF statement. Line: 225, offset: 6683.\n    - [Warning] Too deeply nested IF statement. Line: 226, offset: 6747.\n    - [Warning] Too deeply nested IF statement. Line: 228, offset: 6838.\n    - [Warning] Too deeply nested IF statement. Line: 229, offset: 6902.\n    - [Warning] Too deeply nested IF statement. Line: 230, offset: 6966.\n    - [Warning] Too deeply nested IF statement. Line: 231, offset: 7030.\n    - [Warning] Too deeply nested IF statement. Line: 232, offset: 7094.\n    - [Warning] Too deeply nested IF statement. Line: 233, offset: 7158.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_Active\n  -job.req.pattern_params.8 = instance.PVL_Done\n  -job.req.pattern_params.9 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\candidate.scl\n\n\n== Executing Agents ==\n"
+    },
+    {
+      "id": "P06",
+      "formula": "G(requestArraysPreserved)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "PLCverif could not build a structured C model: .\n    - [Error] The called unit '' is not a valid function or function block. Line: 215, offset: 5851.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 215, offset: 5855.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5907.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5911.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5973.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5977.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6029.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6033.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6095.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6099.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6151.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6155.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6217.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6221.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6273.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6277.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6339.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6343.\n    - [Warning] Too deeply nested IF statement. Line: 221, offset: 6427.\n    - [Warning] Too deeply nested IF statement. Line: 222, offset: 6491.\n    - [Warning] Too deeply nested IF statement. Line: 223, offset: 6555.\n    - [Warning] Too deeply nested IF statement. Line: 224, offset: 6619.\n    - [Warning] Too deeply nested IF statement. Line: 225, offset: 6683.\n    - [Warning] Too deeply nested IF statement. Line: 226, offset: 6747.\n    - [Warning] Too deeply nested IF statement. Line: 228, offset: 6838.\n    - [Warning] Too deeply nested IF statement. Line: 229, offset: 6902.\n    - [Warning] Too deeply nested IF statement. Line: 230, offset: 6966.\n    - [Warning] Too deeply nested IF statement. Line: 231, offset: 7030.\n    - [Warning] Too deeply nested IF statement. Line: 232, offset: 7094.\n    - [Warning] Too deeply nested IF statement. Line: 233, offset: 7158.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_Active\n  -job.req.pattern_params.8 = instance.PVL_Done\n  -job.req.pattern_params.9 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\candidate.scl\n\n\n== Executing Agents ==\n"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [
+    "1<=CurrentFloor & CurrentFloor<=6",
+    "-1<=Direction & Direction<=1"
+  ],
+  "observer_definitions": {
+    "nonempty(E)": "PVL_Any",
+    "empty(E)": "!PVL_Any",
+    "CurrentFloor_in_E": "PVL_AtFloor",
+    "selectedOK": "TargetFloor=PVL_Target & NextDirection=PVL_Dir",
+    "targetInE": "PVL_TargetInE",
+    "requestArraysPreserved": "PVL_ReadOnly"
+  },
+  "source_adaptations": [],
+  "instrumented_sha256": "c824cefd6f9fc54bbc2b4e040aa4864e6d6c039e658b46ca38cd9e032e199bd6",
+  "tool_sha256": {
+    "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+    "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+    "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+  },
+  "plcverif_seconds": 3.304,
+  "message": "PLCverif could not build a structured C model: .\n    - [Error] The called unit '' is not a valid function or function block. Line: 215, offset: 5851.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 215, offset: 5855.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5907.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5911.\n    - [Error] The called unit '' is not a valid function or function block. Line: 216, offset: 5973.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 216, offset: 5977.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6029.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6033.\n    - [Error] The called unit '' is not a valid function or function block. Line: 217, offset: 6095.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 217, offset: 6099.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6151.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6155.\n    - [Error] The called unit '' is not a valid function or function block. Line: 218, offset: 6217.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 218, offset: 6221.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6273.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6277.\n    - [Error] The called unit '' is not a valid function or function block. Line: 219, offset: 6339.\n    - [Error] Unnamed call parameters are only allowed for function calls. Line: 219, offset: 6343.\n    - [Warning] Too deeply nested IF statement. Line: 221, offset: 6427.\n    - [Warning] Too deeply nested IF statement. Line: 222, offset: 6491.\n    - [Warning] Too deeply nested IF statement. Line: 223, offset: 6555.\n    - [Warning] Too deeply nested IF statement. Line: 224, offset: 6619.\n    - [Warning] Too deeply nested IF statement. Line: 225, offset: 6683.\n    - [Warning] Too deeply nested IF statement. Line: 226, offset: 6747.\n    - [Warning] Too deeply nested IF statement. Line: 228, offset: 6838.\n    - [Warning] Too deeply nested IF statement. Line: 229, offset: 6902.\n    - [Warning] Too deeply nested IF statement. Line: 230, offset: 6966.\n    - [Warning] Too deeply nested IF statement. Line: 231, offset: 7030.\n    - [Warning] Too deeply nested IF statement. Line: 232, offset: 7094.\n    - [Warning] Too deeply nested IF statement. Line: 233, offset: 7158.\n    - [Error] Unable to generate the CFA due to errors in parsing the source file.\n* Reporting (0 ms): Unknown\n\nSettings\n--------\n  -description = \"\"\n  -id = ltl-model\n  -job = verif\n  -job.backend = cbmc\n  -job.backend.binary_path = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model-build-only-no-engine.exe\n  -job.backend.exec_output_to_console = false\n  -job.backend.exec_output_to_file = false\n  -job.backend.incremental_bmc = false\n  -job.backend.model_variant = CFD_STRUCTURED\n  -job.backend.timeout = 5\n  -job.backend.timeout_executor_path = .\\tools\\cbmc\\TimeoutExecutor.dll\n  -job.backend.unwind = 10\n  -job.backend.unwind_step = 1\n  -job.backend.verbosity = 7\n  -job.reporters.0 = plaintext\n  -job.reporters.0.include_settings = true\n  -job.reporters.0.max_output_length = 5000\n  -job.reporters.0.min_log_level = Warning\n  -job.reporters.0.show_logitem_timestapms = false\n  -job.reporters.0.write_to_console = true\n  -job.reporters.0.write_to_file = true\n  -job.req = pattern\n  -job.req.pattern_file = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\patterns.xml\n  -job.req.pattern_id = original-ltl\n  -job.req.pattern_params.1 = instance.PVL_A0\n  -job.req.pattern_params.2 = instance.PVL_A1\n  -job.req.pattern_params.3 = instance.PVL_A2\n  -job.req.pattern_params.4 = instance.PVL_A3\n  -job.req.pattern_params.5 = instance.PVL_A4\n  -job.req.pattern_params.6 = instance.PVL_A5\n  -job.req.pattern_params.7 = instance.PVL_Active\n  -job.req.pattern_params.8 = instance.PVL_Done\n  -job.req.pattern_params.9 = instance.PVL_Domain\n  -lf = step7\n  -lf.compiler = Step7v55\n  -lf.entry = PVL_Harness\n  -name = unnamed\n  -output = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\model\n  -sourcefiles.0 = C:\\Users\\Lenovo\\AppData\\Local\\Temp\\plcverif_21cbbn3v\\candidate.scl\n\n\n== Executing Agents ==\n",
+  "seconds": 3.356,
+  "model_source_sha256": "59b5ac066cb75214b56a52b9040a8a05bd6c93236f4f324661e47b28e00cdedd",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "FB_ElevatorTarget"
+    },
+    {
+      "kind": "layout_attribute",
+      "attribute": "S7_Optimized_Access",
+      "reason": "No absolute memory, pointers or references admitted by this adapter"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HasTarget"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "TargetFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "NextDirection"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "anyEligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "eligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CabReq"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HallReq"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "FullLoad"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "eligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "anyEligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Enable"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "anyEligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HasTarget"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "TargetFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "NextDirection"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "eligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CabReq"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HallReq"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "FullLoad"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "eligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HasTarget"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "TargetFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "NextDirection"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "eligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CabReq"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HallReq"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "FullLoad"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "eligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "eligible"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "i"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Direction"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "Direction"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "absDiff"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestAbs"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "absDiff"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestAbs"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "upFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "downFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "found"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HasTarget"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "TargetFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "NextDirection"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "bestFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "NextDirection"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "NextDirection"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "HasTarget"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "TargetFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "CurrentFloor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "NextDirection"
+    },
+    {
+      "kind": "range_token_spacing",
+      "count": 2
+    },
+    {
+      "kind": "fresh_temporary_inputs",
+      "interface_additions": [
+        {
+          "direction": "Input",
+          "name": "WBTEMP_0",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_1",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_2",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_3",
+          "type": "BOOL"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_4",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_5",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_6",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_7",
+          "type": "INT"
+        },
+        {
+          "direction": "Input",
+          "name": "WBTEMP_8",
+          "type": "INT"
+        }
+      ],
+      "semantics": "Fresh independent scalar values at each entry FB call; exact fixed array/struct members, no zero or retained-state assumption"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

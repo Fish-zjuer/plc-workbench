@@ -1,0 +1,49 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "eab5819f15cd304db1c350f8fcb763713b3e11c81b0d5302114264fae2d8b67c",
+  "declared_ltl_total": 7,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(initial -> slabInitialOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(!THICKNESS_SIGNAL_VALID -> !THICKNESS_ALARM)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(validFault -> THICKNESS_ALARM)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(THICKNESS_SIGNAL_VALID & holdRequired -> THICKNESS_ALARM)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(validFaultRise -> countIncremented & newestHistoryShiftOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(!validFaultRise -> faultCountHeld & historyHeld)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(runtimeOK)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

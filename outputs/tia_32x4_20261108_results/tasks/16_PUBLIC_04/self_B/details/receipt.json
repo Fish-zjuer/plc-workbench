@@ -1,0 +1,696 @@
+{
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_04",
+  "dataset_sha256": "806a753737d793b2e5f0bfdb1b506823d7da92a941046a814e398902010e7f25",
+  "target": "tia",
+  "model": "qwen3.8-flash",
+  "inference_parameters": {
+    "enable_thinking": false
+  },
+  "status": "revision_limit",
+  "model_calls": 6,
+  "token_usage": {
+    "prompt_tokens": 18609,
+    "completion_tokens": 5244,
+    "total_tokens": 23853,
+    "cost": null,
+    "usage_calls": 6,
+    "complete": true,
+    "cost_complete": false,
+    "recorded_cost": 0.0
+  },
+  "metrics": [
+    {
+      "model": "qwen3.8-flash",
+      "usage": {
+        "prompt_tokens": 1830,
+        "completion_tokens": 636,
+        "total_tokens": 2466,
+        "prompt_tokens_details": {
+          "cached_tokens": 1024,
+          "text_tokens": 1830
+        },
+        "prompt_cache_hit_tokens": 1024,
+        "prompt_cache_miss_tokens": 806,
+        "cost": "¥0.002342"
+      },
+      "seconds": 10.075
+    },
+    {
+      "model": "qwen3.8-flash",
+      "usage": {
+        "completion_tokens": 683,
+        "prompt_tokens": 3815,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3815
+        },
+        "total_tokens": 4498,
+        "cost": "¥0.004652"
+      },
+      "seconds": 9.079
+    },
+    {
+      "model": "qwen3.8-flash",
+      "usage": {
+        "completion_tokens": 984,
+        "prompt_tokens": 3249,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3249
+        },
+        "total_tokens": 4233,
+        "cost": "¥0.004994"
+      },
+      "seconds": 8.43
+    },
+    {
+      "model": "qwen3.8-flash",
+      "usage": {
+        "completion_tokens": 1134,
+        "prompt_tokens": 4158,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 4158
+        },
+        "total_tokens": 5292,
+        "cost": "¥0.006068"
+      },
+      "seconds": 12.845
+    },
+    {
+      "model": "qwen3.8-flash",
+      "usage": {
+        "completion_tokens": 700,
+        "prompt_tokens": 2779,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 2779
+        },
+        "total_tokens": 3479,
+        "cost": "¥0.003908"
+      },
+      "seconds": 9.479
+    },
+    {
+      "model": "qwen3.8-flash",
+      "usage": {
+        "prompt_tokens": 2778,
+        "completion_tokens": 1107,
+        "total_tokens": 3885,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 2778
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 2778,
+        "cost": "¥0.00495"
+      },
+      "seconds": 20.835
+    }
+  ],
+  "seconds": 633.114,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\16_PUBLIC_04\\self_B\\details",
+  "submissions": [
+    {
+      "status": "generation_failed",
+      "phase": "generate_blocks",
+      "message": "Siemens.Engineering.EngineeringTargetInvocationException: Error when calling method 'GenerateBlocksFromSource' of type 'Siemens.Engineering.SW.ExternalSources.PlcExternalSource'.\r\n\r\nAn error occurred during code generation. 外部源文件 WB_e063b74f 正在生成块 \"Q04\"... Interface: 数据类型 LTime 未知。   1 个错误，1 个警告：导入“WB_e063b74f”完成，但存在错误。     行 000017: 块“ Q04” 将创建为具有“优化的块访问”属性。  \r\n   在 Siemens.Engineering.Private.Session.Siemens.Engineering.Private.IInstanceSession.InvokeAction[TC](LifetimeContractHandle`1 lifetimeContractHandle, String name, IEnumerable`1 parameters, String fullName)\r\n   在 Siemens.Engineering.Private.InternalInstanceAccess`2.InvokeAction(String name, IEnumerable`1 parameters)\r\n   在 CompileJob.Run(String projectFile, String sclFile) 位置 E:\\lab\\GenAI\\plc-workbench\\integrations\\tia_bridge\\Program.cs:行号 97",
+      "platform": "TIA Portal V21",
+      "returncode": 1,
+      "source_sha256": "cfb93e88b197dc120fa4469fbb79332e8133f836bde107d8834a96b7578cbe5d",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\16_PUBLIC_04\\self_B\\details\\submissions\\1\\evaluation\\compile",
+      "seconds": 38.027,
+      "queue_seconds": 199.783,
+      "dataset_sha256": "806a753737d793b2e5f0bfdb1b506823d7da92a941046a814e398902010e7f25",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "cfb93e88b197dc120fa4469fbb79332e8133f836bde107d8834a96b7578cbe5d",
+        "declared_ltl_total": 7,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(initial -> pumpInitialOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(!PASTE_E_STOP_NC -> !VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!VISCOSITY_OK -> !VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(VFD_RUN -> debounced)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(permissive & debounced -> VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(runtimeOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(maintenanceOK)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "generation_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 3,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 3,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "generation_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 7,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 7,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "invalid_candidate",
+      "target_compile": "not_executed",
+      "message": "SCL changed the frozen dataset interface; expected [{\"direction\": \"Input\", \"name\": \"VISCOSITY_OK\", \"type\": \"BOOL\"}, {\"direction\": \"Input\", \"name\": \"PASTE_E_STOP_NC\", \"type\": \"BOOL\"}, {\"direction\": \"Input\", \"name\": \"DebounceTime\", \"type\": \"TIME\"}, {\"direction\": \"Input\", \"name\": \"CycleTime\", \"type\": \"TIME\"}, {\"direction\": \"Output\", \"name\": \"VFD_RUN\", \"type\": \"BOOL\"}, {\"direction\": \"Output\", \"name\": \"PUMP_MAINT_DUE\", \"type\": \"BOOL\"}, {\"direction\": \"Output\", \"name\": \"PUMP_RUNTIME_ACC\", \"type\": \"LTIME\"}]",
+      "target": "tia",
+      "behavior_tested": false,
+      "queue_seconds": 67.136,
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "1b12d27bbf5208ef6f6a3fc326a12e94891f60949ceee36cab4f6a29ad3748cb",
+        "declared_ltl_total": 7,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(initial -> pumpInitialOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(!PASTE_E_STOP_NC -> !VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!VISCOSITY_OK -> !VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(VFD_RUN -> debounced)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(permissive & debounced -> VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(runtimeOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(maintenanceOK)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "invalid_candidate",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "not_executed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 3,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 3,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "invalid_candidate",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 7,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 7,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "generation_failed",
+      "phase": "generate_blocks",
+      "message": "Siemens.Engineering.EngineeringTargetInvocationException: Error when calling method 'GenerateBlocksFromSource' of type 'Siemens.Engineering.SW.ExternalSources.PlcExternalSource'.\r\n\r\nAn error occurred during code generation. 外部源文件 WB_9f708c61 正在生成块 \"Q04\"... Interface: 数据类型 LTime 未知。  Interface: 数据类型 LTime 未知。  Interface: 数据类型 LTime 未知。   3 个错误，1 个警告：导入“WB_9f708c61”完成，但存在错误。     行 000019: 块“ Q04” 将创建为具有“优化的块访问”属性。  \r\n   在 Siemens.Engineering.Private.Session.Siemens.Engineering.Private.IInstanceSession.InvokeAction[TC](LifetimeContractHandle`1 lifetimeContractHandle, String name, IEnumerable`1 parameters, String fullName)\r\n   在 Siemens.Engineering.Private.InternalInstanceAccess`2.InvokeAction(String name, IEnumerable`1 parameters)\r\n   在 CompileJob.Run(String projectFile, String sclFile) 位置 E:\\lab\\GenAI\\plc-workbench\\integrations\\tia_bridge\\Program.cs:行号 97",
+      "platform": "TIA Portal V21",
+      "returncode": 1,
+      "source_sha256": "f393902f4acfdf0f6fb90bbcacca59d2a42ca18b87b8b354f3ad63bed3a1aec0",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\16_PUBLIC_04\\self_B\\details\\submissions\\3\\evaluation\\compile",
+      "seconds": 38.498,
+      "queue_seconds": 42.827,
+      "dataset_sha256": "806a753737d793b2e5f0bfdb1b506823d7da92a941046a814e398902010e7f25",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "f393902f4acfdf0f6fb90bbcacca59d2a42ca18b87b8b354f3ad63bed3a1aec0",
+        "declared_ltl_total": 7,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(initial -> pumpInitialOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(!PASTE_E_STOP_NC -> !VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!VISCOSITY_OK -> !VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(VFD_RUN -> debounced)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(permissive & debounced -> VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(runtimeOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(maintenanceOK)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "generation_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 3,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 3,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "generation_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 7,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 7,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "generation_failed",
+      "phase": "generate_blocks",
+      "message": "Siemens.Engineering.EngineeringTargetInvocationException: Error when calling method 'GenerateBlocksFromSource' of type 'Siemens.Engineering.SW.ExternalSources.PlcExternalSource'.\r\n\r\nAn error occurred during code generation. 外部源文件 WB_20bb3c0e 正在生成块 \"Q04\"... Interface: 数据类型 LTime 未知。  Interface: 数据类型 LTime 未知。   3 个错误，1 个警告：导入“WB_20bb3c0e”完成，但存在错误。     行 000017: 语法错误：设定值“VERSION”无效。   行 000019: 块“ Q04” 将创建为具有“优化的块访问”属性。  \r\n   在 Siemens.Engineering.Private.Session.Siemens.Engineering.Private.IInstanceSession.InvokeAction[TC](LifetimeContractHandle`1 lifetimeContractHandle, String name, IEnumerable`1 parameters, String fullName)\r\n   在 Siemens.Engineering.Private.InternalInstanceAccess`2.InvokeAction(String name, IEnumerable`1 parameters)\r\n   在 CompileJob.Run(String projectFile, String sclFile) 位置 E:\\lab\\GenAI\\plc-workbench\\integrations\\tia_bridge\\Program.cs:行号 97",
+      "platform": "TIA Portal V21",
+      "returncode": 1,
+      "source_sha256": "fcc7821ae9b9297d7b6a14fbc0c94bf723baed1bf8445209f066e41485a5b4b0",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\16_PUBLIC_04\\self_B\\details\\submissions\\4\\evaluation\\compile",
+      "seconds": 38.42,
+      "queue_seconds": 82.134,
+      "dataset_sha256": "806a753737d793b2e5f0bfdb1b506823d7da92a941046a814e398902010e7f25",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "fcc7821ae9b9297d7b6a14fbc0c94bf723baed1bf8445209f066e41485a5b4b0",
+        "declared_ltl_total": 7,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(initial -> pumpInitialOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(!PASTE_E_STOP_NC -> !VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!VISCOSITY_OK -> !VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(VFD_RUN -> debounced)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(permissive & debounced -> VFD_RUN)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(runtimeOK)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(maintenanceOK)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "generation_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 3,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 3,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "generation_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 7,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 7,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    }
+  ],
+  "limits": {
+    "source_versions": 6,
+    "model_requests": 24,
+    "seconds": 1800
+  },
+  "formal_policy": "automatic",
+  "final_evaluation": {
+    "status": "generation_failed",
+    "phase": "generate_blocks",
+    "message": "Siemens.Engineering.EngineeringTargetInvocationException: Error when calling method 'GenerateBlocksFromSource' of type 'Siemens.Engineering.SW.ExternalSources.PlcExternalSource'.\r\n\r\nAn error occurred during code generation. 外部源文件 WB_20bb3c0e 正在生成块 \"Q04\"... Interface: 数据类型 LTime 未知。  Interface: 数据类型 LTime 未知。   3 个错误，1 个警告：导入“WB_20bb3c0e”完成，但存在错误。     行 000017: 语法错误：设定值“VERSION”无效。   行 000019: 块“ Q04” 将创建为具有“优化的块访问”属性。  \r\n   在 Siemens.Engineering.Private.Session.Siemens.Engineering.Private.IInstanceSession.InvokeAction[TC](LifetimeContractHandle`1 lifetimeContractHandle, String name, IEnumerable`1 parameters, String fullName)\r\n   在 Siemens.Engineering.Private.InternalInstanceAccess`2.InvokeAction(String name, IEnumerable`1 parameters)\r\n   在 CompileJob.Run(String projectFile, String sclFile) 位置 E:\\lab\\GenAI\\plc-workbench\\integrations\\tia_bridge\\Program.cs:行号 97",
+    "platform": "TIA Portal V21",
+    "returncode": 1,
+    "source_sha256": "fcc7821ae9b9297d7b6a14fbc0c94bf723baed1bf8445209f066e41485a5b4b0",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "failed",
+    "behavior_tested": false,
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\16_PUBLIC_04\\self_B\\details\\submissions\\4\\evaluation\\compile",
+    "seconds": 38.42,
+    "queue_seconds": 82.134,
+    "dataset_sha256": "806a753737d793b2e5f0bfdb1b506823d7da92a941046a814e398902010e7f25",
+    "target": "tia",
+    "formal_verification": {
+      "status": "not_executed",
+      "backend": "plcverif+cbmc",
+      "model_calls": 0,
+      "source_sha256": "fcc7821ae9b9297d7b6a14fbc0c94bf723baed1bf8445209f066e41485a5b4b0",
+      "declared_ltl_total": 7,
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(initial -> pumpInitialOK)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P02",
+          "formula": "G(!PASTE_E_STOP_NC -> !VFD_RUN)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P03",
+          "formula": "G(!VISCOSITY_OK -> !VFD_RUN)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P04",
+          "formula": "G(VFD_RUN -> debounced)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P05",
+          "formula": "G(permissive & debounced -> VFD_RUN)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P06",
+          "formula": "G(runtimeOK)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P07",
+          "formula": "G(maintenanceOK)",
+          "status": "not_executed"
+        }
+      ],
+      "bounded_verified_property_ids": [],
+      "proved_property_ids": [],
+      "mapped_assertions_total": 0,
+      "full_ltl_proved": false,
+      "message": "Repair compilation or functional tests before formal verification."
+    },
+    "ltl_status": "not_executed",
+    "finite_test_status": "generation_failed",
+    "metrics_summary": {
+      "target_platform": "tia",
+      "target_compile": "failed",
+      "codesys_compile": "not_executed",
+      "test_cases_total": 3,
+      "test_cases_executed": 0,
+      "test_cases_not_executed": 3,
+      "test_cases_passed": null,
+      "test_case_pass_rate": null,
+      "finite_test_status": "generation_failed",
+      "formal_status": "not_executed",
+      "formal_backend": "plcverif+cbmc",
+      "formal_unwind": null,
+      "formal_unwind_complete": null,
+      "formal_valid_domain_witness": null,
+      "mapped_assertions_total": 0,
+      "mapped_assertions_proved": 0,
+      "declared_ltl_total": 7,
+      "formal_full_ltl_proved": false,
+      "formal_bound": null,
+      "formal_properties_verified": 0,
+      "formal_properties_total": 7,
+      "formal_properties_executed": 0,
+      "formal_properties_unsupported": 0,
+      "formal_counterexamples": 0,
+      "formal_property_pass_rate": 0.0,
+      "formal_all_properties_verified": false,
+      "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+    }
+  },
+  "target_compile": "failed",
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "fcc7821ae9b9297d7b6a14fbc0c94bf723baed1bf8445209f066e41485a5b4b0",
+    "declared_ltl_total": 7,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> pumpInitialOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(!PASTE_E_STOP_NC -> !VFD_RUN)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!VISCOSITY_OK -> !VFD_RUN)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(VFD_RUN -> debounced)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(permissive & debounced -> VFD_RUN)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G(runtimeOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(maintenanceOK)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "behavior_tested": false,
+  "source_sha256": "fcc7821ae9b9297d7b6a14fbc0c94bf723baed1bf8445209f066e41485a5b4b0",
+  "metrics_summary": {
+    "target_platform": "tia",
+    "target_compile": "failed",
+    "codesys_compile": "not_executed",
+    "test_cases_total": 3,
+    "test_cases_executed": 0,
+    "test_cases_not_executed": 3,
+    "test_cases_passed": null,
+    "test_case_pass_rate": null,
+    "finite_test_status": "generation_failed",
+    "formal_status": "not_executed",
+    "formal_backend": "plcverif+cbmc",
+    "formal_unwind": null,
+    "formal_unwind_complete": null,
+    "formal_valid_domain_witness": null,
+    "mapped_assertions_total": 0,
+    "mapped_assertions_proved": 0,
+    "declared_ltl_total": 7,
+    "formal_full_ltl_proved": false,
+    "formal_bound": null,
+    "formal_properties_verified": 0,
+    "formal_properties_total": 7,
+    "formal_properties_executed": 0,
+    "formal_properties_unsupported": 0,
+    "formal_counterexamples": 0,
+    "formal_property_pass_rate": 0.0,
+    "formal_all_properties_verified": false,
+    "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+  },
+  "output_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\16_PUBLIC_04\\self_B"
+}

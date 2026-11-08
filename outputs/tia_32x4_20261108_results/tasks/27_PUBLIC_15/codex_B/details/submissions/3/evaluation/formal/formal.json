@@ -1,0 +1,543 @@
+{
+  "status": "tool_error",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_15",
+  "dataset_sha256": "e76b3bc582406f13e276126949ea18aed1d28fd8b2e558458dc9e156e9d4f0e6",
+  "source_sha256": "a3199fe8b1796cda885babded9403c82671cb8f19dbb5e7aad325ec167e210d1",
+  "model_calls": 0,
+  "declared_ltl_total": 9,
+  "mapped_assertions_total": 9,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\27_PUBLIC_15\\codex_B\\details\\submissions\\3\\evaluation\\formal\\shared",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(!estop -> allOff)",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": false,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P02",
+      "formula": "G(estop & manualMode & oneManualRise -> matchingOutputToggled)",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": false,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P03",
+      "formula": "G(estop & manualMode & noManualRise -> manualOutputsHeld)",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": false,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P04",
+      "formula": "G(autoIdle & autoStart -> R1(valveAActive))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P05",
+      "formula": "G(autoA & levelAtLeast50 -> R1(valveBActive))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P06",
+      "formula": "G(autoB & levelAtLeast80 & processMode -> R1(valveCActive))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P07",
+      "formula": "G(autoB & levelAtLeast80 & !processMode -> R1(mixerActive))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P08",
+      "formula": "G(autoC & levelAtLeast100 -> R1(mixerActive))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    },
+    {
+      "id": "P09",
+      "formula": "G(autoMix & mixMotorComplete -> R1(valveDActive))",
+      "status": "not_executed",
+      "temporal_boundary_sensitive": true,
+      "message": "[WinError 5] 拒绝访问。"
+    }
+  ],
+  "scope": "Shared PLCverif source model after explicit SCL normalization; no native replay/equivalence claim.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 20,
+  "timeout_seconds": 120,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 20,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 200,
+    "maximum_elapsed_between_samples_ms": 190
+  },
+  "assumptions": [
+    "PVL_ModeOK"
+  ],
+  "observer_definitions": {
+    "allOff": "!valveARun & !valveBRun & !valveCRun & !valveDRun & !mixMotorRun",
+    "manualMode": "!opeMode",
+    "oneManualRise": "PVL_Rises=1",
+    "noManualRise": "PVL_Rises=0",
+    "matchingOutputToggled": "PVL_ToggleOK",
+    "manualOutputsHeld": "PVL_Held",
+    "autoIdle": "opeMode & estop & PVL_PreStage=0",
+    "autoA": "opeMode & estop & PVL_PreStage=1",
+    "autoB": "opeMode & estop & PVL_PreStage=2",
+    "autoC": "opeMode & estop & PVL_PreStage=3",
+    "autoMix": "opeMode & estop & PVL_PreStage=4",
+    "levelAtLeast50": "levelSensor>=50",
+    "levelAtLeast80": "levelSensor>=80",
+    "levelAtLeast100": "levelSensor>=100",
+    "valveAActive": "valveARun & !valveBRun & !valveCRun & !valveDRun & !mixMotorRun",
+    "valveBActive": "!valveARun & valveBRun & !valveCRun & !valveDRun & !mixMotorRun",
+    "valveCActive": "!valveARun & !valveBRun & valveCRun & !valveDRun & !mixMotorRun",
+    "mixerActive": "!valveARun & !valveBRun & !valveCRun & !valveDRun & mixMotorRun",
+    "valveDActive": "!valveARun & !valveBRun & !valveCRun & valveDRun & !mixMotorRun"
+  },
+  "source_adaptations": [
+    {
+      "kind": "standard_library_model",
+      "block": "R_TRIG",
+      "initial_history": false
+    }
+  ],
+  "instrumented_sha256": "e7983521a8256fe89f7dad1b70595f1cc28b23cee4d5191c590341a2c8c983ed",
+  "tool_sha256": {
+    "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+    "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+    "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+  },
+  "plcverif_seconds": 8.856,
+  "message": "[WinError 5] 拒绝访问。",
+  "seconds": 17.629,
+  "model_source_sha256": "303a043d9d1139db7cb6cc0119a754340817e7d6b97eaad6ddff1137227b8cc4",
+  "platform_adaptations": [
+    {
+      "kind": "symbol_spelling",
+      "symbol": "Q15"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "rtAutoStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "autoStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgAutoStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "rtValveA"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveAStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgValveA"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "rtValveB"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgValveB"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "rtValveC"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgValveC"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "rtValveD"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgValveD"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "rtMixMotor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgMixMotor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "autoActive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "opeMode"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgAutoStart"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "autoActive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "autoActive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "levelSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "levelSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "processMode"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "levelSensor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorComplete"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "autoActive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "autoActive"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "step"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgValveA"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveARun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgValveB"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveBRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgValveC"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveCRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgValveD"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "valveDRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "trgMixMotor"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "local_symbol_prefix",
+      "symbol": "mixMotorRun"
+    },
+    {
+      "kind": "pou_begin_delimiter",
+      "count": 1
+    }
+  ],
+  "source_dialect": "siemens_scl",
+  "platform_assumptions": []
+}

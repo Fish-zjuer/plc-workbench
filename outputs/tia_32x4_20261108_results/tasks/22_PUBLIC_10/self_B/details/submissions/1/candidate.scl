@@ -1,0 +1,147 @@
+FUNCTION_BLOCK "Q10"
+VAR_INPUT
+    TemperatureSensorInput : REAL;
+    SetTemperature : REAL;
+END_VAR
+VAR_OUTPUT
+    CurrentTemperature : REAL;
+    SetTempDisplay : REAL;
+    HeaterStatus : BOOL;
+    OverheatProtection : BOOL;
+    HeaterOutput : BOOL;
+END_VAR
+VAR
+    timerHeat : TON_TIME;
+    timerCool : TON_TIME;
+    heatRequest : BOOL;
+    sensorFault : BOOL;
+    demand : BOOL;
+    overrun : BOOL;
+    cooling : BOOL;
+    protectionReleased : BOOL;
+    prevHeaterOutput : BOOL;
+END_VAR
+BEGIN
+    // 6. Provide status indication: Display current and set temperature
+    #CurrentTemperature := #TemperatureSensorInput;
+    #SetTempDisplay := #SetTemperature;
+
+    // 7. Sensor fault judgment: < 0 or > 100
+    IF (#TemperatureSensorInput < 0.0) OR (#TemperatureSensorInput > 100.0) THEN
+        #sensorFault := TRUE;
+    ELSE
+        #sensorFault := FALSE;
+    END_IF;
+
+    // 2. Compare actual vs set temperature
+    // If actual < set, we need heating (demand)
+    IF NOT #sensorFault AND (#TemperatureSensorInput < #SetTemperature) THEN
+        #demand := TRUE;
+    ELSE
+        #demand := FALSE;
+    END_IF;
+
+    // Logic for Overheating Protection
+    // We track if the heater has been running continuously.
+    // If it runs for more than 5s, trigger protection.
+    
+    // Determine if heater should be requested based on demand and protection state
+    // Initially assume no request if fault or protection active
+    #heatRequest := FALSE;
+
+    IF NOT #sensorFault THEN
+        // Check if protection is currently active or in cooling phase
+        IF #OverheatProtection THEN
+            // If protection is active, check if cooling period (3s) has passed
+            // The cooling timer starts when protection is triggered.
+            // We use a separate timer instance for cooling to ensure accurate timing from entry into protection.
+            
+            // Reset logic for releasing protection:
+            // If cooling time elapsed, release protection.
+            IF #timerCool.Q THEN
+                #OverheatProtection := FALSE;
+            END_IF;
+        ELSE
+            // Not in protection mode. Check if we can start heating.
+            IF #demand THEN
+                #heatRequest := TRUE;
+            END_IF;
+        END_IF;
+    END_IF;
+
+    // Handle Timer for Heating Duration (5s)
+    // This timer measures how long the heater output has been ON continuously.
+    // If it exceeds 5s, we must stop heating and enter protection.
+    
+    // Call Heat Timer
+    // IN is true only if we are actually driving the heater output high.
+    // However, we determine HeaterOutput below. To avoid circular dependency issues in SCL evaluation order,
+    // we calculate the intended output first, then update timers, then finalize outputs.
+    
+    // Let's refine the flow:
+    // 1. Calculate basic conditions (Fault, Demand).
+    // 2. Evaluate Protection State Machine.
+    // 3. Determine raw Heater Output intent.
+    // 4. Update Timers based on previous/current state transitions.
+    // 5. Finalize Outputs.
+
+    // Re-evaluating State Machine for Clarity:
+    
+    // Step A: Determine if we are entering/leaving protection
+    
+    // Cooling Timer: Runs when OverheatProtection is TRUE.
+    // It resets automatically when IN becomes FALSE (i.e., when protection is released).
+    #timerCool(IN := #OverheatProtection, PT := T#3s);
+
+    // If Cooling Timer finished (Q=TRUE), protection is lifted.
+    IF #timerCool.Q THEN
+        #OverheatProtection := FALSE;
+    END_IF;
+
+    // Heat Timer: Runs when HeaterOutput is TRUE.
+    // We need to know if HeaterOutput WAS true to continue counting, or if it just turned on.
+    // Actually, TON counts while IN is TRUE. If IN goes FALSE, it resets.
+    // So we feed the *actual* HeaterOutput status to the timer? No, that creates a loop.
+    // Better: Feed the *command* to turn on the heater to the timer.
+    // But the command depends on whether the timer has already tripped.
+    
+    // Strategy:
+    // 1. Assume HeaterOutput is driven by 'demand' AND NOT 'sensorFault' AND NOT 'OverheatProtection'.
+    // 2. Feed this assumption into the Heat Timer.
+    // 3. If Heat Timer trips (>5s), set OverheatProtection = TRUE and Force HeaterOutput = FALSE.
+    // 4. If OverheatProtection was already TRUE, HeaterOutput is FALSE, so Heat Timer resets.
+
+    #protectionReleased := NOT #OverheatProtection;
+
+    // Initial calculation of HeaterOutput intent
+    IF #sensorFault OR #OverheatProtection THEN
+        #HeaterOutput := FALSE;
+    ELSIF #demand THEN
+        #HeaterOutput := TRUE;
+    ELSE
+        #HeaterOutput := FALSE;
+    END_IF;
+
+    // Update Heat Timer
+    // Input to timer is the calculated HeaterOutput. 
+    // Note: In Siemens SCL, variables are updated sequentially. 
+    // If we call the timer here, it uses the value assigned above.
+    #timerHeat(IN := #HeaterOutput, PT := T#5s);
+
+    // Check for Overrun (Continuous heating > 5s)
+    IF #timerHeat.Q THEN
+        #overrun := TRUE;
+        // Trigger Protection
+        #OverheatProtection := TRUE;
+        // Force Heater Off immediately
+        #HeaterOutput := FALSE;
+        // Reset heat timer because output is now false (it will reset on next scan anyway, but explicit is good)
+        // The timer will reset naturally next cycle as IN will be FALSE.
+    ELSE
+        #overrun := FALSE;
+    END_IF;
+
+    // Final Status Indication
+    #HeaterStatus := #HeaterOutput;
+
+END_FUNCTION_BLOCK

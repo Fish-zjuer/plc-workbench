@@ -1,0 +1,70 @@
+FUNCTION_BLOCK "Q08"
+  VERSION : '0.1'
+
+  VAR_INPUT
+    count : DINT;
+  END_VAR
+
+  VAR_IN_OUT
+    analogValues : ARRAY[*] OF INT;
+    channels : ARRAY[*] OF ST_AnalogChannel;
+  END_VAR
+
+  VAR_TEMP
+    idx : DINT;
+    n : DINT;
+    raw : INT;
+    lo : REAL;
+    hi : REAL;
+    mode : INT;
+    bipolarMode : BOOL;
+    avLow : DINT;
+    chLow : DINT;
+    avSpan : DINT;
+    chSpan : DINT;
+  END_VAR
+
+BEGIN
+    n := count;
+    IF n < 0 THEN
+        n := 0;
+    END_IF;
+    avLow := LOWER_BOUND(ARRAY := analogValues, DIM := 1);
+    chLow := LOWER_BOUND(ARRAY := channels, DIM := 1);
+    avSpan := UPPER_BOUND(ARRAY := analogValues, DIM := 1) - avLow + 1;
+    chSpan := UPPER_BOUND(ARRAY := channels, DIM := 1) - chLow + 1;
+    IF n > avSpan THEN
+        n := avSpan;
+    END_IF;
+    IF n > chSpan THEN
+        n := chSpan;
+    END_IF;
+    FOR idx := 0 TO (n - 1) DO
+        IF channels[chLow + idx].enable THEN
+            mode := channels[chLow + idx].measuringMode;
+            lo := channels[chLow + idx].loLIM;
+            hi := channels[chLow + idx].hiLIM;
+            bipolarMode := channels[chLow + idx].bipolar;
+            raw := analogValues[avLow + idx];
+            IF (mode <> 0) AND (mode <> 1) AND (mode <> 2) THEN
+                channels[chLow + idx].retVal := WORD#16#8001;
+            ELSIF hi <= lo THEN
+                channels[chLow + idx].retVal := WORD#16#8002;
+            ELSE
+                channels[chLow + idx].retVal := WORD#0000;
+                CASE mode OF
+                    0:
+                        IF bipolarMode THEN
+                            channels[chLow + idx].outputValue := lo + (INT_TO_REAL(raw) + 27648.0) * (hi - lo) / 55296.0;
+                        ELSE
+                            channels[chLow + idx].outputValue := lo + INT_TO_REAL(raw) * (hi - lo) / 27648.0;
+                        END_IF;
+                    1:
+                        channels[chLow + idx].outputValue := INT_TO_REAL(raw) / 10.0;
+                    2:
+                        channels[chLow + idx].outputValue := INT_TO_REAL(raw) / 100.0;
+                END_CASE;
+            END_IF;
+        END_IF;
+    END_FOR;
+END_FUNCTION_BLOCK

@@ -1,0 +1,49 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "65656d7764bae7e2642d74b4385aff3831ec2b4647426e3577260859a538866b",
+  "declared_ltl_total": 7,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(initial -> pumpInitialOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(!PASTE_E_STOP_NC -> !VFD_RUN)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(!VISCOSITY_OK -> !VFD_RUN)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(VFD_RUN -> debounced)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(permissive & debounced -> VFD_RUN)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(runtimeOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(maintenanceOK)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

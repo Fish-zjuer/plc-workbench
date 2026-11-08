@@ -1,0 +1,151 @@
+{
+  "status": "timeout",
+  "errors": 0,
+  "warnings": 0,
+  "state": "Success",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "Program blocks",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "Q10 (FB2)",
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Compiling finished (errors: 0; warnings: 0)",
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+  "returncode": 0,
+  "source_sha256": "9d2b0d35e0e8225c843fe4d7284aadfc694abafb504003cf53c82f4609197cd2",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": false,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_B\\details\\submissions\\4\\evaluation\\compile",
+  "seconds": 40.173,
+  "queue_seconds": 220.158,
+  "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1",
+  "test_backend": "tia",
+  "message": "Insufficient shared trial budget for native simulation",
+  "target": "tia",
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Q10 (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "9d2b0d35e0e8225c843fe4d7284aadfc694abafb504003cf53c82f4609197cd2",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\22_PUBLIC_10\\self_B\\details\\submissions\\4\\evaluation\\compile",
+    "seconds": 40.173,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "3d2789019ea381c0e334b7aba8fc5996f70cfd083c3add6798949eb1b860abb1"
+  },
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "9d2b0d35e0e8225c843fe4d7284aadfc694abafb504003cf53c82f4609197cd2",
+    "declared_ltl_total": 6,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(sensorFault -> !HeaterOutput)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(temperatureAboveSetpoint -> !HeaterOutput)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(overrun -> !HeaterOutput & OverheatProtection)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(cooling -> !HeaterOutput & OverheatProtection)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(validSensor & demand & protectionReleased -> HeaterOutput)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G(displayOK)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "timeout"
+}

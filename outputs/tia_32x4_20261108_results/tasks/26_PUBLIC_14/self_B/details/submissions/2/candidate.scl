@@ -1,0 +1,166 @@
+FUNCTION_BLOCK "IPv4Parser"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+
+VAR_INPUT
+    ipText : STRING[254];
+END_VAR
+
+VAR_OUTPUT
+    ipValue : UDINT;
+END_VAR
+
+VAR_TEMP
+    len : INT;
+    i : INT;
+    currentChar : CHAR;
+    segmentCount : INT;
+    digitCount : INT;
+    segValue : UDINT;
+    totalValue : UDINT;
+    isValid : BOOL;
+    charCode : INT;
+    digitVal : INT;
+END_VAR
+
+BEGIN
+    // Initialize output to 0 (covers invalid cases and 0.0.0.0)
+    #ipValue := 0;
+    
+    // Get length of the input string
+    #len := LEN(#ipText);
+    
+    // Reset state variables
+    #segmentCount := 0;
+    #digitCount := 0;
+    #segValue := 0;
+    #totalValue := 0;
+    #isValid := TRUE;
+    
+    // Iterate through the string
+    FOR #i := 1 TO #len DO
+        // Access character using standard SCL syntax
+        #currentChar := #ipText[#i];
+        
+        IF #currentChar = '.' THEN
+            // End of a segment
+            // Check if segment had at least one digit
+            IF #digitCount = 0 THEN
+                #isValid := FALSE;
+                EXIT; // Stop processing
+            END_IF;
+            
+            // Check if segment value is within range 0-255
+            IF #segValue > 255 THEN
+                #isValid := FALSE;
+                EXIT;
+            END_IF;
+            
+            // Accumulate to total value based on position
+            // Segment 0 (first) -> bits 24-31 -> Multiply by 2^24 (16777216)
+            // Segment 1 (second) -> bits 16-23 -> Multiply by 2^16 (65536)
+            // Segment 2 (third) -> bits 8-15 -> Multiply by 2^8 (256)
+            // Segment 3 (fourth) -> bits 0-7 -> Add directly
+            CASE #segmentCount OF
+                0:
+                    #totalValue := #totalValue + (#segValue * 16777216);
+                1:
+                    #totalValue := #totalValue + (#segValue * 65536);
+                2:
+                    #totalValue := #totalValue + (#segValue * 256);
+                ELSE:
+                    // More than 3 dots encountered before end? 
+                    // If we are here, it means we finished segment 3 and hit another dot.
+                    // This implies more than 4 segments or trailing dot issues handled later.
+                    #isValid := FALSE;
+                    EXIT;
+            END_CASE;
+            
+            // Prepare for next segment
+            #segmentCount := #segmentCount + 1;
+            #digitCount := 0;
+            #segValue := 0;
+            
+        ELSIF #currentChar >= '0' AND #currentChar <= '9' THEN
+            // Digit character
+            #digitCount := #digitCount + 1;
+            
+            // Convert Char to Integer value manually for compatibility
+            // '0' is ASCII 48. We can use ORD in some contexts but it's not a standard function block call in all SCL versions without library.
+            // A safer way in TIA Portal V21 SCL is often implicit conversion or specific helper.
+            // However, standard IEC allows: TO_INT(CHAR_TO_STRING(#currentChar)) or just arithmetic if we know encoding.
+            // Let's use a robust method: subtracting '0'. In SCL, CHAR subtraction isn't direct.
+            // We will use the fact that '0'..'9' are contiguous.
+            // Note: ORD() is not available as a global function in basic SCL without libraries in older versions, 
+            // but in V21 it might be. To be safe against "Tag ORD not defined", we avoid it.
+            // Alternative: Use a lookup or simple math if supported. 
+            // Actually, SCL supports: #digitVal := #currentChar - '0'; ? No, CHAR arithmetic is limited.
+            // Best practice for TIA SCL: 
+            // #charCode := 0; // Placeholder
+            // Let's try using the built-in conversion which works reliably:
+            // We can convert the single char to a string then to int, but that's slow.
+            // Or we can rely on the fact that in many PLCs, CHAR is stored as BYTE/USINT.
+            // Let's assume standard behavior where we can calculate offset.
+            // If ORD is missing, we can implement a small check or use a different approach.
+            // Given the error "Tag ORD not defined", we must replace it.
+            // We can use: #digitVal := TO_INT(CONCAT(' ', #currentChar)); // Hacky
+            // Better: Just map them.
+            
+            // Simple mapping for digits
+            IF #currentChar = '0' THEN #digitVal := 0;
+            ELSIF #currentChar = '1' THEN #digitVal := 1;
+            ELSIF #currentChar = '2' THEN #digitVal := 2;
+            ELSIF #currentChar = '3' THEN #digitVal := 3;
+            ELSIF #currentChar = '4' THEN #digitVal := 4;
+            ELSIF #currentChar = '5' THEN #digitVal := 5;
+            ELSIF #currentChar = '6' THEN #digitVal := 6;
+            ELSIF #currentChar = '7' THEN #digitVal := 7;
+            ELSIF #currentChar = '8' THEN #digitVal := 8;
+            ELSIF #currentChar = '9' THEN #digitVal := 9;
+            END_IF;
+            
+            #segValue := (#segValue * 10) + TO_UDINT(#digitVal);
+            
+            // Early exit if segment exceeds 255
+            IF #segValue > 255 THEN
+                #isValid := FALSE;
+                EXIT;
+            END_IF;
+            
+        ELSE
+            // Invalid character found
+            #isValid := FALSE;
+            EXIT;
+        END_IF;
+    END_FOR;
+    
+    // After loop, validate final segment
+    IF #isValid THEN
+        // Must have exactly 4 segments (indices 0, 1, 2, 3 processed)
+        // If we exited normally, we haven't added the last segment to totalValue yet because there was no trailing dot.
+        
+        // Check if last segment has digits
+        IF #digitCount = 0 THEN
+            #isValid := FALSE;
+        END_IF;
+        
+        // Check range of last segment
+        IF #isValid AND #segValue > 255 THEN
+            #isValid := FALSE;
+        END_IF;
+        
+        // Check segment count: should be 3 completed segments + 1 current = 4 total
+        // segmentCount increments on every dot. So after 3 dots, segmentCount is 3.
+        // The 4th segment is currently being held in segValue.
+        IF #isValid AND #segmentCount <> 3 THEN
+            #isValid := FALSE;
+        END_IF;
+        
+        IF #isValid THEN
+            // Add the last segment (bits 0-7)
+            #totalValue := #totalValue + #segValue;
+            #ipValue := #totalValue;
+        END_IF;
+    END_IF;
+
+END_FUNCTION_BLOCK

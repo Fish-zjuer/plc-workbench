@@ -1,0 +1,161 @@
+{
+  "status": "behavior_not_supported",
+  "errors": 0,
+  "warnings": 0,
+  "state": "Success",
+  "diagnostics": [
+    {
+      "path": "PLC_1",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "Program blocks",
+      "state": "Success",
+      "description": "",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "Q19 (FB2)",
+      "state": "Success",
+      "description": "Block was successfully compiled.",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": null,
+      "state": "Success",
+      "description": "Compiling finished (errors: 0; warnings: 0)",
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "platform": "TIA Portal V21",
+  "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+  "returncode": 0,
+  "source_sha256": "21963721cb5f187c2e861c73358c1c64286ea8c989e9b75b35dda84f51c1e2b4",
+  "execution_fingerprint": {
+    "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+    "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+    "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+  },
+  "target_compile": "passed",
+  "behavior_tested": false,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\31_PUBLIC_19\\codex_B\\details\\submissions\\4\\evaluation\\compile",
+  "seconds": 41.935,
+  "queue_seconds": 323.79,
+  "dataset_sha256": "3e0317777c6a8f20c8b1852e05940d7fbb178b87edf5c61c5820cbc38e49fc84",
+  "test_backend": "tia",
+  "message": "Increase the Siemens simulation timeout for this native-clock scenario.",
+  "target": "tia",
+  "compile_result": {
+    "status": "compile_passed",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Q19 (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "21963721cb5f187c2e861c73358c1c64286ea8c989e9b75b35dda84f51c1e2b4",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\31_PUBLIC_19\\codex_B\\details\\submissions\\4\\evaluation\\compile",
+    "seconds": 41.935,
+    "queue_seconds": 0.0,
+    "dataset_sha256": "3e0317777c6a8f20c8b1852e05940d7fbb178b87edf5c61c5820cbc38e49fc84"
+  },
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "21963721cb5f187c2e861c73358c1c64286ea8c989e9b75b35dda84f51c1e2b4",
+    "declared_ltl_total": 8,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(!EmergencyStop -> allArmCommandsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(manualMode & EmergencyStop -> manualCommandMapOK)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(actionActive & actionLimitReached -> R1(actionCommandOff))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(singleStepActionDone & noNewStart -> noNextAction)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(singleStepReady & startRise -> R1(exactNextAction))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "A19 -> G(singleCycleStarted -> F(cycleDone))",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(singleCycleDone & noNewStart -> allArmCommandsOff)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P08",
+        "formula": "G(continuousRunning & cycleDone & EmergencyStop -> R1(firstAction))",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "finite_test_status": "behavior_not_supported"
+}

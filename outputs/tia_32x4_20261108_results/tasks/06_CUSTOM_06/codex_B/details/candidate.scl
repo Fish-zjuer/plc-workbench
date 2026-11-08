@@ -1,0 +1,81 @@
+FUNCTION_BLOCK "FB_CompressorPressure"
+  VERSION : 0.1
+
+VAR_INPUT
+  Enable : BOOL;
+  Reset : BOOL;
+  PressureKpa : LREAL;
+  AirUseFlow : LREAL;
+  Kp : LREAL;
+  Ki : LREAL;
+  DtSec : LREAL;
+END_VAR
+
+VAR_OUTPUT
+  CapacityPct : LREAL;
+  Integral : LREAL;
+  Saturated : BOOL;
+  Error : BOOL;
+END_VAR
+
+VAR
+  TargetKpa : LREAL := 500.0;
+  FfGain : LREAL := 2.0;
+  IPrev : LREAL;
+  ErrVal : LREAL;
+  FF : LREAL;
+  ITrial : LREAL;
+  UTrial : LREAL;
+  UFinal : LREAL;
+  Valid : BOOL;
+  Reject : BOOL;
+END_VAR
+
+BEGIN
+  #IPrev := #Integral;
+
+  IF #Reset THEN
+    #Integral := 0.0;
+    #CapacityPct := 0.0;
+    #Saturated := FALSE;
+    #Error := FALSE;
+  ELSIF NOT #Enable THEN
+    #Integral := #IPrev;
+    #CapacityPct := 0.0;
+    #Saturated := FALSE;
+    #Error := FALSE;
+  ELSE
+    #Valid := (#PressureKpa >= 0.0) AND (#PressureKpa <= 1000.0)
+           AND (#AirUseFlow >= 0.0) AND (#AirUseFlow <= 90.0)
+           AND (#Kp >= 0.0) AND (#Kp <= 1.0)
+           AND (#Ki >= 0.0) AND (#Ki <= 0.1)
+           AND (#DtSec >= 0.001) AND (#DtSec <= 1.0);
+    IF NOT #Valid THEN
+      #Integral := #IPrev;
+      #CapacityPct := 0.0;
+      #Saturated := FALSE;
+      #Error := TRUE;
+    ELSE
+      #ErrVal := #TargetKpa - #PressureKpa;
+      #FF := #FfGain * #AirUseFlow;
+      #ITrial := #IPrev + (#Ki * #ErrVal * #DtSec);
+      #UTrial := #FF + (#Kp * #ErrVal) + #ITrial;
+      #Reject := ((#UTrial > 100.0) AND (#ErrVal > 0.0)) OR ((#UTrial < 0.0) AND (#ErrVal < 0.0));
+      IF #Reject THEN
+        #Integral := #IPrev;
+      ELSE
+        #Integral := #ITrial;
+      END_IF;
+      #UFinal := #FF + (#Kp * #ErrVal) + #Integral;
+      IF #UFinal < 0.0 THEN
+        #CapacityPct := 0.0;
+      ELSIF #UFinal > 100.0 THEN
+        #CapacityPct := 100.0;
+      ELSE
+        #CapacityPct := #UFinal;
+      END_IF;
+      #Saturated := (#UFinal < 0.0) OR (#UFinal > 100.0);
+      #Error := FALSE;
+    END_IF;
+  END_IF;
+END_FUNCTION_BLOCK

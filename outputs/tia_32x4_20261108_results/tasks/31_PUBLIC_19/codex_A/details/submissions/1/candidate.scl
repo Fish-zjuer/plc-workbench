@@ -1,0 +1,125 @@
+FUNCTION_BLOCK "Q19"
+VERSION : 0.1
+   VAR_INPUT
+      ManualMode : BOOL;
+      SingleStepMode : BOOL;
+      SingleCycleMode : BOOL;
+      ContinuousMode : BOOL;
+      EmergencyStop : BOOL;
+      Start : BOOL;
+      DownButton : BOOL;
+      UpButton : BOOL;
+      LeftButton : BOOL;
+      RightButton : BOOL;
+      GripButton : BOOL;
+      ReleaseButton : BOOL;
+      DownLimitSwitch : BOOL;
+      UpLimitSwitch : BOOL;
+      LeftLimitSwitch : BOOL;
+      RightLimitSwitch : BOOL;
+      GripLimitSwitch : BOOL;
+      ReleaseLimitSwitch : BOOL;
+   END_VAR
+   VAR_OUTPUT
+      MoveDown : BOOL;
+      MoveUp : BOOL;
+      MoveLeft : BOOL;
+      MoveRight : BOOL;
+      ActivateGrip : BOOL;
+      ActivateRelease : BOOL;
+   END_VAR
+   VAR
+      prevStart : BOOL;
+      startEdge : BOOL;
+      stepIndex : INT;
+      actDone : BOOL;
+      actActive : BOOL;
+      cycActive : BOOL;
+      cycStep : INT;
+      cycDone : BOOL;
+      contRun : BOOL;
+      runManual : BOOL;
+      runSingle : BOOL;
+      runCycle : BOOL;
+      runCont : BOOL;
+   END_VAR
+   VAR_TEMP
+      aDone : BOOL;
+   END_VAR
+BEGIN
+	// Edge detection on Start
+	startEdge := #Start AND NOT #prevStart;
+	#prevStart := #Start;
+
+	// Mode run flags
+	#runManual := #ManualMode AND #EmergencyStop;
+	#runSingle := #SingleStepMode AND #EmergencyStop;
+	#runCycle := #SingleCycleMode AND #EmergencyStop;
+	#runCont := #ContinuousMode AND #EmergencyStop;
+
+	// Action completion detection (single step program)
+	CASE #stepIndex OF
+	   0: #aDone := #DownLimitSwitch;
+	   1: #aDone := #GripLimitSwitch;
+	   2: #aDone := #UpLimitSwitch;
+	   3: #aDone := #RightLimitSwitch;
+	   4: #aDone := #DownLimitSwitch;
+	   5: #aDone := #ReleaseLimitSwitch;
+	   6: #aDone := #UpLimitSwitch;
+	   7: #aDone := #LeftLimitSwitch;
+	   ELSE
+	      #aDone := TRUE;
+	END_CASE;
+
+	IF NOT #EmergencyStop THEN
+	   #actDone := FALSE;
+	   #actActive := FALSE;
+	   #cycActive := FALSE;
+	   #cycDone := FALSE;
+	   #contRun := FALSE;
+	   #stepIndex := 0;
+	   #cycStep := 0;
+	ELSE
+	   // Single step mode logic
+	   IF #runSingle THEN
+	      IF #actDone AND #startEdge THEN
+	         #actDone := FALSE;
+	         #actActive := TRUE;
+	         #stepIndex := #stepIndex + 1;
+	         IF #stepIndex > 7 THEN
+	            #stepIndex := 0;
+	         END_IF;
+	      END_IF;
+
+	      IF #actActive AND #aDone THEN
+	         #actActive := FALSE;
+	         #actDone := TRUE;
+	      END_IF;
+	   ELSE
+	      #actDone := FALSE;
+	      #actActive := FALSE;
+	   END_IF;
+
+	   // Single cycle and continuous cycle logic
+	   IF #runCycle OR #runCont THEN
+	      IF #runCycle AND NOT #runCont THEN
+	         #contRun := FALSE;
+	      ELSE
+	         #contRun := TRUE;
+	      END_IF;
+
+	      IF #cycleDone THEN
+	         #cycDone := TRUE;
+	      END_IF;
+	   END_IF;
+	END_IF;
+
+	// Output mapping
+	#MoveDown := FALSE;
+	#MoveUp := FALSE;
+	#MoveLeft := FALSE;
+	#MoveRight := FALSE;
+	#ActivateGrip := FALSE;
+	#ActivateRelease := FALSE;
+
+END_FUNCTION_BLOCK

@@ -1,0 +1,175 @@
+FUNCTION_BLOCK FB_BuoyPowerBudget
+
+VAR_INPUT
+    Enable : BOOL;
+    BudgetW : UINT;
+    NeedSensor : BOOL;
+    NeedHeater : BOOL;
+    NeedRadio : BOOL;
+    MandatorySensor : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    SelectedMask : USINT;
+    SensorOn : BOOL;
+    HeaterOn : BOOL;
+    RadioOn : BOOL;
+    PowerW : UINT;
+    Score : USINT;
+    BudgetShortage : BOOL;
+    Error : BOOL;
+END_VAR
+
+VAR
+    validBudget : BOOL;
+    shortageCond : BOOL;
+    candMask : INT;
+    incSensor : BOOL;
+    incHeater : BOOL;
+    incRadio : BOOL;
+    p : INT;
+    s : INT;
+    bestMask : INT;
+    bestPower : INT;
+    bestScore : INT;
+    found : BOOL;
+    allowed : BOOL;
+    brake : BOOL;
+END_VAR
+VAR_INPUT
+WBTEMP_0 : BOOL;
+WBTEMP_1 : BOOL;
+WBTEMP_2 : INT;
+WBTEMP_3 : BOOL;
+WBTEMP_4 : BOOL;
+WBTEMP_5 : BOOL;
+WBTEMP_6 : INT;
+WBTEMP_7 : INT;
+WBTEMP_8 : INT;
+WBTEMP_9 : INT;
+WBTEMP_10 : INT;
+WBTEMP_11 : BOOL;
+WBTEMP_12 : BOOL;
+WBTEMP_13 : BOOL;
+END_VAR
+
+
+     
+validBudget := WBTEMP_0;
+shortageCond := WBTEMP_1;
+candMask := WBTEMP_2;
+incSensor := WBTEMP_3;
+incHeater := WBTEMP_4;
+incRadio := WBTEMP_5;
+p := WBTEMP_6;
+s := WBTEMP_7;
+bestMask := WBTEMP_8;
+bestPower := WBTEMP_9;
+bestScore := WBTEMP_10;
+found := WBTEMP_11;
+allowed := WBTEMP_12;
+brake := WBTEMP_13;
+    validBudget := (BudgetW <= 200);
+    shortageCond := MandatorySensor AND (BudgetW < 40);
+
+    SelectedMask := 0;
+    SensorOn := FALSE;
+    HeaterOn := FALSE;
+    RadioOn := FALSE;
+    PowerW := 0;
+    Score := 0;
+    Error := FALSE;
+    BudgetShortage := FALSE;
+
+    IF NOT Enable THEN
+        RETURN;
+    END_IF;
+
+    IF NOT validBudget THEN
+        Error := TRUE;
+        RETURN;
+    END_IF;
+
+    IF shortageCond THEN
+        BudgetShortage := TRUE;
+        RETURN;
+    END_IF;
+
+    bestMask := 0;
+    bestPower := 0;
+    bestScore := 0;
+    found := FALSE;
+    candMask := 0;
+
+    REPEAT
+        incSensor := (candMask = 1) OR (candMask = 3) OR (candMask = 5) OR (candMask = 7);
+        incHeater := (candMask = 2) OR (candMask = 3) OR (candMask = 6) OR (candMask = 7);
+        incRadio := (candMask >= 4);
+
+        allowed := TRUE;
+        IF incHeater AND NOT NeedHeater THEN
+            allowed := FALSE;
+        END_IF;
+        IF incRadio AND NOT NeedRadio THEN
+            allowed := FALSE;
+        END_IF;
+        IF incSensor AND NOT (NeedSensor OR MandatorySensor) THEN
+            allowed := FALSE;
+        END_IF;
+        IF MandatorySensor AND NOT incSensor THEN
+            allowed := FALSE;
+        END_IF;
+
+        IF allowed THEN
+            p := 0;
+            s := 0;
+            IF incSensor THEN
+                p := p + 40;
+                s := s + 7;
+            END_IF;
+            IF incHeater THEN
+                p := p + 70;
+                s := s + 10;
+            END_IF;
+            IF incRadio THEN
+                p := p + 60;
+                s := s + 9;
+            END_IF;
+            IF p <= BudgetW THEN
+                IF NOT found THEN
+                    bestMask := candMask;
+                    bestPower := p;
+                    bestScore := s;
+                    found := TRUE;
+                ELSIF s > bestScore THEN
+                    bestMask := candMask;
+                    bestPower := p;
+                    bestScore := s;
+                ELSIF s = bestScore THEN
+                    IF p < bestPower THEN
+                        bestMask := candMask;
+                        bestPower := p;
+                        bestScore := s;
+                    ELSIF p = bestPower THEN
+                        IF candMask < bestMask THEN
+                            bestMask := candMask;
+                            bestPower := p;
+                            bestScore := s;
+                        END_IF;
+                    END_IF;
+                END_IF;
+            END_IF;
+        END_IF;
+
+        candMask := candMask + 1;
+        brake := (candMask > 7);
+    UNTIL brake
+    END_REPEAT;
+
+    SelectedMask := bestMask;
+    PowerW := bestPower;
+    Score := bestScore;
+    SensorOn := (bestMask = 1) OR (bestMask = 3) OR (bestMask = 5) OR (bestMask = 7);
+    HeaterOn := (bestMask = 2) OR (bestMask = 3) OR (bestMask = 6) OR (bestMask = 7);
+    RadioOn := (bestMask >= 4);
+END_FUNCTION_BLOCK

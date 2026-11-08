@@ -1,0 +1,117 @@
+FUNCTION_BLOCK "Q08"
+VAR_INPUT
+    count : DINT;
+END_VAR
+VAR_IN_OUT
+    analogValues : ARRAY[*] OF INT;
+    channels : ARRAY[*] OF ST_AnalogChannel;
+END_VAR
+VAR_TEMP
+    i : DINT;
+    idxAV : DINT;
+    idxCH : DINT;
+    rawVal : REAL;
+    loLim : REAL;
+    hiLim : REAL;
+    range : REAL;
+    bipolarFlag : BOOL;
+    mode : INT;
+    enableFlag : BOOL;
+END_VAR
+BEGIN
+    // Determine array bounds for safe indexing
+    // In Siemens SCL, LBOUND returns the first index of an array
+    IF count <= 0 THEN
+        RETURN;
+    END_IF;
+
+    FOR i := 0 TO count - 1 DO
+        // Calculate indices relative to each array's own lower bound
+        idxAV := LBOUND(analogValues) + i;
+        idxCH := LBOUND(channels) + i;
+
+        // Bounds check (though caller guarantees count <= min length)
+        IF idxAV < LBOUND(analogValues) OR idxAV > UBOUND(analogValues) THEN
+            CONTINUE;
+        END_IF;
+        IF idxCH < LBOUND(channels) OR idxCH > UBOUND(channels) THEN
+            CONTINUE;
+        END_IF;
+
+        // Read configuration fields
+        #enableFlag := #channels[#idxCH].enable;
+        #mode := #channels[#idxCH].measuringMode;
+        #loLim := #channels[#idxCH].loLIM;
+        #hiLim := #channels[#idxCH].hiLIM;
+        #bipolarFlag := #channels[#idxCH].bipolar;
+        #rawVal := REAL_TO_REAL(#analogValues[#idxAV]);
+
+        // Skip disabled channels completely (no write to output/retVal as per requirement "disabled channels do not execute conversion")
+        // Note: Requirement says "Read configuration fields without modifying them; write only retVal and outputValue." 
+        // and "If measuringMode is not 0, 1 or 2... skip its conversion".
+        // Usually, if disabled, we might leave previous state or set specific error. 
+        // The prompt implies processing happens for enabled ones. If not enabled, we should probably not update outputs?
+        // However, standard behavior for such blocks often sets retVal to 0 or leaves it alone if disabled.
+        // Let's look at constraints: "G(unprocessedChannelsPreserved)". Disabled channels are effectively unprocessed in terms of calculation.
+        // But usually, a status code is expected. Let's assume if disabled, we don't touch retVal/outputValue unless specified otherwise.
+        // Wait, requirement 6 and 7 apply to "that channel". 
+        // Let's re-read carefully: "Each channel is enabled by its enable field... converted according to measuringMode."
+        // If not enabled, no conversion. Does it get an error? No. Does it keep old value? Likely yes.
+        // To be safe and strictly follow "write only retVal and outputValue", if not enabled, we shouldn't write.
+        IF NOT #enableFlag THEN
+            CONTINUE;
+        END_IF;
+
+        // Check Limits Validity First? Or Mode First?
+        // Req 6: Invalid Mode -> 16#8001
+        // Req 7: hiLIM <= loLIM -> 16#8002
+        // Priority when both errors occur is unspecified. 
+        // Common practice: Validate inputs before calculating.
+        // Let's check Mode validity first as it determines the path, but Limit check is independent.
+        // Actually, if Mode is invalid, we can't calculate anyway. 
+        // If Mode is valid, we check limits.
+        
+        IF (#mode <> 0) AND (#mode <> 1) AND (#mode <> 2) THEN
+            #channels[#idxCH].retVal := 16#8001;
+            // Skip conversion
+            CONTINUE;
+        END_IF;
+
+        // Now Mode is valid (0, 1, or 2). Check Limits.
+        // Note: For modes 1 and 2, loLIM/hiLIM are not used in calculation, but requirement 7 says:
+        // "If hiLIM is less than or equal to loLIM, set that channel's retVal to 16#8002 and skip its conversion."
+        // This applies generally to the channel processing logic.
+        IF #hiLim <= #loLim THEN
+            #channels[#idxCH].retVal := 16#8002;
+            CONTINUE;
+        END_IF;
+
+        // Perform Conversion
+        CASE #mode OF
+            0: // Non-temperature linear scaling
+                #range := #hiLim - #loLim;
+                IF #bipolarFlag THEN
+                    // Map -27648..27648 to loLIM..hiLIM
+                    // Formula: loLIM + (raw + 27648) * (hiLIM - loLIM) / 55296
+                    // 55296 = 27648 - (-27648)
+                    #channels[#idxCH].outputValue := #loLim + ((#rawVal + 27648.0) * #range) / 55296.0;
+                ELSE
+                    // Map 0..27648 to loLIM..hiLIM
+                    // Formula: loLIM + raw * (hiLIM - loLIM) / 27648
+                    #channels[#idxCH].outputValue := #loLim + (#rawVal * #range) / 27648.0;
+                END_IF;
+                #channels[#idxCH].retVal := 16#0000; // Success
+
+            1: // Standard-temperature conversion
+                // OutputValue is one tenth of raw analog value
+                #channels[#idxCH].outputValue := #rawVal / 10.0;
+                #channels[#idxCH].retVal := 16#0000; // Success
+
+            2: // Climatic-temperature conversion
+                // OutputValue is one hundredth of raw analog value
+                #channels[#idxCH].outputValue := #rawVal / 100.0;
+                #channels[#idxCH].retVal := 16#0000; // Success
+        END_CASE;
+
+    END_FOR;
+END_FUNCTION_BLOCK

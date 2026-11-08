@@ -1,0 +1,93 @@
+FUNCTION_BLOCK "FB_CompressorPressure"
+VERSION : 0.1
+
+VAR_INPUT
+    Enable : BOOL;
+    Reset : BOOL;
+    PressureKpa : LREAL;
+    AirUseFlow : LREAL;
+    Kp : LREAL;
+    Ki : LREAL;
+    DtSec : LREAL;
+END_VAR
+
+VAR_OUTPUT
+    CapacityPct : LREAL;
+    Integral : LREAL;
+    Saturated : BOOL;
+    Error : BOOL;
+END_VAR
+
+VAR_TEMP
+    e : LREAL;
+    FF : LREAL;
+    Ic : LREAL;
+    Uc : LREAL;
+    Iwork : LREAL;
+    U : LREAL;
+    Valid : BOOL;
+    Reject : BOOL;
+END_VAR
+
+BEGIN
+    IF #Reset THEN
+        #Integral := 0.0;
+        #CapacityPct := 0.0;
+        #Saturated := FALSE;
+        #Error := FALSE;
+        RETURN;
+    END_IF;
+
+    IF NOT #Enable THEN
+        #CapacityPct := 0.0;
+        #Saturated := FALSE;
+        #Error := FALSE;
+        RETURN;
+    END_IF;
+
+    #Valid := (#PressureKpa >= 0.0) AND (#PressureKpa <= 1000.0)
+          AND (#AirUseFlow >= 0.0) AND (#AirUseFlow <= 90.0)
+          AND (#Kp >= 0.0) AND (#Kp <= 1.0)
+          AND (#Ki >= 0.0) AND (#Ki <= 0.1)
+          AND (#DtSec >= 0.001) AND (#DtSec <= 1.0);
+    IF #Valid THEN
+        #Valid := NOT (#PressureKpa * 0.0 > 0.0) AND NOT (#AirUseFlow * 0.0 > 0.0)
+              AND NOT (#Kp * 0.0 > 0.0) AND NOT (#Ki * 0.0 > 0.0)
+              AND NOT (#DtSec * 0.0 > 0.0);
+    END_IF;
+
+    IF NOT #Valid THEN
+        #CapacityPct := 0.0;
+        #Saturated := FALSE;
+        #Error := TRUE;
+        RETURN;
+    END_IF;
+
+    #e := 500.0 - #PressureKpa;
+    #FF := 2.0 * #AirUseFlow;
+    #Ic := #Integral + #Ki * #e * #DtSec;
+    #Uc := #FF + #Kp * #e + #Ic;
+
+    #Reject := ((#Uc > 100.0) AND (#e > 0.0)) OR ((#Uc < 0.0) AND (#e < 0.0));
+    IF #Reject THEN
+        #Iwork := #Integral;
+    ELSE
+        #Iwork := #Ic;
+    END_IF;
+
+    #U := #FF + #Kp * #e + #Iwork;
+
+    #Integral := #Iwork;
+    IF #U < 0.0 THEN
+        #CapacityPct := 0.0;
+        #Saturated := TRUE;
+    ELSIF #U > 100.0 THEN
+        #CapacityPct := 100.0;
+        #Saturated := TRUE;
+    ELSE
+        #CapacityPct := #U;
+        #Saturated := FALSE;
+    END_IF;
+
+    #Error := FALSE;
+END_FUNCTION_BLOCK

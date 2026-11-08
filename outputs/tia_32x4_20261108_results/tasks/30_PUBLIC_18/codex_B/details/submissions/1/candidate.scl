@@ -1,0 +1,155 @@
+FUNCTION_BLOCK "Q18"
+VERSION : 0.1
+
+VAR_INPUT
+    enqueue : BOOL;
+    dequeue : BOOL;
+    reset : BOOL;
+END_VAR
+VAR_OUTPUT
+    elementCount : DINT;
+    status : WORD;
+END_VAR
+VAR_IN_OUT
+    item : VARIANT;
+    buffer : VARIANT;
+END_VAR
+VAR
+    head : DINT := 0;
+    tail : DINT := 0;
+    capacity : DINT := -1;
+    prevEnq : BOOL := FALSE;
+    prevDeq : BOOL := FALSE;
+    bufPtr : REF_TO TO_VARIANT := NULL;
+    itemPtr : REF_TO TO_VARIANT := NULL;
+    elemSize : DINT := 0;
+    src : REF_TO Byte := NULL;
+    dst : REF_TO Byte := NULL;
+    k : DINT := 0;
+END_VAR
+VAR_TEMP
+    vBuf : VariantType;
+    vItem : VariantType;
+    rBuf : UInt;
+    rItem : UInt;
+    info : VariantInfo;
+    arrInfo : ArrayInfoConst;
+    sub : DWord;
+    nCap : DINT;
+    lo : DINT;
+    up : DINT;
+    enqRise : BOOL;
+    deqRise : BOOL;
+    full : BOOL;
+    empty : BOOL;
+END_VAR
+
+BEGIN
+    // ---- resolve and validate the caller supplied references ----
+    IF (#capacity < 0) OR (#bufPtr <> #getVariantRef(Variant := buffer)) THEN
+        #bufPtr := #getVariantRef(Variant := buffer);
+        #itemPtr := #getVariantRef(Variant := item);
+        #capacity := -1;
+        #elemSize := 0;
+        #head := 0;
+        #tail := 0;
+        #elementCount := 0;
+        IF #bufPtr <> NULL THEN
+            #vBuf := #bufPtr^;
+            #rBuf := getTypeName(#vBuf, #info);
+            IF #rBuf <> VarType.IsArray THEN
+                #rBuf := getVariantArray(#vBuf, #arrInfo);
+                IF #rBuf = VarType.Ok THEN
+                    #sub := #arrInfo.subItemsCnt;
+                    IF (#sub > 0) AND (#arrInfo.pData <> NULL) THEN
+                        IF #sub = 1 THEN
+                            #lo := #arrInfo.lowerRange[1];
+                            #up := #arrInfo.upperRange[1];
+                        ELSE
+                            #lo := #arrInfo.lowerRange[#sub];
+                            #up := #arrInfo.upperRange[#sub];
+                        END_IF;
+                        #nCap := #up - #lo + 1;
+                        IF (#nCap > 0) AND (#arrInfo.pDataType <> NULL) THEN
+                            #elemSize := getSize(#arrInfo.pDataType^);
+                            IF #elemSize > 0 THEN
+                                #capacity := #nCap;
+                                #head := #lo;
+                                #tail := #lo;
+                            END_IF;
+                        END_IF;
+                    END_IF;
+                END_IF;
+            END_IF;
+        END_IF;
+        IF (#capacity >= 0) AND (#itemPtr <> NULL) THEN
+            #vItem := #itemPtr^;
+            #rItem := getTypeName(#vItem, #info);
+            IF (#rItem <> VarType.IsArray) AND (#info.type <> NULL) THEN
+                IF getSize(#info.type^) <> #elemSize THEN
+                    #capacity := -1;
+                END_IF;
+            ELSE
+                #capacity := -1;
+            END_IF;
+        END_IF;
+        IF #capacity < 0 THEN
+            #status := 16#80FF;
+        ELSE
+            #status := 16#0000;
+        END_IF;
+    END_IF;
+
+    IF #capacity >= 0 THEN
+        #enqRise := #enqueue AND (NOT #prevEnq);
+        #deqRise := #dequeue AND (NOT #prevDeq);
+        #prevEnq := #enqueue;
+        #prevDeq := #dequeue;
+
+        IF #reset THEN
+            // reset has priority; stored values need not be cleared
+            #head := 0;
+            #tail := 0;
+            #elementCount := 0;
+            #status := 16#0000;
+        ELSE
+            #empty := (#elementCount = 0);
+            #full := (#elementCount >= #capacity);
+            IF #enqRise THEN
+                IF NOT #full THEN
+                    #dst := #movePointer(Source := #bufPtr, Offset := #elemOffset(#head));
+                    #src := #movePointer(Source := #itemPtr, Offset := 0);
+                    FOR #k := 0 TO #elemSize - 1 DO
+                        #dst^[#k] := #src^[#k];
+                    END_FOR;
+                    #head := #head + 1;
+                    IF #head >= #capacity THEN
+                        #head := #head - #capacity;
+                    END_IF;
+                    #elementCount := #elementCount + 1;
+                    #status := 16#0000;
+                ELSE
+                    #status := 16#8002;
+                END_IF;
+            ELSIF #deqRise THEN
+                IF NOT #empty THEN
+                    #src := #movePointer(Source := #bufPtr, Offset := #elemOffset(#tail));
+                    #dst := #movePointer(Source := #itemPtr, Offset := 0);
+                    FOR #k := 0 TO #elemSize - 1 DO
+                        #dst^[#k] := #src^[#k];
+                    END_FOR;
+                    #tail := #tail + 1;
+                    IF #tail >= #capacity THEN
+                        #tail := #tail - #capacity;
+                    END_IF;
+                    #elementCount := #elementCount - 1;
+                    #status := 16#0000;
+                ELSE
+                    #status := 16#8001;
+                END_IF;
+            ELSE
+                #status := 16#0000;
+            END_IF;
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

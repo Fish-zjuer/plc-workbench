@@ -1,0 +1,1198 @@
+{
+  "task_id": "IMPORT_fe40c7191a524c17b0416a574ccce121__PUBLIC_18",
+  "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af",
+  "target": "tia",
+  "model": "deepseek-v4.1-flash-1017",
+  "inference_parameters": {
+    "thinking": {
+      "type": "disabled"
+    }
+  },
+  "status": "behavior_not_supported",
+  "model_calls": 5,
+  "token_usage": {
+    "prompt_tokens": 20731,
+    "completion_tokens": 6215,
+    "total_tokens": 26946,
+    "cost": null,
+    "usage_calls": 5,
+    "complete": true,
+    "cost_complete": false,
+    "recorded_cost": 0.0
+  },
+  "metrics": [
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 988,
+        "prompt_tokens": 2124,
+        "total_tokens": 3112,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.0048"
+      },
+      "seconds": 12.011
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 1325,
+        "prompt_tokens": 4462,
+        "total_tokens": 5787,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.007712"
+      },
+      "seconds": 12.227
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 1262,
+        "prompt_tokens": 4840,
+        "total_tokens": 6102,
+        "prompt_tokens_details": {
+          "cached_tokens": 2048
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.006226"
+      },
+      "seconds": 23.795
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 1238,
+        "prompt_tokens": 4721,
+        "total_tokens": 5959,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.007642"
+      },
+      "seconds": 20.257
+    },
+    {
+      "model": "deepseek-v4.1-flash-1017",
+      "usage": {
+        "completion_tokens": 1402,
+        "prompt_tokens": 4584,
+        "total_tokens": 5986,
+        "prompt_tokens_details": {
+          "cached_tokens": 2048
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "cost": "¥0.006466"
+      },
+      "seconds": 21.364
+    }
+  ],
+  "seconds": 809.558,
+  "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A\\details",
+  "submissions": [
+    {
+      "status": "generation_failed",
+      "phase": "generate_blocks",
+      "message": "Siemens.Engineering.EngineeringTargetInvocationException: Error when calling method 'GenerateBlocksFromSource' of type 'Siemens.Engineering.SW.ExternalSources.PlcExternalSource'.\r\n\r\nAn error occurred during code generation. 外部源文件 WB_455ded73 正在生成块 \"Q18\"... Interface: 数据类型 Any 未知。   1 个错误，0 个警告：导入“WB_455ded73”完成，但存在错误。    \r\n   在 Siemens.Engineering.Private.Session.Siemens.Engineering.Private.IInstanceSession.InvokeAction[TC](LifetimeContractHandle`1 lifetimeContractHandle, String name, IEnumerable`1 parameters, String fullName)\r\n   在 Siemens.Engineering.Private.InternalInstanceAccess`2.InvokeAction(String name, IEnumerable`1 parameters)\r\n   在 CompileJob.Run(String projectFile, String sclFile) 位置 E:\\lab\\GenAI\\plc-workbench\\integrations\\tia_bridge\\Program.cs:行号 97",
+      "platform": "TIA Portal V21",
+      "returncode": 1,
+      "source_sha256": "1b74ba94acdcff4cfcdee75b82891a137da72ca09326c06bf12bc2e0ca42999e",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A\\details\\submissions\\1\\evaluation\\compile",
+      "seconds": 36.184,
+      "queue_seconds": 119.065,
+      "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "1b74ba94acdcff4cfcdee75b82891a137da72ca09326c06bf12bc2e0ca42999e",
+        "declared_ltl_total": 9,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(initial -> queueEmpty)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P08",
+            "formula": "G(countMatchesQueue)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P09",
+            "formula": "G(countWithinCapacity)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "generation_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 12,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 12,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "generation_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 9,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 9,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "compile_failed",
+      "errors": 5,
+      "warnings": 0,
+      "state": "Error",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Error",
+          "description": "",
+          "errors": 5,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Error",
+          "description": "",
+          "errors": 5,
+          "warnings": 0
+        },
+        {
+          "path": "Q18 (FB2)",
+          "state": "Error",
+          "description": "",
+          "errors": 5,
+          "warnings": 0
+        },
+        {
+          "path": "14",
+          "state": "Error",
+          "description": "Number of parameters passed to the function or the function block does not match.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "15",
+          "state": "Error",
+          "description": "The formal parameter 'LOWER_BOUND' is invalid.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "16",
+          "state": "Error",
+          "description": "The formal parameter 'UPPER_BOUND' is invalid.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "17",
+          "state": "Error",
+          "description": "The formal parameter 'INFO_TYPE' is invalid.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "60",
+          "state": "Error",
+          "description": "Invalid assignment.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Error",
+          "description": "Compiling finished (errors: 5; warnings: 0)",
+          "errors": 1,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 1,
+      "source_sha256": "abeface11d0f31cb697686f9379af1a1003d00ece52d2bd2e8fb50ce12193e90",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A\\details\\submissions\\2\\evaluation\\compile",
+      "seconds": 46.296,
+      "queue_seconds": 137.81,
+      "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "abeface11d0f31cb697686f9379af1a1003d00ece52d2bd2e8fb50ce12193e90",
+        "declared_ltl_total": 9,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(initial -> queueEmpty)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P08",
+            "formula": "G(countMatchesQueue)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P09",
+            "formula": "G(countWithinCapacity)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "compile_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 12,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 12,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "compile_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 9,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 9,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "compile_failed",
+      "errors": 3,
+      "warnings": 0,
+      "state": "Error",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Error",
+          "description": "",
+          "errors": 3,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Error",
+          "description": "",
+          "errors": 3,
+          "warnings": 0
+        },
+        {
+          "path": "Q18 (FB2)",
+          "state": "Error",
+          "description": "",
+          "errors": 3,
+          "warnings": 0
+        },
+        {
+          "path": "16",
+          "state": "Error",
+          "description": "The formal parameter 'COUNT' is invalid.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "16",
+          "state": "Error",
+          "description": "Parameters of the function or the function block do not match the transferred formal parameters.  ",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "56",
+          "state": "Error",
+          "description": "Invalid assignment.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Error",
+          "description": "Compiling finished (errors: 3; warnings: 0)",
+          "errors": 1,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 1,
+      "source_sha256": "da30eecf671b9cb3eeec9dc22cadde0cf1e1833f66e90e138b3d5598cd2ffe57",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A\\details\\submissions\\3\\evaluation\\compile",
+      "seconds": 46.803,
+      "queue_seconds": 23.241,
+      "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "da30eecf671b9cb3eeec9dc22cadde0cf1e1833f66e90e138b3d5598cd2ffe57",
+        "declared_ltl_total": 9,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(initial -> queueEmpty)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P08",
+            "formula": "G(countMatchesQueue)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P09",
+            "formula": "G(countWithinCapacity)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "compile_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 12,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 12,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "compile_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 9,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 9,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "compile_failed",
+      "errors": 1,
+      "warnings": 0,
+      "state": "Error",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Error",
+          "description": "",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Error",
+          "description": "",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "Q18 (FB2)",
+          "state": "Error",
+          "description": "",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": "14",
+          "state": "Error",
+          "description": "Data type 'Void' cannot be converted implicitly into data type 'Int'.",
+          "errors": 1,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Error",
+          "description": "Compiling finished (errors: 1; warnings: 0)",
+          "errors": 1,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 1,
+      "source_sha256": "68463a0cac7ef1ba5332d9bf995df41ec0facd9f55ddaba37e75ecbf75a44b71",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "failed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A\\details\\submissions\\4\\evaluation\\compile",
+      "seconds": 46.873,
+      "queue_seconds": 72.042,
+      "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af",
+      "target": "tia",
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "68463a0cac7ef1ba5332d9bf995df41ec0facd9f55ddaba37e75ecbf75a44b71",
+        "declared_ltl_total": 9,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(initial -> queueEmpty)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P08",
+            "formula": "G(countMatchesQueue)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P09",
+            "formula": "G(countWithinCapacity)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "compile_failed",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "failed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 12,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 12,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "compile_failed",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 9,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 9,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    },
+    {
+      "status": "behavior_not_supported",
+      "errors": 0,
+      "warnings": 0,
+      "state": "Success",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Q18 (FB2)",
+          "state": "Success",
+          "description": "Block was successfully compiled.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Success",
+          "description": "Compiling finished (errors: 0; warnings: 0)",
+          "errors": 0,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 0,
+      "source_sha256": "21407ca3c5bb75efcf0f6cbe6c256160528cdd4056ccdb1dafe4514ade34a92a",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "passed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A\\details\\submissions\\5\\evaluation\\compile",
+      "seconds": 46.854,
+      "queue_seconds": 91.87,
+      "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af",
+      "test_backend": "tia",
+      "message": "FIFO tests use the local PV1 VARIANT ABI. A native VARIANT adapter is required; local execution is not substituted.",
+      "target": "tia",
+      "compile_result": {
+        "status": "compile_passed",
+        "errors": 0,
+        "warnings": 0,
+        "state": "Success",
+        "diagnostics": [
+          {
+            "path": "PLC_1",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Program blocks",
+            "state": "Success",
+            "description": "",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": "Q18 (FB2)",
+            "state": "Success",
+            "description": "Block was successfully compiled.",
+            "errors": 0,
+            "warnings": 0
+          },
+          {
+            "path": null,
+            "state": "Success",
+            "description": "Compiling finished (errors: 0; warnings: 0)",
+            "errors": 0,
+            "warnings": 0
+          }
+        ],
+        "platform": "TIA Portal V21",
+        "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+        "returncode": 0,
+        "source_sha256": "21407ca3c5bb75efcf0f6cbe6c256160528cdd4056ccdb1dafe4514ade34a92a",
+        "execution_fingerprint": {
+          "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+          "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+          "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+        },
+        "target_compile": "passed",
+        "behavior_tested": false,
+        "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A\\details\\submissions\\5\\evaluation\\compile",
+        "seconds": 46.854,
+        "queue_seconds": 0.0,
+        "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af"
+      },
+      "formal_verification": {
+        "status": "not_executed",
+        "backend": "plcverif+cbmc",
+        "model_calls": 0,
+        "source_sha256": "21407ca3c5bb75efcf0f6cbe6c256160528cdd4056ccdb1dafe4514ade34a92a",
+        "declared_ltl_total": 9,
+        "properties": [
+          {
+            "id": "P01",
+            "formula": "G(initial -> queueEmpty)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P02",
+            "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P03",
+            "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P04",
+            "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P05",
+            "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P06",
+            "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P07",
+            "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P08",
+            "formula": "G(countMatchesQueue)",
+            "status": "not_executed"
+          },
+          {
+            "id": "P09",
+            "formula": "G(countWithinCapacity)",
+            "status": "not_executed"
+          }
+        ],
+        "bounded_verified_property_ids": [],
+        "proved_property_ids": [],
+        "mapped_assertions_total": 0,
+        "full_ltl_proved": false,
+        "message": "Repair compilation or functional tests before formal verification."
+      },
+      "ltl_status": "not_executed",
+      "finite_test_status": "behavior_not_supported",
+      "metrics_summary": {
+        "target_platform": "tia",
+        "target_compile": "passed",
+        "codesys_compile": "not_executed",
+        "test_cases_total": 12,
+        "test_cases_executed": 0,
+        "test_cases_not_executed": 12,
+        "test_cases_passed": null,
+        "test_case_pass_rate": null,
+        "finite_test_status": "behavior_not_supported",
+        "formal_status": "not_executed",
+        "formal_backend": "plcverif+cbmc",
+        "formal_unwind": null,
+        "formal_unwind_complete": null,
+        "formal_valid_domain_witness": null,
+        "mapped_assertions_total": 0,
+        "mapped_assertions_proved": 0,
+        "declared_ltl_total": 9,
+        "formal_full_ltl_proved": false,
+        "formal_bound": null,
+        "formal_properties_verified": 0,
+        "formal_properties_total": 9,
+        "formal_properties_executed": 0,
+        "formal_properties_unsupported": 0,
+        "formal_counterexamples": 0,
+        "formal_property_pass_rate": 0.0,
+        "formal_all_properties_verified": false,
+        "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+      }
+    }
+  ],
+  "limits": {
+    "source_versions": 6,
+    "model_requests": 24,
+    "seconds": 1800
+  },
+  "formal_policy": "automatic",
+  "final_evaluation": {
+    "status": "behavior_not_supported",
+    "errors": 0,
+    "warnings": 0,
+    "state": "Success",
+    "diagnostics": [
+      {
+        "path": "PLC_1",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Program blocks",
+        "state": "Success",
+        "description": "",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": "Q18 (FB2)",
+        "state": "Success",
+        "description": "Block was successfully compiled.",
+        "errors": 0,
+        "warnings": 0
+      },
+      {
+        "path": null,
+        "state": "Success",
+        "description": "Compiling finished (errors: 0; warnings: 0)",
+        "errors": 0,
+        "warnings": 0
+      }
+    ],
+    "platform": "TIA Portal V21",
+    "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+    "returncode": 0,
+    "source_sha256": "21407ca3c5bb75efcf0f6cbe6c256160528cdd4056ccdb1dafe4514ade34a92a",
+    "execution_fingerprint": {
+      "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+      "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+      "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+    },
+    "target_compile": "passed",
+    "behavior_tested": false,
+    "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A\\details\\submissions\\5\\evaluation\\compile",
+    "seconds": 46.854,
+    "queue_seconds": 91.87,
+    "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af",
+    "test_backend": "tia",
+    "message": "FIFO tests use the local PV1 VARIANT ABI. A native VARIANT adapter is required; local execution is not substituted.",
+    "target": "tia",
+    "compile_result": {
+      "status": "compile_passed",
+      "errors": 0,
+      "warnings": 0,
+      "state": "Success",
+      "diagnostics": [
+        {
+          "path": "PLC_1",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Program blocks",
+          "state": "Success",
+          "description": "",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": "Q18 (FB2)",
+          "state": "Success",
+          "description": "Block was successfully compiled.",
+          "errors": 0,
+          "warnings": 0
+        },
+        {
+          "path": null,
+          "state": "Success",
+          "description": "Compiling finished (errors: 0; warnings: 0)",
+          "errors": 0,
+          "warnings": 0
+        }
+      ],
+      "platform": "TIA Portal V21",
+      "scope": "Vendor compilation only; no simulation, behavior test or PLC download",
+      "returncode": 0,
+      "source_sha256": "21407ca3c5bb75efcf0f6cbe6c256160528cdd4056ccdb1dafe4514ade34a92a",
+      "execution_fingerprint": {
+        "bridge_sha256": "80147b8fe25973f465f0788a198d07d2f6a41b77586fce3ef9ba659e71db39b4",
+        "template_sha256": "c4ec55011f681b965ddb9b0dee388f3f3b940e325a1b9b5b20622b6e8a345eef",
+        "adapter_sha256": "123d523fd2de82b312e2d6e95b9c03cae1a8e309b2f8def502c5e040df2bd50f"
+      },
+      "target_compile": "passed",
+      "behavior_tested": false,
+      "evidence_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A\\details\\submissions\\5\\evaluation\\compile",
+      "seconds": 46.854,
+      "queue_seconds": 0.0,
+      "dataset_sha256": "6013307b6113169cb4c464193cc9622924be03f483a5505d35590b130ee0c9af"
+    },
+    "formal_verification": {
+      "status": "not_executed",
+      "backend": "plcverif+cbmc",
+      "model_calls": 0,
+      "source_sha256": "21407ca3c5bb75efcf0f6cbe6c256160528cdd4056ccdb1dafe4514ade34a92a",
+      "declared_ltl_total": 9,
+      "properties": [
+        {
+          "id": "P01",
+          "formula": "G(initial -> queueEmpty)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P02",
+          "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P03",
+          "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P04",
+          "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P05",
+          "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P06",
+          "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P07",
+          "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P08",
+          "formula": "G(countMatchesQueue)",
+          "status": "not_executed"
+        },
+        {
+          "id": "P09",
+          "formula": "G(countWithinCapacity)",
+          "status": "not_executed"
+        }
+      ],
+      "bounded_verified_property_ids": [],
+      "proved_property_ids": [],
+      "mapped_assertions_total": 0,
+      "full_ltl_proved": false,
+      "message": "Repair compilation or functional tests before formal verification."
+    },
+    "ltl_status": "not_executed",
+    "finite_test_status": "behavior_not_supported",
+    "metrics_summary": {
+      "target_platform": "tia",
+      "target_compile": "passed",
+      "codesys_compile": "not_executed",
+      "test_cases_total": 12,
+      "test_cases_executed": 0,
+      "test_cases_not_executed": 12,
+      "test_cases_passed": null,
+      "test_case_pass_rate": null,
+      "finite_test_status": "behavior_not_supported",
+      "formal_status": "not_executed",
+      "formal_backend": "plcverif+cbmc",
+      "formal_unwind": null,
+      "formal_unwind_complete": null,
+      "formal_valid_domain_witness": null,
+      "mapped_assertions_total": 0,
+      "mapped_assertions_proved": 0,
+      "declared_ltl_total": 9,
+      "formal_full_ltl_proved": false,
+      "formal_bound": null,
+      "formal_properties_verified": 0,
+      "formal_properties_total": 9,
+      "formal_properties_executed": 0,
+      "formal_properties_unsupported": 0,
+      "formal_counterexamples": 0,
+      "formal_property_pass_rate": 0.0,
+      "formal_all_properties_verified": false,
+      "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+    }
+  },
+  "target_compile": "passed",
+  "formal_verification": {
+    "status": "not_executed",
+    "backend": "plcverif+cbmc",
+    "model_calls": 0,
+    "source_sha256": "21407ca3c5bb75efcf0f6cbe6c256160528cdd4056ccdb1dafe4514ade34a92a",
+    "declared_ltl_total": 9,
+    "properties": [
+      {
+        "id": "P01",
+        "formula": "G(initial -> queueEmpty)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P02",
+        "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P03",
+        "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P04",
+        "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P05",
+        "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P06",
+        "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P07",
+        "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P08",
+        "formula": "G(countMatchesQueue)",
+        "status": "not_executed"
+      },
+      {
+        "id": "P09",
+        "formula": "G(countWithinCapacity)",
+        "status": "not_executed"
+      }
+    ],
+    "bounded_verified_property_ids": [],
+    "proved_property_ids": [],
+    "mapped_assertions_total": 0,
+    "full_ltl_proved": false,
+    "message": "Repair compilation or functional tests before formal verification."
+  },
+  "ltl_status": "not_executed",
+  "behavior_tested": false,
+  "source_sha256": "21407ca3c5bb75efcf0f6cbe6c256160528cdd4056ccdb1dafe4514ade34a92a",
+  "metrics_summary": {
+    "target_platform": "tia",
+    "target_compile": "passed",
+    "codesys_compile": "not_executed",
+    "test_cases_total": 12,
+    "test_cases_executed": 0,
+    "test_cases_not_executed": 12,
+    "test_cases_passed": null,
+    "test_case_pass_rate": null,
+    "finite_test_status": "behavior_not_supported",
+    "formal_status": "not_executed",
+    "formal_backend": "plcverif+cbmc",
+    "formal_unwind": null,
+    "formal_unwind_complete": null,
+    "formal_valid_domain_witness": null,
+    "mapped_assertions_total": 0,
+    "mapped_assertions_proved": 0,
+    "declared_ltl_total": 9,
+    "formal_full_ltl_proved": false,
+    "formal_bound": null,
+    "formal_properties_verified": 0,
+    "formal_properties_total": 9,
+    "formal_properties_executed": 0,
+    "formal_properties_unsupported": 0,
+    "formal_counterexamples": 0,
+    "formal_property_pass_rate": 0.0,
+    "formal_all_properties_verified": false,
+    "scope": "Formal pass counts apply only to the reported scan bound and assumptions; not an infinite-scan proof."
+  },
+  "output_path": "E:\\lab\\GenAI\\plc-workbench\\outputs\\campaigns\\2026-11-08_18-23-07\\tasks\\30_PUBLIC_18\\self_A"
+}

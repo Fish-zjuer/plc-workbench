@@ -1,0 +1,117 @@
+FUNCTION_BLOCK FB_RollGeometry
+VAR_INPUT
+    Reset : BOOL;
+    InitialD : LREAL;
+    Receiving : BOOL;
+    EncoderDelta : DINT;
+    SpeedMpm : LREAL;
+END_VAR
+VAR_OUTPUT
+    StoredLength : LREAL;
+    Diameter : LREAL;
+    MotorRPM : LREAL;
+    LimitHit : BOOL;
+    Error : BOOL;
+END_VAR
+VAR
+    initialized : BOOL := FALSE;
+    CoreD : LREAL := 76.0;
+    MaxD : LREAL := 140.0;
+    Thickness : LREAL := 0.135;
+    PI : LREAL := 3.141592653589793;
+    MeasRollerDia : LREAL := 50.0;
+    PulsesPerRev : LREAL := 1024.0;
+    Lmax : LREAL := 0.0;
+    deltaL : LREAL := 0.0;
+    rawLength : LREAL := 0.0;
+    validInputs : BOOL := FALSE;
+    doInit : BOOL := FALSE;
+END_VAR
+     
+    // Calculate constant Lmax once per call (lightweight) or could be static init
+    Lmax := PI * (MaxD * MaxD - CoreD * CoreD) / (4.0 * Thickness);
+
+    // Determine if inputs are valid
+    validInputs := TRUE;
+    
+    IF (SpeedMpm < -15.0) OR (SpeedMpm > 15.0) THEN
+        validInputs := FALSE;
+    END_IF;
+    
+    IF (EncoderDelta < 0) OR (EncoderDelta > 1000000) THEN
+        validInputs := FALSE;
+    END_IF;
+    
+    doInit := (NOT initialized) OR Reset;
+    
+    IF doInit AND ((InitialD < 76.0) OR (InitialD > 140.0)) THEN
+        validInputs := FALSE;
+    END_IF;
+
+    IF NOT validInputs THEN
+        // Illegal input: Set Error, zero RPM, clear LimitHit, preserve geometry
+        Error := TRUE;
+        MotorRPM := 0.0;
+        LimitHit := FALSE;
+        // If never initialized, ensure defaults are safe
+        IF NOT initialized THEN
+            StoredLength := 0.0;
+            Diameter := CoreD;
+        END_IF;
+        RETURN;
+    ELSE
+        // Legal inputs clear Error
+        Error := FALSE;
+    END_IF;
+
+    IF doInit THEN
+        // Initialize geometric estimate
+        StoredLength := PI * (InitialD * InitialD - CoreD * CoreD) / (4.0 * Thickness);
+        Diameter := InitialD;
+        MotorRPM := 0.0;
+        LimitHit := FALSE;
+        initialized := TRUE;
+    ELSE
+        // Normal operation: Update length based on encoder
+        // Convert DINT to LREAL implicitly by multiplication with LREAL constants
+        deltaL := EncoderDelta * PI * MeasRollerDia / PulsesPerRev;
+        
+        IF Receiving THEN
+            rawLength := StoredLength + deltaL;
+        ELSE
+            rawLength := StoredLength - deltaL;
+        END_IF;
+        
+        // Clamp StoredLength to [0, Lmax]
+        // Set LimitHit only if unclamped value is strictly outside interval
+        IF rawLength < 0.0 THEN
+            StoredLength := 0.0;
+            LimitHit := TRUE;
+        ELSIF rawLength > Lmax THEN
+            StoredLength := Lmax;
+            LimitHit := TRUE;
+        ELSE
+            StoredLength := rawLength;
+            LimitHit := FALSE;
+        END_IF;
+        
+        // Compute Diameter from updated length
+        // Diameter = SQRT(CoreD^2 + 4*Thickness*StoredLength/PI)
+        Diameter := SQRT(CoreD * CoreD + (4.0 * Thickness * StoredLength / PI));
+        
+        // Compute MotorRPM
+        // MotorRPM = SpeedMpm * 1000 * 50 / (PI * Diameter)
+        IF Diameter > 0.0 THEN
+            MotorRPM := SpeedMpm * 1000.0 * 50.0 / (PI * Diameter);
+        ELSE
+            MotorRPM := 0.0;
+        END_IF;
+        
+        // Clamp MotorRPM to [-6000, 6000]
+        IF MotorRPM < -6000.0 THEN
+            MotorRPM := -6000.0;
+        ELSIF MotorRPM > 6000.0 THEN
+            MotorRPM := 6000.0;
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

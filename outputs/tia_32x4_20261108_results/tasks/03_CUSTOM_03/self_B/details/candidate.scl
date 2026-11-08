@@ -1,0 +1,91 @@
+FUNCTION_BLOCK "FB_GateTelemetry"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      Reset : BOOL;
+      FrameValid : BOOL;
+      FrameSeq : UDINT;
+      Ack : BOOL;
+      DtMs : UDINT;
+      TimeoutMs : UDINT;
+   END_VAR
+
+   VAR_OUTPUT
+      Fresh : BOOL;
+      AgeMs : UDINT;
+      CommFault : BOOL;
+      RemoteWritePermit : BOOL;
+      Error : BOOL;
+   END_VAR
+
+   VAR
+      lastSeq : UDINT := 0;
+      hasLastFrame : BOOL := FALSE;
+   END_VAR
+
+BEGIN
+    // Requirement 2: Reset takes priority and clears history/state
+    IF #Reset THEN
+        #hasLastFrame := FALSE;
+        #lastSeq := 0;
+        #AgeMs := 0;
+        #CommFault := TRUE;
+        #RemoteWritePermit := FALSE;
+        #Fresh := FALSE;
+        #Error := FALSE;
+    ELSE
+        // Requirement 5: Check for illegal parameters
+        IF (#DtMs < 1) OR (#DtMs > 1000) OR (#TimeoutMs < 1) OR (#TimeoutMs > 60000) THEN
+            #Error := TRUE;
+            #CommFault := TRUE;
+            #RemoteWritePermit := FALSE;
+            #Fresh := FALSE;
+            // Preserve sequence history (lastSeq, hasLastFrame) and AgeMs as per requirements
+        ELSE
+            // Legal call
+            #Error := FALSE;
+            
+            // Requirement 3: Determine Freshness
+            // Fresh if FrameValid AND (no previous frame OR sequence changed)
+            #Fresh := FALSE;
+            IF #FrameValid THEN
+                IF NOT #hasLastFrame OR (#FrameSeq <> #lastSeq) THEN
+                    #Fresh := TRUE;
+                END_IF;
+            END_IF;
+            
+            // Update State based on Freshness
+            IF #Fresh THEN
+                #lastSeq := #FrameSeq;
+                #hasLastFrame := TRUE;
+                #AgeMs := 0;
+            ELSE
+                // Add DtMs to AgeMs, saturating at 60000
+                IF (#AgeMs + #DtMs) > 60000 THEN
+                    #AgeMs := 60000;
+                ELSE
+                    #AgeMs := #AgeMs + #DtMs;
+                END_IF;
+            END_IF;
+            
+            // Requirement 4: Fault Latching and Clearing
+            // Latch CommFault when AgeMs >= TimeoutMs
+            IF #AgeMs >= #TimeoutMs THEN
+                #CommFault := TRUE;
+            END_IF;
+            
+            // Clear CommFault ONLY on a call with both Fresh=TRUE and Ack=TRUE
+            IF #Fresh AND #Ack THEN
+                #CommFault := FALSE;
+            END_IF;
+            
+            // Calculate RemoteWritePermit
+            // Permit = NOT CommFault AND AgeMs < TimeoutMs
+            IF NOT #CommFault AND (#AgeMs < #TimeoutMs) THEN
+                #RemoteWritePermit := TRUE;
+            ELSE
+                #RemoteWritePermit := FALSE;
+            END_IF;
+        END_IF;
+    END_IF;
+END_FUNCTION_BLOCK

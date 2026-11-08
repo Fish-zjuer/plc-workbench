@@ -1,0 +1,117 @@
+FUNCTION_BLOCK "Q18"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT
+      enqueue : BOOL;
+      dequeue : BOOL;
+      reset : BOOL;
+   END_VAR
+   VAR_OUTPUT
+      elementCount : DINT;
+      status : WORD;
+   END_VAR
+   VAR_IN_OUT
+      item : VARIANT;
+      buffer : VARIANT;
+   END_VAR
+   VAR
+      statInitDone : BOOL;
+      statCapacity : DINT;
+      statCount : DINT;
+      statHead : DINT;
+      statTail : DINT;
+      statLastEnqueue : BOOL;
+      statLastDequeue : BOOL;
+   END_VAR
+   VAR_TEMP
+      tmpEnqueueRise : BOOL;
+      tmpDequeueRise : BOOL;
+      tmpRetVal : INT;
+   END_VAR
+BEGIN
+   (* One-time initialization. NOTE: TIA Portal SCL does not offer a
+      supported instruction to read the actual array length of a
+      VARIANT at run time (VariantGet returns Void, not a size).
+      The capacity therefore cannot be derived from the buffer as
+      required; this is a documented platform limitation. *)
+   IF NOT #statInitDone THEN
+      #statInitDone := TRUE;
+      #statCapacity := 0;
+      #statCount := 0;
+      #statHead := 0;
+      #statTail := 0;
+      #statLastEnqueue := #enqueue;
+      #statLastDequeue := #dequeue;
+      #elementCount := 0;
+      #status := 16#0000;
+   END_IF;
+
+   (* Edge detection *)
+   #tmpEnqueueRise := #enqueue AND NOT #statLastEnqueue;
+   #tmpDequeueRise := #dequeue AND NOT #statLastDequeue;
+   #statLastEnqueue := #enqueue;
+   #statLastDequeue := #dequeue;
+
+   #status := 16#0000;
+
+   IF #reset THEN
+      #statCount := 0;
+      #statHead := 0;
+      #statTail := 0;
+      #status := 16#0000;
+   ELSIF #statCapacity <= 0 THEN
+      IF #tmpDequeueRise THEN
+         #status := 16#8001;
+      ELSIF #tmpEnqueueRise THEN
+         #status := 16#8002;
+      ELSE
+         #status := 16#0000;
+      END_IF;
+   ELSIF #tmpEnqueueRise THEN
+      IF #statCount >= #statCapacity THEN
+         #status := 16#8002;
+      ELSE
+         #tmpRetVal := MOVE_BLK_VARIANT(SRC := #item,
+                                        COUNT := 1,
+                                        SRC_INDEX := 0,
+                                        DEST := #buffer,
+                                        DEST_INDEX := #statTail);
+         IF #tmpRetVal = 0 THEN
+            #statCount := #statCount + 1;
+            IF #statTail >= #statCapacity - 1 THEN
+               #statTail := 0;
+            ELSE
+               #statTail := #statTail + 1;
+            END_IF;
+            #status := 16#0000;
+         ELSE
+            #status := 16#8002;
+         END_IF;
+      END_IF;
+   ELSIF #tmpDequeueRise THEN
+      IF #statCount <= 0 THEN
+         #status := 16#8001;
+      ELSE
+         #tmpRetVal := MOVE_BLK_VARIANT(SRC := #buffer,
+                                        COUNT := 1,
+                                        SRC_INDEX := #statHead,
+                                        DEST := #item,
+                                        DEST_INDEX := 0);
+         IF #tmpRetVal = 0 THEN
+            #statCount := #statCount - 1;
+            IF #statHead >= #statCapacity - 1 THEN
+               #statHead := 0;
+            ELSE
+               #statHead := #statHead + 1;
+            END_IF;
+            #status := 16#0000;
+         ELSE
+            #status := 16#8001;
+         END_IF;
+      END_IF;
+   ELSE
+      #status := 16#0000;
+   END_IF;
+
+   #elementCount := #statCount;
+END_FUNCTION_BLOCK

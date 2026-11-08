@@ -1,0 +1,50 @@
+FUNCTION_BLOCK "FB_GateTelemetry"
+VERSION : 0.1
+
+VAR_INPUT
+  Reset : BOOL;
+  FrameValid : BOOL;
+  FrameSeq : UDINT;
+  Ack : BOOL;
+  DtMs : UDINT;
+  TimeoutMs : UDINT;
+END_VAR
+
+VAR_OUTPUT
+  Fresh : BOOL;
+  AgeMs : UDINT;
+  CommFault : BOOL;
+  RemoteWritePermit : BOOL;
+  Error : BOOL;
+END_VAR
+
+VAR
+  HistKnown : BOOL;
+  HistSeq : UDINT;
+  AgeInt : UDINT;
+  FaultInt : BOOL;
+END_VAR
+
+BEGIN
+  IF #Reset THEN
+    #HistKnown := FALSE;
+    #HistSeq := 0;
+    #AgeInt := 0;
+    #FaultInt := TRUE;
+    #Fresh := FALSE;
+    #Error := FALSE;
+  ELSIF NOT (1 <= #DtMs AND #DtMs <= 1000 AND 1 <= #TimeoutMs AND #TimeoutMs <= 60000) THEN
+    #FaultInt := TRUE;
+    #Fresh := FALSE;
+    #Error := TRUE;
+  ELSE
+    #Error := FALSE;
+    #FaultInt := NOT (#Fresh AND #Ack);
+    IF #Fresh AND #AgeInt >= #TimeoutMs THEN
+      #FaultInt := TRUE;
+    END_IF;
+  END_IF;
+  #AgeMs := #AgeInt;
+  #CommFault := #FaultInt;
+  #RemoteWritePermit := NOT #Reset AND NOT #Error AND NOT #FaultInt AND #AgeInt < #TimeoutMs;
+END_FUNCTION_BLOCK

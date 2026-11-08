@@ -1,0 +1,44 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "c2a5023ee0ede9e547c2cc03d29b4414e9a5c04d4158c8d8957c102a8b4cab99",
+  "declared_ltl_total": 6,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(initial -> hvacInitialOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(!eligible -> !SUPPLY_FAN_RUN)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(SUPPLY_FAN_RUN -> eligible & fanReady)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(eligible & fanReady -> SUPPLY_FAN_RUN)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(normalCalculation -> adjustmentOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(adjustmentWithinFourDegrees)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

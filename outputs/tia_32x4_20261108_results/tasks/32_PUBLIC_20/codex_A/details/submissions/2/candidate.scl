@@ -1,0 +1,155 @@
+FUNCTION_BLOCK "Q20"
+VERSION : 0.1
+   VAR_INPUT
+      Mode : Bool;
+      ForwardButton : Bool;
+      ReverseButton : Bool;
+      SensorFeed : Bool;
+      SensorWash : Bool;
+      SensorWeight : Bool;
+      SensorFiring : Bool;
+      SensorOutput : Bool;
+      washComplete : Bool;
+      weightComplete : Bool;
+      weight : Real;
+      firingComplete : Bool;
+   END_VAR
+   VAR_OUTPUT
+      MotorForward : Bool;
+      MotorReverse : Bool;
+      kick : Bool;
+      CompletionLight : Bool;
+      firingTemp : Real;
+   END_VAR
+   VAR
+      step : Int;
+      ModeOld : Bool;
+      moveTimer : Int;
+      startUp : Bool;
+      startDown : Bool;
+   END_VAR
+
+BEGIN
+	// Mode change resets the automatic sequence
+	IF #Mode <> #ModeOld THEN
+	    #ModeOld := #Mode;
+	    #step := 0;
+	    #moveTimer := 0;
+	    #kick := FALSE;
+	    #CompletionLight := FALSE;
+	END_IF;
+
+	IF NOT #Mode THEN
+	    // Manual mode: buttons with interlock
+	    #MotorForward := #ForwardButton AND NOT #ReverseButton;
+	    #MotorReverse := #ReverseButton AND NOT #ForwardButton;
+	    #CompletionLight := #SensorOutput;
+	    #step := 0;
+	    #moveTimer := 0;
+	ELSE
+        #startUp := FALSE;
+        #startDown := FALSE;
+        CASE #step OF
+        0:
+        IF #SensorFeed THEN
+        #step := 1;
+        #startUp := TRUE;
+        END_IF;
+        1:
+        #startUp := TRUE;
+        2:
+        #startUp := TRUE;
+        3:
+        IF #SensorWash THEN
+        #step := 4;
+        #startDown := TRUE;
+        END_IF;
+        4:
+        IF #washComplete THEN
+        #step := 5;
+        #startUp := TRUE;
+        END_IF;
+        5:
+        #startUp := TRUE;
+        6:
+        #startUp := TRUE;
+        7:
+        IF #SensorWeight THEN
+        #step := 8;
+        #startDown := TRUE;
+        END_IF;
+        8:
+        IF #weightComplete THEN
+        IF #weight >= 100.0 AND #weight <= 200.0 THEN
+        #firingTemp := 500.0 + 0.5 * (#weight - 100.0);
+        #step := 9;
+        #startUp := TRUE;
+        ELSE
+        #kick := TRUE;
+        #step := 20;
+        END_IF;
+        END_IF;
+        9:
+        #startUp := TRUE;
+        10:
+        #startUp := TRUE;
+        11:
+        IF #SensorFiring THEN
+        #step := 12;
+        #startDown := TRUE;
+        END_IF;
+        12:
+        IF #firingComplete THEN
+        #step := 13;
+        #startUp := TRUE;
+        END_IF;
+        13:
+        #startUp := TRUE;
+        14:
+        #startUp := TRUE;
+        15:
+        IF #SensorOutput THEN
+        #step := 16;
+        #startDown := TRUE;
+        END_IF;
+        16:
+        #CompletionLight := TRUE;
+        IF NOT #SensorOutput THEN
+        #CompletionLight := FALSE;
+        #step := 0;
+        END_IF;
+        20:
+        IF #SensorWash THEN
+        #kick := FALSE;
+        #step := 4;
+        END_IF;
+        ELSE
+        #step := 0;
+        END_CASE;
+
+	    IF #startDown THEN
+	        #moveTimer := 0;
+	    END_IF;
+
+	    IF #startUp OR (#moveTimer > 0) THEN
+	        #MotorForward := TRUE;
+	    ELSE
+	        #MotorForward := FALSE;
+	    END_IF;
+
+	    IF #moveTimer < 2 THEN
+	        #moveTimer := #moveTimer + 1;
+	    ELSE
+	        #moveTimer := 0;
+	    END_IF;
+
+	    #MotorReverse := FALSE;
+	    IF #step <> 8 AND #step <> 16 AND #step <> 20 THEN
+	        #kick := FALSE;
+	    END_IF;
+	    IF #step <> 16 THEN
+	        #CompletionLight := FALSE;
+	    END_IF;
+	END_IF;
+
+END_FUNCTION_BLOCK

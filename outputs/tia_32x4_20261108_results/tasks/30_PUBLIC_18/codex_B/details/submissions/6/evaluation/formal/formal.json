@@ -1,0 +1,59 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "d57808ea383bb0543d2f2fc804874d94b8f05bb04410b5d7e9970ee011a40773",
+  "declared_ltl_total": 9,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(initial -> queueEmpty)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(reset -> queueEmpty & elementCountZero & statusZero)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(!reset & enqueueRise & notFull -> queueAfterAppendOK & statusZero)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(!reset & enqueueRise & full -> queueHeld & itemHeld & status8002)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(!reset & dequeueRise & notEmpty -> queueAfterPopOK & statusZero)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(!reset & dequeueRise & empty -> queueHeld & itemHeld & status8001)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(!reset & idleRequest -> queueHeld & statusZero)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P08",
+      "formula": "G(countMatchesQueue)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P09",
+      "formula": "G(countWithinCapacity)",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}

@@ -1,0 +1,49 @@
+{
+  "status": "not_executed",
+  "backend": "plcverif+cbmc",
+  "model_calls": 0,
+  "source_sha256": "2d3d351814a825764b292468919b8a35041937a692c5afba17a21a52072a74e4",
+  "declared_ltl_total": 7,
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(!(conveyorLeft & conveyorRight))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P02",
+      "formula": "G(routeStart -> R1(firstTargetSelected))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P03",
+      "formula": "G(transporting & !targetReached -> directionOK)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P04",
+      "formula": "G(targetReached -> R1(conveyorStopped))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P05",
+      "formula": "G(waitingProcessing & !targetComplete -> cursorHeld & conveyorStopped)",
+      "status": "not_executed"
+    },
+    {
+      "id": "P06",
+      "formula": "G(waitingProcessing & targetComplete -> R1(nextTargetSelected))",
+      "status": "not_executed"
+    },
+    {
+      "id": "P07",
+      "formula": "G(finalStationReached -> R1(conveyorStopped))",
+      "status": "not_executed"
+    }
+  ],
+  "bounded_verified_property_ids": [],
+  "proved_property_ids": [],
+  "mapped_assertions_total": 0,
+  "full_ltl_proved": false,
+  "message": "Repair compilation or functional tests before formal verification."
+}
