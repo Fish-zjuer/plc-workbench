@@ -1,0 +1,290 @@
+digraph G {
+	subgraph cluster__global627411361 {
+		node [shape="folder", style="filled"];
+		//label="_global";
+		_global627411361 [label="_global"];
+		_global627411361 -> instance1836777499;
+		instance1836777499 [label = "(F) instance : _global/PVL_Harness", fillcolor="white" ];
+		_global627411361 -> verificationLoop2016512706;
+		verificationLoop2016512706 [label = "(F) verificationLoop : _global/VerificationLoopDS", fillcolor="white" , peripheries=2];
+		_global627411361 -> EoC1735770321;
+		EoC1735770321 [label = "(F) EoC : bool", fillcolor="white" ];
+		_global627411361 -> BoC2143753518;
+		BoC2143753518 [label = "(F) BoC : bool", fillcolor="white" ];
+		_global627411361 -> FB_SpectrometerQualification154487101;
+		subgraph cluster_FB_SpectrometerQualification154487101 {
+			node [shape="folder", style="filled"];
+			//label="FB_SpectrometerQualification";
+			FB_SpectrometerQualification154487101 [label="FB_SpectrometerQualification"];
+			FB_SpectrometerQualification154487101 -> Maintenance54254849;
+			Maintenance54254849 [label = "(F) Maintenance : bool", fillcolor="white" ];
+			FB_SpectrometerQualification154487101 -> CalibDone648346093;
+			CalibDone648346093 [label = "(F) CalibDone : bool", fillcolor="white" ];
+			FB_SpectrometerQualification154487101 -> MeasureReq79488555;
+			MeasureReq79488555 [label = "(F) MeasureReq : bool", fillcolor="white" ];
+			FB_SpectrometerQualification154487101 -> State363384509;
+			State363384509 [label = "(F) State : unsigned int8", fillcolor="white" ];
+			FB_SpectrometerQualification154487101 -> CalibReq1871084300;
+			CalibReq1871084300 [label = "(F) CalibReq : bool", fillcolor="white" ];
+			FB_SpectrometerQualification154487101 -> MaintLamp1616673438;
+			MaintLamp1616673438 [label = "(F) MaintLamp : bool", fillcolor="white" ];
+			FB_SpectrometerQualification154487101 -> MeasurePermit177901251;
+			MeasurePermit177901251 [label = "(F) MeasurePermit : bool", fillcolor="white" ];
+			FB_SpectrometerQualification154487101 -> preState1438764761;
+			preState1438764761 [label = "(F) preState : unsigned int8", fillcolor="white" ];
+			
+			annotations_pseudonode_FB_SpectrometerQualification154487101 [
+				label="ANNOTATIONS\lMaintenance : direction=INPUT\lMaintenance : PLC type=BOOL\lCalibDone : direction=INPUT\lCalibDone : PLC type=BOOL\lMeasureReq : direction=INPUT\lMeasureReq : PLC type=BOOL\lState : direction=OUTPUT\lState : PLC type=USINT\lCalibReq : direction=OUTPUT\lCalibReq : PLC type=BOOL\lMaintLamp : direction=OUTPUT\lMaintLamp : PLC type=BOOL\lMeasurePermit : direction=OUTPUT\lMeasurePermit : PLC type=BOOL\lpreState : direction=LOCAL\lpreState : PLC type=USINT\l",
+				fontsize=9, margin="0.04,0.04", fillcolor="white", shape="rectangle", style="dashed"];
+			initamt_pseudonode_FB_SpectrometerQualification154487101 [
+				label="INITIAL\lMaintenance := false\lCalibDone := false\lMeasureReq := false\lState := 0\lCalibReq := true\lMaintLamp := false\lMeasurePermit := false\lpreState := 0\l",
+				fontsize=9, margin="0.04,0.04", fillcolor="lightyellow", shape="rectangle", style="dashed"];
+		}
+		_global627411361 -> PVL_Harness1797959612;
+		subgraph cluster_PVL_Harness1797959612 {
+			node [shape="folder", style="filled"];
+			//label="PVL_Harness";
+			PVL_Harness1797959612 [label="PVL_Harness"];
+			PVL_Harness1797959612 -> Maintenance1753134165;
+			Maintenance1753134165 [label = "(F) Maintenance : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> CalibDone2103877926;
+			CalibDone2103877926 [label = "(F) CalibDone : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> MeasureReq1567010362;
+			MeasureReq1567010362 [label = "(F) MeasureReq : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> State1495232387;
+			State1495232387 [label = "(F) State : unsigned int8", fillcolor="white" ];
+			PVL_Harness1797959612 -> CalibReq1785536499;
+			CalibReq1785536499 [label = "(F) CalibReq : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> MaintLamp109978855;
+			MaintLamp109978855 [label = "(F) MaintLamp : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> MeasurePermit814647201;
+			MeasurePermit814647201 [label = "(F) MeasurePermit : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_Uut2075454833;
+			PVL_Uut2075454833 [label = "(F) PVL_Uut : _global/FB_SpectrometerQualification", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_S1089579669;
+			PVL_S1089579669 [label = "(F) PVL_S : unsigned int8", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_PreS1821330375;
+			PVL_PreS1821330375 [label = "(F) PVL_PreS : unsigned int8", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_Scan198503937;
+			PVL_Scan198503937 [label = "(F) PVL_Scan : signed int32", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_Active1291627539;
+			PVL_Active1291627539 [label = "(F) PVL_Active : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_Done1115073856;
+			PVL_Done1115073856 [label = "(F) PVL_Done : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_DtMs729248981;
+			PVL_DtMs729248981 [label = "(F) PVL_DtMs : signed int32", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_NowMs359713488;
+			PVL_NowMs359713488 [label = "(F) PVL_NowMs : signed int32", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A0106787773;
+			PVL_A0106787773 [label = "(F) PVL_A0 : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A11773813582;
+			PVL_A11773813582 [label = "(F) PVL_A1 : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A21037983544;
+			PVL_A21037983544 [label = "(F) PVL_A2 : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A3374845463;
+			PVL_A3374845463 [label = "(F) PVL_A3 : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A41111700510;
+			PVL_A41111700510 [label = "(F) PVL_A4 : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A5257546804;
+			PVL_A5257546804 [label = "(F) PVL_A5 : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A61761864974;
+			PVL_A61761864974 [label = "(F) PVL_A6 : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A71830261066;
+			PVL_A71830261066 [label = "(F) PVL_A7 : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A8242833949;
+			PVL_A8242833949 [label = "(F) PVL_A8 : bool", fillcolor="white" ];
+			PVL_Harness1797959612 -> PVL_A91316735289;
+			PVL_A91316735289 [label = "(F) PVL_A9 : bool", fillcolor="white" ];
+			
+			annotations_pseudonode_PVL_Harness1797959612 [
+				label="ANNOTATIONS\lMaintenance : direction=INPUT\lMaintenance : PLC type=BOOL\lCalibDone : direction=INPUT\lCalibDone : PLC type=BOOL\lMeasureReq : direction=INPUT\lMeasureReq : PLC type=BOOL\lState : direction=OUTPUT\lState : PLC type=USINT\lCalibReq : direction=OUTPUT\lCalibReq : PLC type=BOOL\lMaintLamp : direction=OUTPUT\lMaintLamp : PLC type=BOOL\lMeasurePermit : direction=OUTPUT\lMeasurePermit : PLC type=BOOL\lPVL_Uut : direction=LOCAL\lPVL_S : direction=LOCAL\lPVL_S : PLC type=USINT\lPVL_PreS : direction=LOCAL\lPVL_PreS : PLC type=USINT\lPVL_Scan : direction=LOCAL\lPVL_Scan : PLC type=DINT\lPVL_Active : direction=LOCAL\lPVL_Active : PLC type=BOOL\lPVL_Done : direction=LOCAL\lPVL_Done : PLC type=BOOL\lPVL_DtMs : direction=LOCAL\lPVL_DtMs : PLC type=DINT\lPVL_NowMs : direction=LOCAL\lPVL_NowMs : PLC type=DINT\lPVL_A0 : direction=LOCAL\lPVL_A0 : PLC type=BOOL\lPVL_A1 : direction=LOCAL\lPVL_A1 : PLC type=BOOL\lPVL_A2 : direction=LOCAL\lPVL_A2 : PLC type=BOOL\lPVL_A3 : direction=LOCAL\lPVL_A3 : PLC type=BOOL\lPVL_A4 : direction=LOCAL\lPVL_A4 : PLC type=BOOL\lPVL_A5 : direction=LOCAL\lPVL_A5 : PLC type=BOOL\lPVL_A6 : direction=LOCAL\lPVL_A6 : PLC type=BOOL\lPVL_A7 : direction=LOCAL\lPVL_A7 : PLC type=BOOL\lPVL_A8 : direction=LOCAL\lPVL_A8 : PLC type=BOOL\lPVL_A9 : direction=LOCAL\lPVL_A9 : PLC type=BOOL\l",
+				fontsize=9, margin="0.04,0.04", fillcolor="white", shape="rectangle", style="dashed"];
+			initamt_pseudonode_PVL_Harness1797959612 [
+				label="INITIAL\lMaintenance := false\lCalibDone := false\lMeasureReq := false\lState := 0\lCalibReq := false\lMaintLamp := false\lMeasurePermit := false\lPVL_S := 0\lPVL_PreS := 0\lPVL_Scan := 0\lPVL_Active := false\lPVL_Done := false\lPVL_DtMs := 10\lPVL_NowMs := -10\lPVL_A0 := false\lPVL_A1 := false\lPVL_A2 := false\lPVL_A3 := false\lPVL_A4 := false\lPVL_A5 := false\lPVL_A6 := false\lPVL_A7 := false\lPVL_A8 := false\lPVL_A9 := false\l",
+				fontsize=9, margin="0.04,0.04", fillcolor="lightyellow", shape="rectangle", style="dashed"];
+		}
+		_global627411361 -> VerificationLoopDS194277435;
+		subgraph cluster_VerificationLoopDS194277435 {
+			node [shape="folder", style="filled"];
+			//label="VerificationLoopDS";
+			VerificationLoopDS194277435 [label="VerificationLoopDS"];
+			
+			annotations_pseudonode_VerificationLoopDS194277435 [
+				label="ANNOTATIONS",
+				fontsize=9, margin="0.04,0.04", fillcolor="white", shape="rectangle", style="dashed"];
+			initamt_pseudonode_VerificationLoopDS194277435 [
+				label="INITIAL",
+				fontsize=9, margin="0.04,0.04", fillcolor="lightyellow", shape="rectangle", style="dashed"];
+		}
+		
+		annotations_pseudonode__global627411361 [
+			label="ANNOTATIONS\lEoC : generated\lBoC : generated\l",
+			fontsize=9, margin="0.04,0.04", fillcolor="white", shape="rectangle", style="dashed"];
+		initamt_pseudonode__global627411361 [
+			label="INITIAL\lEoC := false\lBoC := false\l",
+			fontsize=9, margin="0.04,0.04", fillcolor="lightyellow", shape="rectangle", style="dashed"];
+	}
+	subgraph clusterFB_SpectrometerQualification {
+		node [style="filled"];
+		color="black";
+		fontsize=10;
+		ranksep=0.4;
+		
+		label="FB_SpectrometerQualification : FB_SpectrometerQual\lification\l";
+		
+		annotations_pseudonode_FB_SpectrometerQualification [
+			label="ANNOTATIONS\l- Block type: FunctionBlock {name=FB_SpectrometerQ\lualification, stateful=true}\linit: Line 33 in 0.scl\ll1: Line 37 in 0.scl\ll1: IF {then=t2, endsAt=l10}\ll2: Line 39 in 0.scl\ll4: Line 43 in 0.scl\ll6: Line 47 in 0.scl\ll8: Line 51 in 0.scl\ll10: Line 57 in 0.scl\ll11: Line 59 in 0.scl\ll12: Line 61 in 0.scl\l",
+			fontsize=9, margin="0.04,0.04", fillcolor="white", shape="rectangle", style="dashed"];
+		
+		init_FB_SpectrometerQualification [label="init", color="black", fillcolor="cadetblue1", peripheries=2, shape="ellipse"];
+		l1_FB_SpectrometerQualification [label="l1", color="black", fillcolor="white", shape="ellipse"];
+		l2_FB_SpectrometerQualification [label="l2", color="black", fillcolor="white", shape="ellipse"];
+		l3_FB_SpectrometerQualification [label="l3", color="black", fillcolor="white", shape="ellipse"];
+		l4_FB_SpectrometerQualification [label="l4", color="black", fillcolor="white", shape="ellipse"];
+		l5_FB_SpectrometerQualification [label="l5", color="black", fillcolor="white", shape="ellipse"];
+		l6_FB_SpectrometerQualification [label="l6", color="black", fillcolor="white", shape="ellipse"];
+		l7_FB_SpectrometerQualification [label="l7", color="black", fillcolor="white", shape="ellipse"];
+		l8_FB_SpectrometerQualification [label="l8", color="black", fillcolor="white", shape="ellipse"];
+		l9_FB_SpectrometerQualification [label="l9", color="black", fillcolor="white", shape="ellipse"];
+		l10_FB_SpectrometerQualification [label="l10", color="black", fillcolor="white", shape="ellipse"];
+		l11_FB_SpectrometerQualification [label="l11", color="black", fillcolor="white", shape="ellipse"];
+		l12_FB_SpectrometerQualification [label="l12", color="black", fillcolor="white", shape="ellipse"];
+		l13_FB_SpectrometerQualification [label="l13", color="black", fillcolor="white", style=bold, shape="ellipse"];
+		init_FB_SpectrometerQualification -> l1_FB_SpectrometerQualification [color="black", label="preState := State"];
+		l1_FB_SpectrometerQualification -> l2_FB_SpectrometerQualification [color="black", label="[Maintenance]"];
+		l2_FB_SpectrometerQualification -> l3_FB_SpectrometerQualification [color="black", label="State := 2"];
+		l1_FB_SpectrometerQualification -> l4_FB_SpectrometerQualification [color="black", label="[((! Maintenance) && (preState = 2))]"];
+		l4_FB_SpectrometerQualification -> l5_FB_SpectrometerQualification [color="black", label="State := 1"];
+		l1_FB_SpectrometerQualification -> l6_FB_SpectrometerQualification [color="black", label="[(((! Maintenance) && (! (preState = 2))) && ((pre\lState = 0) && CalibDone))]\l"];
+		l6_FB_SpectrometerQualification -> l7_FB_SpectrometerQualification [color="black", label="State := 1"];
+		l1_FB_SpectrometerQualification -> l8_FB_SpectrometerQualification [color="black", label="[ELSE]"];
+		l8_FB_SpectrometerQualification -> l9_FB_SpectrometerQualification [color="black", label="State := preState"];
+		l3_FB_SpectrometerQualification -> l10_FB_SpectrometerQualification [color="black", label=""];
+		l5_FB_SpectrometerQualification -> l10_FB_SpectrometerQualification [color="black", label=""];
+		l7_FB_SpectrometerQualification -> l10_FB_SpectrometerQualification [color="black", label=""];
+		l9_FB_SpectrometerQualification -> l10_FB_SpectrometerQualification [color="black", label=""];
+		l10_FB_SpectrometerQualification -> l11_FB_SpectrometerQualification [color="black", label="CalibReq := (State = 0)"];
+		l11_FB_SpectrometerQualification -> l12_FB_SpectrometerQualification [color="black", label="MaintLamp := (State = 2)"];
+		l12_FB_SpectrometerQualification -> l13_FB_SpectrometerQualification [color="black", label="MeasurePermit := (MeasureReq && (State = 1))"];
+	}
+	subgraph clusterPVL_Harness {
+		node [style="filled"];
+		color="black";
+		fontsize=10;
+		ranksep=0.4;
+		
+		label="PVL_Harness : PVL_Harness";
+		
+		annotations_pseudonode_PVL_Harness [
+			label="ANNOTATIONS\l- Block type: FunctionBlock {name=PVL_Harness, sta\lteful=true}\linit: Line 99 in 0.scl\linit: IF {then=t1, endsAt=l36}\ll1: Line 100 in 0.scl\ll2: Line 101 in 0.scl\ll3: Line 102 in 0.scl\ll4: Line 103 in 0.scl\ll5: Line 104 in 0.scl\ll6: Line 105 in 0.scl\ll7: Line 106 in 0.scl\ll8: Line 107 in 0.scl\ll8: IF {then=t9, endsAt=l16}\ll9: Line 107 in 0.scl\ll11: Line 107 in 0.scl\ll13: Line 107 in 0.scl\ll16: Line 108 in 0.scl\ll16: IF {then=t20, endsAt=l20}\ll17: Line 108 in 0.scl\ll20: Line 109 in 0.scl\ll21: Line 109 in 0.scl\ll22: Line 110 in 0.scl\ll23: Line 111 in 0.scl\ll24: Line 112 in 0.scl\ll25: Line 113 in 0.scl\ll26: Line 114 in 0.scl\ll27: Line 115 in 0.scl\ll28: Line 116 in 0.scl\ll29: Line 117 in 0.scl\ll30: Line 118 in 0.scl\ll31: Line 119 in 0.scl\ll33: Line 120 in 0.scl\ll34: Line 120 in 0.scl\l",
+			fontsize=9, margin="0.04,0.04", fillcolor="white", shape="rectangle", style="dashed"];
+		
+		init_PVL_Harness [label="init", color="black", fillcolor="cadetblue1", peripheries=2, shape="ellipse"];
+		l1_PVL_Harness [label="l1", color="black", fillcolor="white", shape="ellipse"];
+		l2_PVL_Harness [label="l2", color="black", fillcolor="white", shape="ellipse"];
+		l3_PVL_Harness [label="l3", color="black", fillcolor="white", shape="ellipse"];
+		l4_PVL_Harness [label="l4", color="black", fillcolor="white", shape="ellipse"];
+		l5_PVL_Harness [label="l5", color="black", fillcolor="white", shape="ellipse"];
+		l6_PVL_Harness [label="l6", color="black", fillcolor="white", shape="ellipse"];
+		l7_PVL_Harness [label="l7", color="black", fillcolor="white", shape="ellipse"];
+		l8_PVL_Harness [label="l8", color="black", fillcolor="white", shape="ellipse"];
+		l9_PVL_Harness [label="l9", color="black", fillcolor="white", shape="ellipse"];
+		l10_PVL_Harness [label="l10", color="black", fillcolor="white", shape="ellipse"];
+		l11_PVL_Harness [label="l11", color="black", fillcolor="white", shape="ellipse"];
+		l12_PVL_Harness [label="l12", color="black", fillcolor="white", shape="ellipse"];
+		l13_PVL_Harness [label="l13", color="black", fillcolor="white", shape="ellipse"];
+		l14_PVL_Harness [label="l14", color="black", fillcolor="white", shape="ellipse"];
+		l15_PVL_Harness [label="l15", color="black", fillcolor="white", shape="ellipse"];
+		l16_PVL_Harness [label="l16", color="black", fillcolor="white", shape="ellipse"];
+		l17_PVL_Harness [label="l17", color="black", fillcolor="white", shape="ellipse"];
+		l18_PVL_Harness [label="l18", color="black", fillcolor="white", shape="ellipse"];
+		l19_PVL_Harness [label="l19", color="black", fillcolor="white", shape="ellipse"];
+		l20_PVL_Harness [label="l20", color="black", fillcolor="white", shape="ellipse"];
+		l21_PVL_Harness [label="l21", color="black", fillcolor="white", shape="ellipse"];
+		l22_PVL_Harness [label="l22", color="black", fillcolor="white", shape="ellipse"];
+		l23_PVL_Harness [label="l23", color="black", fillcolor="white", shape="ellipse"];
+		l24_PVL_Harness [label="l24", color="black", fillcolor="white", shape="ellipse"];
+		l25_PVL_Harness [label="l25", color="black", fillcolor="white", shape="ellipse"];
+		l26_PVL_Harness [label="l26", color="black", fillcolor="white", shape="ellipse"];
+		l27_PVL_Harness [label="l27", color="black", fillcolor="white", shape="ellipse"];
+		l28_PVL_Harness [label="l28", color="black", fillcolor="white", shape="ellipse"];
+		l29_PVL_Harness [label="l29", color="black", fillcolor="white", shape="ellipse"];
+		l30_PVL_Harness [label="l30", color="black", fillcolor="white", shape="ellipse"];
+		l31_PVL_Harness [label="l31", color="black", fillcolor="white", shape="ellipse"];
+		l32_PVL_Harness [label="l32", color="black", fillcolor="white", shape="ellipse"];
+		l33_PVL_Harness [label="l33", color="black", fillcolor="white", shape="ellipse"];
+		l34_PVL_Harness [label="l34", color="black", fillcolor="white", shape="ellipse"];
+		l35_PVL_Harness [label="l35", color="black", fillcolor="white", shape="ellipse"];
+		l36_PVL_Harness [label="l36", color="black", fillcolor="white", style=bold, shape="ellipse"];
+		init_PVL_Harness -> l1_PVL_Harness [color="black", label="[(PVL_Scan < 3)]"];
+		l1_PVL_Harness -> l2_PVL_Harness [color="black", label="PVL_NowMs := (PVL_NowMs + PVL_DtMs)"];
+		l2_PVL_Harness -> l3_PVL_Harness [color="black", label="CALL: FB_SpectrometerQualification:PVL_Uut(\l   IN: Maintenance := Maintenance\l, CalibDone := CalibDone\l, MeasureReq := MeasureReq\l   OUT: )\l"];
+		l3_PVL_Harness -> l4_PVL_Harness [color="black", label="State := PVL_Uut/State"];
+		l4_PVL_Harness -> l5_PVL_Harness [color="black", label="CalibReq := PVL_Uut/CalibReq"];
+		l5_PVL_Harness -> l6_PVL_Harness [color="black", label="MaintLamp := PVL_Uut/MaintLamp"];
+		l6_PVL_Harness -> l7_PVL_Harness [color="black", label="MeasurePermit := PVL_Uut/MeasurePermit"];
+		l7_PVL_Harness -> l8_PVL_Harness [color="black", label="PVL_PreS := PVL_S"];
+		l8_PVL_Harness -> l9_PVL_Harness [color="black", label="[Maintenance]"];
+		l9_PVL_Harness -> l10_PVL_Harness [color="black", label="PVL_S := 2"];
+		l8_PVL_Harness -> l11_PVL_Harness [color="black", label="[((! Maintenance) && (PVL_PreS = 2))]"];
+		l11_PVL_Harness -> l12_PVL_Harness [color="black", label="PVL_S := 0"];
+		l8_PVL_Harness -> l13_PVL_Harness [color="black", label="[(((! Maintenance) && (! (PVL_PreS = 2))) && ((PVL\l_PreS = 0) && CalibDone))]\l"];
+		l13_PVL_Harness -> l14_PVL_Harness [color="black", label="PVL_S := 1"];
+		l8_PVL_Harness -> l15_PVL_Harness [color="black", label="[ELSE]"];
+		l10_PVL_Harness -> l16_PVL_Harness [color="black", label=""];
+		l12_PVL_Harness -> l16_PVL_Harness [color="black", label=""];
+		l14_PVL_Harness -> l16_PVL_Harness [color="black", label=""];
+		l15_PVL_Harness -> l16_PVL_Harness [color="black", label=""];
+		l16_PVL_Harness -> l17_PVL_Harness [color="black", label="[(PVL_Scan <= 3)]"];
+		l17_PVL_Harness -> l18_PVL_Harness [color="black", label="PVL_Scan := (PVL_Scan + 1)"];
+		l16_PVL_Harness -> l19_PVL_Harness [color="black", label="[ELSE]"];
+		l18_PVL_Harness -> l20_PVL_Harness [color="black", label=""];
+		l19_PVL_Harness -> l20_PVL_Harness [color="black", label=""];
+		l20_PVL_Harness -> l21_PVL_Harness [color="black", label="PVL_Active := (PVL_Scan <= 3)"];
+		l21_PVL_Harness -> l22_PVL_Harness [color="black", label="PVL_Done := (PVL_Scan >= 3)"];
+		l22_PVL_Harness -> l23_PVL_Harness [color="black", label="PVL_A0 := (State = PVL_S)"];
+		l23_PVL_Harness -> l24_PVL_Harness [color="black", label="PVL_A1 := ((! Maintenance) || (State = 2))"];
+		l24_PVL_Harness -> l25_PVL_Harness [color="black", label="PVL_A2 := ((! ((! Maintenance) && (PVL_PreS = 2)))\l || (State = 0))\l"];
+		l25_PVL_Harness -> l26_PVL_Harness [color="black", label="PVL_A3 := ((! (((! Maintenance) && (PVL_PreS = 0))\l && CalibDone)) || (State = 1))\l"];
+		l26_PVL_Harness -> l27_PVL_Harness [color="black", label="PVL_A4 := ((! (((! Maintenance) && (PVL_PreS = 0))\l && (! CalibDone))) || (State = 0))\l"];
+		l27_PVL_Harness -> l28_PVL_Harness [color="black", label="PVL_A5 := ((! ((! Maintenance) && (PVL_PreS = 1)))\l || (State = 1))\l"];
+		l28_PVL_Harness -> l29_PVL_Harness [color="black", label="PVL_A6 := (CalibReq = (State = 0))"];
+		l29_PVL_Harness -> l30_PVL_Harness [color="black", label="PVL_A7 := (MaintLamp = (State = 2))"];
+		l30_PVL_Harness -> l31_PVL_Harness [color="black", label="PVL_A8 := (MeasurePermit = (MeasureReq && (State =\l 1)))\l"];
+		l31_PVL_Harness -> l32_PVL_Harness [color="black", label="PVL_A9 := (((State = 0) || (State = 1)) || (State \l= 2))\l"];
+		init_PVL_Harness -> l33_PVL_Harness [color="black", label="[ELSE]"];
+		l33_PVL_Harness -> l34_PVL_Harness [color="black", label="PVL_Active := false"];
+		l34_PVL_Harness -> l35_PVL_Harness [color="black", label="PVL_Done := true"];
+		l32_PVL_Harness -> l36_PVL_Harness [color="black", label=""];
+		l35_PVL_Harness -> l36_PVL_Harness [color="black", label=""];
+	}
+	subgraph clusterVerificationLoop {
+		node [style="filled"];
+		style=bold;
+		color="black";
+		fontsize=10;
+		ranksep=0.4;
+		
+		label="VerificationLoop : VerificationLoopDS";
+		
+		annotations_pseudonode_VerificationLoop [
+			label="ANNOTATIONS\lloop_start: WHILE {loopBodyEntry=set_BoC, loopExit\l=end1, loopNextCycle=restart}\l",
+			fontsize=9, margin="0.04,0.04", fillcolor="white", shape="rectangle", style="dashed"];
+		
+		init_VerificationLoop [label="init", color="black", fillcolor="cadetblue1", peripheries=2, shape="ellipse"];
+		end_VerificationLoop [label="end", color="black", fillcolor="cadetblue1", style=bold, shape="ellipse"];
+		loop_start_VerificationLoop [label="loop_start", color="black", fillcolor="white", shape="ellipse"];
+		prepare_BoC_VerificationLoop [label="prepare_BoC", color="black", fillcolor="cadetblue1", shape="ellipse"];
+		l_main_call_VerificationLoop [label="l_main_call", color="black", fillcolor="white", shape="ellipse"];
+		callEnd_VerificationLoop [label="callEnd", color="black", fillcolor="white", shape="ellipse"];
+		prepare_EoC_VerificationLoop [label="prepare_EoC", color="black", fillcolor="cadetblue1", shape="ellipse"];
+		init_VerificationLoop -> loop_start_VerificationLoop [color="black", label=""];
+		loop_start_VerificationLoop -> prepare_BoC_VerificationLoop [color="blue", label="instance/CalibDone := NONDETERMINISTIC of bool\linstance/Maintenance := NONDETERMINISTIC of bool\linstance/MeasureReq := NONDETERMINISTIC of bool\lBoC := true (*)\l"];
+		prepare_BoC_VerificationLoop -> l_main_call_VerificationLoop [color="blue", label="BoC := false (*)"];
+		l_main_call_VerificationLoop -> callEnd_VerificationLoop [color="black", label="CALL: PVL_Harness:instance(\l   IN:    OUT: )\l"];
+		callEnd_VerificationLoop -> prepare_EoC_VerificationLoop [color="blue", label="EoC := true (*)"];
+		prepare_EoC_VerificationLoop -> loop_start_VerificationLoop [color="blue", label="EoC := false (*)"];
+		loop_start_VerificationLoop -> end_VerificationLoop [color="black", label="[false]"];
+	}
+}
+
