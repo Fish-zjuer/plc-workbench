@@ -5,6 +5,8 @@
 >
 > [全集说明与贡献台账](docs/TEAM_INTEGRATION_20261108.md) · [TIA原验收报告](reports/tia_final_20261104/README.md) · [TIA配置](docs/TIA_VERIFICATION.md) · [ST独立审查](docs/WEB_ADVERSARIAL_REVIEW.md)
 
+> **TIA 32×4 本轮准备**：只使用 deepseek-flash，self/Codex 各独立重复两次。[运行协议与当前进度](docs/TIA_MATRIX_32X4.md) · [GitHub 中的公开输出](outputs/published/README.md)。本机形式化正负对照已完成，TIA 安装待完成；128 项尚未运行。
+
 在 CODESYS 的基础上，完成了 TIA 的 SCL 生成与修复、编译、PLCSIM 行为测试及共享有界形式化接入和代表性用例验收；尚未覆盖全部 32 题、原生 VARIANT ABI、实体 PLC 和无限扫描证明，也没有重写或扩展验证后端本身。
 
 PLC Workbench 是支持 CODESYS 与 TIA Portal 的本地 PLC 代码生成与验证项目，支持模型驱动的代码生成、编译诊断、功能测试和自动修复，并提供 self / Codex 两框架、两模型的对照实验入口。单题和批量流程统一接入 PLCverif + CBMC 的有界 LTL 检查，逐条保存结果和未执行原因。当前尚未实现全部32题的准确模型覆盖。
