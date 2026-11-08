@@ -1,0 +1,63 @@
+TYPE "ST_Pump"
+VERSION : 0.1
+   STRUCT
+      priority : INT;
+      selection : BOOL;
+      RunComd : BOOL;
+   END_STRUCT;
+END_TYPE
+
+FUNCTION_BLOCK "Q07"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+VAR_INPUT
+    mode : BOOL;
+    start : BOOL;
+    stop : BOOL;
+END_VAR
+VAR_IN_OUT
+    pumpGroup : ARRAY[1..5] OF "ST_Pump";
+END_VAR
+VAR
+    enabled : BOOL := FALSE;
+END_VAR
+VAR_TEMP
+    i : INT;
+    j : INT;
+    tmpPriority : ARRAY[1..5] OF INT;
+    tmpRank : ARRAY[1..5] OF INT;
+END_VAR
+BEGIN
+    IF #stop THEN
+        #enabled := FALSE;
+    ELSIF #start THEN
+        #enabled := TRUE;
+    END_IF;
+
+    IF NOT #enabled THEN
+        FOR #i := 1 TO 5 DO
+            #pumpGroup[#i].RunComd := FALSE;
+        END_FOR;
+    ELSIF #mode THEN
+        FOR #i := 1 TO 5 DO
+            #tmpPriority[#i] := #pumpGroup[#i].priority;
+            #tmpRank[#i] := 0;
+        END_FOR;
+
+        FOR #i := 1 TO 5 DO
+            FOR #j := 1 TO 5 DO
+                IF (#tmpPriority[#j] > #tmpPriority[#i]) OR ((#tmpPriority[#j] = #tmpPriority[#i]) AND (#j < #i)) THEN
+                    #tmpRank[#i] := #tmpRank[#i] + 1;
+                END_IF;
+            END_FOR;
+        END_FOR;
+
+        FOR #i := 1 TO 5 DO
+            #pumpGroup[#i].RunComd := (#tmpRank[#i] < 3);
+        END_FOR;
+    ELSE
+        FOR #i := 1 TO 5 DO
+            #pumpGroup[#i].RunComd := #pumpGroup[#i].selection;
+        END_FOR;
+    END_IF;
+END_FUNCTION_BLOCK

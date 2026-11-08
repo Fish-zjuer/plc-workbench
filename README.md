@@ -1,6 +1,13 @@
 # PLC Workbench
 
-PLC Workbench 是面向 CODESYS 的本地 ST 代码生成与验证项目，支持模型驱动的代码生成、编译诊断、功能测试和自动修复，并提供 self / Codex 两框架、两模型的对照实验入口。单题和批量流程统一接入 PLCverif + CBMC 的有界 LTL 检查，逐条保存结果和未执行原因。当前尚未实现全部32题的准确模型覆盖。
+
+> **2026-11-08 团队全集归档**：统一分支 `full-integration-20261108`，已汇合 CODESYS、TIA、形式化修复、统一32题和网页独立审查，覆盖当前11个分支的成果。先以此版统一接手，合并后端到端验收尚待开展。
+>
+> [全集说明与贡献台账](docs/TEAM_INTEGRATION_20261108.md) · [TIA原验收报告](reports/tia_final_20261104/README.md) · [TIA配置](docs/TIA_VERIFICATION.md) · [ST独立审查](docs/WEB_ADVERSARIAL_REVIEW.md)
+
+在 CODESYS 的基础上，完成了 TIA 的 SCL 生成与修复、编译、PLCSIM 行为测试及共享有界形式化接入和代表性用例验收；尚未覆盖全部 32 题、原生 VARIANT ABI、实体 PLC 和无限扫描证明，也没有重写或扩展验证后端本身。
+
+PLC Workbench 是支持 CODESYS 与 TIA Portal 的本地 PLC 代码生成与验证项目，支持模型驱动的代码生成、编译诊断、功能测试和自动修复，并提供 self / Codex 两框架、两模型的对照实验入口。单题和批量流程统一接入 PLCverif + CBMC 的有界 LTL 检查，逐条保存结果和未执行原因。当前尚未实现全部32题的准确模型覆盖。
 
 ## 1 环境要求与安装
 
@@ -39,6 +46,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup-reproduction
 打开网页左侧 **模型与环境**。
 
 **模型配置：** 网页使用可自定义 Base URL 的 Chat Completions 兼容接口，可连接 DeepSeek、DMXAPI、其他兼容服务或本地模型。填写服务地址、API Key及准确模型ID后保存，可通过“测试连接”验证接口。连接测试会产生模型请求，计入服务用量。配置由界面保存；程序不自动加载 `.env` 文件。
+
+TIA 的依赖、Bridge构建、专用编译/仿真模板及本机配置见 [TIA使用说明](docs/TIA_VERIFICATION.md)。网页选择TIA后执行SCL链路；独立ST审查仍限于CODESYS/本地备用模式。
 
 API密钥保存在本机 `agent_data/private/`，该目录不纳入源码分发。网页结果接口不返回完整密钥。
 
@@ -133,11 +142,20 @@ API密钥保存在本机 `agent_data/private/`，该目录不纳入源码分发�
 
 ## 代码与入口整理
 
-日常只需执行 `start.cmd`；查看结果直接打开 `outputs/`，不需要另运行 cmd 文件。主命令入口只保留网页与 CODESYS 环境工具。历史终端和旧批测代码已归入 `plc_agent/legacy/`，本地专用编译器、驱动与补丁集中在 `optional_local_tests/`。后者提交前可以整体删除。目录分工与保留理由见 [代码导读](docs/CODE_GUIDE.md)。
+日常只需执行 `start.cmd`；查看结果直接打开 `outputs/`，不需要另运行 cmd 文件。主命令入口为网页、CODESYS环境工具和TIA环境/运行工具。历史终端和旧批测代码已归入 `plc_agent/legacy/`，本地专用编译器、驱动与补丁集中在 `optional_local_tests/`。后者提交前可以整体删除。目录分工与保留理由见 [代码导读](docs/CODE_GUIDE.md)。
 
-## 2026-11-03 整合检查
+## 当前 TIA 验收
 
-本版以 agent-codesys-cbmc@0cdaaae 为基础，包含 bank32-v6 与形式化修复分支。恢复自定义 Base URL，保留现有服务参数，切换服务不会沿用旧密钥；补全可复现的测试夹具。当前电脑仍缺 CODESYS、PLCverif 与 CBMC，不将源代码接入当作厂商或完整形式化实测。详细记录见 [整合报告](docs/INTEGRATION_20261103.md)。
+TIA 与 CODESYS 共用 Trial/Campaign、冻结题库、判卷器及 PLCverif/CBMC。TIA 使用 Openness 编译、PLCSIM Advanced 原生执行及 SCL 语法适配。
+
+队友在11月4日留下的TIA验收记录（本次未重跑）：开放数组默认流程 320 次调用、640 项断言及 8 条有界性质通过；15 组基线 ST/SCL 正负例一致，8 份 SCL 实际编译接受，81 项相关回归检查通过。结论限定于报告列出的输入域、扫描上界和已验收能力。
+
+- [最终结果](reports/tia_final_20261104/README.md)
+- [TIA 配置与使用](docs/TIA_VERIFICATION.md)
+- [基线兼容性与复现](docs/TIA_VERIFICATION.md#复现最终验收)
+- [可选试用通知辅助工具](docs/TIA_VERIFICATION.md#可选试用通知监听器)
+
+不用模型重放保存候选：`python scripts/check_tia_complex.py --output outputs/tia_replay_new`。基线形式化对照：`python scripts/check_tia_baseline.py --output outputs/tia_pairs_new`。
 
 不用模型重放32份保存候选（需本地备用后端）：`python scripts/check_saved_candidates.py`；开发回归：`python -m unittest discover -s tests -v`。历史终端命令在 `python -m plc_agent.legacy` 下，网页仍由 start.cmd 启动。
 

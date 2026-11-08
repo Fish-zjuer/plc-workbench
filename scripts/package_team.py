@@ -8,11 +8,12 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 FOLDERS = ('plc_agent', 'plc_probe', 'optional_local_tests', 'datasets', 'docs',
-           'examples', 'scripts', 'tools', 'tests', 'course_materials')
+           'examples', 'scripts', 'tools', 'tests', 'course_materials',
+           'integrations', 'reports/tia_final_20261104')
 FILES = ('README.md', 'start.cmd', 'requirements.lock', '.env.example',
-         '.gitignore', '.gitattributes', 'outputs/README.md')
+         '.gitignore', '.gitattributes', 'outputs/README.md', 'reports/README.md')
 EXCLUDED = {'__pycache__', 'node_modules', '.pytest_cache', '.venv', '.runtime',
-            'agent_data', '.git', 'private'}
+            'agent_data', '.git', 'private', 'bin', 'obj', '.vs'}
 
 
 def main(argv=None):

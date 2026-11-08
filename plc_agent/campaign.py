@@ -65,7 +65,8 @@ def local_proxy_bypass(environment):
     return result
 
 
-def preflight(home=STATE_ROOT, require_vendor=True):
+def preflight(home=STATE_ROOT, require_vendor=True, *, target='codesys'):
+    if target not in ('codesys','tia'):raise ValueError('Unknown platform')
     from plc_agent.runtime_env import configure_tools
     tools=configure_tools()
     cfg=ModelConfig.load(Path(home))
@@ -78,9 +79,15 @@ def preflight(home=STATE_ROOT, require_vendor=True):
         except (OSError,ValueError,subprocess.SubprocessError) as exc: errors.append('Codex CLI version check failed: '+str(exc))
     else: errors.append('未找到实验用 Codex CLI；设置 PLC_CODEX_CLI 为支持 Chat Completions 的 Codex 0.80.0 路径')
     if version and version!='codex-cli 0.80.0': errors.append('此 Chat Completions 适配固定 Codex 0.80.0；当前为 '+version)
-    vendor=codesys.load_config(Path(home))
+    if target=='tia':
+        from plc_agent import tia
+        require_vendor=True
+        vendor=tia.load_config(Path(home))
+    else:vendor=codesys.load_config(Path(home))
     if require_vendor:
-        try: codesys.validate_config(vendor)
+        try:
+            if target=='tia':tia.validate_simulation_config(vendor)
+            else:codesys.validate_config(vendor)
         except ValueError as exc: errors.append(str(exc))
     from plc_probe.config import toolchain_dir
     backend=None
@@ -97,12 +104,15 @@ def preflight(home=STATE_ROOT, require_vendor=True):
         except (ValueError,OSError,ModuleNotFoundError) as exc:errors.append('本地备用后端校验失败: '+str(exc))
     return {'local_backend':{'home':None if require_vendor else str(toolchain_dir()),'extension':backend.get('extension') if backend else None,'fingerprint':backend.get('fingerprint') if backend else None},'status':'ready' if not errors else 'setup_required','errors':errors,
         'codex_path':str(cli) if cli else None,'codex_version':version,
-        'vendor_required':require_vendor,'test_backend':'codesys' if require_vendor else 'optional_local','codesys':vendor,'limits':LIMITS,'tools':tools,'formal':plcverif_backend.environment(home)}
+        'target':target,'vendor_config':vendor,'vendor_required':require_vendor,'test_backend':target if require_vendor else 'optional_local',
+        'codesys':vendor if target=='codesys' else {},'limits':LIMITS,'tools':tools,'formal':plcverif_backend.environment(home)}
 
 
 class Trial:
-    def __init__(self,path,task,cfg,vendor,stop,formal_config=None,save_snapshots=True):
+    def __init__(self,path,task,cfg,vendor,stop,formal_config=None,save_snapshots=True,*,target='codesys'):
+        if target not in ('codesys','tia'):raise ValueError('Unknown platform')
         self.path=Path(path); self.path.mkdir(parents=True,exist_ok=True)
+        self.target=target;self.suffix='.scl' if target=='tia' else '.st'
         self.task=task;self.cfg=cfg;self.vendor=vendor;self.stop=stop
         self.formal_config=dict(formal_config) if formal_config is not None else plcverif_backend.configuration()
         self.provider=ChatProvider(replace(cfg,transport_retries=0)); self.metrics=[]
@@ -158,16 +168,21 @@ class Trial:
             if self.stop.is_set(): return {'status':'interrupted'}
             if time.monotonic()-self.started>LIMITS['seconds']:return {'status':'timeout'}
             if not isinstance(text,str) or len(text)>200000:raise ValueError('ST source must be <=200 KB')
-            text=normalize_v6(text,self.task['block'])
+            if self.target=='codesys':text=normalize_v6(text,self.task['block'])
             sha=hashlib.sha256(text.encode()).hexdigest()
             if sha in self.submissions:return self.submissions[sha]
             if len(self.submissions)>=LIMITS['source_versions']:return {'status':'revision_limit'}
             folder=self.path/'submissions'/str(len(self.submissions)+1)
             folder.mkdir(parents=True)
-            source=folder/'candidate.st';source.write_text(text,encoding='utf-8')
-            result=evaluate_candidate(source,self.task,self.vendor,self.stop,
-                formal_directory=folder/'formal',
-                formal_timeout=max(0,LIMITS['seconds']-(time.monotonic()-self.started)),formal_config=self.formal_config)
+            source=folder/('candidate'+self.suffix);source.write_text(text,encoding='utf-8')
+            remaining=max(0,LIMITS['seconds']-(time.monotonic()-self.started))
+            if self.target=='tia':
+                from plc_agent.tia_workflow import evaluate_candidate as evaluate_tia
+                result=evaluate_tia(source,self.task,self.vendor,self.stop,directory=folder/'evaluation',
+                                    formal_timeout=remaining,formal_config=self.formal_config)
+            else:
+                result=evaluate_candidate(source,self.task,self.vendor,self.stop,
+                    formal_directory=folder/'formal',formal_timeout=remaining,formal_config=self.formal_config)
             if self.stop.is_set():result={**result,'status':'interrupted'}
             elif time.monotonic()-self.started>LIMITS['seconds']:result={**result,'status':'timeout','message':'Whole-task time limit reached'}
             event(self.path,'evaluation',version=len(self.submissions)+1,source_sha256=sha,result=result)
@@ -175,20 +190,30 @@ class Trial:
             result=dataset_workflow.compact(result)
             self.submissions[sha]=result
             result['metrics_summary']=metrics(result,self.task)
-            (self.path/'candidate.st').write_text(text,encoding='utf-8')
+            (self.path/('candidate'+self.suffix)).write_text(text,encoding='utf-8')
             return result
     def receipt(self,status,extra=None):
-        value={'task_id':self.task['id'],'dataset_sha256':self.task['dataset_sha256'],
+        value={'task_id':self.task['id'],'dataset_sha256':self.task['dataset_sha256'],'target':self.target,
             'model':self.cfg.model,'inference_parameters':self.cfg.extra_body,'status':status,'model_calls':self.calls,
             'token_usage':dataset_workflow.usage_totals(self.metrics),'metrics':self.metrics,
             'seconds':round(time.monotonic()-self.started,3),'evidence_path':str(self.path),'submissions':list(self.submissions.values()),
             'limits':LIMITS,'formal_policy':'automatic', **(extra or {})}
-        candidate=self.path/'candidate.st'
+        candidate=self.path/('candidate'+self.suffix)
         value['source_sha256']=hashlib.sha256(candidate.read_bytes()).hexdigest() if candidate.exists() else None
         return finish(self.path,value,self.task)
 
 
-def run_self(trial):
+def run_self(trial, *, max_revisions=None):
+    if trial.target=='tia':
+        from plc_agent import tia_workflow
+        result=tia_workflow.run(trial.task,trial.path/'candidate.scl',trial.path,trial.cfg,vendor_config=trial.vendor,
+            provider=trial,max_revisions=LIMITS['source_versions']-1 if max_revisions is None else max_revisions,verification='full',
+            evaluator=lambda source,task:trial.check(Path(source).read_text(encoding='utf-8-sig')),
+            notify=lambda text:event(trial.path,'progress',message=text))
+        return trial.receipt('finite_pass' if result['status']=='pass' else result['status'],
+            {'final_evaluation':result.get('final_evaluation'),'target_compile':result.get('target_compile','not_executed'),
+             'formal_verification':result.get('formal_verification'),'ltl_status':result.get('ltl_status','not_executed'),
+             'behavior_tested':result.get('behavior_tested',False)})
     dataset_workflow.normalize_source=normalize_v6
     source=trial.path/'candidate.st'
     def check(path,task):return trial.check(Path(path).read_text(encoding='utf-8'))
@@ -244,7 +269,10 @@ class Relay:
 def run_codex(trial,cli):
     workspace=trial.path/'workspace';workspace.mkdir()
     home=trial.path/'cli_home';home.mkdir()
-    packet=bank32.author_packet(trial.task,backend='codesys' if trial.vendor is not None else 'optional_local')
+    if trial.target=='tia':
+        from plc_agent.tia_workflow import author_input
+        packet=author_input(trial.task)
+    else:packet=bank32.author_packet(trial.task,backend='codesys' if trial.vendor is not None else 'optional_local')
     # Only the author packet enters the CLI workspace; expected tables stay host-side.
     (workspace/'requirements.json').write_text(json.dumps(packet,ensure_ascii=False,indent=2),encoding='utf-8')
     with Relay(trial) as relay:
@@ -255,9 +283,12 @@ p=pathlib.Path('candidate.st')
 req=urllib.request.Request(URL,data=json.dumps({'code':p.read_text(encoding='utf-8-sig')}).encode(),headers={'Content-Type':'application/json','Authorization':'Bearer '+TOKEN},method='POST')
 opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
 with opener.open(req,timeout=600) as r: print(r.read().decode())
-""".replace('URL',repr('http://127.0.0.1:'+str(port)+'/check')).replace('TOKEN',repr(relay.token))
+""".replace('candidate.st','candidate'+trial.suffix).replace('URL',repr('http://127.0.0.1:'+str(port)+'/check')).replace('TOKEN',repr(relay.token))
+        if trial.target=='tia':checker=checker.replace('timeout=600','timeout='+str(LIMITS['seconds']))
         (workspace/'check.py').write_text(checker,encoding='utf-8')
         prompt='Read requirements.json. Write complete candidate.st with the exact interface. In PowerShell run: & '+json.dumps(sys.executable)+' check.py after each version. Repair using diagnostics. Repair compile_error, fail, invalid_candidate, runtime_error and formal_counterexample using the actual diagnostics. Stop when status is pass or compiled_without_tests; also stop and report formal_incomplete, formal_blocked, timeout, missing_dependency, tool_error, protocol_error, stale_source, stale_evidence, behavior_not_supported, capability_blocked, backend_busy, revision_limit, interrupted or no_progress instead of guessing a code fix. At most 6 distinct source versions, 24 model requests, 1800 seconds. Work only in this directory; never edit requirements.json or check.py, read parent directories, hidden tests, compiler caches or reference solutions. Finish with status.'
+        if trial.target=='tia':
+            prompt=prompt.replace('candidate.st','candidate.scl').replace('Repair compile_error,','Write Siemens SCL external source as raw code in candidate.scl. Repair compile_failed, generation_failed, compile_error,').replace('behavior_not_supported,','behavior_not_supported, behavior_not_configured, harness_error, simulation_error, bridge_protocol_error,')
         env={k:v for k,v in os.environ.items() if not any(word in k.upper() for word in ('API_KEY','TOKEN','SECRET','PASSWORD','CODEX_HOME','OPENAI_'))}
         env=local_proxy_bypass(env)
         env.update(CODEX_HOME=str(home),PLC_BENCHMARK_TOKEN=relay.token)
@@ -273,7 +304,7 @@ with opener.open(req,timeout=600) as r: print(r.read().decode())
                     else:process.kill()
                     break
             process.wait()
-        candidate=workspace/'candidate.st'
+        candidate=workspace/('candidate'+trial.suffix)
         result={'status':'missing_candidate','target_compile':'not_executed'}
         if candidate.exists():result=trial.check(candidate.read_text(encoding='utf-8-sig'))
         status='finite_pass' if result['status']=='pass' else result['status']
@@ -282,7 +313,7 @@ with opener.open(req,timeout=600) as r: print(r.read().decode())
             'cli_exit_code':process.returncode,'framework_version':'codex-cli 0.80.0','wire_api':'chat'})
 
 
-def summarize(rows,expected,tasks=None):
+def summarize(rows,expected,tasks=None,*,target='codesys'):
     table=[]
     for framework,model in expected:
         group=[r for r in rows if r['framework']==framework and r['model']==model]
@@ -291,7 +322,9 @@ def summarize(rows,expected,tasks=None):
         first_vendor=sum(bool(r.get('submissions')) and r['submissions'][0].get('target_compile')=='passed' for r in group)
         first_pass=sum(bool(r.get('submissions')) and r['submissions'][0].get('status')=='pass' for r in group)
         totals=dataset_workflow.usage_totals([m for r in group for m in r.get('metrics',[])])
-        summaries=[(r.get('final_evaluation') or {}).get('summary') or {} for r in group]
+        target=group[0].get('target',target) if group else target
+        summaries=[(r.get('final_evaluation') or {}).get('summary') or {} for r in group
+                   if not (r.get('target')=='tia' and (r.get('final_evaluation') or {}).get('behavior_tested') is False)]
         scenarios=sum(s.get('scenarios',0) for s in summaries)
         failed=sum(s.get('failed',0) for s in summaries)
         reports=[(r.get('final_evaluation') or {}).get('formal_verification') or {} for r in group]
@@ -303,9 +336,11 @@ def summarize(rows,expected,tasks=None):
         formal_total=sum(property_count(t.get('ltl',{})) for t in tasks) if tasks is not None else sum(f.get('declared_ltl_total',0) for f in reports)
         denominator=len(tasks) if tasks is not None else len(group)
         declared_tests=sum(len(t.get('scenarios',[])) for t in tasks) if tasks is not None else scenarios
-        table.append({'framework':framework,'model':model,'completed':len(group),'passed':passed,
-            'task_count':denominator,'codesys_compile_rate':compiled/denominator if denominator else None,
-            'codesys_first_compile_rate':first_vendor/denominator if denominator else None,
+        table.append({'framework':framework,'model':model,'completed':len(group),'passed':passed,'target':target,
+            'target_compiled':compiled,'target_first_compile_passed':first_vendor,
+            'target_compile_rate':compiled/denominator if denominator else None,
+            'task_count':denominator,'codesys_compile_rate':compiled/denominator if denominator and target=='codesys' else None,
+            'codesys_first_compile_rate':first_vendor/denominator if denominator and target=='codesys' else None,
             'task_pass_rate':passed/denominator if denominator else None,
             'test_cases_passed':scenarios-failed,'test_cases_total':declared_tests,
             'test_cases_executed':scenarios,'test_cases_not_executed':max(0,declared_tests-scenarios),
@@ -319,13 +354,15 @@ def summarize(rows,expected,tasks=None):
             'formal_bounds':sorted({f['bound'] for f in reports if f.get('bound') is not None}),
             'declared_ltl_total':formal_total,
             'failed_tasks':sum(r['status'] not in ('finite_pass','compiled_without_tests','interrupted') for r in group),
-            'codesys_compiled':compiled,'codesys_first_compile_passed':first_vendor,'pass_at_1':first_pass,'scenario_count':scenarios,'failed_scenarios':failed,
+            'codesys_compiled':compiled if target=='codesys' else 0,'codesys_first_compile_passed':first_vendor if target=='codesys' else 0,'pass_at_1':first_pass,'scenario_count':scenarios,'failed_scenarios':failed,
             'model_calls':sum(r.get('model_calls',0) for r in group),'token_usage':totals,
             'seconds':round(sum(r.get('seconds',0) for r in group),3)})
     return table
 
 
 def campaign_inputs(data,cfg):
+    target=data.get('target','codesys')
+    if target not in ('codesys','tia'):raise ValueError('Unknown platform')
     models=data.get('models',[])
     if not isinstance(models,list) or len(models)!=2 or any(not isinstance(m,str) or not m.strip() for m in models):raise ValueError('请填写两个不同的准确模型 ID')
     models=[m.strip() for m in models]
@@ -334,6 +371,7 @@ def campaign_inputs(data,cfg):
     if not isinstance(ids,list) or not ids or any(not isinstance(i,str) for i in ids) or len(set(ids))!=len(ids):raise ValueError('请导入并选择至少一道不重复题目')
     vendor_required=data.get('codesys',True)
     if type(vendor_required) is not bool:raise ValueError('codesys must be boolean')
+    if target=='tia':vendor_required=True
     for model in models:
         if len(model)>200 or any(ord(c)<32 for c in model):raise ValueError('Invalid model ID')
     concurrency=data.get('concurrency',16)
@@ -366,7 +404,8 @@ class Campaigns:
     def start(self,data):
         cfg=ModelConfig.load(self.home)
         models,ids,vendor_required,concurrency,settings,model_configs=campaign_inputs(data,cfg)
-        ready=preflight(self.home,vendor_required)
+        target=data.get('target','codesys')
+        ready=preflight(self.home,vendor_required,**({'target':target} if target!='codesys' else {}))
         formal_config=plcverif_backend.configuration(self.home)
         if ready['errors']:raise ValueError('\n'.join(ready['errors']))
         bank=ImportedBank(self.home);tasks=[bank.load(ident) for ident in ids]
@@ -382,21 +421,27 @@ class Campaigns:
         code_hashes={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
                      for p in [*sorted((ROOT/'plc_agent').glob('*.py'))]}
         record={'id':ident,'layout_version':2,'started_at':datetime.now(LOCAL_TIME).isoformat(),'status':'running','models':models,'task_ids':ids,'total':4*len(tasks),
-            'completed':0,'results':[],'summary':summarize([],expected,tasks),'limits':LIMITS,
+            'completed':0,'results':[],'summary':summarize([],expected,tasks,target=target),'limits':LIMITS,
             'model_configuration':cfg.public(),'model_settings':settings,'formal_configuration':formal_config,
             'model_configurations':{m:c.public() for m,c in model_configs.items()},'code_hashes':code_hashes,'preflight':ready,
-            'task_count':len(tasks),'concurrency':concurrency,'formal_policy':'automatic','output_path':str(path.resolve()),
-            'scope':'CODESYS compilation + local finite tests' if vendor_required else 'Local-only pilot; not assignment vendor evidence'}
+            'task_count':len(tasks),'concurrency':concurrency,'formal_policy':'automatic','output_path':str(path.resolve()),'target':target,
+            'scope':target+' vendor compilation + native finite tests' if vendor_required else 'Local-only pilot; not assignment vendor evidence'}
         atomic_json(directory/'tasks.json',tasks);self.persist(path,record)
         def worker():
             try:
                 # Validate IDE positive/negative controls once before paid generation.
                 if vendor_required:
-                    validate_vendor_environment(ready['codesys'],directory/'vendor_preflight',stop)
+                    if target=='tia':
+                        from plc_agent.tia_cli import probe
+                        checked=probe(ready['vendor_config'],directory/'vendor_preflight',stop)
+                        if checked['status']!='probe_passed':raise ValueError('TIA positive/negative compile controls failed')
+                    else:validate_vendor_environment(ready['codesys'],directory/'vendor_preflight',stop)
                 jobs=iter((framework,model,index,task) for index,task in enumerate(tasks) for framework,model in expected)
                 def execute(job):
                     framework,model,index,task=job
-                    trial=Trial(trial_path(path,record,framework,models.index(model),index)/'details',task,model_configs[model],ready['codesys'] if vendor_required else None,stop,formal_config=formal_config,save_snapshots=False)
+                    trial=Trial(trial_path(path,record,framework,models.index(model),index)/'details',task,model_configs[model],
+                                (ready['vendor_config'] if target=='tia' else ready['codesys']) if vendor_required else None,
+                                stop,formal_config=formal_config,save_snapshots=False,target=target)
                     try:
                         value=run_self(trial) if framework=='self' else run_codex(trial,Path(ready['codex_path']))
                     except Exception as exc:
@@ -429,7 +474,7 @@ class Campaigns:
                                 pending.pop(future)
                                 record['results'].append(future.result());record['completed']+=1
                             if done:
-                                record['summary']=summarize(record['results'],expected,tasks)
+                                record['summary']=summarize(record['results'],expected,tasks,target=target)
                             if stop.is_set():exhausted=True
                     except Exception:
                         stop.set()

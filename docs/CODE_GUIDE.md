@@ -2,7 +2,7 @@
 
 ## 日常启动
 
-只双击根目录 `start.cmd`，它会准备项目内 Python 环境并打开网页。等价命令是 `python -m plc_agent`。`python -m plc_agent web` 仅用于指定端口；`python -m plc_agent codesys` 用于配置和检查厂商环境。这些是同一个程序的子命令，不需要逐个执行。
+只双击根目录 `start.cmd`，它会准备项目内 Python 环境并打开网页。等价命令是 `python -m plc_agent`。`python -m plc_agent web` 仅用于指定端口；`python -m plc_agent codesys` 用于配置和检查CODESYS；`python -m plc_agent tia` 提供TIA环境、检查和运行入口。这些是同一个程序的子命令，不需要逐个执行。
 
 结果直接在 `outputs/` 文件夹中查看，或者从网页下载日志。已经删除只负责打开资源管理器的 `open_outputs.cmd`。
 
@@ -40,6 +40,18 @@
 
 `.gitignore` 排除本机密钥、安装环境、缓存、运行输出、旧实验报告、编辑器配置和 CODESYS 生成文件。`optional_local_tests/` 与 `plc_agent/legacy/` 是源码，明确保留在版本控制中，方便其他同学使用；不能靠忽略源码来代替拆分依赖。
 
-`.gitignore` 不会自动取消已经跟踪的文件。本次不替你暂存、提交或改写索引，也不覆盖已有的代码修改。
+`.gitignore` 不会自动取消已经跟踪的文件；精简的TIA验收报告是有意跟踪的公开证据。
 
 回归源码在 `tests/fixtures/`；旧终端与备用流程的开发测试需要相应源码目录。删除备用目录后可照常启动 CODESYS 网页流程，但不能要求其本地专用测试继续运行。
+
+
+## 2026-11-08 全集新增索引
+
+- `tia.py`、`tia_cli.py`、`tia_workflow.py`：TIA配置、CLI和SCL生成/修复/检查，复用Trial/Campaign。
+- `tia_scl.py`、`tia_formal.py`、`tia_tests.py`、`tia_runtime.py`、`behavior_plan.py`：SCL边界适配、共享验证入口、测试驱动与独立仿真运行器。
+- `integrations/tia_bridge/`：Openness工程操作与PLCSIM运行器C#源码/项目；`integrations/tia_trial_ack/`：可选通知辅助源码。
+- `adversarial_review.py`：独立ST审查与建议轨迹重放；审查意见保持人工待复核。
+- `reports/tia_final_20261104/`：队友原始TIA代表性验收证据；`docs/validation/`：历史本地重放与审查证据。
+- `docs/TEAM_INTEGRATION_20261108.md` / `.json`：统一进度、11分支/5PR台账、历史结果范围和本次整理边界。
+
+旧的模块数量与迁移说明属于整理当时的记录。日常入口仍是start.cmd，无需逐个运行上述模块；本全集没有把历史验收改记为合并后的新实测。
