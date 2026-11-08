@@ -226,6 +226,26 @@ def run_self(trial, *, max_revisions=None):
             'ltl_status':result.get('ltl_status','not_executed')})
 
 
+def cli_messages(messages):
+    """Keep one assistant turn together before its tool results.
+
+    Codex 0.80 can serialize commentary separately after the tool-call message.
+    Strict Chat providers reject that intervening assistant message. Coalescing
+    adjacent assistant entries preserves both the text and the tool-call IDs.
+    """
+    result=[]
+    for message in messages:
+        if (message.get('role')=='assistant' and result and result[-1].get('role')=='assistant'
+                and (result[-1].get('tool_calls') or message.get('tool_calls'))):
+            previous=result[-1]
+            for field in ('content','reasoning_content'):
+                values=[m.get(field) for m in (previous,message) if m.get(field)]
+                if values:previous[field]='\n\n'.join(values)
+            previous['tool_calls']=[*(previous.get('tool_calls') or []),*(message.get('tool_calls') or [])]
+        else:result.append(dict(message))
+    return result
+
+
 class Relay:
     """The CLI sees a local temporary token; the real provider key stays in the host."""
     def __init__(self,trial):
@@ -245,7 +265,7 @@ class Relay:
                     if self.path=='/check':return self.send(trial.check(p['code']))
                     if self.path!='/v1/chat/completions':return self.send({'error':'Unsupported endpoint'},404)
                     if p.get('model')!=trial.cfg.model:raise ValueError('Frozen model mismatch')
-                    answer=trial.complete(p['messages'],tools=p.get('tools'))
+                    answer=trial.complete(cli_messages(p['messages']),tools=p.get('tools'))
                     calls=[{'id':c['id'],'type':'function','function':{'name':c['name'],'arguments':json.dumps(c['arguments'],ensure_ascii=False)}} for c in answer.get('calls',[])]
                     message={'role':'assistant','content':answer.get('text') or None}
                     if calls:message['tool_calls']=calls

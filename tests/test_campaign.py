@@ -18,6 +18,27 @@ class CampaignTests(unittest.TestCase):
         self.cfg=ModelConfig.dmxapi(model='model-A',api_key='fixture-key')
         self.task=dataset.load('CUSTOM_02')
     def tearDown(self):self.tmp.cleanup()
+    def test_cli_commentary_keeps_tool_results_next_to_their_call(self):
+        messages=[{'role':'user','content':'write a file'},
+                  {'role':'assistant','content':None,'tool_calls':[{'id':'call_1','type':'function','function':{'name':'shell','arguments':'{}'}}]},
+                  {'role':'assistant','content':'Writing it now.'},
+                  {'role':'tool','tool_call_id':'call_1','content':'done'},
+                  {'role':'assistant','content':'OK'}]
+        original=copy.deepcopy(messages)
+        result=campaign.cli_messages(messages)
+        self.assertEqual([m['role'] for m in result],['user','assistant','tool','assistant'])
+        self.assertEqual(result[1]['content'],'Writing it now.')
+        self.assertEqual(result[1]['tool_calls'][0]['id'],result[2]['tool_call_id'])
+        self.assertEqual(messages,original)
+    def test_cli_parallel_tool_calls_and_text_are_preserved(self):
+        messages=[{'role':'assistant','content':'First','tool_calls':[{'id':'one'}]},
+                  {'role':'assistant','content':'Second','tool_calls':[{'id':'two'}]},
+                  {'role':'tool','tool_call_id':'one','content':'one result'},
+                  {'role':'tool','tool_call_id':'two','content':'two result'}]
+        result=campaign.cli_messages(messages)
+        self.assertEqual(result[0]['content'],'First\n\nSecond')
+        self.assertEqual([c['id'] for c in result[0]['tool_calls']],['one','two'])
+        self.assertEqual(result[1:],messages[2:])
     def test_cli_loopback_bypass_preserves_external_proxy_and_exclusions(self):
         original={'HTTPS_PROXY':'http://proxy.test:9000','NO_PROXY':'internal.test','no_proxy':'other.test,internal.test'}
         result=campaign.local_proxy_bypass(original)
