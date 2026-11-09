@@ -105,7 +105,7 @@ class Workbench:
         return value
 
     def read_trial(self,data):
-        record=self.campaigns.read(data['campaign_id'])
+        record=self.campaigns.view(data['campaign_id'], False)
         framework=data['framework'];model=data['model_index'];index=data['task_index']
         if framework not in ('self','codex') or type(model) is not int or type(index) is not int:
             raise ValueError('Invalid trial address')
@@ -341,7 +341,9 @@ def make_handler(app):
                     from plc_agent.plcverif_backend import environment
                     return self.send_json({'tia':tia.doctor(app.home), 'codesys':codesys.load_config(app.home), 'preflight':preflight(app.home), 'local_backend':str(toolchain_dir()),
                                             'formal':environment(app.home),'formal_status':environment(app.home)['status']})
-                if self.path == '/api/campaigns': return self.send_json(app.campaigns.list())
+                if self.path == '/api/campaigns': return self.send_json(app.campaigns.list_views())
+                if self.path.startswith('/api/campaign-view/'):
+                    return self.send_json(app.campaigns.view(self.path.rsplit('/',1)[1]))
                 if self.path.startswith('/api/campaigns/'):
                     return self.send_json(app.campaigns.read(self.path.rsplit('/',1)[1]))
                 if self.path.split('?')[0] == '/api/preflight':

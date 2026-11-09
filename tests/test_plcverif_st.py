@@ -3,11 +3,61 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from plc_agent.dataset import load
+from plc_agent.ltl_adapter import Adapter
 from plc_agent.plcverif_backend import DEFAULTS, verify
-from plc_agent.plcverif_st import adapt
+from plc_agent.plcverif_intrinsics import lower_intrinsics
+from plc_agent.plcverif_st import adapt, adapt_int_abs
 
 
 class PlcverifStTests(unittest.TestCase):
+    def test_candidate_and_property_min_are_both_lowered_without_changing_formula(self):
+        source = '''FUNCTION_BLOCK Example
+VAR_INPUT value : UDINT; END_VAR
+VAR_OUTPUT capped : UDINT; END_VAR
+capped := MIN(60000, value);
+END_FUNCTION_BLOCK
+'''
+        task = {'block': 'Example', 'interface': [
+            {'direction': 'Input', 'name': 'value', 'type': 'UDINT'},
+            {'direction': 'Output', 'name': 'capped', 'type': 'UDINT'}],
+            'ltl': {'text': 'P01: G(capped=min(60000,value))'}}
+        adapter = Adapter(task, 20).prepare()
+        lowered, notes = lower_intrinsics(adapter.instrument(source), engine='cbmc')
+        self.assertEqual(adapter.properties[0]['formula'], 'G(capped=min(60000,value))')
+        self.assertNotIn('MIN(', lowered)
+        self.assertEqual(notes, [{'kind': 'typed_intrinsics', 'calls': {'PLCVERIF_NUM_MIN_UDINT': 1}}])
+
+    def test_nested_intrinsics_preserve_precision_and_leave_mixed_types_alone(self):
+        source = '''FUNCTION_BLOCK Example
+VAR_INPUT x : LREAL; k : DINT; END_VAR
+VAR_OUTPUT y : LREAL; END_VAR
+// MAX(0.0, x)
+y := MAX(0.0, MIN(x, TO_LREAL(k)));
+y := SQRT(y);
+y := MIN(x, k);
+END_FUNCTION_BLOCK
+'''
+        lowered, _ = lower_intrinsics(source, engine='cbmc')
+        self.assertIn('PLCVERIF_NUM_MAX_LREAL(Left := 0.0,Right :=  PLCVERIF_NUM_MIN_LREAL', lowered)
+        self.assertIn('FUNCTION DINT_TO_LREAL : LREAL', lowered)
+        self.assertIn('y := PLCVERIF_NUM_SQRT_LREAL(y);', lowered)
+        self.assertIn('y := MIN(x, k);', lowered)
+        self.assertIn('// MAX(0.0, x)', lowered)
+
+    def test_abs_model_only_rewrites_calls_with_known_int_operands(self):
+        source = '''FUNCTION_BLOCK Example
+VAR a, b : INT; distance : INT; x : REAL; y : REAL; END_VAR
+// ABS(a - b) in a comment
+distance := ABS(a - b);
+y := ABS(x);
+END_FUNCTION_BLOCK
+'''
+        adapted, notes = adapt_int_abs(source)
+        self.assertEqual(notes, [{'kind': 'int_abs_model', 'count': 1}])
+        self.assertIn('distance := PLCVERIF_ABS_INT(a - b);', adapted)
+        self.assertIn('y := ABS(x);', adapted)
+        self.assertIn('// ABS(a - b) in a comment', adapted)
+
     @staticmethod
     def _reference_ton(inputs, pt, tick):
         """Independent elapsed-since-rising-edge scan-clock definition."""

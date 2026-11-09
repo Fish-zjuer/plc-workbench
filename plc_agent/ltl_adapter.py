@@ -11,6 +11,7 @@ TOKEN = re.compile(r'\s*(<->|->|<=|>=|!=|<>|&&|\|\||[A-Za-z_]\w*(?:\.[A-Za-z_]\w
 PRECEDENCE = {'<->': 1, '->': 2, '|': 3, '||': 3, '&': 4, '&&': 4,
               'U': 5, '=': 6, '!=': 6, '<>': 6, '<': 6, '>': 6, '<=': 6, '>=': 6,
               '+': 7, '-': 7, '*': 8, '/': 8, '%': 8}
+INTEGER_TYPES = frozenset(('SINT', 'INT', 'DINT', 'LINT', 'USINT', 'UINT', 'UDINT', 'ULINT'))
 
 
 def parse(text):
@@ -73,7 +74,7 @@ def observers(task):
             if re.search(r'\bPVL_Uut\s*\(',mask_noncode(step),re.I):raise Unsupported('Observer cannot invoke the candidate')
             for target in re.findall(r'([A-Za-z_]\w*(?:\[[^\]]+\])?(?:\.[A-Za-z_]\w*)*)\s*:=',mask_noncode(step)):
                 root=re.split(r'[.\[]',target)[0].lower()
-                reserved=root in ('pvl_uut','pvl_scan','pvl_active','pvl_done','pvl_nowms','pvl_dtms') or re.fullmatch(r'pvl_a\d+',root)
+                reserved=root in ('pvl_uut','pvl_scan','pvl_active','pvl_done','pvl_nowms','pvl_dtms','pvl_domain') or re.fullmatch(r'pvl_a\d+',root)
                 if not target.upper().startswith('PVL_') or reserved:raise Unsupported('Observer cannot write candidate/harness storage '+target)
             ports={p['name'].lower() for p in task['interface']}
             for name in re.findall(r'\bPVL_Uut\.(\w+)',mask_noncode(step),re.I):
@@ -105,9 +106,15 @@ class Adapter:
             self.declarations+=storage
         self.call_defs={parse(k):(k,v) for k,v in self.defs.items() if '(' in k}
         self.names={p['name'].lower():p['name'] for p in task['interface']}
+        self.integer_types = {p['name'].lower(): p['type'].upper()
+                              for p in task['interface'] if p['type'].upper() in INTEGER_TYPES}
         self.names.update({'pvl_nowms':'PVL_NowMs','pvl_dtms':'PVL_DtMs'})
+        self.integer_types.update(pvl_nowms='DINT', pvl_dtms='DINT')
         for line in self.declarations:
             self.names[line.split(':')[0].strip().lower()]=line.split(':')[0].strip()
+            declaration = re.fullmatch(r'\s*(\w+)\s*:\s*(\w+)\s*(?::=.*)?;', line)
+            if declaration and declaration[2].upper() in INTEGER_TYPES:
+                self.integer_types[declaration[1].lower()] = declaration[2].upper()
         if self.reference_plan:
             self.names.update({name:ref['target'] for name,ref in self.reference_plan['bindings'].items()})
         self.atoms={};self.properties=[]
@@ -123,6 +130,20 @@ class Adapter:
                 if name in seen: raise Unsupported('Recursive observer definition: '+name)
                 return self.expand(parse(self.defs[name]),seen+(name,))
         return (node[0],*(self.expand(x,seen) if isinstance(x,tuple) else x for x in node[1:]))
+
+    def _integer_term_types(self, node):
+        op = node[0]
+        if op == 'number' and node[1].isdecimal():
+            return set()
+        if op == 'name':
+            dtype = self.integer_types.get(node[1].lower())
+            return {dtype} if dtype else None
+        if op in ('+', '-') and len(node) == 3:
+            left = self._integer_term_types(node[1])
+            right = self._integer_term_types(node[2])
+            if left is not None and right is not None:
+                return left | right
+        return None
 
     def st(self,n):
         op=n[0]
@@ -140,6 +161,19 @@ class Adapter:
         if len(n)==2:
             if op not in ('!','~','-'): raise Unsupported('Unexpected temporal operator in state predicate')
             return ('NOT ' if op in ('!','~') else '-')+'('+self.st(n[1])+')'
+        if op == '=':
+            value, call = n[1:]
+            if value[0] == 'call':
+                value, call = call, value
+            if call[0] == 'call' and len(call) == 4 and call[1].lower() in ('min', 'max'):
+                types = [self._integer_term_types(term) for term in (value, *call[2:])]
+                if all(t is not None for t in types) and len(set.union(*types)) == 1:
+                    # Keep arithmetic in the comparisons, without an
+                    # intermediate narrowing conversion at a helper call.
+                    left, right = call[2:]
+                    choose_left = ('<=' if call[1].lower() == 'min' else '>=', left, right)
+                    return self.st(('|', ('&', choose_left, ('=', value, left)),
+                                         ('&', ('!', choose_left), ('=', value, right))))
         a,b=self.st(n[1]),self.st(n[2])
         if op=='->': return '(NOT ('+a+') OR ('+b+'))'
         if op=='<->': return '(('+a+') = ('+b+'))'
@@ -191,7 +225,29 @@ class Adapter:
     def formula(self,p,symbol=lambda s:'instance.'+s,end='{PLC_END}'):
         return '(!'+end+') U ('+end+' & '+self.sampled(p['ast'],symbol,end)+')'
 
-    def instrument(self,source):
+    def _input_domain(self):
+        """Recognize bounds that can be evaluated before calling the candidate."""
+        inputs = {p['name'].lower() for p in self.task['interface']
+                  if p['direction'] == 'Input' and p['type'].upper() in ('INT', 'DINT')}
+
+        def operand(node):
+            if node[0] == 'name':
+                return node[1].lower() in inputs
+            if node[0] == '-':
+                node = node[1]
+            return node[0] == 'number' and node[1].isdecimal()
+
+        def bound(node):
+            if node[0] in ('&', '&&', '|', '||'):
+                return bound(node[1]) and bound(node[2])
+            return node[0] in ('<', '<=', '>', '>=', '=', '!=', '<>') and all(map(operand, node[1:]))
+
+        nodes = [parse(a) for a in self.assumptions]
+        if nodes and all(map(bound, nodes)):
+            return ' AND '.join(self.st(node) for node in nodes)
+        return None
+
+    def instrument(self,source,*,guard_input_domain=False):
         if re.search(r'\bPVL_\w*',mask_noncode(source),re.I): raise Unsupported('PVL_ prefix is reserved for formal observers')
         if not any(u['name'].lower()==self.task['block'].lower() for u in split_units(source)):
             raise Unsupported('Required function block missing')
@@ -215,10 +271,17 @@ class Adapter:
         body=['PVL_NowMs := PVL_NowMs + PVL_DtMs;']+list(self.entry)+call
         body += [p['name']+' := PVL_Uut.'+p['name']+';' for p in self.task['interface'] if p['direction']=='Output']
         body+=self.before
-        body+=[f'IF PVL_Scan <= {self.bound} THEN PVL_Scan := PVL_Scan + 1; END_IF;',
+        advance=[f'IF PVL_Scan <= {self.bound} THEN PVL_Scan := PVL_Scan + 1; END_IF;',
                f'PVL_Active := PVL_Scan <= {self.bound}; PVL_Done := PVL_Scan >= {self.bound};']
-        if self.assumptions:body+=['PVL_Domain := PVL_Domain AND ('+' AND '.join(self.st(parse(a)) for a in self.assumptions)+');']
+        body+=advance
+        input_domain = self._input_domain() if guard_input_domain else None
+        if self.assumptions and input_domain is None:
+            body+=['PVL_Domain := PVL_Domain AND ('+' AND '.join(self.st(parse(a)) for a in self.assumptions)+');']
         body += [v+' := '+expr+';' for expr,v in self.atoms.items()]+self.after
+        if input_domain is not None:
+            # Invalid prefixes cannot contribute to a verdict. Advance the
+            # harness clock without executing the candidate on excluded inputs.
+            body = ['PVL_Domain := PVL_Domain AND ('+input_domain+');', 'IF PVL_Domain THEN'] + body + ['ELSE'] + advance + ['END_IF;']
         body=[f'IF PVL_Scan < {self.bound} THEN']+body+['ELSE PVL_Active := FALSE; PVL_Done := TRUE; END_IF;']
         return source+'\n\n'+'\n'.join(decl+body+['END_FUNCTION_BLOCK'])+'\n'
 

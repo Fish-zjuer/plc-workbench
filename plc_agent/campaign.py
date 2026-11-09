@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from dataclasses import replace
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import hashlib
+import csv
 import json
 import os
 from pathlib import Path
@@ -245,23 +246,74 @@ def cli_messages(messages):
         else:result.append(dict(message))
     return result
 
+def codex_wire_messages(messages):
+    """Place Codex's preamble before tool calls when it interrupts tool results."""
+    output=[]
+    index=0
+    while index<len(messages):
+        message=messages[index]
+        calls=message.get('tool_calls') if message.get('role')=='assistant' else None
+        if calls:
+            pending={call.get('id') for call in calls}
+            end=index+1
+            preambles=[]
+            results=[]
+            while end<len(messages) and pending:
+                item=messages[end]
+                if item.get('role')=='assistant' and not item.get('tool_calls') and isinstance(item.get('content'),str):
+                    preambles.append(item)
+                elif item.get('role')=='tool' and item.get('tool_call_id') in pending:
+                    pending.remove(item['tool_call_id'])
+                    results.append(item)
+                else:
+                    break
+                end+=1
+            if not pending and preambles:
+                output.extend(preambles+[message]+results)
+                index=end
+                continue
+        output.append(message)
+        index+=1
+    return output
+
 
 class Relay:
     """The CLI sees a local temporary token; the real provider key stays in the host."""
     def __init__(self,trial):
         self.trial=trial; token=uuid.uuid4().hex;self.token=token
+        disconnected = (BrokenPipeError, ConnectionAbortedError, ConnectionResetError)
         class Handler(BaseHTTPRequestHandler):
             def log_message(self,*_):pass
+            def reply(self, raw, status, content_type, *, stream=False):
+                try:
+                    self.send_response(status)
+                    self.send_header('Content-Type',content_type)
+                    if stream:
+                        self.send_header('Connection','close')
+                        self.close_connection=True
+                    else:
+                        self.send_header('Content-Length',str(len(raw)))
+                    self.end_headers()
+                    self.wfile.write(raw)
+                    if stream:
+                        self.wfile.flush()
+                except disconnected:
+                    # The CLI closed its socket. A second HTTP reply cannot reach it.
+                    self.close_connection=True
             def send(self,value,status=200):
                 raw=json.dumps(value,ensure_ascii=False).encode()
-                self.send_response(status);self.send_header('Content-Type','application/json')
-                self.send_header('Content-Length',str(len(raw)));self.end_headers();self.wfile.write(raw)
+                self.reply(raw,status,'application/json')
             def do_POST(self):
                 if self.headers.get('Authorization')!='Bearer '+token:return self.send({'error':'Unauthorized'},401)
                 try:
                     length=int(self.headers.get('Content-Length',0))
                     if not 0<length<=2000000:raise ValueError('Request too large')
-                    p=json.loads(self.rfile.read(length))
+                    try:
+                        raw=self.rfile.read(length)
+                    except disconnected:
+                        self.close_connection=True
+                        return
+                    p=json.loads(raw)
                     if self.path=='/check':return self.send(trial.check(p['code']))
                     if self.path!='/v1/chat/completions':return self.send({'error':'Unsupported endpoint'},404)
                     if p.get('model')!=trial.cfg.model:raise ValueError('Frozen model mismatch')
@@ -273,11 +325,11 @@ class Relay:
                     usage=answer.get('usage',{})
                     finish='tool_calls' if calls else 'stop'
                     if not p.get('stream'):return self.send({'id':'chatcmpl-'+uuid.uuid4().hex,'object':'chat.completion','model':trial.cfg.model,'choices':[{'index':0,'message':message,'finish_reason':finish}],'usage':usage})
-                    self.send_response(200);self.send_header('Content-Type','text/event-stream');self.send_header('Connection','close');self.end_headers();self.close_connection=True
                     if calls:
                         message['tool_calls']=[{**c,'index':i} for i,c in enumerate(calls)]
                     chunk={'id':'chatcmpl-'+uuid.uuid4().hex,'object':'chat.completion.chunk','model':trial.cfg.model,'choices':[{'index':0,'delta':message,'finish_reason':finish}],'usage':usage}
-                    self.wfile.write(('data: '+json.dumps(chunk,ensure_ascii=False)+'\n\ndata: [DONE]\n\n').encode());self.wfile.flush()
+                    raw=('data: '+json.dumps(chunk,ensure_ascii=False)+'\n\ndata: [DONE]\n\n').encode()
+                    self.reply(raw,200,'text/event-stream',stream=True)
                 except Exception as exc:
                     self.send({'error':{'message':str(exc).replace(trial.cfg.api_key,'[redacted]') if trial.cfg.api_key else str(exc)}},400)
         self.server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
@@ -416,6 +468,75 @@ class Campaigns:
         if not self.root.exists():return []
         paths=sorted((p for p in self.root.iterdir() if p.is_dir() and valid_run_id(p.name)),key=lambda p:p.stat().st_mtime,reverse=True)
         return [self.read(p.name) for p in paths if (details_path(p)/'campaign.json').exists() and not (p/'hidden.json').exists()][:100]
+    def view(self, ident, include_results=True):
+        """Read the small header and saved per-task summaries without loading large receipts."""
+        if not valid_run_id(ident): raise ValueError('Invalid campaign ID')
+        path = self.root / ident
+        directory = details_path(path)
+        # Records written by atomic_json have this fixed, indented header.
+        with (directory / 'campaign.json').open(encoding='utf-8') as stream:
+            header = []
+            for line in stream:
+                if line.startswith('  "results":'):
+                    break
+                header.append(line)
+            else:
+                # Older layouts may not use the current serialized format.
+                return self.read(ident)
+        record = json.loads(''.join(header).rstrip().rstrip(',') + '\n}')
+        record['summary'] = read_json(directory / 'metrics.json') if (directory / 'metrics.json').exists() else []
+        record['results'] = []
+        record['output_path'] = str(path.resolve())
+        if record['status'] in ('running','pausing','paused','stopping') and ident not in self.active:
+            record['status'] = 'interrupted'
+            record['message'] = '服务已退出；记录保留，本轮未完成。'
+        record['can_resume'] = ident in self.active and ident in self.pauses and self.pauses[ident].is_set()
+        table = path / 'results.csv'
+        if include_results and table.exists():
+            with table.open(encoding='utf-8-sig', newline='') as stream:
+                for row in csv.DictReader(stream):
+                    if row['状态代码'] == 'not_started': continue
+                    matches = [t for t in record['task_ids'] if t.split('__')[-1] == row['题目']]
+                    if len(matches) != 1: continue
+                    item = {'task_id': matches[0], 'framework': row['框架'], 'model': row['模型'],
+                            'status': row['状态代码'], 'target_compile': row['编译'], 'message': row['原因']}
+                    metrics_file = path / row['文件夹'] / 'details' / 'metrics.json'
+                    if metrics_file.is_file():
+                        item['metrics_summary'] = read_json(metrics_file)
+                        item['ltl_status'] = item['metrics_summary'].get('formal_status', 'not_executed')
+                    receipt_file = metrics_file.parent / 'receipt.json'
+                    if receipt_file.is_file():
+                        # These small fields precede the potentially enormous submissions array.
+                        # Stop at that array rather than loading the detailed evidence.
+                        wanted = {'model_calls', 'token_usage', 'experiment_token_usage', 'seconds', 'ltl_status'}
+                        current = None
+                        parts = []
+                        def save_field():
+                            if current in wanted:
+                                try:
+                                    item[current] = json.loads(''.join(parts).rstrip().rstrip(','))
+                                except (ValueError, TypeError):
+                                    pass
+                        with receipt_file.open(encoding='utf-8') as receipt:
+                            for line in receipt:
+                                if line.startswith('  "'):
+                                    save_field()
+                                    key, sep, value = line.strip().partition(':')
+                                    current = json.loads(key) if sep else None
+                                    if current == 'submissions': break
+                                    parts = [value] if current in wanted else []
+                                elif current in wanted:
+                                    parts.append(line)
+                            else:
+                                save_field()
+                    record['results'].append(item)
+        return record
+
+    def list_views(self):
+        if not self.root.exists(): return []
+        paths = sorted((p for p in self.root.iterdir() if p.is_dir() and valid_run_id(p.name)), key=lambda p:p.stat().st_mtime, reverse=True)
+        return [self.view(p.name, False) for p in paths if (details_path(p)/'campaign.json').exists() and not (p/'hidden.json').exists()][:100]
+
     def persist(self,path,record):
         directory=details_path(path)
         atomic_json(directory/'campaign.json',record)

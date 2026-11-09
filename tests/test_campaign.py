@@ -1,12 +1,13 @@
 """Campaign transport and vendor adapter tests: fixtures are not vendor evidence."""
 import copy
+import io
 import json
 from pathlib import Path
 import tempfile
 import threading
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from plc_agent import campaign; from plc_agent import codesys_dataset; from plc_agent import dataset
 from plc_agent.config import ModelConfig
 from plc_agent.provider import ProviderError, Cancelled
@@ -39,6 +40,37 @@ class CampaignTests(unittest.TestCase):
         self.assertEqual(result[0]['content'],'First\n\nSecond')
         self.assertEqual([c['id'] for c in result[0]['tool_calls']],['one','two'])
         self.assertEqual(result[1:],messages[2:])
+    def test_codex_preamble_does_not_interrupt_tool_results(self):
+        calls={'role':'assistant','content':None,'tool_calls':[{'id':'one'},{'id':'two'}]}
+        preamble={'role':'assistant','content':'Reading the requirements.'}
+        first={'role':'tool','tool_call_id':'one','content':'first'}
+        second={'role':'tool','tool_call_id':'two','content':'second'}
+        messages=[{'role':'user','content':'start'},calls,preamble,first,second]
+        self.assertEqual(campaign.codex_wire_messages(messages),[messages[0],preamble,calls,first,second])
+        self.assertEqual(messages[1],calls)
+        self.assertEqual(campaign.codex_wire_messages([calls,preamble,first]),[calls,preamble,first])
+    def test_relay_does_not_send_a_second_response_to_a_closed_socket(self):
+        trial = Mock(cfg=self.cfg)
+        trial.complete.return_value = {'text': 'done'}
+        with patch.object(campaign, 'ThreadingHTTPServer') as server:
+            relay = campaign.Relay(trial)
+        handler_type = server.call_args.args[1]
+        payload = json.dumps({'model': self.cfg.model, 'messages': [], 'stream': True}).encode()
+        for model_error, expected_status in ((None, 200), (ProviderError('upstream error'), 400)):
+            with self.subTest(status=expected_status):
+                trial.complete.side_effect = model_error
+                handler = handler_type.__new__(handler_type)
+                handler.path = '/v1/chat/completions'
+                handler.headers = {'Authorization': 'Bearer ' + relay.token, 'Content-Length': str(len(payload))}
+                handler.rfile = io.BytesIO(payload)
+                handler.send_response = Mock()
+                handler.send_header = Mock()
+                handler.end_headers = Mock(side_effect=ConnectionAbortedError('client disconnected'))
+                handler.wfile = Mock()
+                handler.do_POST()
+                handler.send_response.assert_called_once_with(expected_status)
+                handler.wfile.write.assert_not_called()
+                self.assertTrue(handler.close_connection)
     def test_cli_loopback_bypass_preserves_external_proxy_and_exclusions(self):
         original={'HTTPS_PROXY':'http://proxy.test:9000','NO_PROXY':'internal.test','no_proxy':'other.test,internal.test'}
         result=campaign.local_proxy_bypass(original)
