@@ -7,6 +7,70 @@ from decimal import Decimal, InvalidOperation
 from plc_agent.ltl_adapter import Unsupported
 
 
+_DOUBLE_BITS = r'''
+typedef union { double value; uint64_t bits; } pvl_binary64;
+static uint64_t pvl_bits(double value) {
+    pvl_binary64 repr;
+    repr.value = value;
+    return repr.bits;
+}
+'''
+
+_DOUBLE_SQRT = r'''
+/* Binary64 square root, rounded to nearest. Use integer arithmetic so the
+   model works even when Windows CBMC cannot preprocess its math library. */
+static double pvl_sqrt_binary64(double value) {
+    const uint64_t unit = 1ULL << 52;
+    const uint64_t fraction_mask = unit - 1;
+    uint64_t bits = pvl_bits(value);
+    int biased_exponent = (int)((bits >> 52) & 2047ULL);
+    if ((bits & ((1ULL << 63) - 1)) == 0) return value; /* signed zero */
+    bool valid = (bits >> 63) == 0 && biased_exponent != 2047;
+    __CPROVER_assert(valid, "PLC LREAL SQRT domain");
+    if (!valid) return 0.0;
+
+    uint64_t significand = bits & fraction_mask;
+    int exponent = -1022;
+    if (biased_exponent != 0) {
+        significand |= unit;
+        exponent = biased_exponent - 1023;
+    } else {
+        while (significand < unit) {
+            significand <<= 1;
+            --exponent;
+        }
+    }
+    if (exponent % 2 != 0) {
+        significand <<= 1;
+        --exponent;
+    }
+
+    /* Digit-by-digit integer sqrt of (significand << 52). Feed the input
+       in pairs instead of storing the full 106-bit integer. */
+    uint64_t root = 0, remainder = 0;
+    for (int pair = 52; pair >= 0; --pair) {
+        uint64_t digit = pair >= 26 ? (significand >> (2 * (pair - 26))) & 3ULL : 0;
+        remainder = (remainder << 2) | digit;
+        root <<= 1;
+        uint64_t trial = (root << 1) | 1ULL;
+        if (remainder >= trial) {
+            remainder -= trial;
+            ++root;
+        }
+    }
+    /* The halfway point squared is root^2 + root + 1/4, never an integer. */
+    if (remainder > root) ++root;
+    if (root == (unit << 1)) {
+        root >>= 1;
+        exponent += 2;
+    }
+    pvl_binary64 repr;
+    repr.bits = ((uint64_t)(exponent / 2 + 1023) << 52) | (root & fraction_mask);
+    return repr.value;
+}
+'''
+
+
 def typed_floats(model, cfa):
     """Use CFA literal widths; never guess when a spelling has mixed widths."""
     xsi='{http://www.w3.org/2001/XMLSchema-instance}type'
@@ -121,9 +185,65 @@ def order_structs(model):
     return head+'// Struct definitions\n'+'\n\n'.join(ordered)+'\n\n// Global variables'+rest
 
 
-def checked_model(model,adapter,cfa):
+def _typed_numeric_models(model, calls):
+    helpers = ''
+    for operation in ('SQRT', 'MIN', 'MAX'):
+        name = f'PLCVERIF_NUM_{operation}_LREAL'
+        if name not in calls:
+            continue
+        if not helpers:
+            helpers = _DOUBLE_BITS
+        fields = ('Value', 'RET_VAL') if operation == 'SQRT' else ('Left', 'Right', 'RET_VAL')
+        struct = r'typedef\s+struct\s*\{\s*' + ''.join(r'double\s+' + field + r';\s*' for field in fields)
+        if not re.search(struct + r'\}\s+__' + name + ';', model):
+            raise Unsupported('PLCverif did not preserve binary64 intrinsic storage: ' + name)
+        signature = r'void\s+' + name + r'\(__' + name + r'\s+\*__context\)\s*\{'
+        matches = list(re.finditer(signature, model))
+        if len(matches) != 1:
+            raise Unsupported('Missing or duplicate exported intrinsic body: ' + name)
+        start = matches[0].end()
+        if operation == 'SQRT':
+            stub = re.match(r'\s*// Temporary variables\s*\{\s*__context->RET_VAL = __context->Value;\s*return;\s*\}\s*\}', model[start:])
+            if not stub:
+                raise Unsupported('Unexpected exported square root marker')
+            helpers += _DOUBLE_SQRT
+            body = '\n__context->RET_VAL = pvl_sqrt_binary64(__context->Value);\n}'
+            model = model[:start] + body + model[start+stub.end():]
+        else:
+            # Check special cases rather than silently assume a vendor tie
+            # policy or remove those inputs from the checked domain.
+            left, right = '__context->Left', '__context->Right'
+            guard = (f'\n__CPROVER_assert({left} == {left} && {right} == {right} && '
+                     f'({left} != 0.0 || {right} != 0.0 || pvl_bits({left}) == pvl_bits({right})), '
+                     f'"PLC LREAL {operation} operand semantics");\n')
+            model = model[:start] + guard + model[start:]
+    return helpers + model
+
+
+def checked_model(model,adapter,cfa,*,numeric_calls=None):
     model=order_structs(model)
     model,float_changes=typed_floats(model,cfa)
+    model=_typed_numeric_models(model,numeric_calls or {})
+    # The header-free Windows model has no memmove implementation. Lower
+    # whole-array copies between named objects to checked element assignments.
+    field = r'\w+(?:(?:->|\.)\w+)*'
+    array_copy = re.compile(
+        rf'^([ \t]*)memmove\(&\(({field})\), &\(({field})\), sizeof \2\);$', re.M
+    )
+    def copy_array(match):
+        indent, dst, src = match.groups()
+        checks = (f'_Static_assert(sizeof({dst}) == sizeof({src}), "PLC array copy size");\n'
+                  f'_Static_assert(sizeof({dst}[0]) == sizeof({src}[0]), "PLC array element size");\n')
+        name = re.split(r'->|\.', dst)[-1]
+        lengths = {int(n) for n in re.findall(rf'\b{re.escape(name)}\[(\d+)\]\s*;', model)}
+        if len(lengths) == 1 and (length := lengths.pop()) <= 32:
+            checks += f'_Static_assert(sizeof({dst}) / sizeof({dst}[0]) == {length}, "PLC array length");\n'
+            copy = '\n'.join(f'{dst}[{i}] = {src}[{i}];' for i in range(length))
+        else:
+            copy = (f'for (__CPROVER_size_t pvl_i = 0; pvl_i < sizeof({dst}) / sizeof({dst}[0]); ++pvl_i) '
+                    f'{dst}[pvl_i] = {src}[pvl_i];')
+        return indent + '{\n' + '\n'.join(indent + '\t' + line for line in (checks + copy).splitlines()) + '\n' + indent + '}'
+    model = array_copy.sub(copy_array, model)
     if adapter.reference_observer is not None:
         model=adapter.reference_observer.instrument(model,adapter)
     declaration,sample,finish=monitor(adapter)
@@ -191,6 +311,11 @@ def results(console,report,adapter):
     if not rows:
         errors=[item.get('messageText','') for item in items if item.get('messageType')=='ERROR']
         raise Unsupported('CBMC returned no property results: '+'; '.join(errors)[-2500:])
+    for row in rows:
+        if row.get('status') != 'SUCCESS' and row.get('description','').startswith('no body for callee '):
+            name=row['description'].removeprefix('no body for callee ')
+            if not name.startswith(('nondet_', '__CPROVER_')):
+                raise Unsupported('CBMC has no executable model for '+name+'; see cbmc.json')
     witness=[r for r in rows if r.get('description')=='PVL:DOMAIN_WITNESS']
     guards=[r for r in rows if not r.get('description','').startswith('PVL:')]
     bad_guards=[r for r in guards if r.get('status')!='SUCCESS']

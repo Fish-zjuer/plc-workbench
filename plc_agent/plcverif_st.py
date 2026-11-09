@@ -185,6 +185,46 @@ END_FUNCTION
     return helper+source,[note]
 
 
+def adapt_int_abs(source):
+    """Model simple INT ABS calls, including calls emitted by observers."""
+    masked = mask_noncode(source)
+    helper = 'PLCVERIF_ABS_INT'
+    if re.search(r'\bFUNCTION\s+ABS\b|\b' + helper + r'\b', masked, re.I):
+        return source, []
+    units = re.compile(r'\b(FUNCTION_BLOCK|FUNCTION|PROGRAM)\s+\w+\b(.*?)\bEND_\1\b', re.I | re.S)
+    operand = r'(?:[A-Za-z_]\w*|\d+)'
+    calls = re.compile(r'(?<![.\w])ABS(?=\s*\(\s*(' + operand + r')(?:\s*-\s*(' + operand + r'))?\s*\))', re.I)
+    replacements = []
+    for unit in units.finditer(masked):
+        declarations = re.findall(r'\bVAR(?:_\w+)?\b(.*?)\bEND_VAR\b', unit[2], re.I | re.S)
+        types = {}
+        for names, dtype in re.findall(r'\b(\w+(?:\s*,\s*\w+)*)\s*:\s*(\w+)',
+                                       ' '.join(declarations).upper()):
+            types.update((name.strip(), dtype) for name in names.split(','))
+        if 'ABS' in types:
+            continue
+        for call in calls.finditer(unit[2]):
+            args = [arg.upper() for arg in call.groups() if arg is not None]
+            arg_types = [types.get(arg, 'literal' if arg.isdecimal() and int(arg) <= 32767 else None)
+                         for arg in args]
+            if 'INT' in arg_types and all(kind in ('INT', 'literal') for kind in arg_types):
+                replacements.append(unit.start(2) + call.start())
+    if not replacements:
+        return source, []
+    for pos in reversed(replacements):
+        source = source[:pos] + helper + source[pos + 3:]
+    definition = f"""FUNCTION {helper} : INT
+VAR_INPUT Value : INT; END_VAR
+IF (Value < 0) AND (Value <> INT#-32768) THEN
+    {helper} := -Value;
+ELSE
+    {helper} := Value;
+END_IF;
+END_FUNCTION
+"""
+    return definition + source, [{'kind': 'int_abs_model', 'count': len(replacements)}]
+
+
 def adapt(source, scan_period_ms=10, entry_block=None):
     notes=[];masked=mask_noncode(source);replacements=[];constants={};types={}
     pattern=re.compile(r'\bTYPE\s+(\w+)\s*:\s*\((.*?)\)\s*(INT|UINT|SINT|USINT|DINT|UDINT|BYTE|WORD|DWORD)?\s*;?\s*END_TYPE\b',re.I|re.S)
@@ -225,6 +265,16 @@ def adapt(source, scan_period_ms=10, entry_block=None):
         if not masked[m.end():].lstrip().startswith(';'):changes.append(m.end())
     for pos in reversed(changes):source=source[:pos]+';'+source[pos:]
     if changes:notes.append({'kind':'statement_terminators','count':len(changes)})
+    # STEP 7's CFA builder treats bare negative CASE labels as references.
+    # Spell in-range signed literals as INT constants.
+    masked = mask_noncode(source)
+    labels = [m for m in re.finditer(r'(?m)^[ \t]*(-\d+)[ \t]*:(?!=)', masked)
+              if -32768 <= int(m[1]) < 0]
+    for label in reversed(labels):
+        pos = label.start(1)
+        source = source[:pos] + 'INT#' + source[pos:]
+    if labels:
+        notes.append({'kind': 'typed_negative_case_labels', 'count': len(labels)})
     if re.search(r':\s*R_TRIG\b',mask_noncode(source),re.I) and not re.search(r'\bFUNCTION_BLOCK\s+R_TRIG\b',mask_noncode(source),re.I):
         source='''FUNCTION_BLOCK R_TRIG
 VAR_INPUT CLK : BOOL; END_VAR

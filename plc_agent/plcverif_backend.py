@@ -214,15 +214,39 @@ def _trace(text):
     return scans
 
 
+def _model_build_failure(work, report, target):
+    log = (work/'plcverif.log').read_text(encoding='utf-8', errors='replace')
+    lines = log.splitlines()
+    source = (work/'candidate.scl').read_text(encoding='utf-8').splitlines()
+    harness = next((i for i, line in enumerate(source, 1) if line.strip() == 'FUNCTION_BLOCK PVL_Harness'), None)
+    report['failure_stage'] = 'plcverif_model_build'
+    prefix = 'PLCverif could not build a ' + target + ' model'
+    for line in lines:
+        line = line.strip()
+        location = re.search(r'\((\d+):(\d+)\)|\bLine:\s*(\d+)\b', line)
+        if not location or not line.startswith(('Error:', '- ')):
+            continue
+        number = int(location[1] or location[3])
+        if not 1 <= number <= len(source):
+            continue
+        region = 'verification harness' if harness and number >= harness else 'translated source'
+        report['model_build_diagnostic'] = {
+            'file': 'candidate.scl', 'line': number, 'region': region, 'message': line,
+            'source': source[number - 1].strip()}
+        return Unsupported(f'{prefix}: {region}, candidate.scl:{number}: {line}\n{source[number - 1].strip()}')
+    error = next((line.strip() for line in lines if line.startswith('Error:')), None)
+    return Unsupported(f'{prefix}: {error or log[-1600:].strip()}')
+
+
 def _verify_cbmc(work,adapter,cfg,report,deadline,cancel_event):
     from plc_agent.cbmc_model import checked_model, results
     model_path=work/'model/ltl-model.c'
     cfa_path=work/'model/ltl-model.verif.cfd-original'
     if not model_path.is_file() or not cfa_path.is_file():
-        details=(work/'plcverif.log').read_text(encoding='utf-8',errors='replace')
-        raise Unsupported('PLCverif could not build a structured C model: '+details[-4500:])
+        raise _model_build_failure(work, report, 'structured C')
     transform_started=time.monotonic()
-    checked,changes=checked_model(model_path.read_text(encoding='utf-8'),adapter,cfa_path)
+    numeric_calls=next((n['calls'] for n in report['source_adaptations'] if n['kind']=='typed_intrinsics'),{})
+    checked,changes=checked_model(model_path.read_text(encoding='utf-8'),adapter,cfa_path,numeric_calls=numeric_calls)
     report['model_transform_seconds']=round(time.monotonic()-transform_started,3)
     (work/'checked.i').write_text(checked,encoding='utf-8')
     report.update(arithmetic_model='IEEE binary32/binary64; CFA-typed literals; round to nearest even',
@@ -246,19 +270,45 @@ def _verify_cbmc(work,adapter,cfg,report,deadline,cancel_event):
         loops=re.findall(r'Loop (PVL_Harness\.\d+):',loop_log.read_text(encoding='utf-8',errors='replace'))
         report['reference_loop_unwind']={name:limit for name in loops}
         if loops:command+=['--unwindset',','.join(name+':'+str(limit) for name in loops)]
-    atomic_json(work/'cbmc-command.json',command)
+    # The elevator has six floors. Give short loops a smaller initial
+    # expansion, with unwinding assertions still required for a verdict.
+    configured_unwind=report['unwind']
+    first_unwind=configured_unwind
+    if adapter.task['block'].lower()=='fb_elevatortarget':
+        first_unwind=min(configured_unwind,max(24,adapter.bound+1))
+    unwind_arg=command.index('--unwind')+1
     while not _engine_slots.acquire(timeout=.1):
         if cancel_event is not None and cancel_event.is_set():raise Cancelled('Formal verification cancelled')
         if time.monotonic()>=deadline:raise TimeoutError('Formal engine queue exceeded time budget')
     cbmc_started=time.monotonic()
-    try:code=_run(command,work,work/'cbmc.json',deadline,cancel_event,cfg.get('memory_limit_mb',768))
+    try:
+        for unwind in dict.fromkeys((first_unwind,configured_unwind)):
+            report['unwind']=unwind
+            command[unwind_arg]=str(unwind)
+            atomic_json(work/'cbmc-command.json',command)
+            code=_run(command,work,work/'cbmc.json',deadline,cancel_event,cfg.get('memory_limit_mb',768))
+            # 10 includes the deliberate valid-domain witness failure.
+            if code not in (0,10):
+                log=(work/'cbmc.json').read_text(encoding='utf-8',errors='replace')
+                exhausted=bool(re.search(r'out of memory',log,re.I))
+                report.update(status='tool_error',failure_stage='cbmc_solver',cbmc_exit_code=code,
+                              message=('CBMC ran out of memory while checking the model.'
+                                       if exhausted else f'CBMC failed with exit code {code}; see cbmc.json'))
+                if exhausted:report['solver_resource_limit']='memory'
+                return
+            report['bounded_verified_property_ids']=[]
+            counterexamples=results((work/'cbmc.json').read_text(encoding='utf-8',errors='replace'),report,adapter)
+            if report['unwind_complete'] or unwind==configured_unwind:
+                atomic_json(work/'counterexamples.json',counterexamples)
+                break
+            report['initial_unwind_incomplete']=unwind
+            for prop in adapter.properties:
+                if prop.get('ast'):
+                    prop['status']='not_executed'
+                    prop.pop('message',None)
     finally:
         report['cbmc_seconds']=round(time.monotonic()-cbmc_started,3)
         _engine_slots.release()
-    # 10 means at least one failed assertion. The domain witness intentionally
-    # fails on a reachable valid trace, so only per-property results are verdicts.
-    if code not in (0,10):raise Unsupported('CBMC failed with exit code '+str(code)+'; see cbmc.json')
-    atomic_json(work/'counterexamples.json',results((work/'cbmc.json').read_text(encoding='utf-8',errors='replace'),report,adapter))
 
 
 def _verify_one(task,source,directory,*,timeout_seconds=None,cancel_event=None,config=None,reference_observer=None):
@@ -328,17 +378,19 @@ def _verify_one(task,source,directory,*,timeout_seconds=None,cancel_event=None,c
         if engine=='nuxmv' and (re.search(r'\b(?:REAL|LREAL|\w+_TO_REAL|\w+_TO_LREAL|REAL_TO_\w+|LREAL_TO_\w+|SQRT|SIN|COS|EXP|LN|EXPT)\b|(?<![\w#])\d+\.\d+',typed_source,re.I) or any(re.search(r'\bL?REAL\b',p['type'],re.I) for p in task['interface'])):
             report['arithmetic_model']='IEEE floating-point required; nuXmv bridge uses an experimental fixed-point abstraction'
             raise Unsupported('REAL/LREAL cannot be reported as verified through the current PLCverif-to-nuXmv fixed-point translation. An IEEE floating-point backend/model is required.')
-        from plc_agent.plcverif_st import adapt
+        from plc_agent.plcverif_st import adapt, adapt_int_abs
+        from plc_agent.plcverif_intrinsics import lower_intrinsics
         model_source=(reference_observer.prefix if reference_observer is not None else '')+original.decode('utf-8-sig')
         derived,changes=adapt(model_source,cfg.get('scan_period_ms',10),task['block'])
-        report['source_adaptations']=changes
-        instrumented=adapter.instrument(derived)
+        instrumented,abs_changes=adapt_int_abs(adapter.instrument(derived,guard_input_domain=engine=='cbmc'))
+        instrumented,intrinsic_changes=lower_intrinsics(instrumented,engine=engine)
+        report['source_adaptations']=changes+abs_changes+intrinsic_changes
         report['instrumented_sha256']=hashlib.sha256(instrumented.encode()).hexdigest()
         report['tool_sha256']={name:hashlib.sha256(Path(cfg[name]).read_bytes()).hexdigest() for name in ('plcverif','java',engine)}
         # A default temporary directory may contain Chinese characters. Refuse silently broken tool paths.
         with _workspace(directory) as work:
             if not str(work).isascii():raise Unsupported('Set TEMP to an ASCII directory for nuXmv')
-            (work/'candidate.scl').write_text(instrumented,encoding='utf-8')
+            (work/'candidate.scl').write_bytes(instrumented.replace('\r\n','\n').replace('\r','\n').encode('utf-8'))
             symbols=_pattern(adapter,work/'patterns.xml')
             def setting(key,value):return '-'+key+'='+json.dumps(str(value),ensure_ascii=False)
             args=[setting('id','ltl-model'),'-job=verif','-lf=step7',setting('lf.entry','PVL_Harness'),
@@ -365,8 +417,7 @@ def _verify_one(task,source,directory,*,timeout_seconds=None,cancel_event=None,c
                 return report
             model_path=work/'model/ltl-model.smv'
             if not model_path.is_file():
-                details=(work/'plcverif.log').read_text(encoding='utf-8',errors='replace')
-                raise Unsupported('PLCverif could not build this ST model: '+details[-4500:])
+                raise _model_build_failure(work, report, 'SMV')
             report['model_generation_condition_used_for_verdict']=False
             model=model_path.read_text(encoding='utf-8')
             if '-- Requirement' not in model:raise Unsupported('Unknown PLCverif model format')
