@@ -20,14 +20,15 @@ PLC Workbench uses compiler and execution feedback to revise generated PLC code.
     \put(146,96){\vector(-1,0){12}}
     \put(70,78){\vector(0,-1){34}}
     \put(6,8){\framebox(128,36){\shortstack{Run receipt\\Metrics and evidence}}}
-    \put(164,8){\framebox(248,36){\shortstack{Repairable diagnostic from any check\\Shared Trial enforces the repair budget}}}
-    \put(164,26){\vector(-1,0){30}}
+    \put(164,8){\framebox(248,36){\shortstack{Compiler errors or failed scenarios\\Shared Trial enforces the repair budget}}}
+    \put(212,78){\vector(0,-1){34}}
+    \put(354,78){\vector(0,-1){34}}
     \put(412,26){\line(1,0){16}}
     \put(428,26){\line(0,1){150}}
     \put(428,176){\line(-1,0){216}}
     \put(212,176){\vector(0,-1){10}}
   \end{picture}
-  \caption{Both author frameworks submit candidates to the same Trial controller. Each check records evidence. A repairable diagnostic starts another version within the budget.}
+  \caption{Both author frameworks use the same Trial controller. Compilation and functional-test failures drive repairs. Bounded LTL results enter the receipt and may block completion.}
   \label{fig:agent-loop}
 \end{figure}
 
@@ -40,6 +41,8 @@ The separate interactive console also supports plan mode, local file attachments
 \subsection{Platform adapters and repair}
 
 The CODESYS adapter submits ST to the vendor compiler and uses a simulation project to replay scan sequences. The TIA adapter submits SCL through Openness and uses a separate PLCSIM Advanced runtime to execute the behavior tests. Both platforms use the frozen task oracle. A successful functional evaluation can trigger the shared PLCverif and CBMC checks. For supported SCL constructs, the adapter prepares the source model and records the assumptions used by the verifier.
+
+Compilation and functional-test diagnostics enter the automatic repair loop. A formal counterexample sets the final status to \texttt{formal\_blocked}, saves the trace, and stops further repair requests. Other formal outcomes remain attached to the functional result. This policy is enforced by the shared formal attachment function and both author workflows.
 
 Trial saves every distinct submitted source version, identifies duplicates by hash, and enforces the same limits for both frameworks: six source versions, 24 model requests including transport retries, and 1,800 seconds per task. The agent can repair candidate errors such as a compile rejection or a reproducible behavior failure. It stops on success, exhausted budget, no progress, or an environment error. An unconfirmed source-model counterexample is reported for review. The workbench also supports independent adversarial review for CODESYS and the optional local ST backend. The reviewer proposes scan sequences from the requirements and candidate. Replay records bind to the candidate hash. Reviewer expectations remain proposals for human review, and this optional stage runs outside the batch comparison.
 
