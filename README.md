@@ -1,11 +1,13 @@
 # PLC Workbench
 
 
-> **2026-11-08 团队全集归档**：统一分支 `full-integration-20261108`，已汇合 CODESYS、TIA、形式化修复、统一32题和网页独立审查，覆盖当前11个分支的成果。先以此版统一接手，合并后端到端验收尚待开展。
+> **团队全集归档**：`full-integration-20261108` 已于 11 月 9 日合入主分支，汇合 CODESYS、TIA、形式化修复、统一32题和网页独立审查。最新实验与材料入口见下方进度更新。
 >
 > [全集说明与贡献台账](docs/TEAM_INTEGRATION_20261108.md) · [TIA原验收报告](reports/tia_final_20261104/README.md) · [TIA配置](docs/TIA_VERIFICATION.md) · [ST独立审查](docs/WEB_ADVERSARIAL_REVIEW.md)
 
-在 CODESYS 的基础上，完成了 TIA 的 SCL 生成与修复、编译、PLCSIM 行为测试及共享有界形式化接入和代表性用例验收；尚未覆盖全部 32 题、原生 VARIANT ABI、实体 PLC 和无限扫描证明，也没有重写或扩展验证后端本身。
+> **2026-11-11 进度更新**：团队 TIA 两框架、两模型实验已结束 128/128 项，[实际结果与逐题证据](outputs/tia_32x4_20261108_results/README.md)已在主分支。新增[整合核对与报告交接](docs/INTEGRATION_20261111.md)。另保留本机 DeepSeek-flash 单模型重复[运行入口](docs/TIA_MATRIX_32X4.md)及[准备记录](outputs/published/README.md)。
+
+在 CODESYS 的基础上，项目接入 TIA SCL 生成与修复、编译、PLCSIM 行为测试和共享有界形式化。团队已对全部 32 题执行四组实验，逐项报告成功、失败和工具限制。形式化支持范围仍见各题结果和验证说明。
 
 PLC Workbench 是支持 CODESYS 与 TIA Portal 的本地 PLC 代码生成与验证项目，支持模型驱动的代码生成、编译诊断、功能测试和自动修复，并提供 self / Codex 两框架、两模型的对照实验入口。单题和批量流程统一接入 PLCverif + CBMC 的有界 LTL 检查，逐条保存结果和未执行原因。当前尚未实现全部32题的准确模型覆盖。
 

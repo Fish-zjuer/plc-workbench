@@ -1,0 +1,89 @@
+FUNCTION_BLOCK FB_SpectrometerQualification
+VAR_INPUT
+    Maintenance : BOOL;
+    CalibDone : BOOL;
+    MeasureReq : BOOL;
+END_VAR
+VAR_OUTPUT
+    State : USINT := 0;
+    CalibReq : BOOL := TRUE;
+    MaintLamp : BOOL := FALSE;
+    MeasurePermit : BOOL := FALSE;
+END_VAR
+VAR
+    preState : USINT;
+END_VAR
+
+preState := State;
+
+IF Maintenance THEN
+    State := 2;
+ELSIF preState = 2 THEN
+    State := 0;
+ELSIF (preState = 0) AND CalibDone THEN
+    State := 1;
+ELSE
+    State := preState;
+END_IF;
+
+CalibReq := (State = 0);
+MaintLamp := (State = 2);
+MeasurePermit := MeasureReq AND (State = 1);
+
+END_FUNCTION_BLOCK
+
+FUNCTION_BLOCK PVL_Harness
+VAR_INPUT
+Maintenance : BOOL;
+CalibDone : BOOL;
+MeasureReq : BOOL;
+END_VAR
+VAR_OUTPUT
+State : USINT;
+CalibReq : BOOL;
+MaintLamp : BOOL;
+MeasurePermit : BOOL;
+END_VAR
+VAR
+PVL_Uut : FB_SpectrometerQualification;
+PVL_S : USINT := 0;
+PVL_PreS : USINT := 0;
+PVL_Scan : DINT := 0;
+PVL_Active : BOOL;
+PVL_Done : BOOL;
+PVL_DtMs : DINT := 10;
+PVL_NowMs : DINT := -10;
+PVL_A0 : BOOL;
+PVL_A1 : BOOL;
+PVL_A2 : BOOL;
+PVL_A3 : BOOL;
+PVL_A4 : BOOL;
+PVL_A5 : BOOL;
+PVL_A6 : BOOL;
+PVL_A7 : BOOL;
+PVL_A8 : BOOL;
+PVL_A9 : BOOL;
+END_VAR
+IF PVL_Scan < 3 THEN
+PVL_NowMs := PVL_NowMs + PVL_DtMs;
+PVL_Uut(Maintenance := Maintenance, CalibDone := CalibDone, MeasureReq := MeasureReq);
+State := PVL_Uut.State;
+CalibReq := PVL_Uut.CalibReq;
+MaintLamp := PVL_Uut.MaintLamp;
+MeasurePermit := PVL_Uut.MeasurePermit;
+PVL_PreS := PVL_S;
+IF Maintenance THEN PVL_S := 2; ELSIF PVL_PreS = 2 THEN PVL_S := 0; ELSIF (PVL_PreS = 0) AND CalibDone THEN PVL_S := 1; END_IF;
+IF PVL_Scan <= 3 THEN PVL_Scan := PVL_Scan + 1; END_IF;
+PVL_Active := PVL_Scan <= 3; PVL_Done := PVL_Scan >= 3;
+PVL_A0 := ((State) = (PVL_S));
+PVL_A1 := (NOT (Maintenance) OR (((State) = (2))));
+PVL_A2 := (NOT (((NOT (Maintenance)) AND (((PVL_PreS) = (2))))) OR (((State) = (0))));
+PVL_A3 := (NOT (((((NOT (Maintenance)) AND (((PVL_PreS) = (0))))) AND (CalibDone))) OR (((State) = (1))));
+PVL_A4 := (NOT (((((NOT (Maintenance)) AND (((PVL_PreS) = (0))))) AND (NOT (CalibDone)))) OR (((State) = (0))));
+PVL_A5 := (NOT (((NOT (Maintenance)) AND (((PVL_PreS) = (1))))) OR (((State) = (1))));
+PVL_A6 := ((CalibReq) = (((State) = (0))));
+PVL_A7 := ((MaintLamp) = (((State) = (2))));
+PVL_A8 := ((MeasurePermit) = (((MeasureReq) AND (((State) = (1))))));
+PVL_A9 := ((((((State) = (0))) OR (((State) = (1))))) OR (((State) = (2))));
+ELSE PVL_Active := FALSE; PVL_Done := TRUE; END_IF;
+END_FUNCTION_BLOCK
