@@ -1,0 +1,73 @@
+unnamed
+=======
+
+Requirement: Model construction only; not a verification verdict
+             (AG (EoC --> (((((((((((instance/PVL_A0 && instance/PVL_A1) && instance/PVL_A2) && instance/PVL_A3) && instance/PVL_A4) && instance/PVL_A5) && instance/PVL_A6) && instance/PVL_A7) && instance/PVL_A8) && instance/PVL_A9) && instance/PVL_Active) && instance/PVL_Done)))
+
+**Result: the requirement is ERROR**
+
+Backend: CbmcBackend
+Parameters: 
+Input bindings: 
+
+
+
+Stages
+------
+* Parsing source code (0 ms): Successful
+* Control-flow declaration generation (286 ms): Successful
+* Requirement representation (66 ms): Successful
+* Model preparation (27 ms): Successful
+* CBMC model building (28 ms): Successful
+* CBMC execution: k=10 (0 ms): Unsuccessful
+    - [Error] Error happened in CBMC backend that prevented the model checking. The CBMC binary is not found at 'V:\.runtime\tmp\plcverif_ldmee4e5\model-build-only-no-engine.exe'.
+* Result diagnosis (0 ms): Successful
+* Reporting (0 ms): Unknown
+
+Settings
+--------
+  -description = ""
+  -id = ltl-model
+  -job = verif
+  -job.backend = cbmc
+  -job.backend.binary_path = V:\.runtime\tmp\plcverif_ldmee4e5\model-build-only-no-engine.exe
+  -job.backend.exec_output_to_console = false
+  -job.backend.exec_output_to_file = false
+  -job.backend.incremental_bmc = false
+  -job.backend.model_variant = CFD_STRUCTURED
+  -job.backend.timeout = 5
+  -job.backend.timeout_executor_path = .\tools\cbmc\TimeoutExecutor.dll
+  -job.backend.unwind = 10
+  -job.backend.unwind_step = 1
+  -job.backend.verbosity = 7
+  -job.backend.vs_init_batch = "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+  -job.reporters.0 = plaintext
+  -job.reporters.0.include_settings = true
+  -job.reporters.0.max_output_length = 5000
+  -job.reporters.0.min_log_level = Warning
+  -job.reporters.0.show_logitem_timestapms = false
+  -job.reporters.0.write_to_console = true
+  -job.reporters.0.write_to_file = true
+  -job.req = pattern
+  -job.req.pattern_file = V:\.runtime\tmp\plcverif_ldmee4e5\patterns.xml
+  -job.req.pattern_id = original-ltl
+  -job.req.pattern_params.1 = instance.PVL_A0
+  -job.req.pattern_params.2 = instance.PVL_A1
+  -job.req.pattern_params.3 = instance.PVL_A2
+  -job.req.pattern_params.4 = instance.PVL_A3
+  -job.req.pattern_params.5 = instance.PVL_A4
+  -job.req.pattern_params.6 = instance.PVL_A5
+  -job.req.pattern_params.7 = instance.PVL_A6
+  -job.req.pattern_params.8 = instance.PVL_A7
+  -job.req.pattern_params.9 = instance.PVL_A8
+  -job.req.pattern_params.10 = instance.PVL_A9
+  -job.req.pattern_params.11 = instance.PVL_Active
+  -job.req.pattern_params.12 = instance.PVL_Done
+  -lf = step7
+  -lf.compiler = Step7v55
+  -lf.entry = PVL_Harness
+  -name = unnamed
+  -output = V:\.runtime\tmp\plcverif_ldmee4e5\model
+  -sourcefiles.0 = V:\.runtime\tmp\plcverif_ldmee4e5\candidate.scl
+
+

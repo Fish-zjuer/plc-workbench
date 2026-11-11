@@ -1,0 +1,115 @@
+{
+  "status": "unsupported",
+  "backend": "plcverif+cbmc",
+  "policy": "automatic",
+  "task_id": "CUSTOM_09",
+  "dataset_sha256": "f768af3132563715c25519a881f52cea6082aa8a21708a3b05529acca83c62f8",
+  "source_sha256": "7e8a3e2c0c08af20dcf7e843963d79e8b70102b329a2a4609b0f32288a67bcff",
+  "model_calls": 0,
+  "declared_ltl_total": 10,
+  "mapped_assertions_total": 10,
+  "proved_property_ids": [],
+  "full_ltl_proved": false,
+  "bounded_verified_property_ids": [],
+  "evidence_path": "<PROJECT>\\outputs\\toolchain_checks\\20261108\\negative",
+  "properties": [
+    {
+      "id": "P01",
+      "formula": "G(stateMatch)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    },
+    {
+      "id": "P02",
+      "formula": "G(Maintenance -> State=2)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    },
+    {
+      "id": "P03",
+      "formula": "G((!Maintenance & pre.S=2) -> State=0)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    },
+    {
+      "id": "P04",
+      "formula": "G((!Maintenance & pre.S=0 & CalibDone) -> State=1)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    },
+    {
+      "id": "P05",
+      "formula": "G((!Maintenance & pre.S=0 & !CalibDone) -> State=0)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    },
+    {
+      "id": "P06",
+      "formula": "G((!Maintenance & pre.S=1) -> State=1)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    },
+    {
+      "id": "P07",
+      "formula": "G(CalibReq <-> State=0)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    },
+    {
+      "id": "P08",
+      "formula": "G(MaintLamp <-> State=2)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    },
+    {
+      "id": "P09",
+      "formula": "G(MeasurePermit <-> (MeasureReq & State=1))",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    },
+    {
+      "id": "P10",
+      "formula": "G(State=0 | State=1 | State=2)",
+      "status": "unsupported_model",
+      "temporal_boundary_sensitive": false,
+      "message": "Set TEMP to an ASCII directory for nuXmv"
+    }
+  ],
+  "scope": "First N completed scans from declared initial state; PLCverif STEP7 model of supplied ST. CODESYS semantic equivalence is not asserted.",
+  "sampling": "After every function-block call; input values vary nondeterministically each scan within declared types.",
+  "finite_trace_semantics": "Strong next/until/eventually on N scans. A failed future obligation at the horizon is inconclusive, not an implementation defect.",
+  "bound": 3,
+  "timeout_seconds": 90,
+  "scan_period_ms": 10,
+  "memory_limit_mb": 768,
+  "time_coverage": {
+    "scan_samples": 3,
+    "scan_period_ms": 10,
+    "first_sample_offset_ms": 10,
+    "last_sample_offset_ms": 30,
+    "maximum_elapsed_between_samples_ms": 20
+  },
+  "assumptions": [],
+  "observer_definitions": {
+    "pre.S": "PVL_PreS",
+    "stateMatch": "State=PVL_S"
+  },
+  "source_adaptations": [],
+  "instrumented_sha256": "5fd004d64875b56c60fc6fb3fbe1128dd7cfcf73c8627b5ca46c1da2396f5c02",
+  "tool_sha256": {
+    "plcverif": "9794fa26f74fe5e04435f7111a853a415fd97476c85fe24b1da3ad65cae955e8",
+    "java": "f961fb8db73c7c546821bc6d30fdaa8ce2458da460a5e75e2c39189cd107e6ba",
+    "cbmc": "e2f6a110906b7c5998f31617c89220f9840735250333c90c56ef467c667d8bda"
+  },
+  "message": "Set TEMP to an ASCII directory for nuXmv",
+  "seconds": 0.015
+}

@@ -1,0 +1,1126 @@
+{
+  "schema": "plc-tia-repeat-matrix-v1",
+  "id": "2026-11-08_17-17-06_deepseek_flash",
+  "target": "tia",
+  "model": "deepseek-flash",
+  "source_revision": "e50d5c3272adefdd9e5a78471e3d058536a33410",
+  "source_worktree_dirty": true,
+  "code_hashes": {
+    "plc_agent/adversarial_review.py": "696c5114a7121d327dbdf9a11d9d82f1009b20669e90702e8aa04800cbf59d89",
+    "plc_agent/bank32.py": "082a30a58cb1befcb39395549718ac4f57c735d1c874916b32d4ae5e25db9405",
+    "plc_agent/bank32_v6.py": "7d54c1c068eb3135c40cb7f242d9c8e85a19e818f517caa8f941f7778866b88d",
+    "plc_agent/bank_contracts.py": "d4e227d218b34b7fd3ec255fa4d521d231938356d917f55988aed99484f6cbed",
+    "plc_agent/behavior_plan.py": "363893dc875a0eb3e2ee3ed0cb9f498516937880ae31e21adb1cf2189e36d2a4",
+    "plc_agent/campaign.py": "9721878944f7e99292e15af665c2070a1f98326607529940e3fc9eeb689157bb",
+    "plc_agent/cbmc_model.py": "e140902b0c16ec8bca1ad06b0dc0b795acbf0ac1af1a5b381fe0d0e4d9460bcd",
+    "plc_agent/codesys.py": "9417b064901d7111966016eee2e75999a9bfa1cdab86257de066bbb62227b8b7",
+    "plc_agent/codesys_cli.py": "0df742d7e8f40a89e863cb7cebf53fc39a472cb07af82a0679ffdce8b23a1807",
+    "plc_agent/codesys_dataset.py": "9b256ec6e0d67976a1ed4441218fc17c7ce8129f488dc5ee7ee77335ccfc933f",
+    "plc_agent/codesys_tests.py": "e47eec877699fdc9f91c96567bb8fa24eddb2d11feefab593b46da4e4e2598ee",
+    "plc_agent/codesys_worker.py": "ccb05f727079c1d3989fca5921a625c4dfc4c381f0049b36d85c7c2321047d5d",
+    "plc_agent/config.py": "95225b28552d559d0f3d21236ca1d45ca23c9185cab1f59ed1d5a52d7dcefa2e",
+    "plc_agent/dataset.py": "84656b5bef8a9b0a48b86d7ff28373bbc23487bd9055af13bdf24ad6bd3bdb65",
+    "plc_agent/dataset_formal.py": "c527be923eae841d4066e48900ba2d716e0f108b8c627c8186770acc3b872897",
+    "plc_agent/dataset_workflow.py": "b4645207922da125ddb190d49640cb29cad4ec490a3b7a108502eed14fc47ad4",
+    "plc_agent/formal_st.py": "5b2f5047fc957a2f050457c1e9317eafad5686504eb0259edf29575537fba0df",
+    "plc_agent/formal_verify.py": "89e4b55d4552cbd69e91e68c741c204d8cad98d7a90f56b7dbecb693e03a9f4c",
+    "plc_agent/imported_bank.py": "0155872c9b5967c219b1e228ce1062c870305e9f2f9ee270fcaec9089e93b43b",
+    "plc_agent/inference.py": "1ce137ac49af38ca4091a2eca2b83efe8941694feddd8679faeb193f2e66b146",
+    "plc_agent/local_test_support.py": "a25fcb634f694358acc11b3bcdc4fa04fdf1c0d9a6d707ab5fc741984b1d0dc1",
+    "plc_agent/ltl_adapter.py": "d5f83fe25bc8b3db18d949162e8b4ac7f63a2f5c1781ade7f44eff8a4ac38896",
+    "plc_agent/plcverif_backend.py": "8941f52c3533c2d6f3e4e4c565710b07532f87415f26c8347b46ac22e5e87305",
+    "plc_agent/plcverif_references.py": "b96e1bf657f765e291bacc89c1e24c26b9c7de46b1e5023feb308ead6bbabf48",
+    "plc_agent/plcverif_st.py": "bb7fd927168c093175f18abd4a892de9b4ec37a7a19ae6ed69a5b965c23aca1f",
+    "plc_agent/provider.py": "36bf5324912310a2bd6c9f76723eacda0e95d69261dc90519c6f28eb82310c5d",
+    "plc_agent/public_output.py": "03d0ffbc3f4a29246475da158eebe5d6a5c1acdca76f9572c856493ef78a9a3e",
+    "plc_agent/q20_contract.py": "876ea0cbeae381d2bbc8f966b0a5146fbd0ce523a73e0bbb793db4b47512ff4b",
+    "plc_agent/reference_observers.py": "4d5265fc1287e16b1b84b7a7e9c4923663adcc910b7814c67196565b6e96d639",
+    "plc_agent/runtime_env.py": "621039247eb392f3c9da09b8e4ee60515621f7444e3ca6f848ee88bf5fb6dbe1",
+    "plc_agent/run_output.py": "cb21a8f77dae0af9a475269825321efa63c231fcf4e397b6a5456072f3179ca6",
+    "plc_agent/storage.py": "afc0d0ece6279f50ae958b1cd8596fb7f7bd1390512fbd29923eef7ecea190af",
+    "plc_agent/st_source.py": "8b3e8d8b6e346b4033fc8c419cec6eabfd07122cab539cee963c4d1dd0903b23",
+    "plc_agent/task_backend.py": "1b48c6c19917c8f91de47dde21df044ae8a49318e7b269481ac62b01a346d204",
+    "plc_agent/task_formal.py": "217f8add26146ed40970c0842891aec7f482d3373f127dad5d2637285bf8bba9",
+    "plc_agent/task_runner.py": "0534fd1d919b0016d78f8ebaca074cec36c9e7a7da1da9313cee5a7d26196a6b",
+    "plc_agent/task_spec.py": "1dc8d382952d155229d630da0f21c27acc71d9740b28c3908aadf01b776c4ddb",
+    "plc_agent/task_store.py": "71924b84fc0d9b3efb518aa6c8128b05cf20e0230724af63678f4fcdf3284c35",
+    "plc_agent/tia.py": "8f785329d5ae1962402dc185902d5708b8d21abffa862beeaa59f95dcc5acca8",
+    "plc_agent/tia_cli.py": "dc4a154d1f607c0bc00c5fbc328645cf6ac51b9389c8b0ea264d6c3c824b7a8c",
+    "plc_agent/tia_formal.py": "b864da0aa4b530ca0b02a29541363134cfce3d270935a8045b2e54414212de71",
+    "plc_agent/tia_runtime.py": "b2f6aa730cf4e3f2cc2a8fe8bb87383e3f56069eda00bc817d287dc34f4fe1a6",
+    "plc_agent/tia_scl.py": "e311cd819c5f2f4e10bcbb25d0fb43adbe85e3e0dd4cae32c60ee1e58ced9cf2",
+    "plc_agent/tia_tests.py": "814763da6ada800d4230a3054bbfea41a63b6bede1f47fcf26b0976f00496079",
+    "plc_agent/tia_workflow.py": "297e53fa6a1dc8ccc99a057eafba3683f8a83a69e6ff9fc5bcbd836e78c8b662",
+    "plc_agent/web.py": "80bf760a0a5a7747d76ce71950e9bef36ac7878d79be990f50d5f2833b55be9b",
+    "plc_agent/__init__.py": "0d3b10fb79265ac0b950fb02de96de9e625e2a91912334d04ca50c2c34c31b98",
+    "plc_agent/__main__.py": "9ee62db73a241c740e38767a7f0b3f96292bcf0b0bb62ddddc5ecf085a38cf5c",
+    "plc_agent/legacy/attachments.py": "ad49e3e681fcfab5ab2f8e1d8de4a18acbacb8099643d6578d8aff44050eb756",
+    "plc_agent/legacy/bank_runner.py": "2fdf101edbd5002ccdad6b37f898d46712b632713ac221f2ebb4fb125207e35c",
+    "plc_agent/legacy/call_budget.py": "0b53037692b985436cc46946ffb43ef3071fc94b5dcc6d17b1d6c24a57c50e3f",
+    "plc_agent/legacy/codesys_bank.py": "d24a2984abe2f83cdba5ff2ccbe36576f86e7999a7b25416c69a981c64e05ad5",
+    "plc_agent/legacy/codesys_check.py": "b4c7ec0b8d4b696d913793f152440b64b441ee669f2c53874a0cfce65a3886aa",
+    "plc_agent/legacy/compile_unit.py": "ad9b8b7993e881295bcbf92b24cf4ccdddc47aa97814305b3d7d30cae790592f",
+    "plc_agent/legacy/context_memory.py": "4381a82387e0821ed335b18ccc63e54a1275e789dc290e2ff5a73eee0c98a6cd",
+    "plc_agent/legacy/dataset_cli.py": "2e4814cf49e10f70cbcfc4f8865ba0a01aea55a0e9ddbdd73a5acb3527172f3b",
+    "plc_agent/legacy/deepseek_credentials.py": "d46799f632529d9e268e9a096a15fe4ad1df002287af17ea87c4a7ffd2427490",
+    "plc_agent/legacy/engine.py": "bf156ef95ef126ee0e1c9c01b8ac4c57908f0d3d33678c466c10157cdea80316",
+    "plc_agent/legacy/extended_eval.py": "b60294386c8f3db2c3993a4b812e5180c8bab128162d8d5d4cef96da8742acc5",
+    "plc_agent/legacy/review.py": "3133cfb795e1ab29bf89281526fb1bb04a1c61daf0d86ac3e08ee20792440093",
+    "plc_agent/legacy/task_cli.py": "3ae54f7931859a89daed1d4a37a42db50a90bdddaf4ad9ba2266b44347743cb9",
+    "plc_agent/legacy/task_codesys.py": "55acb17d9b4aee4f246da73ec5b2bd5933cd35efcbfbe92bd0213d794ee873e5",
+    "plc_agent/legacy/task_tools.py": "966a73b0c255fb1e2717ca027b967f35ba92f7a6e17ab43ebb4ac4c720ac6948",
+    "plc_agent/legacy/task_ui.py": "c4d8d99eee0f0b2bd816c9b943da1d58a34b0ba73365f5f06fe555a297ffd73f",
+    "plc_agent/legacy/task_workflow.py": "b9fb5a70273221e8766710094a7fcdf2b5c17c7c94daf959842eede74f838eb0",
+    "plc_agent/legacy/toolbox.py": "2fa1b0e3818269ee17a20a0f360bdd221a46345b80753fcb2bf9096d54e16d7b",
+    "plc_agent/legacy/tui.py": "7ca3f6568c9571539c02271bf606a473c16867bb2cc5d193396a32aad70d2bcd",
+    "plc_agent/legacy/validation.py": "6ed6c9038c88b68f46411156f8bf3b3c8ed8eab6d89e6c9e33253dfb0ba65fda",
+    "plc_agent/legacy/workflow.py": "04f2149ddf3b5ad22b87ef198e05d1edd47f0df4d74ad3f0135d992431e08445",
+    "plc_agent/legacy/__init__.py": "7f14442a29d5169d99bfe2b0e0e57ad43de4e24569228980219381f5970ee7a0",
+    "plc_agent/legacy/__main__.py": "1ad7a438a42ff107d989fee9ae357f96973b24a0e22cbf1fddd2ec66ff873162",
+    "integrations/tia_bridge/BridgeProgress.cs": "88a260e6cf1329142c7d144f611c87de5347487bab6234d6b699b27a4fcb9a7a",
+    "integrations/tia_bridge/Program.cs": "4e513d1aec04746809028f5f0bc33686d0add97833bd7cc10fb95131638f3263",
+    "integrations/tia_bridge/RuntimeWorker.cs": "34d26f4ea6776872d310308da02ed023c7c6069c8bc6ecd6dfa1ad18210fe960",
+    "integrations/tia_bridge/SimulationCardJob.cs": "24e7603036e4720cb2e77b5aff0dc2b64e77d29372be173d816c3ffea96c59f6",
+    "integrations/tia_bridge/SimulationJob.cs": "8be3562089e408fdda9f1331244bd8ca70638d8fe2405d5a2a9bb7c29fc0b496",
+    "integrations/tia_bridge/SimulationTemplate.cs": "9626acea868e4efe7add6aef2c34eef81949f056b14d436896461192bfff44d8",
+    "integrations/tia_bridge/TiaBridge.csproj": "5ec7868ebf4375730e1ea467f5597366fdf552d6a385b685d831442611554e19",
+    "integrations/tia_bridge/TiaSession.cs": "e64be2ddf954fe250aeebc87c9423992a01c01de38987fb13ec8e8db32f5245c",
+    "integrations/tia_bridge/runtime/Program.cs": "91b6cea66ee80db7e5550a7f70c09b09abc25e54da3a4d14226dee92cdccd9b2",
+    "integrations/tia_bridge/runtime/TiaRuntime.csproj": "531727e2786a0fa2cab5ea1464884ffb3f5f37dd8f0f3c5e0ae58a1225d72226",
+    "integrations/tia_trial_ack/Program.cs": "1d87905ef5ec7b6c0dec04838b5ef2da7ea76e41d0840771b43ea557b67fdf7d",
+    "integrations/tia_trial_ack/TiaTrialAck.csproj": "98eb86f46c12ae423b736c7e2e5243cd4a9c2f4e1bb6d1a5a1bb14e66bb097e3",
+    "scripts/check_course_references.py": "9971e6188b169b72c336e79e713ac3948f218dbb9a200acd2867ddc2d99212b3",
+    "scripts/check_plcverif_references.py": "66bc35f9ace9c9b2749f712d30a5c9faa7c7558aaf4bf17be353288caa711af2",
+    "scripts/check_saved_candidates.py": "897ef9ee5fd1ab8d9a1b8862d511431460c3d503f02b27318f29daabf0ee5b9f",
+    "scripts/check_tia_adapter.py": "19d5ef40a97a078cde60b90c210de6127e14f1447c06b2edd9e97d1956654128",
+    "scripts/check_tia_baseline.py": "92ed0db0a37a074d73e7713a8689cc02d301210a3d9728687d35f1316671b7ed",
+    "scripts/check_tia_complex.py": "ed4d361ab4783d08f4716e22849934b0c5953dfb9ea107e922ac78b8a5f74aeb",
+    "scripts/codesys_batch.py": "195572b4738ecf3c1f599fbf38d76a386f4bacf1ec3cffd3b00930f00bec7b17",
+    "scripts/codesys_prepare_template.py": "0a3d65157f24a42b639edf7c55768242e16070a70baee38df22097dc0d1c4ec5",
+    "scripts/codesys_smoke.py": "64128aad4f87e81f767e19e3a9091add3ca9dae983803a01e0dd59ece9101e43",
+    "scripts/package_team.py": "a09ddc1825696717d962560b845da5aff6252791246d0890df4b81021573e45c",
+    "scripts/run_tia_matrix.py": "577fa3d165ba746762dab0321de78d71410f076bdb5cea1e20cc50edace560b2",
+    "scripts/verify_reproduction_data.py": "0c47f452c777f7b5e05b859075cfc107de09955bdf3224508865fd06c97fa2b0"
+  },
+  "model_configuration": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-flash",
+    "comparison_model": "qwen3.8-flash",
+    "key_env": "PLC_AGENT_API_KEY",
+    "tool_mode": "native",
+    "stream": true,
+    "context_window": 64000,
+    "max_output_tokens": 16384,
+    "max_steps": 24,
+    "timeout": 120,
+    "transport_retries": 2,
+    "review_model": "",
+    "extra_body": {
+      "thinking": {
+        "type": "enabled"
+      },
+      "reasoning_effort": "low"
+    },
+    "compact_keep_turns": 2,
+    "compact_target_ratio": 0.5,
+    "compact_summary_tokens": 2048,
+    "compact_extra_body": {
+      "thinking": {
+        "type": "disabled"
+      }
+    }
+  },
+  "inference_parameters": {
+    "thinking": {
+      "type": "enabled"
+    },
+    "reasoning_effort": "low"
+  },
+  "limits": {
+    "source_versions": 6,
+    "model_requests": 24,
+    "seconds": 1800
+  },
+  "repeats": 2,
+  "concurrency": 2,
+  "total": 128,
+  "completed": 0,
+  "model_calls": 0,
+  "status": "setup_required",
+  "preflight": {
+    "status": "setup_required",
+    "errors": [
+      "Configure an existing TIA executable (.exe)"
+    ],
+    "runtime": {
+      "local_backend": {
+        "home": null,
+        "extension": null,
+        "fingerprint": null
+      },
+      "status": "setup_required",
+      "errors": [
+        "Configure an existing TIA executable (.exe)"
+      ],
+      "codex_path": "<PROJECT>\\.runtime\\codex-0.80\\node_modules\\.bin\\codex.cmd",
+      "codex_version": "codex-cli 0.80.0",
+      "target": "tia",
+      "vendor_config": {},
+      "vendor_required": true,
+      "test_backend": "tia",
+      "codesys": {},
+      "limits": {
+        "source_versions": 6,
+        "model_requests": 24,
+        "seconds": 1800
+      },
+      "tools": {
+        "cxx": "C:\\Strawberry\\c\\bin\\g++.EXE"
+      },
+      "formal": {
+        "engine": "cbmc",
+        "bound": 20,
+        "timeout_seconds": 120,
+        "scan_period_ms": 10,
+        "memory_limit_mb": 768,
+        "unwind": 256,
+        "reference_numeric_domain": "ieee",
+        "plcverif": "<PROJECT>\\.runtime\\plcverif\\plcverif-clic.exe",
+        "java": "<PROJECT>\\.runtime\\java25\\jdk-25.0.5+8-jre\\bin\\java.exe",
+        "cbmc": "<PROJECT>\\.runtime\\cbmc\\cbmc\\bin\\cbmc.exe",
+        "nuxmv": "",
+        "path_sources": {
+          "plcverif": "saved",
+          "java": "saved",
+          "cbmc": "saved",
+          "nuxmv": "missing"
+        },
+        "status": "tools_ready",
+        "config_file": "agent_data/formal_config.json",
+        "saved": true,
+        "missing_tools": [],
+        "message": "已找到所需工具；这只确认文件存在，尚未执行验证。",
+        "scope": "Executables found; this is not a claim of full dataset/model compatibility.",
+        "unsupported_models": [
+          "open-array callers without a configured storage contract",
+          "vendor-native VARIANT APIs outside the local PV1 contract",
+          "mixed-width float literals and REAL math calls requiring a typed exporter"
+        ],
+        "floating_point_reference": "https://plcverif-oss.gitlab.io/plcverif-docs/library/backends/Cbmc.html"
+      }
+    },
+    "formal": {
+      "engine": "cbmc",
+      "bound": 20,
+      "timeout_seconds": 120,
+      "scan_period_ms": 10,
+      "memory_limit_mb": 768,
+      "unwind": 256,
+      "reference_numeric_domain": "ieee",
+      "plcverif": "<PROJECT>\\.runtime\\plcverif\\plcverif-clic.exe",
+      "java": "<PROJECT>\\.runtime\\java25\\jdk-25.0.5+8-jre\\bin\\java.exe",
+      "cbmc": "<PROJECT>\\.runtime\\cbmc\\cbmc\\bin\\cbmc.exe",
+      "nuxmv": ""
+    }
+  },
+  "jobs": [
+    {
+      "task_id": "PUBLIC_01",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_01",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_01",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_01",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_02",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_02",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_02",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_02",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_03",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_03",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_03",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_03",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_04",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_04",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_04",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_04",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_05",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_05",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_05",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_05",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_06",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_06",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_06",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_06",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_07",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_07",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_07",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_07",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_08",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_08",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_08",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_08",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_09",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_09",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_09",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_09",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_10",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_10",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_10",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_10",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_11",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_11",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_11",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_11",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_12",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_12",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_12",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_12",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_13",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_13",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_13",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_13",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_14",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_14",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_14",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_14",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_15",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_15",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_15",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_15",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_16",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_16",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_16",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_16",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_17",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_17",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_17",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_17",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_18",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_18",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_18",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_18",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_19",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_19",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_19",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_19",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "PUBLIC_20",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "PUBLIC_20",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "PUBLIC_20",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "PUBLIC_20",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_01",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_01",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_01",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_01",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_02",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_02",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_02",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_02",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_03",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_03",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_03",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_03",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_04",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_04",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_04",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_04",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_05",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_05",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_05",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_05",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_06",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_06",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_06",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_06",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_07",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_07",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_07",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_07",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_08",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_08",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_08",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_08",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_09",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_09",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_09",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_09",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_10",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_10",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_10",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_10",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_11",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_11",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_11",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_11",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    },
+    {
+      "task_id": "CUSTOM_12",
+      "framework": "self",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "self_r1"
+    },
+    {
+      "task_id": "CUSTOM_12",
+      "framework": "self",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "self_r2"
+    },
+    {
+      "task_id": "CUSTOM_12",
+      "framework": "codex",
+      "repeat": 1,
+      "status": "not_started",
+      "group": "codex_r1"
+    },
+    {
+      "task_id": "CUSTOM_12",
+      "framework": "codex",
+      "repeat": 2,
+      "status": "not_started",
+      "group": "codex_r2"
+    }
+  ],
+  "started_at": "2026-11-08T17:17:06.636101+08:00",
+  "scope": "Same model, independent repetitions in self/Codex; original TIA functional and shared bounded formal checks. No hardware or infinite-scan proof."
+}

@@ -1,0 +1,1357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfadeclaration:CfaNetworkDeclaration xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cfabase="cern.plcverif.base.models.cfa.cfabase" xmlns:cfadeclaration="cern.plcverif.base.models.cfa.cfadeclaration" xmlns:expr="cern.plcverif.base.models.expr" xmi:id="network" name="network" displayName="network" mainAutomaton="network_VerificationLoop">
+  <automata xmi:id="network_FB_SpectrometerQualification" name="FB_SpectrometerQualification" displayName="FB_SpectrometerQualification" initialLocation="network_FB_SpectrometerQualification_init" endLocation="network_FB_SpectrometerQualification_l13">
+    <locations xmi:id="network_FB_SpectrometerQualification_init" name="init" displayName="init" frozen="true" outgoing="network_FB_SpectrometerQualification_t1">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id0" fileName="0.scl" lineNumber="33"/>
+    </locations>
+    <locations xmi:id="network_FB_SpectrometerQualification_l1" name="l1" displayName="l1" incoming="network_FB_SpectrometerQualification_t1" outgoing="network_FB_SpectrometerQualification_t2 network_FB_SpectrometerQualification_t4 network_FB_SpectrometerQualification_t6 network_FB_SpectrometerQualification_t8">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id1" fileName="0.scl" lineNumber="37"/>
+      <annotations xsi:type="cfabase:IfLocationAnnotation" xmi:id="id2" endsAt="network_FB_SpectrometerQualification_l10" then="network_FB_SpectrometerQualification_t2"/>
+    </locations>
+    <locations xmi:id="network_FB_SpectrometerQualification_l2" name="l2" displayName="l2" incoming="network_FB_SpectrometerQualification_t2" outgoing="network_FB_SpectrometerQualification_t3">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id3" fileName="0.scl" lineNumber="39"/>
+    </locations>
+    <locations xmi:id="network_FB_SpectrometerQualification_l3" name="l3" displayName="l3" incoming="network_FB_SpectrometerQualification_t3" outgoing="network_FB_SpectrometerQualification_t10"/>
+    <locations xmi:id="network_FB_SpectrometerQualification_l4" name="l4" displayName="l4" incoming="network_FB_SpectrometerQualification_t4" outgoing="network_FB_SpectrometerQualification_t5">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id4" fileName="0.scl" lineNumber="43"/>
+    </locations>
+    <locations xmi:id="network_FB_SpectrometerQualification_l5" name="l5" displayName="l5" incoming="network_FB_SpectrometerQualification_t5" outgoing="network_FB_SpectrometerQualification_t11"/>
+    <locations xmi:id="network_FB_SpectrometerQualification_l6" name="l6" displayName="l6" incoming="network_FB_SpectrometerQualification_t6" outgoing="network_FB_SpectrometerQualification_t7">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id5" fileName="0.scl" lineNumber="47"/>
+    </locations>
+    <locations xmi:id="network_FB_SpectrometerQualification_l7" name="l7" displayName="l7" incoming="network_FB_SpectrometerQualification_t7" outgoing="network_FB_SpectrometerQualification_t12"/>
+    <locations xmi:id="network_FB_SpectrometerQualification_l8" name="l8" displayName="l8" incoming="network_FB_SpectrometerQualification_t8" outgoing="network_FB_SpectrometerQualification_t9">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id6" fileName="0.scl" lineNumber="51"/>
+    </locations>
+    <locations xmi:id="network_FB_SpectrometerQualification_l9" name="l9" displayName="l9" incoming="network_FB_SpectrometerQualification_t9" outgoing="network_FB_SpectrometerQualification_t13"/>
+    <locations xmi:id="network_FB_SpectrometerQualification_l10" name="l10" displayName="l10" incoming="network_FB_SpectrometerQualification_t10 network_FB_SpectrometerQualification_t11 network_FB_SpectrometerQualification_t12 network_FB_SpectrometerQualification_t13" outgoing="network_FB_SpectrometerQualification_t14">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id7" fileName="0.scl" lineNumber="57"/>
+    </locations>
+    <locations xmi:id="network_FB_SpectrometerQualification_l11" name="l11" displayName="l11" incoming="network_FB_SpectrometerQualification_t14" outgoing="network_FB_SpectrometerQualification_t15">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id8" fileName="0.scl" lineNumber="59"/>
+    </locations>
+    <locations xmi:id="network_FB_SpectrometerQualification_l12" name="l12" displayName="l12" incoming="network_FB_SpectrometerQualification_t15" outgoing="network_FB_SpectrometerQualification_t16">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id9" fileName="0.scl" lineNumber="61"/>
+    </locations>
+    <locations xmi:id="network_FB_SpectrometerQualification_l13" name="l13" displayName="l13" incoming="network_FB_SpectrometerQualification_t16"/>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t1" name="t1" displayName="t1" source="network_FB_SpectrometerQualification_init" target="network_FB_SpectrometerQualification_l1">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id10" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id11"/>
+      </condition>
+      <assignments xmi:id="id12">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id13" field="network__global_FB_SpectrometerQualification_preState"/>
+        <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id14" field="network__global_FB_SpectrometerQualification_State"/>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t2" name="t2" displayName="t2" source="network_FB_SpectrometerQualification_l1" target="network_FB_SpectrometerQualification_l2">
+      <condition xsi:type="cfadeclaration:FieldRef" xmi:id="id15" field="network__global_FB_SpectrometerQualification_Maintenance"/>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t3" name="t3" displayName="t3" source="network_FB_SpectrometerQualification_l2" target="network_FB_SpectrometerQualification_l3">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id16" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id17"/>
+      </condition>
+      <assignments xmi:id="id18">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id19" field="network__global_FB_SpectrometerQualification_State"/>
+        <rightValue xsi:type="expr:IntLiteral" xmi:id="id20" value="2">
+          <type xsi:type="expr:IntType" xmi:id="id21" signed="false" bits="8"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t4" name="t4" displayName="t4" source="network_FB_SpectrometerQualification_l1" target="network_FB_SpectrometerQualification_l4">
+      <condition xsi:type="expr:BinaryLogicExpression" xmi:id="id22">
+        <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id23">
+          <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id24" field="network__global_FB_SpectrometerQualification_Maintenance"/>
+        </leftOperand>
+        <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id25">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id26" field="network__global_FB_SpectrometerQualification_preState"/>
+          <rightOperand xsi:type="expr:IntLiteral" xmi:id="id27" value="2">
+            <type xsi:type="expr:IntType" xmi:id="id28" signed="false" bits="8"/>
+          </rightOperand>
+          <type xsi:type="expr:BoolType" xmi:id="id29"/>
+        </rightOperand>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t5" name="t5" displayName="t5" source="network_FB_SpectrometerQualification_l4" target="network_FB_SpectrometerQualification_l5">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id30" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id31"/>
+      </condition>
+      <assignments xmi:id="id32">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id33" field="network__global_FB_SpectrometerQualification_State"/>
+        <rightValue xsi:type="expr:IntLiteral" xmi:id="id34" value="1">
+          <type xsi:type="expr:IntType" xmi:id="id35" signed="false" bits="8"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t6" name="t6" displayName="t6" source="network_FB_SpectrometerQualification_l1" target="network_FB_SpectrometerQualification_l6">
+      <condition xsi:type="expr:BinaryLogicExpression" xmi:id="id36">
+        <leftOperand xsi:type="expr:BinaryLogicExpression" xmi:id="id37">
+          <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id38">
+            <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id39" field="network__global_FB_SpectrometerQualification_Maintenance"/>
+          </leftOperand>
+          <rightOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id40">
+            <operand xsi:type="expr:ComparisonExpression" xmi:id="id41">
+              <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id42" field="network__global_FB_SpectrometerQualification_preState"/>
+              <rightOperand xsi:type="expr:IntLiteral" xmi:id="id43" value="2">
+                <type xsi:type="expr:IntType" xmi:id="id44" signed="false" bits="8"/>
+              </rightOperand>
+              <type xsi:type="expr:BoolType" xmi:id="id45"/>
+            </operand>
+          </rightOperand>
+        </leftOperand>
+        <rightOperand xsi:type="expr:BinaryLogicExpression" xmi:id="id46">
+          <leftOperand xsi:type="expr:ComparisonExpression" xmi:id="id47">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id48" field="network__global_FB_SpectrometerQualification_preState"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id49" value="0">
+              <type xsi:type="expr:IntType" xmi:id="id50" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id51"/>
+          </leftOperand>
+          <rightOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id52" field="network__global_FB_SpectrometerQualification_CalibDone"/>
+        </rightOperand>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t7" name="t7" displayName="t7" source="network_FB_SpectrometerQualification_l6" target="network_FB_SpectrometerQualification_l7">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id53" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id54"/>
+      </condition>
+      <assignments xmi:id="id55">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id56" field="network__global_FB_SpectrometerQualification_State"/>
+        <rightValue xsi:type="expr:IntLiteral" xmi:id="id57" value="1">
+          <type xsi:type="expr:IntType" xmi:id="id58" signed="false" bits="8"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t8" name="t8" displayName="t8" source="network_FB_SpectrometerQualification_l1" target="network_FB_SpectrometerQualification_l8">
+      <condition xsi:type="cfabase:ElseExpression" xmi:id="id59">
+        <type xsi:type="expr:BoolType" xmi:id="id60"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t9" name="t9" displayName="t9" source="network_FB_SpectrometerQualification_l8" target="network_FB_SpectrometerQualification_l9">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id61" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id62"/>
+      </condition>
+      <assignments xmi:id="id63">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id64" field="network__global_FB_SpectrometerQualification_State"/>
+        <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id65" field="network__global_FB_SpectrometerQualification_preState"/>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t10" name="t10" displayName="t10" source="network_FB_SpectrometerQualification_l3" target="network_FB_SpectrometerQualification_l10">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id66" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id67"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t11" name="t11" displayName="t11" source="network_FB_SpectrometerQualification_l5" target="network_FB_SpectrometerQualification_l10">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id68" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id69"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t12" name="t12" displayName="t12" source="network_FB_SpectrometerQualification_l7" target="network_FB_SpectrometerQualification_l10">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id70" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id71"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t13" name="t13" displayName="t13" source="network_FB_SpectrometerQualification_l9" target="network_FB_SpectrometerQualification_l10">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id72" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id73"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t14" name="t14" displayName="t14" source="network_FB_SpectrometerQualification_l10" target="network_FB_SpectrometerQualification_l11">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id74" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id75"/>
+      </condition>
+      <assignments xmi:id="id76">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id77" field="network__global_FB_SpectrometerQualification_CalibReq"/>
+        <rightValue xsi:type="expr:ComparisonExpression" xmi:id="id78">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id79" field="network__global_FB_SpectrometerQualification_State"/>
+          <rightOperand xsi:type="expr:IntLiteral" xmi:id="id80" value="0">
+            <type xsi:type="expr:IntType" xmi:id="id81" signed="false" bits="8"/>
+          </rightOperand>
+          <type xsi:type="expr:BoolType" xmi:id="id82"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t15" name="t15" displayName="t15" source="network_FB_SpectrometerQualification_l11" target="network_FB_SpectrometerQualification_l12">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id83" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id84"/>
+      </condition>
+      <assignments xmi:id="id85">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id86" field="network__global_FB_SpectrometerQualification_MaintLamp"/>
+        <rightValue xsi:type="expr:ComparisonExpression" xmi:id="id87">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id88" field="network__global_FB_SpectrometerQualification_State"/>
+          <rightOperand xsi:type="expr:IntLiteral" xmi:id="id89" value="2">
+            <type xsi:type="expr:IntType" xmi:id="id90" signed="false" bits="8"/>
+          </rightOperand>
+          <type xsi:type="expr:BoolType" xmi:id="id91"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_FB_SpectrometerQualification_t16" name="t16" displayName="t16" source="network_FB_SpectrometerQualification_l12" target="network_FB_SpectrometerQualification_l13">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id92" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id93"/>
+      </condition>
+      <assignments xmi:id="id94">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id95" field="network__global_FB_SpectrometerQualification_MeasurePermit"/>
+        <rightValue xsi:type="expr:BinaryLogicExpression" xmi:id="id96">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id97" field="network__global_FB_SpectrometerQualification_MeasureReq"/>
+          <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id98">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id99" field="network__global_FB_SpectrometerQualification_State"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id100" value="1">
+              <type xsi:type="expr:IntType" xmi:id="id101" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id102"/>
+          </rightOperand>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <annotations xsi:type="cfabase:BlockAutomatonAnnotation" xmi:id="id103" blockType="FunctionBlock" name="FB_SpectrometerQualification" stateful="true"/>
+    <localDataStructure xmi:id="id104" definition="network__global_FB_SpectrometerQualification"/>
+  </automata>
+  <automata xmi:id="network_PVL_Harness" name="PVL_Harness" displayName="PVL_Harness" initialLocation="network_PVL_Harness_init" endLocation="network_PVL_Harness_l36">
+    <locations xmi:id="network_PVL_Harness_init" name="init" displayName="init" frozen="true" outgoing="network_PVL_Harness_t1 network_PVL_Harness_t37">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id105" fileName="0.scl" lineNumber="99"/>
+      <annotations xsi:type="cfabase:IfLocationAnnotation" xmi:id="id106" endsAt="network_PVL_Harness_l36" then="network_PVL_Harness_t1"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l1" name="l1" displayName="l1" incoming="network_PVL_Harness_t1" outgoing="network_PVL_Harness_t2">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id107" fileName="0.scl" lineNumber="100"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l2" name="l2" displayName="l2" incoming="network_PVL_Harness_t2" outgoing="network_PVL_Harness_t3">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id108" fileName="0.scl" lineNumber="101"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l3" name="l3" displayName="l3" incoming="network_PVL_Harness_t3" outgoing="network_PVL_Harness_t4">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id109" fileName="0.scl" lineNumber="102"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l4" name="l4" displayName="l4" incoming="network_PVL_Harness_t4" outgoing="network_PVL_Harness_t5">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id110" fileName="0.scl" lineNumber="103"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l5" name="l5" displayName="l5" incoming="network_PVL_Harness_t5" outgoing="network_PVL_Harness_t6">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id111" fileName="0.scl" lineNumber="104"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l6" name="l6" displayName="l6" incoming="network_PVL_Harness_t6" outgoing="network_PVL_Harness_t7">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id112" fileName="0.scl" lineNumber="105"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l7" name="l7" displayName="l7" incoming="network_PVL_Harness_t7" outgoing="network_PVL_Harness_t8">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id113" fileName="0.scl" lineNumber="106"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l8" name="l8" displayName="l8" incoming="network_PVL_Harness_t8" outgoing="network_PVL_Harness_t9 network_PVL_Harness_t11 network_PVL_Harness_t13 network_PVL_Harness_t15">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id114" fileName="0.scl" lineNumber="107"/>
+      <annotations xsi:type="cfabase:IfLocationAnnotation" xmi:id="id115" endsAt="network_PVL_Harness_l16" then="network_PVL_Harness_t9"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l9" name="l9" displayName="l9" incoming="network_PVL_Harness_t9" outgoing="network_PVL_Harness_t10">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id116" fileName="0.scl" lineNumber="107"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l10" name="l10" displayName="l10" incoming="network_PVL_Harness_t10" outgoing="network_PVL_Harness_t16"/>
+    <locations xmi:id="network_PVL_Harness_l11" name="l11" displayName="l11" incoming="network_PVL_Harness_t11" outgoing="network_PVL_Harness_t12">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id117" fileName="0.scl" lineNumber="107"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l12" name="l12" displayName="l12" incoming="network_PVL_Harness_t12" outgoing="network_PVL_Harness_t17"/>
+    <locations xmi:id="network_PVL_Harness_l13" name="l13" displayName="l13" incoming="network_PVL_Harness_t13" outgoing="network_PVL_Harness_t14">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id118" fileName="0.scl" lineNumber="107"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l14" name="l14" displayName="l14" incoming="network_PVL_Harness_t14" outgoing="network_PVL_Harness_t18"/>
+    <locations xmi:id="network_PVL_Harness_l15" name="l15" displayName="l15" incoming="network_PVL_Harness_t15" outgoing="network_PVL_Harness_t19"/>
+    <locations xmi:id="network_PVL_Harness_l16" name="l16" displayName="l16" incoming="network_PVL_Harness_t16 network_PVL_Harness_t17 network_PVL_Harness_t18 network_PVL_Harness_t19" outgoing="network_PVL_Harness_t20 network_PVL_Harness_t22">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id119" fileName="0.scl" lineNumber="108"/>
+      <annotations xsi:type="cfabase:IfLocationAnnotation" xmi:id="id120" endsAt="network_PVL_Harness_l20" then="network_PVL_Harness_t20"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l17" name="l17" displayName="l17" incoming="network_PVL_Harness_t20" outgoing="network_PVL_Harness_t21">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id121" fileName="0.scl" lineNumber="108"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l18" name="l18" displayName="l18" incoming="network_PVL_Harness_t21" outgoing="network_PVL_Harness_t23"/>
+    <locations xmi:id="network_PVL_Harness_l19" name="l19" displayName="l19" incoming="network_PVL_Harness_t22" outgoing="network_PVL_Harness_t24"/>
+    <locations xmi:id="network_PVL_Harness_l20" name="l20" displayName="l20" incoming="network_PVL_Harness_t23 network_PVL_Harness_t24" outgoing="network_PVL_Harness_t25">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id122" fileName="0.scl" lineNumber="109"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l21" name="l21" displayName="l21" incoming="network_PVL_Harness_t25" outgoing="network_PVL_Harness_t26">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id123" fileName="0.scl" lineNumber="109"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l22" name="l22" displayName="l22" incoming="network_PVL_Harness_t26" outgoing="network_PVL_Harness_t27">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id124" fileName="0.scl" lineNumber="110"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l23" name="l23" displayName="l23" incoming="network_PVL_Harness_t27" outgoing="network_PVL_Harness_t28">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id125" fileName="0.scl" lineNumber="111"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l24" name="l24" displayName="l24" incoming="network_PVL_Harness_t28" outgoing="network_PVL_Harness_t29">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id126" fileName="0.scl" lineNumber="112"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l25" name="l25" displayName="l25" incoming="network_PVL_Harness_t29" outgoing="network_PVL_Harness_t30">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id127" fileName="0.scl" lineNumber="113"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l26" name="l26" displayName="l26" incoming="network_PVL_Harness_t30" outgoing="network_PVL_Harness_t31">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id128" fileName="0.scl" lineNumber="114"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l27" name="l27" displayName="l27" incoming="network_PVL_Harness_t31" outgoing="network_PVL_Harness_t32">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id129" fileName="0.scl" lineNumber="115"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l28" name="l28" displayName="l28" incoming="network_PVL_Harness_t32" outgoing="network_PVL_Harness_t33">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id130" fileName="0.scl" lineNumber="116"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l29" name="l29" displayName="l29" incoming="network_PVL_Harness_t33" outgoing="network_PVL_Harness_t34">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id131" fileName="0.scl" lineNumber="117"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l30" name="l30" displayName="l30" incoming="network_PVL_Harness_t34" outgoing="network_PVL_Harness_t35">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id132" fileName="0.scl" lineNumber="118"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l31" name="l31" displayName="l31" incoming="network_PVL_Harness_t35" outgoing="network_PVL_Harness_t36">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id133" fileName="0.scl" lineNumber="119"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l32" name="l32" displayName="l32" incoming="network_PVL_Harness_t36" outgoing="network_PVL_Harness_t40"/>
+    <locations xmi:id="network_PVL_Harness_l33" name="l33" displayName="l33" incoming="network_PVL_Harness_t37" outgoing="network_PVL_Harness_t38">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id134" fileName="0.scl" lineNumber="120"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l34" name="l34" displayName="l34" incoming="network_PVL_Harness_t38" outgoing="network_PVL_Harness_t39">
+      <annotations xsi:type="cfabase:LineNumberAnnotation" xmi:id="id135" fileName="0.scl" lineNumber="120"/>
+    </locations>
+    <locations xmi:id="network_PVL_Harness_l35" name="l35" displayName="l35" incoming="network_PVL_Harness_t39" outgoing="network_PVL_Harness_t41"/>
+    <locations xmi:id="network_PVL_Harness_l36" name="l36" displayName="l36" incoming="network_PVL_Harness_t40 network_PVL_Harness_t41"/>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t1" name="t1" displayName="t1" source="network_PVL_Harness_init" target="network_PVL_Harness_l1">
+      <condition xsi:type="expr:ComparisonExpression" xmi:id="id136" operator="LESS_THAN">
+        <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id137" field="network__global_PVL_Harness_PVL_Scan"/>
+        <rightOperand xsi:type="expr:IntLiteral" xmi:id="id138" value="3">
+          <type xsi:type="expr:IntType" xmi:id="id139" signed="true" bits="32"/>
+        </rightOperand>
+        <type xsi:type="expr:BoolType" xmi:id="id140"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t2" name="t2" displayName="t2" source="network_PVL_Harness_l1" target="network_PVL_Harness_l2">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id141" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id142"/>
+      </condition>
+      <assignments xmi:id="id143">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id144" field="network__global_PVL_Harness_PVL_NowMs"/>
+        <rightValue xsi:type="expr:BinaryArithmeticExpression" xmi:id="id145">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id146" field="network__global_PVL_Harness_PVL_NowMs"/>
+          <rightOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id147" field="network__global_PVL_Harness_PVL_DtMs"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:CallTransition" xmi:id="network_PVL_Harness_t3" name="t3" displayName="t3" source="network_PVL_Harness_l2" target="network_PVL_Harness_l3">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id148" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id149"/>
+      </condition>
+      <calls xmi:id="id150" calledAutomaton="network_FB_SpectrometerQualification">
+        <calleeContext xsi:type="cfadeclaration:FieldRef" xmi:id="id151" field="network__global_PVL_Harness_PVL_Uut"/>
+        <inputAssignments xmi:id="id152">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id153" field="network__global_FB_SpectrometerQualification_Maintenance"/>
+          <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id154" field="network__global_PVL_Harness_Maintenance"/>
+        </inputAssignments>
+        <inputAssignments xmi:id="id155">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id156" field="network__global_FB_SpectrometerQualification_CalibDone"/>
+          <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id157" field="network__global_PVL_Harness_CalibDone"/>
+        </inputAssignments>
+        <inputAssignments xmi:id="id158">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id159" field="network__global_FB_SpectrometerQualification_MeasureReq"/>
+          <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id160" field="network__global_PVL_Harness_MeasureReq"/>
+        </inputAssignments>
+      </calls>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t4" name="t4" displayName="t4" source="network_PVL_Harness_l3" target="network_PVL_Harness_l4">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id161" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id162"/>
+      </condition>
+      <assignments xmi:id="id163">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id164" field="network__global_PVL_Harness_State"/>
+        <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id165" field="network__global_FB_SpectrometerQualification_State">
+          <prefix xsi:type="cfadeclaration:FieldRef" xmi:id="id166" field="network__global_PVL_Harness_PVL_Uut"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t5" name="t5" displayName="t5" source="network_PVL_Harness_l4" target="network_PVL_Harness_l5">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id167" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id168"/>
+      </condition>
+      <assignments xmi:id="id169">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id170" field="network__global_PVL_Harness_CalibReq"/>
+        <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id171" field="network__global_FB_SpectrometerQualification_CalibReq">
+          <prefix xsi:type="cfadeclaration:FieldRef" xmi:id="id172" field="network__global_PVL_Harness_PVL_Uut"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t6" name="t6" displayName="t6" source="network_PVL_Harness_l5" target="network_PVL_Harness_l6">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id173" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id174"/>
+      </condition>
+      <assignments xmi:id="id175">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id176" field="network__global_PVL_Harness_MaintLamp"/>
+        <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id177" field="network__global_FB_SpectrometerQualification_MaintLamp">
+          <prefix xsi:type="cfadeclaration:FieldRef" xmi:id="id178" field="network__global_PVL_Harness_PVL_Uut"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t7" name="t7" displayName="t7" source="network_PVL_Harness_l6" target="network_PVL_Harness_l7">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id179" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id180"/>
+      </condition>
+      <assignments xmi:id="id181">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id182" field="network__global_PVL_Harness_MeasurePermit"/>
+        <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id183" field="network__global_FB_SpectrometerQualification_MeasurePermit">
+          <prefix xsi:type="cfadeclaration:FieldRef" xmi:id="id184" field="network__global_PVL_Harness_PVL_Uut"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t8" name="t8" displayName="t8" source="network_PVL_Harness_l7" target="network_PVL_Harness_l8">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id185" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id186"/>
+      </condition>
+      <assignments xmi:id="id187">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id188" field="network__global_PVL_Harness_PVL_PreS"/>
+        <rightValue xsi:type="cfadeclaration:FieldRef" xmi:id="id189" field="network__global_PVL_Harness_PVL_S"/>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t9" name="t9" displayName="t9" source="network_PVL_Harness_l8" target="network_PVL_Harness_l9">
+      <condition xsi:type="cfadeclaration:FieldRef" xmi:id="id190" field="network__global_PVL_Harness_Maintenance"/>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t10" name="t10" displayName="t10" source="network_PVL_Harness_l9" target="network_PVL_Harness_l10">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id191" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id192"/>
+      </condition>
+      <assignments xmi:id="id193">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id194" field="network__global_PVL_Harness_PVL_S"/>
+        <rightValue xsi:type="expr:IntLiteral" xmi:id="id195" value="2">
+          <type xsi:type="expr:IntType" xmi:id="id196" signed="false" bits="8"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t11" name="t11" displayName="t11" source="network_PVL_Harness_l8" target="network_PVL_Harness_l11">
+      <condition xsi:type="expr:BinaryLogicExpression" xmi:id="id197">
+        <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id198">
+          <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id199" field="network__global_PVL_Harness_Maintenance"/>
+        </leftOperand>
+        <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id200">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id201" field="network__global_PVL_Harness_PVL_PreS"/>
+          <rightOperand xsi:type="expr:IntLiteral" xmi:id="id202" value="2">
+            <type xsi:type="expr:IntType" xmi:id="id203" signed="false" bits="8"/>
+          </rightOperand>
+          <type xsi:type="expr:BoolType" xmi:id="id204"/>
+        </rightOperand>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t12" name="t12" displayName="t12" source="network_PVL_Harness_l11" target="network_PVL_Harness_l12">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id205" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id206"/>
+      </condition>
+      <assignments xmi:id="id207">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id208" field="network__global_PVL_Harness_PVL_S"/>
+        <rightValue xsi:type="expr:IntLiteral" xmi:id="id209" value="0">
+          <type xsi:type="expr:IntType" xmi:id="id210" signed="false" bits="8"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t13" name="t13" displayName="t13" source="network_PVL_Harness_l8" target="network_PVL_Harness_l13">
+      <condition xsi:type="expr:BinaryLogicExpression" xmi:id="id211">
+        <leftOperand xsi:type="expr:BinaryLogicExpression" xmi:id="id212">
+          <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id213">
+            <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id214" field="network__global_PVL_Harness_Maintenance"/>
+          </leftOperand>
+          <rightOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id215">
+            <operand xsi:type="expr:ComparisonExpression" xmi:id="id216">
+              <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id217" field="network__global_PVL_Harness_PVL_PreS"/>
+              <rightOperand xsi:type="expr:IntLiteral" xmi:id="id218" value="2">
+                <type xsi:type="expr:IntType" xmi:id="id219" signed="false" bits="8"/>
+              </rightOperand>
+              <type xsi:type="expr:BoolType" xmi:id="id220"/>
+            </operand>
+          </rightOperand>
+        </leftOperand>
+        <rightOperand xsi:type="expr:BinaryLogicExpression" xmi:id="id221">
+          <leftOperand xsi:type="expr:ComparisonExpression" xmi:id="id222">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id223" field="network__global_PVL_Harness_PVL_PreS"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id224" value="0">
+              <type xsi:type="expr:IntType" xmi:id="id225" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id226"/>
+          </leftOperand>
+          <rightOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id227" field="network__global_PVL_Harness_CalibDone"/>
+        </rightOperand>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t14" name="t14" displayName="t14" source="network_PVL_Harness_l13" target="network_PVL_Harness_l14">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id228" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id229"/>
+      </condition>
+      <assignments xmi:id="id230">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id231" field="network__global_PVL_Harness_PVL_S"/>
+        <rightValue xsi:type="expr:IntLiteral" xmi:id="id232" value="1">
+          <type xsi:type="expr:IntType" xmi:id="id233" signed="false" bits="8"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t15" name="t15" displayName="t15" source="network_PVL_Harness_l8" target="network_PVL_Harness_l15">
+      <condition xsi:type="cfabase:ElseExpression" xmi:id="id234">
+        <type xsi:type="expr:BoolType" xmi:id="id235"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t16" name="t16" displayName="t16" source="network_PVL_Harness_l10" target="network_PVL_Harness_l16">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id236" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id237"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t17" name="t17" displayName="t17" source="network_PVL_Harness_l12" target="network_PVL_Harness_l16">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id238" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id239"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t18" name="t18" displayName="t18" source="network_PVL_Harness_l14" target="network_PVL_Harness_l16">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id240" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id241"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t19" name="t19" displayName="t19" source="network_PVL_Harness_l15" target="network_PVL_Harness_l16">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id242" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id243"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t20" name="t20" displayName="t20" source="network_PVL_Harness_l16" target="network_PVL_Harness_l17">
+      <condition xsi:type="expr:ComparisonExpression" xmi:id="id244" operator="LESS_EQ">
+        <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id245" field="network__global_PVL_Harness_PVL_Scan"/>
+        <rightOperand xsi:type="expr:IntLiteral" xmi:id="id246" value="3">
+          <type xsi:type="expr:IntType" xmi:id="id247" signed="true" bits="32"/>
+        </rightOperand>
+        <type xsi:type="expr:BoolType" xmi:id="id248"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t21" name="t21" displayName="t21" source="network_PVL_Harness_l17" target="network_PVL_Harness_l18">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id249" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id250"/>
+      </condition>
+      <assignments xmi:id="id251">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id252" field="network__global_PVL_Harness_PVL_Scan"/>
+        <rightValue xsi:type="expr:BinaryArithmeticExpression" xmi:id="id253">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id254" field="network__global_PVL_Harness_PVL_Scan"/>
+          <rightOperand xsi:type="expr:IntLiteral" xmi:id="id255" value="1">
+            <type xsi:type="expr:IntType" xmi:id="id256" signed="true" bits="32"/>
+          </rightOperand>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t22" name="t22" displayName="t22" source="network_PVL_Harness_l16" target="network_PVL_Harness_l19">
+      <condition xsi:type="cfabase:ElseExpression" xmi:id="id257">
+        <type xsi:type="expr:BoolType" xmi:id="id258"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t23" name="t23" displayName="t23" source="network_PVL_Harness_l18" target="network_PVL_Harness_l20">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id259" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id260"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t24" name="t24" displayName="t24" source="network_PVL_Harness_l19" target="network_PVL_Harness_l20">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id261" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id262"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t25" name="t25" displayName="t25" source="network_PVL_Harness_l20" target="network_PVL_Harness_l21">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id263" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id264"/>
+      </condition>
+      <assignments xmi:id="id265">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id266" field="network__global_PVL_Harness_PVL_Active"/>
+        <rightValue xsi:type="expr:ComparisonExpression" xmi:id="id267" operator="LESS_EQ">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id268" field="network__global_PVL_Harness_PVL_Scan"/>
+          <rightOperand xsi:type="expr:IntLiteral" xmi:id="id269" value="3">
+            <type xsi:type="expr:IntType" xmi:id="id270" signed="true" bits="32"/>
+          </rightOperand>
+          <type xsi:type="expr:BoolType" xmi:id="id271"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t26" name="t26" displayName="t26" source="network_PVL_Harness_l21" target="network_PVL_Harness_l22">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id272" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id273"/>
+      </condition>
+      <assignments xmi:id="id274">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id275" field="network__global_PVL_Harness_PVL_Done"/>
+        <rightValue xsi:type="expr:ComparisonExpression" xmi:id="id276" operator="GREATER_EQ">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id277" field="network__global_PVL_Harness_PVL_Scan"/>
+          <rightOperand xsi:type="expr:IntLiteral" xmi:id="id278" value="3">
+            <type xsi:type="expr:IntType" xmi:id="id279" signed="true" bits="32"/>
+          </rightOperand>
+          <type xsi:type="expr:BoolType" xmi:id="id280"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t27" name="t27" displayName="t27" source="network_PVL_Harness_l22" target="network_PVL_Harness_l23">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id281" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id282"/>
+      </condition>
+      <assignments xmi:id="id283">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id284" field="network__global_PVL_Harness_PVL_A0"/>
+        <rightValue xsi:type="expr:ComparisonExpression" xmi:id="id285">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id286" field="network__global_PVL_Harness_State"/>
+          <rightOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id287" field="network__global_PVL_Harness_PVL_S"/>
+          <type xsi:type="expr:BoolType" xmi:id="id288"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t28" name="t28" displayName="t28" source="network_PVL_Harness_l23" target="network_PVL_Harness_l24">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id289" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id290"/>
+      </condition>
+      <assignments xmi:id="id291">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id292" field="network__global_PVL_Harness_PVL_A1"/>
+        <rightValue xsi:type="expr:BinaryLogicExpression" xmi:id="id293" operator="OR">
+          <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id294">
+            <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id295" field="network__global_PVL_Harness_Maintenance"/>
+          </leftOperand>
+          <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id296">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id297" field="network__global_PVL_Harness_State"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id298" value="2">
+              <type xsi:type="expr:IntType" xmi:id="id299" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id300"/>
+          </rightOperand>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t29" name="t29" displayName="t29" source="network_PVL_Harness_l24" target="network_PVL_Harness_l25">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id301" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id302"/>
+      </condition>
+      <assignments xmi:id="id303">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id304" field="network__global_PVL_Harness_PVL_A2"/>
+        <rightValue xsi:type="expr:BinaryLogicExpression" xmi:id="id305" operator="OR">
+          <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id306">
+            <operand xsi:type="expr:BinaryLogicExpression" xmi:id="id307">
+              <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id308">
+                <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id309" field="network__global_PVL_Harness_Maintenance"/>
+              </leftOperand>
+              <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id310">
+                <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id311" field="network__global_PVL_Harness_PVL_PreS"/>
+                <rightOperand xsi:type="expr:IntLiteral" xmi:id="id312" value="2">
+                  <type xsi:type="expr:IntType" xmi:id="id313" signed="false" bits="8"/>
+                </rightOperand>
+                <type xsi:type="expr:BoolType" xmi:id="id314"/>
+              </rightOperand>
+            </operand>
+          </leftOperand>
+          <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id315">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id316" field="network__global_PVL_Harness_State"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id317" value="0">
+              <type xsi:type="expr:IntType" xmi:id="id318" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id319"/>
+          </rightOperand>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t30" name="t30" displayName="t30" source="network_PVL_Harness_l25" target="network_PVL_Harness_l26">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id320" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id321"/>
+      </condition>
+      <assignments xmi:id="id322">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id323" field="network__global_PVL_Harness_PVL_A3"/>
+        <rightValue xsi:type="expr:BinaryLogicExpression" xmi:id="id324" operator="OR">
+          <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id325">
+            <operand xsi:type="expr:BinaryLogicExpression" xmi:id="id326">
+              <leftOperand xsi:type="expr:BinaryLogicExpression" xmi:id="id327">
+                <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id328">
+                  <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id329" field="network__global_PVL_Harness_Maintenance"/>
+                </leftOperand>
+                <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id330">
+                  <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id331" field="network__global_PVL_Harness_PVL_PreS"/>
+                  <rightOperand xsi:type="expr:IntLiteral" xmi:id="id332" value="0">
+                    <type xsi:type="expr:IntType" xmi:id="id333" signed="false" bits="8"/>
+                  </rightOperand>
+                  <type xsi:type="expr:BoolType" xmi:id="id334"/>
+                </rightOperand>
+              </leftOperand>
+              <rightOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id335" field="network__global_PVL_Harness_CalibDone"/>
+            </operand>
+          </leftOperand>
+          <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id336">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id337" field="network__global_PVL_Harness_State"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id338" value="1">
+              <type xsi:type="expr:IntType" xmi:id="id339" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id340"/>
+          </rightOperand>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t31" name="t31" displayName="t31" source="network_PVL_Harness_l26" target="network_PVL_Harness_l27">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id341" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id342"/>
+      </condition>
+      <assignments xmi:id="id343">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id344" field="network__global_PVL_Harness_PVL_A4"/>
+        <rightValue xsi:type="expr:BinaryLogicExpression" xmi:id="id345" operator="OR">
+          <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id346">
+            <operand xsi:type="expr:BinaryLogicExpression" xmi:id="id347">
+              <leftOperand xsi:type="expr:BinaryLogicExpression" xmi:id="id348">
+                <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id349">
+                  <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id350" field="network__global_PVL_Harness_Maintenance"/>
+                </leftOperand>
+                <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id351">
+                  <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id352" field="network__global_PVL_Harness_PVL_PreS"/>
+                  <rightOperand xsi:type="expr:IntLiteral" xmi:id="id353" value="0">
+                    <type xsi:type="expr:IntType" xmi:id="id354" signed="false" bits="8"/>
+                  </rightOperand>
+                  <type xsi:type="expr:BoolType" xmi:id="id355"/>
+                </rightOperand>
+              </leftOperand>
+              <rightOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id356">
+                <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id357" field="network__global_PVL_Harness_CalibDone"/>
+              </rightOperand>
+            </operand>
+          </leftOperand>
+          <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id358">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id359" field="network__global_PVL_Harness_State"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id360" value="0">
+              <type xsi:type="expr:IntType" xmi:id="id361" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id362"/>
+          </rightOperand>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t32" name="t32" displayName="t32" source="network_PVL_Harness_l27" target="network_PVL_Harness_l28">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id363" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id364"/>
+      </condition>
+      <assignments xmi:id="id365">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id366" field="network__global_PVL_Harness_PVL_A5"/>
+        <rightValue xsi:type="expr:BinaryLogicExpression" xmi:id="id367" operator="OR">
+          <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id368">
+            <operand xsi:type="expr:BinaryLogicExpression" xmi:id="id369">
+              <leftOperand xsi:type="expr:UnaryLogicExpression" xmi:id="id370">
+                <operand xsi:type="cfadeclaration:FieldRef" xmi:id="id371" field="network__global_PVL_Harness_Maintenance"/>
+              </leftOperand>
+              <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id372">
+                <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id373" field="network__global_PVL_Harness_PVL_PreS"/>
+                <rightOperand xsi:type="expr:IntLiteral" xmi:id="id374" value="1">
+                  <type xsi:type="expr:IntType" xmi:id="id375" signed="false" bits="8"/>
+                </rightOperand>
+                <type xsi:type="expr:BoolType" xmi:id="id376"/>
+              </rightOperand>
+            </operand>
+          </leftOperand>
+          <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id377">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id378" field="network__global_PVL_Harness_State"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id379" value="1">
+              <type xsi:type="expr:IntType" xmi:id="id380" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id381"/>
+          </rightOperand>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t33" name="t33" displayName="t33" source="network_PVL_Harness_l28" target="network_PVL_Harness_l29">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id382" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id383"/>
+      </condition>
+      <assignments xmi:id="id384">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id385" field="network__global_PVL_Harness_PVL_A6"/>
+        <rightValue xsi:type="expr:ComparisonExpression" xmi:id="id386">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id387" field="network__global_PVL_Harness_CalibReq"/>
+          <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id388">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id389" field="network__global_PVL_Harness_State"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id390" value="0">
+              <type xsi:type="expr:IntType" xmi:id="id391" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id392"/>
+          </rightOperand>
+          <type xsi:type="expr:BoolType" xmi:id="id393"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t34" name="t34" displayName="t34" source="network_PVL_Harness_l29" target="network_PVL_Harness_l30">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id394" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id395"/>
+      </condition>
+      <assignments xmi:id="id396">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id397" field="network__global_PVL_Harness_PVL_A7"/>
+        <rightValue xsi:type="expr:ComparisonExpression" xmi:id="id398">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id399" field="network__global_PVL_Harness_MaintLamp"/>
+          <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id400">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id401" field="network__global_PVL_Harness_State"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id402" value="2">
+              <type xsi:type="expr:IntType" xmi:id="id403" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id404"/>
+          </rightOperand>
+          <type xsi:type="expr:BoolType" xmi:id="id405"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t35" name="t35" displayName="t35" source="network_PVL_Harness_l30" target="network_PVL_Harness_l31">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id406" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id407"/>
+      </condition>
+      <assignments xmi:id="id408">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id409" field="network__global_PVL_Harness_PVL_A8"/>
+        <rightValue xsi:type="expr:ComparisonExpression" xmi:id="id410">
+          <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id411" field="network__global_PVL_Harness_MeasurePermit"/>
+          <rightOperand xsi:type="expr:BinaryLogicExpression" xmi:id="id412">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id413" field="network__global_PVL_Harness_MeasureReq"/>
+            <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id414">
+              <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id415" field="network__global_PVL_Harness_State"/>
+              <rightOperand xsi:type="expr:IntLiteral" xmi:id="id416" value="1">
+                <type xsi:type="expr:IntType" xmi:id="id417" signed="false" bits="8"/>
+              </rightOperand>
+              <type xsi:type="expr:BoolType" xmi:id="id418"/>
+            </rightOperand>
+          </rightOperand>
+          <type xsi:type="expr:BoolType" xmi:id="id419"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t36" name="t36" displayName="t36" source="network_PVL_Harness_l31" target="network_PVL_Harness_l32">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id420" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id421"/>
+      </condition>
+      <assignments xmi:id="id422">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id423" field="network__global_PVL_Harness_PVL_A9"/>
+        <rightValue xsi:type="expr:BinaryLogicExpression" xmi:id="id424" operator="OR">
+          <leftOperand xsi:type="expr:BinaryLogicExpression" xmi:id="id425" operator="OR">
+            <leftOperand xsi:type="expr:ComparisonExpression" xmi:id="id426">
+              <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id427" field="network__global_PVL_Harness_State"/>
+              <rightOperand xsi:type="expr:IntLiteral" xmi:id="id428" value="0">
+                <type xsi:type="expr:IntType" xmi:id="id429" signed="false" bits="8"/>
+              </rightOperand>
+              <type xsi:type="expr:BoolType" xmi:id="id430"/>
+            </leftOperand>
+            <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id431">
+              <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id432" field="network__global_PVL_Harness_State"/>
+              <rightOperand xsi:type="expr:IntLiteral" xmi:id="id433" value="1">
+                <type xsi:type="expr:IntType" xmi:id="id434" signed="false" bits="8"/>
+              </rightOperand>
+              <type xsi:type="expr:BoolType" xmi:id="id435"/>
+            </rightOperand>
+          </leftOperand>
+          <rightOperand xsi:type="expr:ComparisonExpression" xmi:id="id436">
+            <leftOperand xsi:type="cfadeclaration:FieldRef" xmi:id="id437" field="network__global_PVL_Harness_State"/>
+            <rightOperand xsi:type="expr:IntLiteral" xmi:id="id438" value="2">
+              <type xsi:type="expr:IntType" xmi:id="id439" signed="false" bits="8"/>
+            </rightOperand>
+            <type xsi:type="expr:BoolType" xmi:id="id440"/>
+          </rightOperand>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t37" name="t37" displayName="t37" source="network_PVL_Harness_init" target="network_PVL_Harness_l33">
+      <condition xsi:type="cfabase:ElseExpression" xmi:id="id441">
+        <type xsi:type="expr:BoolType" xmi:id="id442"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t38" name="t38" displayName="t38" source="network_PVL_Harness_l33" target="network_PVL_Harness_l34">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id443" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id444"/>
+      </condition>
+      <assignments xmi:id="id445">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id446" field="network__global_PVL_Harness_PVL_Active"/>
+        <rightValue xsi:type="expr:BoolLiteral" xmi:id="id447" value="false">
+          <type xsi:type="expr:BoolType" xmi:id="id448"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t39" name="t39" displayName="t39" source="network_PVL_Harness_l34" target="network_PVL_Harness_l35">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id449" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id450"/>
+      </condition>
+      <assignments xmi:id="id451">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id452" field="network__global_PVL_Harness_PVL_Done"/>
+        <rightValue xsi:type="expr:BoolLiteral" xmi:id="id453" value="true">
+          <type xsi:type="expr:BoolType" xmi:id="id454"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t40" name="t40" displayName="t40" source="network_PVL_Harness_l32" target="network_PVL_Harness_l36">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id455" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id456"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_PVL_Harness_t41" name="t41" displayName="t41" source="network_PVL_Harness_l35" target="network_PVL_Harness_l36">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id457" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id458"/>
+      </condition>
+    </transitions>
+    <annotations xsi:type="cfabase:BlockAutomatonAnnotation" xmi:id="id459" blockType="FunctionBlock" name="PVL_Harness" stateful="true"/>
+    <localDataStructure xmi:id="id460" definition="network__global_PVL_Harness"/>
+  </automata>
+  <automata xmi:id="network_VerificationLoop" name="VerificationLoop" displayName="VerificationLoop" initialLocation="network_VerificationLoop_init" endLocation="network_VerificationLoop_end">
+    <locations xmi:id="network_VerificationLoop_init" name="init" displayName="init" frozen="true" outgoing="network_VerificationLoop_t_params"/>
+    <locations xmi:id="network_VerificationLoop_end" name="end" displayName="end" frozen="true" incoming="network_VerificationLoop_end1"/>
+    <locations xmi:id="network_VerificationLoop_loop_start" name="loop_start" displayName="loop_start" incoming="network_VerificationLoop_t_params network_VerificationLoop_restart" outgoing="network_VerificationLoop_set_BoC network_VerificationLoop_end1">
+      <annotations xsi:type="cfabase:WhileLoopLocationAnnotation" xmi:id="id461" loopBodyEntry="network_VerificationLoop_set_BoC" loopNextCycle="network_VerificationLoop_restart" loopExit="network_VerificationLoop_end1"/>
+    </locations>
+    <locations xmi:id="network_VerificationLoop_prepare_BoC" name="prepare_BoC" displayName="prepare_BoC" frozen="true" incoming="network_VerificationLoop_set_BoC" outgoing="network_VerificationLoop_t_inputs"/>
+    <locations xmi:id="network_VerificationLoop_l_main_call" name="l_main_call" displayName="l_main_call" incoming="network_VerificationLoop_t_inputs" outgoing="network_VerificationLoop_main_call"/>
+    <locations xmi:id="network_VerificationLoop_callEnd" name="callEnd" displayName="callEnd" incoming="network_VerificationLoop_main_call" outgoing="network_VerificationLoop_set_EoC"/>
+    <locations xmi:id="network_VerificationLoop_prepare_EoC" name="prepare_EoC" displayName="prepare_EoC" frozen="true" incoming="network_VerificationLoop_set_EoC" outgoing="network_VerificationLoop_restart"/>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_VerificationLoop_t_params" name="t_params" displayName="t_params" source="network_VerificationLoop_init" target="network_VerificationLoop_loop_start">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id462" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id463"/>
+      </condition>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_VerificationLoop_set_BoC" name="set_BoC" displayName="set_BoC" frozen="true" source="network_VerificationLoop_loop_start" target="network_VerificationLoop_prepare_BoC">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id464" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id465"/>
+      </condition>
+      <assignments xmi:id="id466">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id467" field="network__global_PVL_Harness_CalibDone">
+          <prefix xsi:type="cfadeclaration:FieldRef" xmi:id="id468" field="network__global_instance"/>
+        </leftValue>
+        <rightValue xsi:type="expr:Nondeterministic" xmi:id="id469">
+          <type xsi:type="expr:BoolType" xmi:id="id470"/>
+        </rightValue>
+      </assignments>
+      <assignments xmi:id="id471">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id472" field="network__global_PVL_Harness_Maintenance">
+          <prefix xsi:type="cfadeclaration:FieldRef" xmi:id="id473" field="network__global_instance"/>
+        </leftValue>
+        <rightValue xsi:type="expr:Nondeterministic" xmi:id="id474">
+          <type xsi:type="expr:BoolType" xmi:id="id475"/>
+        </rightValue>
+      </assignments>
+      <assignments xmi:id="id476">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id477" field="network__global_PVL_Harness_MeasureReq">
+          <prefix xsi:type="cfadeclaration:FieldRef" xmi:id="id478" field="network__global_instance"/>
+        </leftValue>
+        <rightValue xsi:type="expr:Nondeterministic" xmi:id="id479">
+          <type xsi:type="expr:BoolType" xmi:id="id480"/>
+        </rightValue>
+      </assignments>
+      <assignments xmi:id="id481" frozen="true">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id482" frozen="true" field="network__global_BoC"/>
+        <rightValue xsi:type="expr:BoolLiteral" xmi:id="id483" value="true">
+          <type xsi:type="expr:BoolType" xmi:id="id484"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_VerificationLoop_t_inputs" name="t_inputs" displayName="t_inputs" frozen="true" source="network_VerificationLoop_prepare_BoC" target="network_VerificationLoop_l_main_call">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id485" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id486"/>
+      </condition>
+      <assignments xmi:id="id487" frozen="true">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id488" frozen="true" field="network__global_BoC"/>
+        <rightValue xsi:type="expr:BoolLiteral" xmi:id="id489" value="false">
+          <type xsi:type="expr:BoolType" xmi:id="id490"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:CallTransition" xmi:id="network_VerificationLoop_main_call" name="main_call" displayName="main_call" source="network_VerificationLoop_l_main_call" target="network_VerificationLoop_callEnd">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id491" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id492"/>
+      </condition>
+      <calls xmi:id="id493" calledAutomaton="network_PVL_Harness">
+        <calleeContext xsi:type="cfadeclaration:FieldRef" xmi:id="id494" field="network__global_instance"/>
+      </calls>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_VerificationLoop_set_EoC" name="set_EoC" displayName="set_EoC" frozen="true" source="network_VerificationLoop_callEnd" target="network_VerificationLoop_prepare_EoC">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id495" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id496"/>
+      </condition>
+      <assignments xmi:id="id497" frozen="true">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id498" frozen="true" field="network__global_EoC"/>
+        <rightValue xsi:type="expr:BoolLiteral" xmi:id="id499" value="true">
+          <type xsi:type="expr:BoolType" xmi:id="id500"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_VerificationLoop_restart" name="restart" displayName="restart" frozen="true" source="network_VerificationLoop_prepare_EoC" target="network_VerificationLoop_loop_start">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id501" value="true">
+        <type xsi:type="expr:BoolType" xmi:id="id502"/>
+      </condition>
+      <assignments xmi:id="id503" frozen="true">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id504" frozen="true" field="network__global_EoC"/>
+        <rightValue xsi:type="expr:BoolLiteral" xmi:id="id505" value="false">
+          <type xsi:type="expr:BoolType" xmi:id="id506"/>
+        </rightValue>
+      </assignments>
+    </transitions>
+    <transitions xsi:type="cfadeclaration:AssignmentTransition" xmi:id="network_VerificationLoop_end1" name="end1" displayName="end" source="network_VerificationLoop_loop_start" target="network_VerificationLoop_end">
+      <condition xsi:type="expr:BoolLiteral" xmi:id="id507" value="false">
+        <type xsi:type="expr:BoolType" xmi:id="id508"/>
+      </condition>
+    </transitions>
+    <localDataStructure xmi:id="id509" definition="network__global_VerificationLoopDS"/>
+  </automata>
+  <rootDataStructure xmi:id="network__global" name="_global" displayName="_global">
+    <fields xmi:id="network__global_instance" name="instance" displayName="instance">
+      <type xsi:type="cfadeclaration:DataStructureRef" xmi:id="id510" definition="network__global_PVL_Harness"/>
+    </fields>
+    <fields xmi:id="network__global_verificationLoop" name="verificationLoop" displayName="verificationLoop">
+      <type xsi:type="cfadeclaration:DataStructureRef" xmi:id="id511" definition="network__global_VerificationLoopDS"/>
+    </fields>
+    <fields xmi:id="network__global_EoC" name="EoC" displayName="EoC" frozen="true">
+      <type xsi:type="expr:BoolType" xmi:id="id512"/>
+      <initialAssignments xmi:id="id513">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id514" field="network__global_EoC"/>
+        <rightValue xsi:type="expr:BoolLiteral" xmi:id="id515" value="false">
+          <type xsi:type="expr:BoolType" xmi:id="id516"/>
+        </rightValue>
+      </initialAssignments>
+      <annotations xsi:type="cfadeclaration:InternalGeneratedFieldAnnotation" xmi:id="id517"/>
+    </fields>
+    <fields xmi:id="network__global_BoC" name="BoC" displayName="BoC" frozen="true">
+      <type xsi:type="expr:BoolType" xmi:id="id518"/>
+      <initialAssignments xmi:id="id519">
+        <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id520" field="network__global_BoC"/>
+        <rightValue xsi:type="expr:BoolLiteral" xmi:id="id521" value="false">
+          <type xsi:type="expr:BoolType" xmi:id="id522"/>
+        </rightValue>
+      </initialAssignments>
+      <annotations xsi:type="cfadeclaration:InternalGeneratedFieldAnnotation" xmi:id="id523"/>
+    </fields>
+    <complexTypes xmi:id="network__global_FB_SpectrometerQualification" name="FB_SpectrometerQualification" displayName="FB_SpectrometerQualification">
+      <fields xmi:id="network__global_FB_SpectrometerQualification_Maintenance" name="Maintenance" displayName="Maintenance">
+        <type xsi:type="expr:BoolType" xmi:id="id524"/>
+        <initialAssignments xmi:id="id525">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id526" field="network__global_FB_SpectrometerQualification_Maintenance"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id527" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id528"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id529"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id530" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_FB_SpectrometerQualification_CalibDone" name="CalibDone" displayName="CalibDone">
+        <type xsi:type="expr:BoolType" xmi:id="id531"/>
+        <initialAssignments xmi:id="id532">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id533" field="network__global_FB_SpectrometerQualification_CalibDone"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id534" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id535"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id536"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id537" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_FB_SpectrometerQualification_MeasureReq" name="MeasureReq" displayName="MeasureReq">
+        <type xsi:type="expr:BoolType" xmi:id="id538"/>
+        <initialAssignments xmi:id="id539">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id540" field="network__global_FB_SpectrometerQualification_MeasureReq"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id541" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id542"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id543"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id544" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_FB_SpectrometerQualification_State" name="State" displayName="State">
+        <type xsi:type="expr:IntType" xmi:id="id545" signed="false" bits="8"/>
+        <initialAssignments xmi:id="id546">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id547" field="network__global_FB_SpectrometerQualification_State"/>
+          <rightValue xsi:type="expr:IntLiteral" xmi:id="id548" value="0">
+            <type xsi:type="expr:IntType" xmi:id="id549" signed="false" bits="8"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id550" direction="OUTPUT"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id551" plcDataType="USINT"/>
+      </fields>
+      <fields xmi:id="network__global_FB_SpectrometerQualification_CalibReq" name="CalibReq" displayName="CalibReq">
+        <type xsi:type="expr:BoolType" xmi:id="id552"/>
+        <initialAssignments xmi:id="id553">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id554" field="network__global_FB_SpectrometerQualification_CalibReq"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id555" value="true">
+            <type xsi:type="expr:BoolType" xmi:id="id556"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id557" direction="OUTPUT"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id558" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_FB_SpectrometerQualification_MaintLamp" name="MaintLamp" displayName="MaintLamp">
+        <type xsi:type="expr:BoolType" xmi:id="id559"/>
+        <initialAssignments xmi:id="id560">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id561" field="network__global_FB_SpectrometerQualification_MaintLamp"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id562" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id563"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id564" direction="OUTPUT"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id565" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_FB_SpectrometerQualification_MeasurePermit" name="MeasurePermit" displayName="MeasurePermit">
+        <type xsi:type="expr:BoolType" xmi:id="id566"/>
+        <initialAssignments xmi:id="id567">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id568" field="network__global_FB_SpectrometerQualification_MeasurePermit"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id569" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id570"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id571" direction="OUTPUT"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id572" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_FB_SpectrometerQualification_preState" name="preState" displayName="preState">
+        <type xsi:type="expr:IntType" xmi:id="id573" signed="false" bits="8"/>
+        <initialAssignments xmi:id="id574">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id575" field="network__global_FB_SpectrometerQualification_preState"/>
+          <rightValue xsi:type="expr:IntLiteral" xmi:id="id576" value="0">
+            <type xsi:type="expr:IntType" xmi:id="id577" signed="false" bits="8"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id578" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id579" plcDataType="USINT"/>
+      </fields>
+    </complexTypes>
+    <complexTypes xmi:id="network__global_PVL_Harness" name="PVL_Harness" displayName="PVL_Harness">
+      <fields xmi:id="network__global_PVL_Harness_Maintenance" name="Maintenance" displayName="Maintenance">
+        <type xsi:type="expr:BoolType" xmi:id="id580"/>
+        <initialAssignments xmi:id="id581">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id582" field="network__global_PVL_Harness_Maintenance"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id583" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id584"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id585"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id586" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_CalibDone" name="CalibDone" displayName="CalibDone">
+        <type xsi:type="expr:BoolType" xmi:id="id587"/>
+        <initialAssignments xmi:id="id588">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id589" field="network__global_PVL_Harness_CalibDone"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id590" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id591"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id592"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id593" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_MeasureReq" name="MeasureReq" displayName="MeasureReq">
+        <type xsi:type="expr:BoolType" xmi:id="id594"/>
+        <initialAssignments xmi:id="id595">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id596" field="network__global_PVL_Harness_MeasureReq"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id597" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id598"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id599"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id600" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_State" name="State" displayName="State">
+        <type xsi:type="expr:IntType" xmi:id="id601" signed="false" bits="8"/>
+        <initialAssignments xmi:id="id602">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id603" field="network__global_PVL_Harness_State"/>
+          <rightValue xsi:type="expr:IntLiteral" xmi:id="id604" value="0">
+            <type xsi:type="expr:IntType" xmi:id="id605" signed="false" bits="8"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id606" direction="OUTPUT"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id607" plcDataType="USINT"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_CalibReq" name="CalibReq" displayName="CalibReq">
+        <type xsi:type="expr:BoolType" xmi:id="id608"/>
+        <initialAssignments xmi:id="id609">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id610" field="network__global_PVL_Harness_CalibReq"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id611" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id612"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id613" direction="OUTPUT"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id614" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_MaintLamp" name="MaintLamp" displayName="MaintLamp">
+        <type xsi:type="expr:BoolType" xmi:id="id615"/>
+        <initialAssignments xmi:id="id616">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id617" field="network__global_PVL_Harness_MaintLamp"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id618" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id619"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id620" direction="OUTPUT"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id621" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_MeasurePermit" name="MeasurePermit" displayName="MeasurePermit">
+        <type xsi:type="expr:BoolType" xmi:id="id622"/>
+        <initialAssignments xmi:id="id623">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id624" field="network__global_PVL_Harness_MeasurePermit"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id625" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id626"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id627" direction="OUTPUT"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id628" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_Uut" name="PVL_Uut" displayName="PVL_Uut">
+        <type xsi:type="cfadeclaration:DataStructureRef" xmi:id="id629" definition="network__global_FB_SpectrometerQualification"/>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id630" direction="LOCAL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_S" name="PVL_S" displayName="PVL_S">
+        <type xsi:type="expr:IntType" xmi:id="id631" signed="false" bits="8"/>
+        <initialAssignments xmi:id="id632">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id633" field="network__global_PVL_Harness_PVL_S"/>
+          <rightValue xsi:type="expr:IntLiteral" xmi:id="id634" value="0">
+            <type xsi:type="expr:IntType" xmi:id="id635" signed="false" bits="8"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id636" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id637" plcDataType="USINT"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_PreS" name="PVL_PreS" displayName="PVL_PreS">
+        <type xsi:type="expr:IntType" xmi:id="id638" signed="false" bits="8"/>
+        <initialAssignments xmi:id="id639">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id640" field="network__global_PVL_Harness_PVL_PreS"/>
+          <rightValue xsi:type="expr:IntLiteral" xmi:id="id641" value="0">
+            <type xsi:type="expr:IntType" xmi:id="id642" signed="false" bits="8"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id643" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id644" plcDataType="USINT"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_Scan" name="PVL_Scan" displayName="PVL_Scan">
+        <type xsi:type="expr:IntType" xmi:id="id645" signed="true" bits="32"/>
+        <initialAssignments xmi:id="id646">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id647" field="network__global_PVL_Harness_PVL_Scan"/>
+          <rightValue xsi:type="expr:IntLiteral" xmi:id="id648" value="0">
+            <type xsi:type="expr:IntType" xmi:id="id649" signed="true" bits="32"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id650" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id651" plcDataType="DINT"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_Active" name="PVL_Active" displayName="PVL_Active">
+        <type xsi:type="expr:BoolType" xmi:id="id652"/>
+        <initialAssignments xmi:id="id653">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id654" field="network__global_PVL_Harness_PVL_Active"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id655" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id656"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id657" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id658" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_Done" name="PVL_Done" displayName="PVL_Done">
+        <type xsi:type="expr:BoolType" xmi:id="id659"/>
+        <initialAssignments xmi:id="id660">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id661" field="network__global_PVL_Harness_PVL_Done"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id662" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id663"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id664" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id665" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_DtMs" name="PVL_DtMs" displayName="PVL_DtMs">
+        <type xsi:type="expr:IntType" xmi:id="id666" signed="true" bits="32"/>
+        <initialAssignments xmi:id="id667">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id668" field="network__global_PVL_Harness_PVL_DtMs"/>
+          <rightValue xsi:type="expr:IntLiteral" xmi:id="id669" value="10">
+            <type xsi:type="expr:IntType" xmi:id="id670" signed="true" bits="32"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id671" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id672" plcDataType="DINT"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_NowMs" name="PVL_NowMs" displayName="PVL_NowMs">
+        <type xsi:type="expr:IntType" xmi:id="id673" signed="true" bits="32"/>
+        <initialAssignments xmi:id="id674">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id675" field="network__global_PVL_Harness_PVL_NowMs"/>
+          <rightValue xsi:type="expr:IntLiteral" xmi:id="id676" value="-10">
+            <type xsi:type="expr:IntType" xmi:id="id677" signed="true" bits="32"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id678" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id679" plcDataType="DINT"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A0" name="PVL_A0" displayName="PVL_A0">
+        <type xsi:type="expr:BoolType" xmi:id="id680"/>
+        <initialAssignments xmi:id="id681">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id682" field="network__global_PVL_Harness_PVL_A0"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id683" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id684"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id685" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id686" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A1" name="PVL_A1" displayName="PVL_A1">
+        <type xsi:type="expr:BoolType" xmi:id="id687"/>
+        <initialAssignments xmi:id="id688">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id689" field="network__global_PVL_Harness_PVL_A1"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id690" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id691"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id692" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id693" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A2" name="PVL_A2" displayName="PVL_A2">
+        <type xsi:type="expr:BoolType" xmi:id="id694"/>
+        <initialAssignments xmi:id="id695">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id696" field="network__global_PVL_Harness_PVL_A2"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id697" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id698"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id699" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id700" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A3" name="PVL_A3" displayName="PVL_A3">
+        <type xsi:type="expr:BoolType" xmi:id="id701"/>
+        <initialAssignments xmi:id="id702">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id703" field="network__global_PVL_Harness_PVL_A3"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id704" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id705"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id706" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id707" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A4" name="PVL_A4" displayName="PVL_A4">
+        <type xsi:type="expr:BoolType" xmi:id="id708"/>
+        <initialAssignments xmi:id="id709">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id710" field="network__global_PVL_Harness_PVL_A4"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id711" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id712"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id713" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id714" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A5" name="PVL_A5" displayName="PVL_A5">
+        <type xsi:type="expr:BoolType" xmi:id="id715"/>
+        <initialAssignments xmi:id="id716">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id717" field="network__global_PVL_Harness_PVL_A5"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id718" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id719"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id720" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id721" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A6" name="PVL_A6" displayName="PVL_A6">
+        <type xsi:type="expr:BoolType" xmi:id="id722"/>
+        <initialAssignments xmi:id="id723">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id724" field="network__global_PVL_Harness_PVL_A6"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id725" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id726"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id727" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id728" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A7" name="PVL_A7" displayName="PVL_A7">
+        <type xsi:type="expr:BoolType" xmi:id="id729"/>
+        <initialAssignments xmi:id="id730">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id731" field="network__global_PVL_Harness_PVL_A7"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id732" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id733"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id734" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id735" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A8" name="PVL_A8" displayName="PVL_A8">
+        <type xsi:type="expr:BoolType" xmi:id="id736"/>
+        <initialAssignments xmi:id="id737">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id738" field="network__global_PVL_Harness_PVL_A8"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id739" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id740"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id741" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id742" plcDataType="BOOL"/>
+      </fields>
+      <fields xmi:id="network__global_PVL_Harness_PVL_A9" name="PVL_A9" displayName="PVL_A9">
+        <type xsi:type="expr:BoolType" xmi:id="id743"/>
+        <initialAssignments xmi:id="id744">
+          <leftValue xsi:type="cfadeclaration:FieldRef" xmi:id="id745" field="network__global_PVL_Harness_PVL_A9"/>
+          <rightValue xsi:type="expr:BoolLiteral" xmi:id="id746" value="false">
+            <type xsi:type="expr:BoolType" xmi:id="id747"/>
+          </rightValue>
+        </initialAssignments>
+        <annotations xsi:type="cfadeclaration:DirectionFieldAnnotation" xmi:id="id748" direction="LOCAL"/>
+        <annotations xsi:type="cfadeclaration:OriginalDataTypeFieldAnnotation" xmi:id="id749" plcDataType="BOOL"/>
+      </fields>
+    </complexTypes>
+    <complexTypes xmi:id="network__global_VerificationLoopDS" name="VerificationLoopDS" displayName="VerificationLoopDS"/>
+  </rootDataStructure>
+  <mainContext xsi:type="cfadeclaration:FieldRef" xmi:id="id750" field="network__global_verificationLoop"/>
+</cfadeclaration:CfaNetworkDeclaration>

@@ -15,3 +15,7 @@ reports/tia_final_20261104/** -text whitespace=-trailing-space,cr-at-eol
 
 # Review evidence hashes refer to exact source bytes, including line endings.
 docs/validation/**/*.st -text
+outputs/published/** -text whitespace=-trailing-space,cr-at-eol
+# PLCverif emits the heading "unnamed\n=======" in these evidence logs.
+outputs/published/**/plcverif.log conflict-marker-size=32
+outputs/published/**/*.report.txt conflict-marker-size=32

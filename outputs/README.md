@@ -2,8 +2,14 @@
 
 每次运行单独保存，目录名是北京时间，例如 `2026-11-01_21-30-00`，同秒运行会自动加序号，不覆盖已有记录。
 
+**团队已完成的 TIA 128 项实验见 [tia_32x4_20261108_results/](tia_32x4_20261108_results/README.md)。** 每组含 32 题，模型为 deepseek-v4.1-flash-1017 与 qwen3.8-flash，作者框架为 self 与 Codex。部分 JSON 采用 gzip，逐文件摘要见该目录 manifest.json。
+
+[published/](published/README.md) 保存本机单模型重复计划和形式化工具对照。完整运行路径及协议见 [单模型重复入口](../docs/TIA_MATRIX_32X4.md)。
+
 - `single/时间戳_题号/`：一次单题运行。
 - `campaigns/时间戳/`：一次完整的四组对照实验。
+- `tia_matrix/时间戳_deepseek_flash/`：TIA 单模型、两框架、两次独立重复的原始实验输出。
+- `published/实验目录名/`：可提交到 GitHub 的证据快照及哈希清单。
 
 ## 批量实验先看哪里
 

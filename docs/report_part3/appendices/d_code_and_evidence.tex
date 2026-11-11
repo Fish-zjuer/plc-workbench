@@ -1,0 +1,27 @@
+\section{Key Code and Verification Evidence}
+\label{app:evidence}
+
+The implementation and evidence below are available in the
+\href{https://github.com/Fish-zjuer/plc-workbench/tree/0eaa0e571043ef8c127945613d483437a37b7b4d}{PLC Workbench source snapshot}. Paths are relative to the repository.
+
+\begin{itemize}
+  \item \nolinkurl{plc_agent/campaign.py} sets the shared budget and defines both author entry points.
+  \item \nolinkurl{plc_agent/codesys_dataset.py} evaluates ST.
+  \item \nolinkurl{plc_agent/tia_workflow.py} evaluates SCL.
+  \item \nolinkurl{integrations/tia_bridge/} contains the Openness bridge and runtime host.
+  \item \nolinkurl{plc_agent/plcverif_backend.py} runs the bounded checks.
+  \item \nolinkurl{plc_agent/run_output.py} records stage statuses and denominators.
+  \item \nolinkurl{plc_agent/adversarial_review.py} implements optional review.
+\end{itemize}
+
+For a compact example, the
+\href{https://github.com/Fish-zjuer/plc-workbench/tree/0eaa0e571043ef8c127945613d483437a37b7b4d/outputs/tia_32x4_20261108_results/tasks/09_CUSTOM_09}{archived TIA experiment for CUSTOM\_09}
+contains the final SCL and the receipt for each framework and model. With \texttt{deepseek-v4.1-flash-1017}, the self agent completed the task with one model request and Codex used four. Both passed 25 scenarios and verified all ten properties at a scan bound of 20. Their recorded elapsed times were 322.487 and 387.997 seconds respectively. These include time spent in the concurrent batch and vendor queue.
+
+A separate
+\href{https://github.com/Fish-zjuer/plc-workbench/tree/0e44dfbac247943b7a9adc07872a8b8b50c62316/outputs/published/20261108_formal_toolchain_controls_complete}{local formal control}
+used saved ST for CUSTOM\_09 at a scan bound of 3 and an unwind limit of 16. The original source verified all ten properties. Changing the initial state from 0 to 1 produced counterexamples for P01, P03, and P05. Its archived counterexample JSON and logs show the evidence returned by the checker.
+
+For batch records, use the task receipt and per-version evidence in the run directory. The final source alone omits earlier compile failures and repairs. The public snapshot manifest records hashes for published evidence.
+
+The archive contains 128 receipts and 314 submissions. An audit verified the stored and decompressed hashes of all 3,645 manifest entries, checked unique task/framework/model identities, and reproduced the group counts from the receipts. The experiment README records the use of uncommitted runtime changes. Strict reproduction requires recovering the runtime source for the twelve content differences listed in the integration audit.
